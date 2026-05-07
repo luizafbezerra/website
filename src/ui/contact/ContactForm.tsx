@@ -19,13 +19,7 @@ export function ContactForm() {
     if (!submitResult) return;
 
     if (submitResult.success) {
-      // @template:i18n-start
-      toast.success("Message sent! I'll get back to you soon.");
-      // @template:i18n-end
     } else {
-      // @template:i18n-start
-      toast.error(submitResult.error ?? "Something went wrong. Please try again.");
-      // @template:i18n-end
     }
   }, [submitResult]);
 
@@ -33,11 +27,7 @@ export function ContactForm() {
     <form onSubmit={onSubmit} className="space-y-5" aria-label="Contact form">
       {/* Name */}
       <div className="space-y-1.5">
-        <label htmlFor="name" className="text-sm font-medium text-foreground">
-          {/* @template:i18n-start */}
-          Name
-          {/* @template:i18n-end */}
-        </label>
+        <label htmlFor="name" className="text-sm font-medium text-foreground"></label>
         <Input
           id="name"
           {...register("name")}
@@ -55,11 +45,7 @@ export function ContactForm() {
 
       {/* Email */}
       <div className="space-y-1.5">
-        <label htmlFor="email" className="text-sm font-medium text-foreground">
-          {/* @template:i18n-start */}
-          Email
-          {/* @template:i18n-end */}
-        </label>
+        <label htmlFor="email" className="text-sm font-medium text-foreground"></label>
         <Input
           id="email"
           type="email"
@@ -78,11 +64,7 @@ export function ContactForm() {
 
       {/* Message */}
       <div className="space-y-1.5">
-        <label htmlFor="message" className="text-sm font-medium text-foreground">
-          {/* @template:i18n-start */}
-          Message
-          {/* @template:i18n-end */}
-        </label>
+        <label htmlFor="message" className="text-sm font-medium text-foreground"></label>
         <Textarea
           id="message"
           {...register("message")}
@@ -102,9 +84,6 @@ export function ContactForm() {
       {/* Submit */}
       <Button type="submit" disabled={isSubmitting} className="w-full gap-2">
         {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
-        {/* @template:i18n-start */}
-        Send Message
-        {/* @template:i18n-end */}
       </Button>
     </form>
   );

@@ -18,16 +18,8 @@ export function ContactSection() {
           <h2
             id="contact-heading"
             className="mb-4 text-center text-3xl font-bold text-foreground sm:text-4xl"
-          >
-            {/* @template:i18n-start */}
-            Get in Touch
-            {/* @template:i18n-end */}
-          </h2>
-          <p className="mb-12 text-center text-muted-foreground">
-            {/* @template:i18n-start */}
-            Have a project in mind? Send me a message and I&apos;ll get back to you.
-            {/* @template:i18n-end */}
-          </p>
+          ></h2>
+          <p className="mb-12 text-center text-muted-foreground"></p>
 
           <div className="mx-auto max-w-lg">
             <ContactForm />

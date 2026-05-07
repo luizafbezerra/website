@@ -13,20 +13,10 @@ function slugify(text: string): string {
 }
 
 const revalidateBlog = (slug?: string) => {
-  // @template:i18n-start
-  revalidatePath("/en/blog", "layout");
-  revalidatePath("/pt/blog", "layout");
-  if (slug) {
-    revalidatePath(`/en/blog/${slug}`, "layout");
-    revalidatePath(`/pt/blog/${slug}`, "layout");
-  }
-  // @template:i18n-end
-  // @template:no-i18n-start
   revalidatePath("/blog", "layout");
   if (slug) {
     revalidatePath(`/blog/${slug}`, "layout");
   }
-  // @template:no-i18n-end
 };
 
 export const Posts: CollectionConfig = {

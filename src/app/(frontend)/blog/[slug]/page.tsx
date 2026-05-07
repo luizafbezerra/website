@@ -14,9 +14,6 @@ import { ArrowLeft, Calendar, Clock } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-// @template:i18n-start
-import { getTranslations } from "next-intl/server";
-// @template:i18n-end
 
 export const revalidate = 3600;
 
@@ -41,30 +38,15 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const resolvedParams = await params;
   const slug = resolvedParams.slug;
-  // @template:i18n-start
-  // @ts-ignore
-  const locale = (resolvedParams as { slug: string; locale: string }).locale ?? "en";
-  // @template:i18n-end
 
   try {
     const { post } = await getPost(slug);
     const showUpdated = isUpdatedAfterPublish(post.date, post.updatedAt);
     const coverImageUrl = post.coverImage?.heroUrl ?? post.coverImage?.url;
-    // @template:i18n-start
-    // @ts-ignore
-    const metaUrl = `${BASE_URL}/${locale}/blog/${slug}`;
-    // @ts-ignore
-    const metaAlternates = {
-      canonical: metaUrl,
-      languages: { en: `${BASE_URL}/en/blog/${slug}`, pt: `${BASE_URL}/pt/blog/${slug}` },
-    };
-    // @template:i18n-end
-    // @template:no-i18n-start
     // @ts-ignore
     const metaUrl = `${BASE_URL}/blog/${slug}`;
     // @ts-ignore
     const metaAlternates = { canonical: metaUrl };
-    // @template:no-i18n-end
 
     return {
       title: post.title,
@@ -101,15 +83,8 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
   const resolvedParams = await params;
   const slug = resolvedParams.slug;
 
-  // @template:i18n-start
-  // @ts-ignore
-  const locale = (resolvedParams as { slug: string; locale: string }).locale;
-  const t = await getTranslations({ locale, namespace: "blog" });
-  // @template:i18n-end
-  // @template:no-i18n-start
   // @ts-ignore
   const locale = "en";
-  // @template:no-i18n-end
 
   try {
     const { post, content: rawContent, headings } = await getPost(slug);
@@ -119,23 +94,11 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     ]);
 
     const showUpdated = isUpdatedAfterPublish(post.date, post.updatedAt);
-    // @template:i18n-start
-    // @ts-ignore
-    const postUrl = `${BASE_URL}/${locale}/blog/${slug}`;
-    // @template:i18n-end
-    // @template:no-i18n-start
     // @ts-ignore
     const postUrl = `${BASE_URL}/blog/${slug}`;
-    // @template:no-i18n-end
     const coverImageUrl = post.coverImage?.heroUrl ?? post.coverImage?.url;
-    // @template:i18n-start
-    // @ts-ignore
-    const tocLabel = t("tableOfContents");
-    // @template:i18n-end
-    // @template:no-i18n-start
     // @ts-ignore
     const tocLabel = "Table of Contents";
-    // @template:no-i18n-end
 
     return (
       <>
@@ -155,12 +118,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             className="mb-8 inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
           >
             <ArrowLeft className="size-4" />
-            {/* @template:i18n-start */}
-            {t("backToList")}
-            {/* @template:i18n-end */}
-            {/* @template:no-i18n-start */}
             Back to Blog
-            {/* @template:no-i18n-end */}
           </Link>
 
           {/* Cover image hero */}
@@ -176,22 +134,12 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
               {post.readingTime > 0 && (
                 <span className="flex items-center gap-1.5">
                   <Clock className="size-4" />
-                  {/* @template:i18n-start */}
-                  {t("readingTime", { minutes: post.readingTime })}
-                  {/* @template:i18n-end */}
-                  {/* @template:no-i18n-start */}
                   {`${post.readingTime} min read`}
-                  {/* @template:no-i18n-end */}
                 </span>
               )}
               {showUpdated && post.updatedAt && (
                 <Badge variant="outline" className="text-xs">
-                  {/* @template:i18n-start */}
-                  {t("updated", { date: formatDate(post.updatedAt, locale) })}
-                  {/* @template:i18n-end */}
-                  {/* @template:no-i18n-start */}
                   {`Updated ${formatDate(post.updatedAt, locale)}`}
-                  {/* @template:no-i18n-end */}
                 </Badge>
               )}
             </div>

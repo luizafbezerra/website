@@ -14,9 +14,10 @@ coverage/
 .idea/
 .vscode/
 !.vscode/extensions.json
-src/app/(payload)/importMap.js
+src/app/(payload)/admin/importMap.js
 src/payload-types.ts
 .claude/settings.local.json
+.neon
 next-env.d.ts
 tsconfig.tsbuildinfo
 docs/

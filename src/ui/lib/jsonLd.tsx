@@ -71,23 +71,13 @@ export function BlogPostingJsonLd({
     headline: post.title,
     description: post.description,
     datePublished: post.date,
-    // @template:i18n-start
-    // inLanguage: locale === "pt" ? "pt-BR" : "en-US",
-    // @template:i18n-end
-    // @template:no-i18n-start
     inLanguage: "en-US",
-    // @template:no-i18n-end
     author: {
       "@type": "Person",
       name: "Author",
       url: BASE_URL,
     },
-    // @template:i18n-start
-    // url: `${BASE_URL}/${locale}/blog/${post.slug}`,
-    // @template:i18n-end
-    // @template:no-i18n-start
     url: `${BASE_URL}/blog/${post.slug}`,
-    // @template:no-i18n-end
     keywords: post.tags.join(", "),
   };
 

@@ -22,9 +22,6 @@ export const getAllPosts = cache(async function getAllPosts(
 
   const { docs } = await payload.find({
     collection: "posts",
-    // @template:i18n-start
-    locale: locale as "en" | "pt",
-    // @template:i18n-end
     where,
     sort: "-publishedDate",
     limit: 100,
@@ -87,9 +84,6 @@ export const getPost = cache(async function getPost(
 
   const { docs } = await payload.find({
     collection: "posts",
-    // @template:i18n-start
-    locale: locale as "en" | "pt",
-    // @template:i18n-end
     where: {
       slug: { equals: slug },
     },

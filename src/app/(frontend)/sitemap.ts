@@ -15,14 +15,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 1.0,
   });
 
-  // @template:blog-start
   entries.push({
     url: `${BASE_URL}/blog`,
     lastModified: new Date(),
     changeFrequency: "weekly",
     priority: 0.8,
   });
-  // @template:blog-end
 
   return entries;
 }

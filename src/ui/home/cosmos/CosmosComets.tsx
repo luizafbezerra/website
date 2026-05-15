@@ -19,13 +19,15 @@ type CometState = {
 // every 30–60 seconds, traverses a curving path over ~17–20s, despawns. The
 // state machine lives in a ref to avoid React re-renders inside the rAF loop.
 //
-// The trajectories live off-screen on both ends; visibility is gated by the
-// per-frame fade applied to head + tail opacity at the ends of the curve.
+// Head and tail are both `<sprite>` — always camera-facing. The tail sprite is
+// stretched along its X axis and rotated via `material.rotation` (in screen
+// space) so the trail always points opposite the comet's motion direction,
+// regardless of camera angle. v3's flat-plane tail was foreshortened to a
+// thin slice at certain orbit angles; sprites avoid that entirely.
 export function CosmosComets() {
   const groupRef = useRef<THREE.Group>(null);
   const headRef = useRef<THREE.Sprite>(null);
-  const tailGroupRef = useRef<THREE.Group>(null);
-  const tailRef = useRef<THREE.Mesh>(null);
+  const tailRef = useRef<THREE.Sprite>(null);
 
   // Procedurally-generated sprite textures: warm radial-glow head + tapered
   // ochre streak tail. Painted hand-finished sprites can replace these later
@@ -41,6 +43,9 @@ export function CosmosComets() {
     duration: 2.0,
     trajectoryIdx: 0,
   });
+
+  // Reusable temporary vectors so useFrame doesn't allocate per tick.
+  const tmpTan = useMemo(() => new THREE.Vector3(), []);
 
   useFrame((tickState) => {
     const now = tickState.clock.getElapsedTime();
@@ -91,21 +96,52 @@ export function CosmosComets() {
       groupRef.current.visible = true;
       groupRef.current.position.set(pos[0], pos[1], pos[2]);
     }
-    if (tailGroupRef.current) {
-      // Align the tail's +X axis with the motion tangent (XY plane only — z
-      // varies little along the trajectories, so this reads correctly).
-      tailGroupRef.current.rotation.z = Math.atan2(tan[1], tan[0]);
+
+    // Tail orientation. The tail sprite is camera-facing, but to point the
+    // streak opposite the motion direction we rotate the sprite material by
+    // the motion direction's *screen-space* angle. To get that, transform the
+    // world-space tangent into the camera's view space (rotation only — the
+    // tangent is a direction, not a point) and take atan2 of its 2D
+    // components. Sprite rotation is around its centre, clockwise around the
+    // view axis; the negation aligns "tail trails behind" with the texture's
+    // u-axis (bright end at u=1 → ahead, far end at u=0 → behind).
+    const tailMat = tailRef.current?.material as THREE.SpriteMaterial | undefined;
+    if (tailMat) {
+      tmpTan.set(tan[0], tan[1], tan[2]);
+      tmpTan.transformDirection(tickState.camera.matrixWorldInverse);
+      tailMat.rotation = Math.atan2(tmpTan.y, tmpTan.x);
     }
 
     const fade = Cosmos.smoothstep(u, 0, 0.08) * (1 - Cosmos.smoothstep(u, 0.92, 1.0));
     const headMat = headRef.current?.material as THREE.SpriteMaterial | undefined;
-    const tailMat = tailRef.current?.material as THREE.MeshBasicMaterial | undefined;
     if (headMat) headMat.opacity = 0.95 * fade;
     if (tailMat) tailMat.opacity = 0.7 * fade;
   });
 
   return (
     <group ref={groupRef} visible={false}>
+      {/* Tail FIRST so its renderOrder puts it underneath the head sprite at
+          the overlap. Both use additive blending; the head ends up dominant
+          at its centre while the tail's gradient blends seamlessly into it. */}
+      <sprite
+        ref={tailRef}
+        // Stretched along sprite X (length 1.6, height 0.36). Sprite center
+        // sits behind the head by half its length, so the bright (u≈1) end
+        // overlaps the head's centre and the faded (u=0) end trails behind.
+        scale={[1.6, 0.36, 1]}
+        position={[0, 0, 0]}
+        center={[1, 0.5]}
+      >
+        <spriteMaterial
+          map={tailSprite ?? undefined}
+          color="#ffd9a0"
+          transparent
+          opacity={0}
+          blending={THREE.AdditiveBlending}
+          depthWrite={false}
+          toneMapped={false}
+        />
+      </sprite>
       {/* Head: a sprite (always camera-facing) with a warm radial-glow texture.
           Additive blending so the head reads as light, not as an opaque dot. */}
       <sprite ref={headRef} scale={[0.45, 0.45, 1]}>
@@ -119,24 +155,6 @@ export function CosmosComets() {
           toneMapped={false}
         />
       </sprite>
-      {/* Tail: a textured plane rotated each frame so its +X axis aligns with
-          the motion tangent (left of the head, trailing back along the arc).
-          The tapered texture fades to transparent at the far end. */}
-      <group ref={tailGroupRef}>
-        <mesh ref={tailRef} position={[-0.55, 0, 0]}>
-          <planeGeometry args={[1.4, 0.22]} />
-          <meshBasicMaterial
-            map={tailSprite ?? undefined}
-            color="#ffd9a0"
-            transparent
-            opacity={0}
-            blending={THREE.AdditiveBlending}
-            depthWrite={false}
-            side={THREE.DoubleSide}
-            toneMapped={false}
-          />
-        </mesh>
-      </group>
     </group>
   );
 }

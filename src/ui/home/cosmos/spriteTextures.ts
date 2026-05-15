@@ -51,10 +51,12 @@ export function getStarSprite(): THREE.Texture | null {
 }
 
 // Gilt-warm comet head — bright hot center, ochre falloff, transparent edges.
+// 256² so the head still reads as a soft painted disc at the closest orbit
+// distance instead of as a low-res sprite.
 export function getCometHeadSprite(): THREE.Texture | null {
   if (typeof document === "undefined") return null;
   if (_cometHead) return _cometHead;
-  _cometHead = radialDisc(128, [
+  _cometHead = radialDisc(256, [
     [0.0, "rgba(255, 248, 220, 1)"],
     [0.18, "rgba(255, 226, 168, 0.9)"],
     [0.5, "rgba(220, 162, 88, 0.35)"],
@@ -64,32 +66,41 @@ export function getCometHeadSprite(): THREE.Texture | null {
   return _cometHead;
 }
 
-// Tapered ochre/gilt streak. Bright on the right (head end), fading to the
-// left. Vertical mask feathers the edges so it doesn't read as a hard bar.
+// Tapered ochre/gilt streak. Bright in the middle, fading at BOTH ends so it
+// blends into the head where it meets and dissolves toward the tail's far
+// end. v4-perf: 512×128 for resolution; the head end is no longer fully
+// opaque, so meeting the head sprite reads as a continuous glow instead of
+// the previous abrupt bright cutoff.
 export function getCometTailSprite(): THREE.Texture | null {
   if (typeof document === "undefined") return null;
   if (_cometTail) return _cometTail;
-  const w = 256;
-  const h = 64;
+  const w = 512;
+  const h = 128;
   const c = document.createElement("canvas");
   c.width = w;
   c.height = h;
   const ctx = c.getContext("2d");
   if (!ctx) return makeTexture(c);
 
-  // Length gradient: left (away from head) transparent → right (head) bright.
+  // Length gradient: transparent at far end (u=0), peaks around u=0.85,
+  // softens back at the head end (u=1) so the sprite blends into the head.
   const len = ctx.createLinearGradient(0, 0, w, 0);
   len.addColorStop(0.0, "rgba(140, 90, 50, 0)");
-  len.addColorStop(0.55, "rgba(200, 140, 80, 0.4)");
-  len.addColorStop(0.92, "rgba(245, 210, 140, 0.9)");
-  len.addColorStop(1.0, "rgba(255, 238, 192, 1)");
+  len.addColorStop(0.45, "rgba(200, 140, 80, 0.35)");
+  len.addColorStop(0.78, "rgba(245, 210, 140, 0.78)");
+  len.addColorStop(0.92, "rgba(255, 230, 178, 0.55)");
+  len.addColorStop(1.0, "rgba(255, 238, 192, 0)");
   ctx.fillStyle = len;
   ctx.fillRect(0, 0, w, h);
 
   // Vertical mask: feather the top and bottom so the streak isn't a hard rect.
+  // Wider centre band + softer shoulders than v3 so the streak reads as a
+  // painted brush stroke rather than a thin geometric bar.
   const mask = ctx.createLinearGradient(0, 0, 0, h);
   mask.addColorStop(0.0, "rgba(0, 0, 0, 0)");
+  mask.addColorStop(0.25, "rgba(0, 0, 0, 0.55)");
   mask.addColorStop(0.5, "rgba(0, 0, 0, 1)");
+  mask.addColorStop(0.75, "rgba(0, 0, 0, 0.55)");
   mask.addColorStop(1.0, "rgba(0, 0, 0, 0)");
   ctx.globalCompositeOperation = "destination-in";
   ctx.fillStyle = mask;

@@ -31,6 +31,7 @@
     "@payloadcms/next": "3.78.0",
     "@payloadcms/richtext-lexical": "3.78.0",
     "@payloadcms/storage-vercel-blob": "3.78.0",
+    "@react-three/fiber": "^9.0.0",
     "@tailwindcss/typography": "^0.5.19",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -49,6 +50,7 @@
     "shiki": "^4.0.1",
     "sonner": "^2.0.7",
     "tailwind-merge": "^3.5.0",
+    "three": "^0.180.0",
     "zod": "^4.3.6"
   },
   "devDependencies": {
@@ -56,6 +58,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/three": "^0.184.1",
     "@typescript/native-preview": "7.0.0-dev.20260227.1",
     "cross-env": "^10.1.0",
     "husky": "^9.1.7",

@@ -5,9 +5,9 @@ export namespace Navigation {
   };
 
   export const links: Link[] = [
-    { label: "home", href: "/" },
-    { label: "about", href: "/about" },
-    { label: "blog", href: "/blog" },
-    { label: "contact", href: "/#contact" },
+    { label: "Sobre", href: "/#sobre" },
+    { label: "Como trabalho", href: "/#abordagem" },
+    { label: "Escrita", href: "/blog" },
+    { label: "Contato", href: "/#contato" },
   ];
 }

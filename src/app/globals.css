@@ -1,178 +1,689 @@
 @import "tailwindcss";
 @import "tw-animate-css";
-@import "shadcn/tailwind.css";
 
 @plugin "@tailwindcss/typography";
 
-@custom-variant dark (&:where(.dark, .dark *));
+@theme {
+  --color-parchment: oklch(0.97 0.012 75);
+  --color-parchment-deep: oklch(0.945 0.018 75);
+  --color-parchment-edge: oklch(0.91 0.022 70);
+  --color-vellum: oklch(0.93 0.024 70);
 
-:root {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.65 0.24 155);
-  --primary-foreground: oklch(0.145 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --destructive-foreground: oklch(0.985 0 0);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.65 0.24 155);
-  --radius: 0.625rem;
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.65 0.24 155);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-}
+  --color-ink: oklch(0.22 0.02 35);
+  --color-ink-soft: oklch(0.34 0.02 45);
+  --color-quill: oklch(0.5 0.022 55);
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-destructive: var(--destructive);
-  --color-destructive-foreground: var(--destructive-foreground);
-  --color-border: var(--border);
-  --color-input: var(--input);
-  --color-ring: var(--ring);
+  --color-terracotta: oklch(0.55 0.16 35);
+  --color-terracotta-deep: oklch(0.42 0.14 30);
+  --color-terracotta-soft: oklch(0.66 0.13 35);
 
-  --color-sidebar: var(--sidebar);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-ring: var(--sidebar-ring);
+  --color-cobalt: oklch(0.4 0.14 250);
+  --color-cobalt-deep: oklch(0.3 0.12 250);
 
-  --color-chart-1: var(--chart-1);
-  --color-chart-2: var(--chart-2);
-  --color-chart-3: var(--chart-3);
-  --color-chart-4: var(--chart-4);
-  --color-chart-5: var(--chart-5);
+  --color-ochre: oklch(0.68 0.13 75);
+  --color-moss: oklch(0.45 0.1 145);
+  --color-gilt: oklch(0.75 0.13 80);
 
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-  --radius-2xl: calc(var(--radius) + 8px);
-  --radius-3xl: calc(var(--radius) + 12px);
-  --radius-4xl: calc(var(--radius) + 16px);
+  --color-rule: oklch(0.84 0.018 70);
+  --color-rule-soft: oklch(0.88 0.014 72);
 
-  --font-sans: ui-sans-serif, system-ui, sans-serif;
+  --color-background: var(--color-parchment);
+  --color-foreground: var(--color-ink);
+  --color-primary: var(--color-terracotta);
+  --color-primary-foreground: var(--color-parchment);
+  --color-secondary: var(--color-parchment-deep);
+  --color-secondary-foreground: var(--color-ink);
+  --color-muted: var(--color-vellum);
+  --color-muted-foreground: var(--color-quill);
+  --color-accent: var(--color-cobalt);
+  --color-accent-foreground: var(--color-parchment);
+  --color-destructive: oklch(0.55 0.2 25);
+  --color-destructive-foreground: var(--color-parchment);
+  --color-card: var(--color-parchment-deep);
+  --color-card-foreground: var(--color-ink);
+  --color-popover: var(--color-parchment);
+  --color-popover-foreground: var(--color-ink);
+  --color-border: var(--color-rule);
+  --color-input: var(--color-rule);
+  --color-ring: var(--color-terracotta);
+
+  --radius: 0.125rem;
+  --radius-sm: 0.0625rem;
+  --radius-md: 0.125rem;
+  --radius-lg: 0.25rem;
+  --radius-xl: 0.375rem;
+  --radius-2xl: 0.5rem;
+
+  --font-display: var(--font-cardo), Georgia, "Times New Roman", serif;
+  --font-body: var(--font-vollkorn), Georgia, "Times New Roman", serif;
+  --font-sans: var(--font-vollkorn), Georgia, serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  --text-xs: 0.78rem;
+  --text-sm: 0.92rem;
+  --text-base: 1.0625rem;
+  --text-lg: 1.235rem;
+  --text-xl: 1.45rem;
+  --text-2xl: 1.85rem;
+  --text-3xl: 2.4rem;
+  --text-4xl: 3.1rem;
+  --text-5xl: 4rem;
 }
 
 @layer base {
-  * {
-    @apply border-border outline-ring/50;
+  *,
+  *::before,
+  *::after {
+    border-color: var(--color-rule);
   }
+
+  html {
+    color-scheme: light;
+    scroll-behavior: smooth;
+    font-size: 100%;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    background-color: var(--color-parchment);
+    color: var(--color-ink);
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+    line-height: 1.65;
+    font-feature-settings:
+      "kern" 1,
+      "liga" 1,
+      "calt" 1,
+      "onum" 1;
+    text-wrap: pretty;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    color: var(--color-ink);
+    letter-spacing: -0.005em;
+    line-height: 1.12;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+    hyphens: auto;
+    -webkit-hyphens: auto;
+  }
+
+  a {
+    color: inherit;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.18em;
+  }
+
+  ::selection {
+    background-color: var(--color-terracotta);
+    color: var(--color-parchment);
+  }
+
+  ::-moz-selection {
+    background-color: var(--color-terracotta);
+    color: var(--color-parchment);
+  }
+
   pre,
   code {
-    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-    font-variant-ligatures: common-ligatures;
+    font-family: var(--font-mono);
     font-feature-settings:
       "liga" 1,
       "calt" 1;
   }
-  html {
-    scroll-behavior: smooth;
+
+  :focus:not(:focus-visible) {
+    outline: none;
   }
-  ::selection {
-    background-color: var(--primary);
-    color: var(--primary-foreground);
-  }
-  body {
-    @apply bg-background text-foreground;
+
+  :focus-visible {
+    outline: 2px solid var(--color-terracotta);
+    outline-offset: 3px;
+    border-radius: 1px;
   }
 }
 
-/* View Transition animations */
-/* ::view-transition-group(*) {
-  animation-duration: 400ms;
-  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
-} */
+@layer components {
+  .dropcap::first-letter {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    float: left;
+    font-size: 4.4em;
+    line-height: 0.86;
+    padding-right: 0.18em;
+    padding-top: 0.06em;
+    color: var(--color-terracotta);
+  }
 
-/* Subtle crossfade */
-/* ::view-transition-old(root) {
-  animation: vt-fade-out 200ms ease both;
-}
-::view-transition-new(root) {
-  animation: vt-fade-in 200ms ease both;
-}
-@keyframes vt-fade-out {
-  to {
+  .smallcaps {
+    font-feature-settings:
+      "smcp" 1,
+      "kern" 1;
+    letter-spacing: 0.07em;
+    text-transform: lowercase;
+  }
+
+  .tracked {
+    font-family: var(--font-display);
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    font-size: 0.74rem;
+    color: var(--color-quill);
+  }
+
+  .tracked-ink {
+    font-family: var(--font-display);
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    font-size: 0.74rem;
+    color: var(--color-ink);
+  }
+
+  .marginalia {
+    font-family: var(--font-body);
+    font-style: italic;
+    color: var(--color-quill);
+    font-size: var(--text-sm);
+    line-height: 1.55;
+  }
+
+  .roman-numeral {
+    font-family: var(--font-display);
+    font-style: italic;
+    color: var(--color-terracotta);
+    font-size: var(--text-2xl);
+    line-height: 1;
+    font-feature-settings: "smcp" 1;
+  }
+
+  .body-prose p {
+    margin-bottom: 1.1em;
+  }
+
+  .body-prose p + p {
+    text-indent: 1.4em;
+  }
+
+  .body-prose em,
+  .body-prose i {
+    font-style: italic;
+    color: var(--color-ink-soft);
+  }
+
+  /* ---------------------------------------------------------------------- */
+  /* Cosmos — celestial atlas section.                                       */
+  /* Carve-out: parametric ornament permitted within `.cosmos-*` scope only. */
+  /* See .impeccable.md → Carve-outs.                                        */
+  /* ---------------------------------------------------------------------- */
+
+  .cosmos-section {
+    --cosmos-progress: 0;
+    --cosmos-sigil-opacity: 1; /* used only by the reduced-motion wheel */
+    --cosmos-overlay-opacity: 1; /* used by the v2 live overlay */
+  }
+
+  .cosmos-pinned {
+    position: relative;
+    width: 100%;
+    height: 250vh;
+  }
+
+  .cosmos-sticky {
+    position: sticky;
+    top: 0;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  .cosmos-canvas-layer {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  .cosmos-stage-frame {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    padding: 1.5rem;
+  }
+
+  .cosmos-stage {
+    position: relative;
+    width: min(78vh, 78vw);
+    height: min(78vh, 78vw);
+    aspect-ratio: 1 / 1;
+  }
+
+  .cosmos-hub {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    font-size: clamp(1.4rem, 2vw, 1.8rem);
+    opacity: calc(var(--cosmos-sigil-opacity, 1) * 0.55);
+    pointer-events: none;
+    user-select: none;
+    line-height: 1;
+  }
+
+  .cosmos-sigil {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    color: var(--color-ink);
+    font-size: clamp(1.6rem, 2.6vw, 2.3rem);
+    line-height: 1;
+    background: transparent;
+    border: 0;
+    padding: 0.45rem 0.55rem;
+    cursor: pointer;
+    opacity: var(--cosmos-sigil-opacity, 1);
+    transition:
+      opacity 280ms ease-out,
+      color 200ms ease,
+      transform 260ms ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .cosmos-sigil:hover,
+  .cosmos-sigil:focus-visible {
+    color: var(--color-terracotta-deep);
+  }
+
+  .cosmos-sigil-active {
+    color: var(--color-terracotta-deep);
+    transform: translate(-50%, -50%) scale(1.14);
+  }
+
+  .cosmos-sigil-dim {
+    opacity: calc(var(--cosmos-sigil-opacity, 1) * 0.55);
+  }
+
+  .cosmos-marginalia-frame {
+    position: absolute;
+    left: 50%;
+    bottom: 6%;
+    transform: translateX(-50%);
+    width: min(85%, 26rem);
+    text-align: center;
+    pointer-events: none;
+    z-index: 3;
+  }
+
+  /* v2 live overlay: DOM buttons positioned by 3D-to-2D projection each frame.
+     The container fills the canvas layer; buttons set `--cosmos-x` / `--cosmos-y`
+     in pixels via rAF so the transform updates are GPU-composited. No CSS
+     transition on transform — that would lag a frame behind the projection. */
+
+  .cosmos-sigil-overlay {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 2;
+    opacity: var(--cosmos-overlay-opacity, 1);
+    transition: opacity 360ms ease-out;
+  }
+
+  .cosmos-sigil-button {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: translate(var(--cosmos-x, 0), var(--cosmos-y, 0)) translate(-50%, -50%);
+    background: transparent;
+    border: 0;
+    margin: 0;
+    padding: 0.45rem 0.55rem;
+    font-family: var(--font-display);
+    font-size: clamp(1.4rem, 2.2vw, 1.95rem);
+    line-height: 1;
+    color: var(--color-ink);
+    cursor: pointer;
     opacity: 0;
+    transition: opacity 320ms ease-out;
+    pointer-events: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .cosmos-sigil-button[data-visible="1"] {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .cosmos-sigil-button.cosmos-sigil-dim {
+    opacity: 0.55;
+  }
+
+  .cosmos-sigil-glyph {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.85em;
+    height: 1.85em;
+    border-radius: 50%;
+    /* Soft parchment wax-seal disc so the unicode glyph reads cleanly against
+       the busy engraved cartouche underneath. The radial fade lets the
+       engraving still show around the edges instead of stamping a hard coin
+       over the painted plate. */
+    background: radial-gradient(
+      circle at center,
+      color-mix(in oklch, var(--color-parchment) 88%, transparent) 0%,
+      color-mix(in oklch, var(--color-parchment) 70%, transparent) 55%,
+      color-mix(in oklch, var(--color-parchment) 0%, transparent) 100%
+    );
+    /* Force text-style rendering for the zodiac codepoints. The string-level
+       text variation selector (U+FE0E) on each glyph in `Cosmos.sigils` is
+       the primary line of defense; this is a CSS belt-and-suspenders for
+       browsers that respect the property but not the selector. */
+    font-variant-emoji: text;
+    transition:
+      transform 240ms cubic-bezier(0.2, 0.8, 0.2, 1),
+      background 240ms ease,
+      color 200ms ease;
+  }
+
+  .cosmos-sigil-button:hover .cosmos-sigil-glyph,
+  .cosmos-sigil-button:focus-visible .cosmos-sigil-glyph,
+  .cosmos-sigil-button.cosmos-sigil-active .cosmos-sigil-glyph {
+    background: radial-gradient(
+      circle at center,
+      color-mix(in oklch, var(--color-parchment) 96%, transparent) 0%,
+      color-mix(in oklch, var(--color-parchment) 82%, transparent) 60%,
+      color-mix(in oklch, var(--color-parchment) 0%, transparent) 100%
+    );
+  }
+
+  .cosmos-sigil {
+    font-variant-emoji: text;
+  }
+
+  .cosmos-sigil-button:hover .cosmos-sigil-glyph,
+  .cosmos-sigil-button:focus-visible .cosmos-sigil-glyph,
+  .cosmos-sigil-button.cosmos-sigil-active .cosmos-sigil-glyph {
+    color: var(--color-terracotta-deep);
+    transform: scale(1.14);
+  }
+
+  .cosmos-sigil-button:focus-visible {
+    outline: 2px solid var(--color-terracotta);
+    outline-offset: 4px;
+    border-radius: 999px;
+  }
+
+  /* Painted-poster fallback. Until the rasterized keyframe lands the layer is
+     transparent — the page parchment shows through. When the poster ships:
+       background-image: url("/art/cosmos/poster.webp");
+       background-size: cover;
+       background-position: center;
+  */
+  .cosmos-poster-fallback {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  /* Floating marginalia popover. Tracks the active sigil's screen position
+     and reads as a soft parchment card with a backdrop blur so the canvas
+     art shows through faintly but doesn't fight the ink type. The popover is
+     non-interactive (pointer-events: none) — it's a description, not a
+     control — so the mouse glides through it onto/off the sigil button. */
+  .cosmos-sigil-popover {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: translate(var(--cosmos-x, 0), var(--cosmos-y, 0));
+    width: min(20rem, 78vw);
+    padding: 0.7rem 0.95rem 0.8rem;
+    background: color-mix(in oklch, var(--color-parchment) 84%, transparent);
+    border: 1px solid color-mix(in oklch, var(--color-rule) 60%, transparent);
+    border-radius: 3px;
+    box-shadow:
+      0 1px 0 color-mix(in oklch, var(--color-parchment) 60%, transparent) inset,
+      0 8px 24px -10px oklch(0.22 0.02 35 / 0.32),
+      0 2px 6px -2px oklch(0.22 0.02 35 / 0.16);
+    backdrop-filter: blur(7px) saturate(1.04);
+    -webkit-backdrop-filter: blur(7px) saturate(1.04);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 4;
+    transition:
+      opacity 280ms ease-out,
+      transform 280ms cubic-bezier(0.2, 0.8, 0.2, 1);
+    will-change: transform, opacity;
+  }
+
+  .cosmos-sigil-popover-visible {
+    opacity: 1;
+  }
+
+  .cosmos-popover-title {
+    font-family: var(--font-display);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    font-size: 0.74rem;
+    color: var(--color-ink);
+    margin: 0 0 0.35rem 0;
+    display: flex;
+    align-items: baseline;
+    gap: 0.55rem;
+  }
+
+  .cosmos-popover-glyph {
+    font-variant-emoji: text;
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 1.1rem;
+    letter-spacing: 0;
+    line-height: 1;
+    color: var(--color-terracotta);
+  }
+
+  .cosmos-popover-body {
+    font-family: var(--font-body);
+    font-style: italic;
+    color: var(--color-quill);
+    font-size: 0.96rem;
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  /* No-JS list (rendered inside <noscript>). Visible only when JS is disabled. */
+  .cosmos-noscript-list {
+    max-width: 36rem;
+    margin: 1.5rem auto 3rem;
+    padding: 0 1.25rem;
+    list-style: none;
+    color: var(--color-ink);
+    font-size: var(--text-sm);
+  }
+  .cosmos-noscript-list li {
+    padding: 0.4rem 0;
+    border-top: 1px solid var(--color-rule-soft);
+  }
+  .cosmos-noscript-list li:first-child {
+    border-top: 0;
+  }
+
+  /* Reduced-motion + small screens: collapse the pin, lay the wheel out flat. */
+  .cosmos-reduced .cosmos-pinned,
+  .cosmos-section.cosmos-reduced .cosmos-pinned {
+    height: auto;
+  }
+  .cosmos-reduced .cosmos-sticky {
+    position: relative;
+    height: auto;
+    min-height: 0;
+    padding: 1.5rem 0 3rem;
+  }
+  .cosmos-reduced .cosmos-stage-frame {
+    position: relative;
+    height: auto;
+    padding: 1.5rem 1rem;
+  }
+  .cosmos-reduced .cosmos-marginalia-frame {
+    position: relative;
+    bottom: auto;
+    left: auto;
+    transform: none;
+    margin: 1.25rem auto 0;
+  }
+  .cosmos-reduced .cosmos-stage {
+    width: min(78vw, 28rem);
+    height: min(78vw, 28rem);
+  }
+
+  /* Mobile (< 768px): drop the scroll pin. With v2 the canvas still mounts
+     (simpler scene, fixed camera) so the sticky box gets an explicit height
+     instead of collapsing to 0. The reduced-motion branch keeps its own
+     flat-flow rules below and overrides this. */
+  @media (max-width: 767px) {
+    .cosmos-section .cosmos-pinned {
+      height: auto;
+    }
+    .cosmos-section:not(.cosmos-reduced) .cosmos-sticky {
+      position: relative;
+      top: auto;
+      height: 78vh;
+      min-height: 440px;
+      overflow: hidden;
+    }
+    .cosmos-section:not(.cosmos-reduced) .cosmos-marginalia-frame {
+      bottom: 4%;
+      width: min(90%, 22rem);
+    }
+    .cosmos-section.cosmos-reduced .cosmos-sticky {
+      position: relative;
+      height: auto;
+      min-height: 0;
+      padding: 1.25rem 0 3rem;
+    }
+    .cosmos-section.cosmos-reduced .cosmos-stage-frame {
+      position: relative;
+      height: auto;
+      padding: 1.5rem 1rem;
+    }
+    .cosmos-section.cosmos-reduced .cosmos-stage {
+      width: min(82vw, 26rem);
+      height: min(82vw, 26rem);
+    }
+    .cosmos-section.cosmos-reduced .cosmos-marginalia-frame {
+      position: relative;
+      bottom: auto;
+      left: auto;
+      transform: none;
+      margin: 0.75rem auto 0;
+    }
+  }
+
+  /* JS-class echo of the mobile media query — post-hydration certainty when
+     the user has resized to mobile after first paint. */
+  .cosmos-section.cosmos-mobile:not(.cosmos-reduced) .cosmos-pinned {
+    height: auto;
+  }
+  .cosmos-section.cosmos-mobile:not(.cosmos-reduced) .cosmos-sticky {
+    position: relative;
+    top: auto;
+    height: 78vh;
+    min-height: 440px;
+    overflow: hidden;
+  }
+  .cosmos-section.cosmos-mobile:not(.cosmos-reduced) .cosmos-marginalia-frame {
+    bottom: 4%;
+    width: min(90%, 22rem);
+  }
+
+  @media (min-width: 1024px) {
+    .cosmos-section:not(.cosmos-reduced) .cosmos-marginalia-frame {
+      left: auto;
+      bottom: auto;
+      top: 50%;
+      right: max(1.5rem, calc((100vw - 72rem) / 2 + 1.5rem));
+      transform: translateY(-50%);
+      width: 14rem;
+      text-align: left;
+    }
   }
 }
-@keyframes vt-fade-in {
-  from {
-    opacity: 0;
-  }
-} */
 
-/* Keep the header completely static during transitions */
-::view-transition-group(header) {
-  animation: none;
+@layer utilities {
+  .vignette {
+    -webkit-mask-image: radial-gradient(ellipse at center, black 60%, transparent 92%);
+    mask-image: radial-gradient(ellipse at center, black 60%, transparent 92%);
+  }
+
+  .parchment-grain {
+    background-color: var(--color-parchment);
+    background-image: url("/texture/parchment.webp");
+    background-size: 512px 512px;
+    background-repeat: repeat;
+    /* Fix the grain to the viewport so scroll-pinned sections (e.g. cosmos)
+       don't show the texture sliding past underneath the canvas. */
+    background-attachment: fixed;
+  }
+
+  .rule-warm {
+    border-color: var(--color-rule);
+  }
+
+  .ink-muted {
+    color: var(--color-quill);
+  }
+
+  .display {
+    font-family: var(--font-display);
+  }
+
+  .display-italic {
+    font-family: var(--font-display);
+    font-style: italic;
+  }
+
+  .body-italic {
+    font-family: var(--font-body);
+    font-style: italic;
+  }
+
+  .skip-link {
+    position: absolute;
+    left: 1rem;
+    top: 1rem;
+    z-index: 100;
+    padding: 0.75rem 1.25rem;
+    background: var(--color-ink);
+    color: var(--color-parchment);
+    font-family: var(--font-display);
+    font-size: 0.95rem;
+    text-decoration: none;
+    transform: translateY(-150%);
+    transition: transform 150ms ease;
+  }
+
+  .skip-link:focus {
+    transform: translateY(0);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  ::view-transition-group(*) {
-    animation-duration: 0ms;
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
-}
-
-/* Dot-grid texture system */
-.dot-grid {
-  background-image: radial-gradient(circle, currentColor 1px, transparent 1px);
-  background-size: 40px 40px;
-  color: oklch(0.8 0 0 / 0.04);
-}
-
-.dot-grid-dense {
-  background-image: radial-gradient(circle, currentColor 1px, transparent 1px);
-  background-size: 32px 32px;
-  color: oklch(0.8 0 0 / 0.06);
-}
-
-/* Blinking cursor for terminal effects */
-@keyframes blink {
-  0%,
-  100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0;
-  }
-}
-
-.animate-blink {
-  animation: blink 1s step-end infinite;
 }

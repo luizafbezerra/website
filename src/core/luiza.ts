@@ -13,6 +13,9 @@ export namespace Luiza {
   export const email = "luizafbezerra@gmail.com";
   export const whatsappUrl = `https://wa.me/${phoneE164.replace(/\D/g, "")}`;
 
+  export const instagramUrl = "https://www.instagram.com/simbolos.do.self/";
+  export const instagramHandle = "@simbolos.do.self";
+
   // TODO: replace with Luiza's real CRP number (state + digits)
   export const credential = "CRP placeholder";
 

@@ -1,7 +1,19 @@
 import type { Metadata } from "next";
 import { getAllPosts } from "@/app/actions/blog";
 import { Luiza } from "@/core";
-import { About, Contact, Cosmos, Footer, Header, Hero, Pillars, Voices, Writing } from "@/ui/home";
+import {
+  About,
+  Contact,
+  Cosmos,
+  Footer,
+  Header,
+  Hero,
+  Pillars,
+  StickyHeaderShell,
+  Symbols,
+  Voices,
+  Writing,
+} from "@/ui/home";
 import {
   BreadcrumbJsonLd,
   FaqJsonLd,
@@ -108,12 +120,15 @@ export default async function Home() {
         />
       )}
 
-      <Header />
+      <StickyHeaderShell>
+        <Header />
+      </StickyHeaderShell>
       <main id="main">
         <Hero />
         <Cosmos />
         <Pillars />
         <About />
+        <Symbols />
         <Voices />
         <Writing posts={recentPosts} />
         <Contact />

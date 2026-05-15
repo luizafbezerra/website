@@ -7,5 +7,7 @@ export { Hero } from "./Hero";
 export { Ornament } from "./Ornament";
 export { PaintedAsset } from "./PaintedAsset";
 export { Pillars } from "./Pillars";
+export { StickyHeaderShell } from "./StickyHeaderShell";
+export { Symbols } from "./Symbols";
 export { Voices } from "./Voices";
 export { Writing } from "./Writing";

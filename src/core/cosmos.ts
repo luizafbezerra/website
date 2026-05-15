@@ -200,6 +200,16 @@ export namespace Cosmos {
   export const sectionDek =
     "Para Jung, o céu noturno é uma das linguagens mais antigas que temos para conversar com nós mesmos — não como prescrição, mas como um vocabulário de padrões. Estas constelações não predizem; elas nomeiam.";
   export const sectionDisclaimer = "Não é uma análise astrológica; é uma evocação simbólica.";
+
+  // Descent-beat epigraph. Anchored bottom-left of the cosmos sticky frame
+  // during the final 15% of the scroll, fading in alongside the painted
+  // horizon. Placeholder text for Luiza's review before publish — the
+  // attribution to Jung for this quote is widely repeated but disputed
+  // (not found verbatim in his published works); flag this when reviewing.
+  export const descentEpigraph = {
+    line: "Quem olha para fora, sonha. Quem olha para dentro, desperta.",
+    attribution: "Carl Gustav Jung",
+  } as const;
   export const sectionAriaLabel = "Atlas celeste — evocação simbólica, sem análise astrológica";
   export const sigilAriaLabel = (signName: string) => `Constelação de ${signName}`;
 
@@ -507,23 +517,42 @@ export namespace Cosmos {
   // Spawn cadence: after a traversal, wait this long before the next spawn.
   export const cometCooldownRange: readonly [number, number] = [30, 60];
 
-  // ---- Camera cinema (v4 — 3 phases) ----------------------------------------
-  // zoomIn → orbit → zoomOut. A single graceful arc: dolly toward the
+  // ---- Camera cinema (v5 — 3 phases: zoom-in → orbit → descent) ------------
+  // zoomIn → orbit → descent. A single graceful arc: dolly toward the
   // armillary, ride a continuous polar arc around it (with a gentle y-bob in
-  // place of the v3 tilt-up jolt), then dolly back out. LookAt is always the
-  // origin, so there's no abrupt look-vector swing at any phase boundary.
+  // place of the v3 tilt-up jolt), then descend from orbit altitude to a
+  // hill-top view where the armillary sits in the upper half of the frame
+  // and the painted landscape horizon fills the lower portion. LookAt
+  // interpolates from origin to a point slightly below origin so the camera
+  // tilts down into the landscape during descent — no abrupt look swing.
 
   export type CameraKey = { pos: Vec3; look: Vec3 };
 
+  // Orbit phase is extended to 0.85 (was 0.75) so the existing 0 → 0.85
+  // scroll feel is preserved; the new descent phase occupies only the final
+  // 15% of the scroll. Consumers (CSS-var driven overlays) read these to
+  // gate their own fade-in/out envelopes.
   export const cameraPhases = {
     zoomIn: { range: [0.0, 0.25] as const },
-    orbit: { range: [0.25, 0.75] as const },
-    zoomOut: { range: [0.75, 1.0] as const },
+    orbit: { range: [0.25, 0.85] as const },
+    descent: { range: [0.85, 1.0] as const },
   };
 
   const KEY_FAR_IN: CameraKey = { pos: [0, 0.08, 8.4], look: [0, 0, 0] };
   const KEY_MID: CameraKey = { pos: [0, 0.2, 3.6], look: [0, 0, 0] };
-  const KEY_FAR_OUT: CameraKey = { pos: [0, 0.6, 8.2], look: [0, 0, 0] };
+  // Descent endpoint: a wider, slightly elevated shot of the armillary
+  // surrounded by the dense constellation network. Camera pulls back from
+  // the orbit + lifts a touch + tilts up slightly so the visitor sees the
+  // armillary at the lower-mid of the frame with the constellations of the
+  // RA 18h region (Lyra, Cygnus, Hercules, Sagittarius, Scorpius, Aquila)
+  // filling the upper sky.
+  //
+  // History — earlier v5 versions of this beat aimed at a painted horizon
+  // plane (dropped after the procedural placeholder read as crude SVG
+  // geometry) and then FBM cloud parallax planes (dropped after the
+  // baked shader output read as pale grey strips). v6 carries no special
+  // descent content — the section ends as "the cosmos itself, denser".
+  const KEY_DESCENT: CameraKey = { pos: [0, 0.6, 7.6], look: [0, 1.1, 0] };
 
   // Orbit shape: just under one full turn so the visitor sees the full sphere
   // and a bit. Radius drifts in slightly during the orbit so the scene feels
@@ -534,6 +563,20 @@ export namespace Cosmos {
   const ORBIT_Y_PEAK = 0.35;
   const ORBIT_A_START = Math.atan2(KEY_MID.pos[2], KEY_MID.pos[0]);
   const ORBIT_A_END_REL = Math.PI * 2 * ORBIT_TURNS;
+
+  // Mid-orbit lookAt tilt-up. The camera's look target's Y rises from 0 to
+  // ORBIT_LOOK_UP_PEAK and back, so for a beat in the middle of the orbit
+  // the camera tilts upward and the high-Dec constellations (Cygnus,
+  // Cepheus, Cassiopeia, Hercules, Boötes) come into the upper frame while
+  // the armillary settles into the lower portion. Both edges use
+  // smootherstep so there's no perceptible discontinuity at orbit start /
+  // end where the lookAt is anchored back at the origin.
+  //
+  // Peak is kept modest (~1.8) so the armillary stays in the lower-frame
+  // — the brief is "a bit toward the top," not "a polar flyover."
+  const ORBIT_LOOK_UP_PEAK = 1.8;
+  const ORBIT_LOOK_UP_RISE = [0.15, 0.55] as const; // local_t window
+  const ORBIT_LOOK_UP_FALL = [0.55, 0.95] as const;
 
   export const cameraKeyAtProgress = (p: number): CameraKey => {
     // Zoom-in: dolly from far to mid, always looking at origin.
@@ -546,35 +589,80 @@ export namespace Cosmos {
     }
     // Orbit: continuous polar arc on a slightly inclined plane (handled by
     // the y-bob). Radius pulls in 3.6 → 3.2, y bobs through ORBIT_Y_PEAK.
+    // The lookAt target's Y rises mid-orbit to bring high-Dec constellations
+    // into the upper frame (see ORBIT_LOOK_UP_PEAK).
     if (p <= cameraPhases.orbit.range[1]) {
       const t = smootherstep(p, cameraPhases.orbit.range[0], cameraPhases.orbit.range[1]);
       const a = ORBIT_A_START + t * ORBIT_A_END_REL;
       const r = lerp(ORBIT_R_START, ORBIT_R_END, t);
       const y = KEY_MID.pos[1] + ORBIT_Y_PEAK * Math.sin(t * Math.PI);
+      // Smootherstep-shaped arc on the lookAt Y. Rises across the first
+      // window, falls across the second; product is 1 at the join, 0 at
+      // both ends. No perceptible velocity step at orbit boundaries
+      // because both smootherstep edges flatten to zero derivative.
+      const rise = smootherstep(t, ORBIT_LOOK_UP_RISE[0], ORBIT_LOOK_UP_RISE[1]);
+      const fall = 1 - smootherstep(t, ORBIT_LOOK_UP_FALL[0], ORBIT_LOOK_UP_FALL[1]);
+      const lookY = rise * fall * ORBIT_LOOK_UP_PEAK;
       return {
         pos: [Math.cos(a) * r, y, Math.sin(a) * r],
-        look: [0, 0, 0],
+        look: [0, lookY, 0],
       };
     }
-    // Zoom-out: from the orbit-end point straight back out.
-    const t = smootherstep(p, cameraPhases.zoomOut.range[0], cameraPhases.zoomOut.range[1]);
+    // Descent: from the orbit-end point down/back to the hilltop view. Both
+    // pos and look interpolate, so the camera both pulls back AND tilts down
+    // toward the painted horizon in a single continuous motion.
+    const t = smootherstep(p, cameraPhases.descent.range[0], cameraPhases.descent.range[1]);
     const a1 = ORBIT_A_START + ORBIT_A_END_REL;
     const orbitEnd: Vec3 = [Math.cos(a1) * ORBIT_R_END, KEY_MID.pos[1], Math.sin(a1) * ORBIT_R_END];
     return {
-      pos: v3lerp(orbitEnd, KEY_FAR_OUT.pos, t),
-      look: [0, 0, 0],
+      pos: v3lerp(orbitEnd, KEY_DESCENT.pos, t),
+      look: v3lerp([0, 0, 0], KEY_DESCENT.look, t),
     };
   };
 
   // Sigil overlay visibility envelope, re-tuned for the 3-phase timing.
-  // The sigils are most legible during the orbit phase (0.25 → 0.75) when
-  // the camera is close in; fade in across the zoom-in and out across the
-  // zoom-out. Smootherstep on both edges so opacity has no velocity step.
+  // The sigils are most legible during the orbit phase (0.25 → 0.85) when
+  // the camera is close in; fade in across the zoom-in and out before the
+  // descent begins so the final beat carries a single epigraph instead of
+  // twelve competing labels. Smootherstep on both edges so opacity has no
+  // velocity step.
   export const sigilOverlayOpacity = (p: number): number => {
     const fadeIn = smootherstep(p, 0.1, 0.32);
-    const fadeOut = 1 - smootherstep(p, 0.7, 0.95);
+    const fadeOut = 1 - smootherstep(p, 0.78, 0.9);
     return fadeIn * fadeOut;
   };
+
+  // Descent-beat fade envelope. Hidden through the orbit phase; fades in
+  // across the first half of the descent (0.85 → 0.95) and holds at full
+  // opacity through scroll end. Consumed by the FBM cloud planes inside the
+  // canvas AND the DOM overlay epigraph so cloud drift and the closing
+  // Jungian line appear together. (Earlier named `horizonFadeOpacity` when
+  // the beat was a painted horizon plane; the horizon was dropped in
+  // favour of a sky-dominant beat.)
+  export const descentBeatOpacity = (p: number): number =>
+    smootherstep(p, cameraPhases.descent.range[0], 0.95);
+
+  // Constellation line network fade. Lines appear mid-orbit (when the
+  // camera is closest in and the sigils still dominate visual attention is
+  // fine — these are background context, not foreground UI) and reach full
+  // opacity well before the descent so they're already legible when the
+  // descent's wider camera framing arrives. Capped at 0.5 base opacity by
+  // the consumer's material.
+  export const constellationLineOpacity = (p: number): number => smootherstep(p, 0.5, 0.7);
+
+  // Constellation VERTEX STAR fade. Brighter than the lines, fades in
+  // slightly earlier so the named-star pattern reads before the connecting
+  // strokes — the references emphasize bright stars at the network nodes
+  // and that's what readers parse first. Consumer applies a gentle
+  // sinusoidal twinkle on top of this base envelope.
+  export const constellationStarOpacity = (p: number): number => smootherstep(p, 0.42, 0.62);
+
+  // Comet fade-out during the descent. Comets are foreground motion that
+  // would compete with the constellation network in the final framing, so
+  // their head + tail opacity is scaled by this multiplier — 1 through the
+  // orbit, fading to 0 across the same 0.78 → 0.92 window the sigil
+  // overlay uses for its own fade-out.
+  export const cometDescentDimming = (p: number): number => 1 - smootherstep(p, 0.78, 0.92);
 
   // ---- Painted-poster fallback positions (stub) ------------------------------
 

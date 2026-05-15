@@ -1,10 +1,15 @@
 "use client";
 
 import { useFrame } from "@react-three/fiber";
+import type { MutableRefObject } from "react";
 import { useMemo, useRef } from "react";
 import * as THREE from "three";
 import { Cosmos } from "@/core";
 import { getCometHeadSprite, getCometTailSprite } from "./spriteTextures";
+
+type Props = {
+  progressRef: MutableRefObject<number>;
+};
 
 type CometPhase = "idle" | "active";
 
@@ -24,7 +29,7 @@ type CometState = {
 // space) so the trail always points opposite the comet's motion direction,
 // regardless of camera angle. v3's flat-plane tail was foreshortened to a
 // thin slice at certain orbit angles; sprites avoid that entirely.
-export function CosmosComets() {
+export function CosmosComets({ progressRef }: Props) {
   const groupRef = useRef<THREE.Group>(null);
   const headRef = useRef<THREE.Sprite>(null);
   const tailRef = useRef<THREE.Sprite>(null);
@@ -113,9 +118,13 @@ export function CosmosComets() {
     }
 
     const fade = Cosmos.smoothstep(u, 0, 0.08) * (1 - Cosmos.smoothstep(u, 0.92, 1.0));
+    // Multiply by the descent dimming envelope so comets recede during the
+    // final beat — they're foreground motion that would compete with the
+    // constellation network in the sky-dominant framing.
+    const descentDim = Cosmos.cometDescentDimming(Cosmos.clamp01(progressRef.current));
     const headMat = headRef.current?.material as THREE.SpriteMaterial | undefined;
-    if (headMat) headMat.opacity = 0.95 * fade;
-    if (tailMat) tailMat.opacity = 0.7 * fade;
+    if (headMat) headMat.opacity = 0.95 * fade * descentDim;
+    if (tailMat) tailMat.opacity = 0.7 * fade * descentDim;
   });
 
   return (

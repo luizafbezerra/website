@@ -288,6 +288,11 @@ async function buildBrushedRoughness(): Promise<string | null> {
   return dst;
 }
 
+// (v5 dropped the SVG horizon + ellipse-cloud plate passes — the descent
+// beat is rebuilt around an FBM cloud shader + denser constellation network
+// in `src/ui/home/cosmos/`. No new texture assets need to be emitted for
+// the descent beat.)
+
 // ---------------------------------------------------------------------------
 // Runner — process simple resize tasks then the graded ones.
 // ---------------------------------------------------------------------------

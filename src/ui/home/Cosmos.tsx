@@ -94,6 +94,10 @@ export function Cosmos() {
       progressRef.current = p;
       root.style.setProperty("--cosmos-progress", p.toFixed(3));
       root.style.setProperty("--cosmos-overlay-opacity", Data.sigilOverlayOpacity(p).toFixed(3));
+      // Drives the bottom-left epigraph's fade in tandem with the FBM
+      // cloud planes inside the canvas. Same envelope, same window: both
+      // appear during the final descent beat (p ∈ [0.85, 0.95]).
+      root.style.setProperty("--cosmos-descent-opacity", Data.descentBeatOpacity(p).toFixed(3));
     };
 
     const onScroll = () => {
@@ -176,6 +180,24 @@ export function Cosmos() {
             <div className="cosmos-marginalia-frame">
               <CosmosMarginalia activeSigilId={activeSigil} />
             </div>
+          ) : null}
+
+          {/* Epigraph for the descent beat. Hidden through the orbit phase,
+              fades in alongside the FBM cloud planes inside the canvas
+              (same --cosmos-descent-opacity window). Bottom-left of the
+              sticky frame; closes the section with a single Jungian line
+              under the dense constellation network. Copy is a placeholder
+              for Luiza's review before publish. */}
+          {showLiveCanvas ? (
+            <aside className="cosmos-epigraph" aria-hidden="true">
+              <p className="cosmos-epigraph-line">{Data.descentEpigraph.line}</p>
+              <p className="cosmos-epigraph-attribution">
+                <span aria-hidden="true" className="text-terracotta mr-2">
+                  ·
+                </span>
+                {Data.descentEpigraph.attribution}
+              </p>
+            </aside>
           ) : null}
         </div>
       </div>

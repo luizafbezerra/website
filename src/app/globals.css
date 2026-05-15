@@ -252,6 +252,7 @@
     --cosmos-progress: 0;
     --cosmos-sigil-opacity: 1; /* used only by the reduced-motion wheel */
     --cosmos-overlay-opacity: 1; /* used by the v2 live overlay */
+    --cosmos-descent-opacity: 0; /* used by the v5 descent-beat epigraph */
   }
 
   .cosmos-pinned {
@@ -359,6 +360,42 @@
     text-align: center;
     pointer-events: none;
     z-index: 3;
+  }
+
+  /* Descent-beat epigraph. Anchored bottom-left of the cosmos sticky frame
+     so it shares the lower portion of the viewport with the painted horizon
+     (which fills the lower third of the canvas via the descent camera).
+     Opacity is driven by the same --cosmos-horizon-opacity var set by
+     Cosmos.tsx — both DOM epigraph and 3D plane fade together. Smaller and
+     narrower on small screens so it doesn't crowd the landscape silhouette. */
+  .cosmos-epigraph {
+    position: absolute;
+    left: clamp(1.25rem, 4vw, 2.75rem);
+    bottom: clamp(1.5rem, 5vh, 3rem);
+    max-width: min(28rem, 60vw);
+    pointer-events: none;
+    z-index: 4;
+    opacity: var(--cosmos-descent-opacity, 0);
+    transition: opacity 320ms ease-out;
+  }
+
+  .cosmos-epigraph-line {
+    font-family: var(--font-display);
+    font-style: italic;
+    color: var(--color-terracotta-deep);
+    font-size: clamp(1.05rem, 1.6vw, 1.35rem);
+    line-height: 1.42;
+    text-wrap: balance;
+    margin: 0;
+  }
+
+  .cosmos-epigraph-attribution {
+    margin: 0.5rem 0 0;
+    font-family: var(--font-display);
+    font-style: italic;
+    color: var(--color-ink-soft);
+    font-size: clamp(0.78rem, 1vw, 0.92rem);
+    letter-spacing: 0.02em;
   }
 
   /* v2 live overlay: DOM buttons positioned by 3D-to-2D projection each frame.

@@ -29,6 +29,11 @@ const RING_TEXTURE_REPEATS = 8; // times the brushed-roughness map tiles around 
 // cube map. The brass photo is sampled as a roughness micro-variation map
 // (brushed-striation character), NOT as a base colour map — base colour is a
 // flat warm brass. The sun stays emissive (`MeshBasicMaterial`).
+//
+// v4-perf: no direct light. The env-probe cube map already includes the warm
+// nebula + galaxy band, so the brass picks up colour and direction from the
+// reflection alone. `envMapIntensity` is raised to keep the rings reading
+// bright enough without per-fragment light math.
 export function CosmosArmillary({ sigilScreenPositionsRef, activeSigilId }: Props) {
   const groupRef = useRef<THREE.Group>(null);
   const sigilAnchorRefs = useRef<Array<THREE.Object3D | null>>(Array(SIGIL_COUNT).fill(null));
@@ -143,7 +148,9 @@ export function CosmosArmillary({ sigilScreenPositionsRef, activeSigilId }: Prop
             roughness={0.32}
             roughnessMap={ringRoughnessMap ?? undefined}
             envMap={envCubeMap ?? undefined}
-            envMapIntensity={1.4}
+            // Bumped from 1.4 → 1.8 to compensate for the dropped pointLight:
+            // the brass now takes all of its illumination from the env probe.
+            envMapIntensity={1.8}
           />
         </mesh>
       ))}

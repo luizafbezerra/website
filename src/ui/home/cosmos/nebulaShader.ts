@@ -1,31 +1,16 @@
 "use client";
 
-// GLSL for the procedural nebula sphere. The vertex shader forwards a
-// normalized "look direction" from the sphere centre; the fragment shader
-// runs two octaves of simplex-noise FBM on that direction and mixes the
-// locked earth-pigment palette (terracotta, cobalt, ochre) against a warm
-// dark umber baseline. No time uniform — static painterly wash; one bake
-// into the env cube map is enough.
+// GLSL for the procedural nebula. v4-perf bakes this to a 2D equirectangular
+// texture once at mount (see `bakeNebulaTexture`) instead of running it every
+// frame as a screen-covering shader. The bake variant takes the quad's UV in
+// [0, 1]², converts it to a spherical direction, and runs the same FBM + earth
+// pigment palette mix the per-frame shader used to.
+//
+// Ashima / Ian McEwan's stock 3D simplex noise (`snoise`) is public-domain
+// MIT-style and is inlined directly so the shader has no external deps.
 
-export const nebulaVertexShader = /* glsl */ `
-varying vec3 vWorldDir;
-
-void main() {
-  // Direction from the sphere centre (mesh origin) to this vertex, in world
-  // space. The mesh is an inverted icosphere centred at the scene origin, so
-  // this direction also matches the view direction for any camera inside.
-  vec4 wp = modelMatrix * vec4(position, 1.0);
-  vWorldDir = normalize(wp.xyz);
-  gl_Position = projectionMatrix * viewMatrix * wp;
-}
-`;
-
-// Ashima / Ian McEwan's stock 3D simplex noise — public domain, MIT-style
-// (the `snoise` function in this file is the standard inlined snippet that
-// ships with most reference shaders). Compact enough to drop in directly.
-export const nebulaFragmentShader = /* glsl */ `
-varying vec3 vWorldDir;
-
+// Shared GLSL — simplex noise + 4-octave FBM. Used by the bake fragment.
+const NOISE_AND_FBM = /* glsl */ `
 vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
 vec4 mod289(vec4 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
 vec4 permute(vec4 x) { return mod289(((x * 34.0) + 1.0) * x); }
@@ -89,7 +74,7 @@ float snoise(vec3 v) {
 
 // 4-octave fractional Brownian motion. Low base frequency = large soft
 // painterly blobs; the higher harmonics add gentle texture rather than the
-// granular "static" you get from generic noise wallpapers.
+// granular "static" of generic noise wallpapers.
 float fbm(vec3 p) {
   float v = 0.0;
   float amp = 0.5;
@@ -101,17 +86,13 @@ float fbm(vec3 p) {
   return v;
 }
 
-void main() {
-  vec3 dir = normalize(vWorldDir);
-
-  // Two FBM samples at different frequencies + offsets so the warm-cool
-  // mix isn't perfectly correlated. Remap from [-1, 1]-ish to [0, 1].
+// Earth-pigment palette mix. Caller supplies a unit direction; result is the
+// final RGB sample for that direction. Locked to terracotta + cobalt + ochre
+// against a warm dark umber baseline — no cyan/magenta, no Hubble palette.
+vec3 nebulaSample(vec3 dir) {
   float n  = clamp(fbm(dir * 1.5) * 0.5 + 0.5, 0.0, 1.0);
   float n2 = clamp(fbm(dir * 4.0 + vec3(7.3, 2.1, 5.7)) * 0.5 + 0.5, 0.0, 1.0);
 
-  // Locked palette — earth pigments only. Baseline is a warm dark umber so
-  // the void never reads as pure black; mixed against terracotta + cobalt +
-  // ochre as the noise rises.
   vec3 base   = vec3(0.04, 0.025, 0.018);
   vec3 terra  = vec3(0.42, 0.18, 0.10);
   vec3 cobalt = vec3(0.10, 0.13, 0.32);
@@ -130,6 +111,33 @@ void main() {
   float haze = smoothstep(0.30, 0.55, n) * 0.05;
   col += vec3(0.18, 0.10, 0.06) * haze;
 
-  gl_FragColor = vec4(col, 1.0);
+  return col;
+}
+`;
+
+// Bake variant — runs once over a full-screen quad in offscreen render.
+// Reads `uv` in [0, 1]², converts to a unit spherical direction in
+// equirectangular convention (u = longitude, v = colatitude from the
+// south pole, three.js sphere default), and samples the nebula.
+export const nebulaBakeVertexShader = /* glsl */ `
+varying vec2 vUv;
+
+void main() {
+  vUv = uv;
+  gl_Position = vec4(position, 1.0);
+}
+`;
+
+export const nebulaBakeFragmentShader = /* glsl */ `
+varying vec2 vUv;
+
+${NOISE_AND_FBM}
+
+void main() {
+  float phi   = vUv.x * 6.28318530718;          // longitude, 0..2π
+  float theta = (1.0 - vUv.y) * 3.14159265359;  // colatitude from north, 0..π
+  float st = sin(theta);
+  vec3 dir = normalize(vec3(st * cos(phi), cos(theta), st * sin(phi)));
+  gl_FragColor = vec4(nebulaSample(dir), 1.0);
 }
 `;

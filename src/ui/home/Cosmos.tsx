@@ -28,6 +28,9 @@ export function Cosmos() {
   const [reducedMotion, setReducedMotion] = useState<boolean>(false);
   const [isMobile, setIsMobile] = useState<boolean>(false);
   const [activeSigil, setActiveSigil] = useState<Data.SigilId | null>(null);
+  // Drives `<Canvas frameloop>` so per-frame WebGL work pauses when the
+  // section is scrolled completely off the viewport.
+  const [isVisible, setIsVisible] = useState<boolean>(false);
 
   // Reduced motion preference.
   useEffect(() => {
@@ -47,8 +50,14 @@ export function Cosmos() {
     return () => mq.removeEventListener("change", onChange);
   }, []);
 
-  // IntersectionObserver gate: only mount the WebGL canvas once the section
-  // is within ~30vh of the viewport. Reduced-motion never mounts it.
+  // IntersectionObserver gate. Two concerns wired through the same observer:
+  //   * `mountCanvas` is set once the first time the section gets within
+  //     ~30vh of the viewport. Never unset — once mounted, the canvas + env
+  //     probe + nebula bake stay alive in memory.
+  //   * `isVisible` tracks current intersection. Drives the Canvas's
+  //     `frameloop` so per-frame WebGL work pauses when the user scrolls
+  //     completely past the section.
+  // Reduced-motion never mounts the canvas.
   useEffect(() => {
     if (reducedMotion) return;
     const el = sectionRef.current;
@@ -56,11 +65,8 @@ export function Cosmos() {
     const io = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
-          if (entry.isIntersecting) {
-            setMountCanvas(true);
-            io.disconnect();
-            return;
-          }
+          if (entry.isIntersecting) setMountCanvas(true);
+          setIsVisible(entry.isIntersecting);
         }
       },
       { rootMargin: "30% 0px 30% 0px", threshold: 0 },
@@ -141,6 +147,7 @@ export function Cosmos() {
                 sigilScreenPositionsRef={sigilScreenPositionsRef}
                 activeSigilId={activeSigil}
                 mobile={isMobile}
+                visible={isVisible}
               />
             ) : (
               <PosterFallback />

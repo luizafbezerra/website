@@ -1,10 +1,11 @@
 "use client";
 
 import { useFrame } from "@react-three/fiber";
-import { useEffect, useMemo, useRef } from "react";
+import { useContext, useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
 import { Cosmos } from "@/core";
-import { useOptionalTexture, useOptionalTextures } from "./useOptionalTexture";
+import { CosmosEnvContext } from "./CosmosEnvContext";
+import { useOptionalTexture } from "./useOptionalTexture";
 
 export type SigilScreenPosition = { x: number; y: number; visible: boolean };
 
@@ -14,28 +15,28 @@ type Props = {
 };
 
 const SIGIL_COUNT = 12;
-const RING_TEXTURE_REPEATS = 8; // times the brass tiles around each major circumference
+const RING_TEXTURE_REPEATS = 8; // times the brushed-roughness map tiles around each circumference
 
-// Five concentric brass-toned rings + a central gilt sun, the twelve zodiac
-// cartouches riding the ecliptic. The group rotates slowly around Y and wobbles
-// ±3° around Z on an ~8s cycle (precession feel). Each frame, the sigil
-// cartouches billboard to the camera and their world positions are projected
-// into the screen-space ref read by the DOM sigil overlay.
+// Five concentric brass rings + a central gilt sun. The group rotates slowly
+// around Y and wobbles ±3° around Z on an ~8s cycle (precession feel). The
+// twelve zodiac sigils ride the ecliptic ring as *invisible 3D anchors* —
+// only their world positions are projected into the screen-space ref the DOM
+// sigil overlay consumes. The visible glyph + popover (with painted Bayer
+// engraving) live in the DOM, where focus / tab order / a11y are native.
 //
-// Materials use loaded WebP textures when available, falling back to solid
-// palette colors when a file isn't present yet. The texture-loading hook
-// returns null on missing files so the scene stays functional throughout the
-// asset pipeline.
+// v4: rings are real PBR metal (`MeshStandardMaterial`, metalness ≈ 0.92,
+// roughness ≈ 0.32) that reflect the procedural universe via the env-probe's
+// cube map. The brass photo is sampled as a roughness micro-variation map
+// (brushed-striation character), NOT as a base colour map — base colour is a
+// flat warm brass. The sun stays emissive (`MeshBasicMaterial`).
 export function CosmosArmillary({ sigilScreenPositionsRef, activeSigilId }: Props) {
   const groupRef = useRef<THREE.Group>(null);
-  const sigilGroupRefs = useRef<Array<THREE.Object3D | null>>(Array(SIGIL_COUNT).fill(null));
+  const sigilAnchorRefs = useRef<Array<THREE.Object3D | null>>(Array(SIGIL_COUNT).fill(null));
 
   // Reusable temporaries — `useFrame` runs every animation tick, so we avoid
   // allocating Vector3 / Quaternion instances per frame.
   const tmpWorld = useMemo(() => new THREE.Vector3(), []);
   const tmpProj = useMemo(() => new THREE.Vector3(), []);
-  const tmpParentQuat = useMemo(() => new THREE.Quaternion(), []);
-  const tmpInvParentQuat = useMemo(() => new THREE.Quaternion(), []);
 
   const sigilPositions = useMemo(() => Cosmos.sigils.map((_, i) => Cosmos.sigilPosition3D(i)), []);
 
@@ -55,23 +56,25 @@ export function CosmosArmillary({ sigilScreenPositionsRef, activeSigilId }: Prop
     [],
   );
 
-  // Texture loading — single brass texture shared across all 5 rings, single
-  // sun texture, 12 distinct sigil cartouches.
-  const ringTex = useOptionalTexture(Cosmos.textures.ringBrass);
+  // Texture loading.
+  //   - `ringRoughnessMap`: brushed-brass photo desaturated to a roughness
+  //     micro-variation map. Drives per-pixel roughness on the PBR rings.
+  //   - `sunTex`: gilt sun — still consumed as a basic-material colour map.
+  const ringRoughnessMap = useOptionalTexture(Cosmos.textures.ringBrushedRoughness);
   const sunTex = useOptionalTexture(Cosmos.textures.sunGilt);
-  const sigilUrls = useMemo(() => Cosmos.sigils.map((s) => Cosmos.textures.sigil(s.id)), []);
-  const sigilTextures = useOptionalTextures(sigilUrls);
+  const envCubeMap = useContext(CosmosEnvContext);
 
-  // Once the brass texture is loaded, tile it around each ring's major
-  // circumference so a non-tileable engraving still reads as a continuous
-  // metal band rather than one giant stretched plate.
+  // Tile the roughness map around each ring's major circumference so a single
+  // sample reads as a continuous brushed band rather than one stretched plate.
+  // Roughness maps are linear data, not colour — switch off sRGB decoding.
   useEffect(() => {
-    if (!ringTex) return;
-    ringTex.wrapS = THREE.RepeatWrapping;
-    ringTex.wrapT = THREE.RepeatWrapping;
-    ringTex.repeat.set(RING_TEXTURE_REPEATS, 1);
-    ringTex.needsUpdate = true;
-  }, [ringTex]);
+    if (!ringRoughnessMap) return;
+    ringRoughnessMap.colorSpace = THREE.NoColorSpace;
+    ringRoughnessMap.wrapS = THREE.RepeatWrapping;
+    ringRoughnessMap.wrapT = THREE.RepeatWrapping;
+    ringRoughnessMap.repeat.set(RING_TEXTURE_REPEATS, 1);
+    ringRoughnessMap.needsUpdate = true;
+  }, [ringRoughnessMap]);
 
   useFrame((state) => {
     const t = state.clock.getElapsedTime();
@@ -83,22 +86,15 @@ export function CosmosArmillary({ sigilScreenPositionsRef, activeSigilId }: Prop
         Math.sin((t * Math.PI * 2) / Cosmos.armillary.wobblePeriodSec);
       g.rotation.y = t * rotSpeed;
       g.rotation.z = wobble;
-      g.getWorldQuaternion(tmpParentQuat);
-      tmpInvParentQuat.copy(tmpParentQuat).invert();
     }
 
     const camera = state.camera;
     for (let i = 0; i < SIGIL_COUNT; i++) {
-      const mesh = sigilGroupRefs.current[i];
-      if (!mesh) continue;
-      // Billboard: set local quaternion so the mesh's world quaternion matches
-      // the camera's. Cancels out the parent's rotation.
-      mesh.quaternion.copy(tmpInvParentQuat).multiply(camera.quaternion);
+      const anchor = sigilAnchorRefs.current[i];
+      if (!anchor) continue;
+      anchor.getWorldPosition(tmpWorld);
 
-      // World position for the DOM overlay projection.
-      mesh.getWorldPosition(tmpWorld);
-
-      // Front-side visibility: sigil is on the same hemisphere as the camera
+      // Front-side visibility: anchor is on the same hemisphere as the camera
       // relative to the armillary centre (origin). Dot product > 0 = front.
       const sameSide =
         tmpWorld.x * camera.position.x +
@@ -123,6 +119,12 @@ export function CosmosArmillary({ sigilScreenPositionsRef, activeSigilId }: Prop
     }
   });
 
+  // `activeSigilId` is forwarded so the rig can opt-in to in-scene effects
+  // later (e.g. a soft sigil-position spotlight). Currently the active-state
+  // visual treatment lives entirely in the DOM overlay's popover; reference
+  // the prop so the type stays meaningful while the in-scene branch is dark.
+  void activeSigilId;
+
   return (
     <group ref={groupRef}>
       {rings.map((ring) => (
@@ -135,73 +137,36 @@ export function CosmosArmillary({ sigilScreenPositionsRef, activeSigilId }: Prop
               Cosmos.armillary.ringSegments,
             ]}
           />
-          <meshBasicMaterial
-            map={ringTex ?? undefined}
-            // Multiply the brass tint over the texture so the (mostly pale)
-            // Cellarius engraving reads as a warm brass band instead of as
-            // bright white paper. With no texture the same colour falls back
-            // to a flat brass fill.
-            color={Cosmos.armillary.ringColor}
-            toneMapped={false}
+          <meshStandardMaterial
+            color="#b08850"
+            metalness={0.92}
+            roughness={0.32}
+            roughnessMap={ringRoughnessMap ?? undefined}
+            envMap={envCubeMap ?? undefined}
+            envMapIntensity={1.4}
           />
         </mesh>
       ))}
 
-      {/* Central gilt sun. */}
+      {/* Central gilt sun — emissive `MeshBasicMaterial`, unaffected by the
+          scene lighting. Its diffuse contribution to the rings is provided by
+          the `pointLight` placed at the same position in the scene root. */}
       <mesh position={[0, 0, 0]}>
         <sphereGeometry args={[Cosmos.armillary.sunRadius, 32, 24]} />
-        <meshBasicMaterial
-          map={sunTex ?? undefined}
-          color={Cosmos.armillary.sunColor}
-          toneMapped={false}
-        />
+        <meshBasicMaterial map={sunTex ?? undefined} color="#ffffff" toneMapped={false} />
       </mesh>
 
-      {sigilPositions.map((pos, i) => {
-        const sigil = Cosmos.sigils[i];
-        const sigilTex = sigilTextures[i] ?? null;
-        const isActive = activeSigilId === sigil.id;
-        // Textured cartouches read as paper cards on the ring; without a
-        // texture we fall back to the small terracotta dot used during the
-        // stub phase.
-        const planeSize = sigilTex ? 0.18 : 0.07;
-        const planeAspect = sigilTex ? 0.85 : 1.0;
-        return (
-          <group
-            key={sigil.id}
-            ref={(el) => {
-              sigilGroupRefs.current[i] = el;
-            }}
-            position={pos as [number, number, number]}
-          >
-            <mesh>
-              <planeGeometry args={[planeSize, planeSize * planeAspect]} />
-              <meshBasicMaterial
-                map={sigilTex ?? undefined}
-                color={sigilTex ? "#ffffff" : "#7d3a25"}
-                transparent
-                opacity={sigilTex ? 1 : 0.55}
-                side={THREE.DoubleSide}
-                toneMapped={false}
-              />
-            </mesh>
-            {/* Gilt halo when the sigil is active. */}
-            {isActive ? (
-              <mesh>
-                <torusGeometry args={[planeSize * 0.65, 0.0075, 12, 48]} />
-                <meshBasicMaterial
-                  color="#d8a04a"
-                  transparent
-                  opacity={0.9}
-                  blending={THREE.AdditiveBlending}
-                  depthWrite={false}
-                  toneMapped={false}
-                />
-              </mesh>
-            ) : null}
-          </group>
-        );
-      })}
+      {/* Invisible 3D anchors for the sigil overlay. No mesh — just an Object3D
+          positioned on the ecliptic so its world position can be projected. */}
+      {sigilPositions.map((pos, i) => (
+        <object3D
+          key={Cosmos.sigils[i].id}
+          ref={(el) => {
+            sigilAnchorRefs.current[i] = el;
+          }}
+          position={pos as [number, number, number]}
+        />
+      ))}
     </group>
   );
 }

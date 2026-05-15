@@ -6,7 +6,9 @@ import { Cosmos } from "@/core";
 import { CosmosArmillary } from "./cosmos/CosmosArmillary";
 import { CosmosCameraRig } from "./cosmos/CosmosCameraRig";
 import { CosmosComets } from "./cosmos/CosmosComets";
-import { CosmosMilkyWay } from "./cosmos/CosmosMilkyWay";
+import { CosmosDeepField } from "./cosmos/CosmosDeepField";
+import { CosmosEnvProbe } from "./cosmos/CosmosEnvProbe";
+import { CosmosGalaxyBand } from "./cosmos/CosmosGalaxyBand";
 import { CosmosNebulae } from "./cosmos/CosmosNebulae";
 import { CosmosStarField } from "./cosmos/CosmosStarField";
 
@@ -19,12 +21,24 @@ type Props = {
   mobile?: boolean;
 };
 
-// Scene root. Owns the WebGL canvas, the perspective camera, and composes the
-// painted cosmos: armillary at centre, parallax star field, sparse atmosphere.
+// Scene root. Composes the v4 simulated universe:
+//   * Background (layer 0 + layer 1 — baked into the brass armillary's
+//     reflection cube map by `<CosmosEnvProbe>`):
+//       - `<CosmosNebulae>` — shader-driven inverted sphere at radius 100.
+//       - `<CosmosDeepField>` — ~4000 stars at radii 30–80, warm distribution.
+//       - `<CosmosGalaxyBand>` — ~1200 stars along an inclined great-circle.
+//   * Foreground (default layer 0 only — excluded from the env probe so the
+//     brass doesn't reflect itself):
+//       - `<CosmosStarField>` — preserved v3 sphere shell at radii 4–8.
+//       - `<CosmosArmillary>` — PBR brass rings + emissive gilt sun.
+//       - `<CosmosComets>` — occasional arcing comets.
+//   * A real `<pointLight>` at the sun's position so the brass takes diffuse
+//     + specular illumination from the centre (the emissive sun mesh is
+//     unaffected; the light handles the rings' physical lighting).
 //
-// `mobile` swaps in a simpler scene: no scroll-driven camera, no comets, no
-// nebulae, no near-layer stars — keeping the same brass armillary + Milky Way
-// + mid/far stars + sigil overlay (handled outside the canvas).
+// `mobile` swaps in a simpler scene: no scroll-driven camera, no comets, the
+// foreground shell halves its count, and the env probe drops its cube
+// resolution from 128 → 64.
 export function CosmosCanvas({
   progressRef,
   sigilScreenPositionsRef,
@@ -33,31 +47,37 @@ export function CosmosCanvas({
 }: Props) {
   return (
     <Canvas
-      camera={{ position: [0, 0.08, 7.6], fov: 38, near: 0.1, far: 100 }}
+      camera={{ position: [0, 0.08, 8.4], fov: 38, near: 0.1, far: 200 }}
       dpr={[1, 2]}
       gl={{
         antialias: true,
         alpha: true,
         powerPreference: "low-power",
-        // Premultiplied alpha keeps additive blending honest against the
-        // transparent canvas, so nebulae and comet tails don't dirty the
-        // parchment ground when they pass over.
-        premultipliedAlpha: true,
       }}
       style={{ width: "100%", height: "100%" }}
     >
       {!mobile ? <CosmosCameraRig progressRef={progressRef} /> : null}
 
-      <CosmosMilkyWay />
-      <CosmosStarField mobile={mobile} />
-      {!mobile ? <CosmosNebulae /> : null}
+      <CosmosEnvProbe mobile={mobile}>
+        {/* Background — layer 1 enabled so the env probe captures it. */}
+        <CosmosNebulae />
+        <CosmosDeepField mobile={mobile} />
+        <CosmosGalaxyBand mobile={mobile} />
 
-      <CosmosArmillary
-        sigilScreenPositionsRef={sigilScreenPositionsRef}
-        activeSigilId={activeSigilId}
-      />
+        {/* Foreground — layer 0 only; excluded from the env reflection. */}
+        <CosmosStarField mobile={mobile} />
 
-      {!mobile ? <CosmosComets /> : null}
+        {/* Warm gilt point light at the sun position. Drives the rings'
+            diffuse + specular response (the sun mesh itself is emissive). */}
+        <pointLight position={[0, 0, 0]} color="#f5d782" intensity={3} distance={6} decay={2} />
+
+        <CosmosArmillary
+          sigilScreenPositionsRef={sigilScreenPositionsRef}
+          activeSigilId={activeSigilId}
+        />
+
+        {!mobile ? <CosmosComets /> : null}
+      </CosmosEnvProbe>
     </Canvas>
   );
 }

@@ -195,6 +195,21 @@ export function CosmosSigilOverlay({
       >
         {displayedSigil ? (
           <>
+            {/* The painted Bayer engraving for this sigil. Reward-for-engagement
+                — only loaded into view when a popover opens. `loading="lazy"`
+                keeps the 12 cartouches out of the initial paint. */}
+            <picture className="cosmos-popover-picture">
+              <source srcSet={Cosmos.textures.sigil(displayedSigil.id)} type="image/webp" />
+              <img
+                src={Cosmos.textures.sigil(displayedSigil.id)}
+                alt=""
+                aria-hidden="true"
+                loading="lazy"
+                decoding="async"
+                width={240}
+                height={240}
+              />
+            </picture>
             <p className="cosmos-popover-title">
               <span aria-hidden="true" className="cosmos-popover-glyph">
                 {displayedSigil.glyph}

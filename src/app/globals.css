@@ -238,7 +238,7 @@
   .cosmos-pinned {
     position: relative;
     width: 100%;
-    height: 250vh;
+    height: 375vh;
   }
 
   .cosmos-sticky {
@@ -253,6 +253,23 @@
     position: absolute;
     inset: 0;
     pointer-events: none;
+    /* Tipped-in-plate vignette: the dome inside the canvas is a dark painted
+       artifact; without this mask its rectangular edges read as a wall of
+       dark UI against the parchment surround. The radial gradient feathers
+       the canvas edges into the page so the dome appears to "open up" from
+       the parchment — the manuscript metaphor made literal. */
+    -webkit-mask-image: radial-gradient(
+      ellipse 78% 86% at 50% 50%,
+      black 55%,
+      rgba(0, 0, 0, 0.78) 78%,
+      rgba(0, 0, 0, 0) 100%
+    );
+    mask-image: radial-gradient(
+      ellipse 78% 86% at 50% 50%,
+      black 55%,
+      rgba(0, 0, 0, 0.78) 78%,
+      rgba(0, 0, 0, 0) 100%
+    );
   }
 
   .cosmos-stage-frame {
@@ -468,6 +485,29 @@
 
   .cosmos-sigil-popover-visible {
     opacity: 1;
+  }
+
+  /* Painted Bayer engraving inside the popover. A small square plate that
+     sits above the title, ringed by the same rule colour used elsewhere on
+     the popover so it reads as a tipped-in illustration on the parchment
+     card. Picture is hidden from AT (`aria-hidden`) — the popover title +
+     body already name the sigil for screen readers. */
+  .cosmos-popover-picture {
+    display: block;
+    width: 100%;
+    margin: 0 0 0.7rem 0;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    border-radius: 2px;
+    border: 1px solid color-mix(in oklch, var(--color-rule) 50%, transparent);
+    background: color-mix(in oklch, var(--color-parchment) 90%, transparent);
+  }
+
+  .cosmos-popover-picture img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
   }
 
   .cosmos-popover-title {

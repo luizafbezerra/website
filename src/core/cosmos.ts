@@ -110,7 +110,7 @@ export namespace Cosmos {
   };
 
   // Deterministic RNG so star positions are stable across SSR/CSR and reloads.
-  const mulberry32 = (seed: number) => {
+  export const mulberry32 = (seed: number) => {
     let s = seed >>> 0;
     return () => {
       s = (s + 0x6d2b79f5) >>> 0;
@@ -251,20 +251,14 @@ export namespace Cosmos {
   const DEG = Math.PI / 180;
   export const deg2rad = (d: number): number => d * DEG;
 
-  // Texture asset paths. Files are stubbed during initial implementation; ring
-  // materials fall back to solid palette colours when the texture is missing.
-  // Texture processing pipeline lives in §7 of the design brief.
+  // Texture asset paths. v4 replaces the painted dome with a procedural
+  // universe (shader-based nebulae + procedural starfields), but keeps the
+  // dome.webp on disk for a future section. The brass photo is consumed as a
+  // roughness micro-variation map by `MeshStandardMaterial`, not as base color.
   export const textures = {
-    ringBrass: "/art/cosmos/ring-brass.webp",
-    sunGilt: "/art/cosmos/sun-gilt.webp",
-    star: ["/art/cosmos/star-1.webp", "/art/cosmos/star-2.webp", "/art/cosmos/star-3.webp"],
-    nebula: [
-      "/art/cosmos/nebula-1.webp",
-      "/art/cosmos/nebula-2.webp",
-      "/art/cosmos/nebula-3.webp",
-      "/art/cosmos/nebula-4.webp",
-    ],
-    milkyWay: "/art/cosmos/milky-way.webp",
+    ringBrass: "/art/cosmos/ring-brass-v2.webp",
+    ringBrushedRoughness: "/art/cosmos/ring-brushed-roughness.webp",
+    sunGilt: "/art/cosmos/sun-gilt-v2.webp",
     cometHead: "/art/cosmos/comet-head.webp",
     cometTail: "/art/cosmos/comet-tail.webp",
     sigil: (id: SigilId): string => `/art/cosmos/sigils/${id}.webp`,
@@ -275,6 +269,52 @@ export namespace Cosmos {
     },
     parchment: "/texture/parchment.webp",
   };
+
+  // ---- Procedural universe (v4) --------------------------------------------
+  // Deep-field stars: ~4000 points distributed uniformly on a thick spherical
+  // shell at radii 30–80. Per-vertex colour sampled from a warm distribution
+  // so the cosmos reads cream/gilt with rare warm reds and a few cool blues
+  // that punctuate without clashing.
+  export const deepField = {
+    count: 4000,
+    radiusMin: 30,
+    radiusMax: 80,
+    size: 0.6,
+    // Cumulative palette weights — sampled by `pickStarColor` below.
+    // Cream-warm dominant; gilt accent; rare terracotta warm-reds; rare cool
+    // blue-whites that lend "cosmic" punctuation without breaking the brief.
+    palette: {
+      cream: { weight: 0.7, rgb: [1.0, 0.96, 0.86] as const },
+      gilt: { weight: 0.2, rgb: [0.98, 0.84, 0.5] as const },
+      terracotta: { weight: 0.07, rgb: [0.85, 0.42, 0.28] as const },
+      coolBlue: { weight: 0.03, rgb: [0.72, 0.84, 1.0] as const },
+    },
+  } as const;
+
+  // Galaxy band — ~1200 stars concentrated along an inclined great-circle.
+  // Skewed warmer than the deep field so the band reads as a "warm river".
+  export const galaxyBand = {
+    count: 1200,
+    radiusMin: 30,
+    radiusMax: 80,
+    size: 0.55,
+    // Normal to the great-circle plane (NOT normalized — consumer normalizes).
+    planeNormal: [0.2, 1.0, 0.15] as const,
+    halfWidthDeg: 12,
+    palette: {
+      cream: { weight: 0.78, rgb: [1.0, 0.96, 0.86] as const },
+      gilt: { weight: 0.18, rgb: [0.98, 0.84, 0.5] as const },
+      terracotta: { weight: 0.04, rgb: [0.85, 0.42, 0.28] as const },
+    },
+  } as const;
+
+  // Nebulae shader — applied to an inverted sphere at radius 100.
+  // No time uniform: static painterly wash.
+  export const nebulae = {
+    radius: 100,
+    sphereSegments: 64,
+    sphereRings: 32,
+  } as const;
 
   // ---- Armillary sphere ------------------------------------------------------
 
@@ -311,10 +351,6 @@ export namespace Cosmos {
     rotationRpm: 0.25, // ~1 full turn every 4 minutes about the Y axis.
     wobbleAmpDeg: 3, // ±3° secondary tilt.
     wobblePeriodSec: 8,
-    // Palette stubs — replaced visually by the brass texture once shipped.
-    ringColor: "#b07a3a", // ochre/brass placeholder
-    ringColorAccent: "#8a5a2a", // shadow side
-    sunColor: "#d8a04a", // gilt
     sunRadius: 0.085,
     ringSegments: 96,
     tubularSegments: 16,
@@ -334,144 +370,53 @@ export namespace Cosmos {
     return [x, y, z0];
   };
 
-  // ---- Star field (3 parallax layers) ----------------------------------------
+  // ---- Foreground star shell (v3) -------------------------------------------
+  // A single spherical distribution of small painted dots around the camera.
+  // Replaces v2's three parallel parallax planes (which left the back
+  // hemisphere blank when the camera rotated). Uniform-on-sphere sampling
+  // via inverse-CDF so density is even wherever the camera points.
 
-  export type StarLayer = {
-    id: "near" | "mid" | "far";
-    z: number; // approximate depth at the scene origin
-    count: number;
-    spread: { x: number; y: number };
-    sizeRange: readonly [number, number];
-    brightnessRange: readonly [number, number];
+  export type StarShellPoint = {
+    pos: Vec3;
+    size: number;
+    accent: boolean; // gilt-warm (rare) vs cream-warm ink (common)
+    phase: number;
   };
 
-  export const starLayers: ReadonlyArray<StarLayer> = [
-    {
-      id: "near",
-      z: -1.8,
-      count: 38,
-      spread: { x: 7, y: 4.5 },
-      sizeRange: [0.04, 0.08],
-      brightnessRange: [0.65, 0.95],
-    },
-    {
-      id: "mid",
-      z: -4.5,
-      count: 52,
-      spread: { x: 16, y: 10 },
-      sizeRange: [0.03, 0.055],
-      brightnessRange: [0.5, 0.85],
-    },
-    {
-      id: "far",
-      z: -9.0,
-      count: 64,
-      spread: { x: 36, y: 22 },
-      sizeRange: [0.025, 0.045],
-      brightnessRange: [0.35, 0.7],
-    },
-  ];
+  export const starShell = {
+    count: 120,
+    radiusMin: 4.0,
+    radiusMax: 8.0,
+    // Sprite size in world units. Smaller and sharper than v2's blurred discs.
+    sizeRange: [0.04, 0.06] as readonly [number, number],
+    // ~10% of dots are slightly larger gilt accents; the rest cream-warm ink.
+    accentRatio: 0.1,
+  } as const;
 
-  // Pre-built deterministic star sets per layer. Seed differs per layer so the
-  // layers don't visibly align.
-  const buildStarLayer = (layer: StarLayer, seed: number): Star[] => {
-    const rng = mulberry32(seed);
-    const out: Star[] = [];
-    for (let i = 0; i < layer.count; i++) {
+  // Inverse-CDF uniform-sphere sample. z = 1 - 2u gives even latitude density.
+  export const sampleOnSphere = (rng: () => number, radius: number): Vec3 => {
+    const z = 1 - 2 * rng();
+    const phi = rng() * Math.PI * 2;
+    const r = Math.sqrt(Math.max(0, 1 - z * z));
+    return [Math.cos(phi) * r * radius, z * radius, Math.sin(phi) * r * radius];
+  };
+
+  const buildStarShell = (): StarShellPoint[] => {
+    const rng = mulberry32(0xc05f1e);
+    const out: StarShellPoint[] = [];
+    for (let i = 0; i < starShell.count; i++) {
+      const radius = lerp(starShell.radiusMin, starShell.radiusMax, rng());
       out.push({
-        x: (rng() * 2 - 1) * layer.spread.x,
-        y: (rng() * 2 - 1) * layer.spread.y,
-        z: layer.z,
-        size: lerp(layer.sizeRange[0], layer.sizeRange[1], rng()),
-        brightness: lerp(layer.brightnessRange[0], layer.brightnessRange[1], rng()),
+        pos: sampleOnSphere(rng, radius),
+        size: lerp(starShell.sizeRange[0], starShell.sizeRange[1], rng()),
+        accent: rng() < starShell.accentRatio,
         phase: rng() * Math.PI * 2,
       });
     }
     return out;
   };
 
-  export const starLayerStars: Record<StarLayer["id"], ReadonlyArray<Star>> = {
-    near: buildStarLayer(starLayers[0], 0xa11ce),
-    mid: buildStarLayer(starLayers[1], 0xb0b1e),
-    far: buildStarLayer(starLayers[2], 0xc0c1e),
-  };
-
-  // ---- Nebulae ---------------------------------------------------------------
-
-  export type Nebula = {
-    id: string;
-    position: Vec3;
-    size: number;
-    color: string;
-    opacity: number;
-    driftAmp: number;
-    driftPeriodSec: number;
-    driftPhase: number;
-    textureIdx: number;
-  };
-
-  // 4 painted cloud washes at deep Z. Colours drawn from the site palette
-  // (terracotta, cobalt, ochre, moss). Sparse on purpose — 1–2 in view at most.
-  export const nebulae: ReadonlyArray<Nebula> = [
-    {
-      id: "n1",
-      position: [-5.2, 1.4, -6.8],
-      size: 4.6,
-      color: "#7d3a25", // terracotta-deep wash
-      opacity: 0.18,
-      driftAmp: 0.32,
-      driftPeriodSec: 34,
-      driftPhase: 0,
-      textureIdx: 0,
-    },
-    {
-      id: "n2",
-      position: [4.4, -1.8, -6.2],
-      size: 3.8,
-      color: "#36598a", // cobalt wash
-      opacity: 0.16,
-      driftAmp: 0.26,
-      driftPeriodSec: 28,
-      driftPhase: 1.4,
-      textureIdx: 1,
-    },
-    {
-      id: "n3",
-      position: [0.9, 3.0, -8.2],
-      size: 5.3,
-      color: "#a67233", // ochre wash
-      opacity: 0.15,
-      driftAmp: 0.38,
-      driftPeriodSec: 40,
-      driftPhase: 2.6,
-      textureIdx: 2,
-    },
-    {
-      id: "n4",
-      position: [-2.6, -2.4, -7.6],
-      size: 3.2,
-      color: "#5e7a3c", // moss wash
-      opacity: 0.13,
-      driftAmp: 0.22,
-      driftPeriodSec: 32,
-      driftPhase: 0.7,
-      textureIdx: 3,
-    },
-  ];
-
-  // ---- Milky Way band --------------------------------------------------------
-
-  export const milkyWay = {
-    position: [0, 0.4, -9.5] as Vec3,
-    eulerDeg: [0, 0, 22] as readonly [number, number, number], // 22° tilt
-    width: 26,
-    height: 7,
-    color: "#a07a40", // soft ochre placeholder (texture brings ochre→gilt→cobalt)
-    opacity: 0.16,
-  } as const;
-
-  // Very slow opacity wobble so the band breathes — not consciously noticed.
-  export const milkyWayBreath = (t: number): number => 0.88 + 0.12 * Math.sin(t * 0.06);
+  export const starShellPoints: ReadonlyArray<StarShellPoint> = buildStarShell();
 
   // ---- Comets ----------------------------------------------------------------
 
@@ -554,93 +499,72 @@ export namespace Cosmos {
   // Spawn cadence: after a traversal, wait this long before the next spawn.
   export const cometCooldownRange: readonly [number, number] = [30, 60];
 
-  // ---- Camera cinema (5 phases) ----------------------------------------------
+  // ---- Camera cinema (v4 — 3 phases) ----------------------------------------
+  // zoomIn → orbit → zoomOut. A single graceful arc: dolly toward the
+  // armillary, ride a continuous polar arc around it (with a gentle y-bob in
+  // place of the v3 tilt-up jolt), then dolly back out. LookAt is always the
+  // origin, so there's no abrupt look-vector swing at any phase boundary.
 
   export type CameraKey = { pos: Vec3; look: Vec3 };
 
   export const cameraPhases = {
-    entry: { range: [0.0, 0.12] as const },
-    approach: { range: [0.12, 0.35] as const },
-    orbit: { range: [0.35, 0.6] as const },
-    tiltUp: { range: [0.6, 0.82] as const },
-    recede: { range: [0.82, 1.0] as const },
+    zoomIn: { range: [0.0, 0.25] as const },
+    orbit: { range: [0.25, 0.75] as const },
+    zoomOut: { range: [0.75, 1.0] as const },
   };
 
-  // Keyframes. The orbit phase is a continuous polar arc (no kink at
-  // mid-phase); other phases interpolate position + lookAt via smootherstep.
-  // Entry uses two keyframes (far/end) so the camera drifts gently rather than
-  // holding still — that removes the velocity step at the entry→approach
-  // boundary.
-  const KEY_FAR: CameraKey = { pos: [0, 0.04, 8.4], look: [0, 0, 0] };
-  const KEY_ENTRY_END: CameraKey = { pos: [0, 0.12, 7.2], look: [0, 0, 0] };
-  const KEY_APPROACH_END: CameraKey = { pos: [0, 0.32, 3.6], look: [0, 0, 0] };
-  const KEY_ORBIT_END: CameraKey = { pos: [-3.0, 0.45, -1.5], look: [0, 0, 0] };
-  const KEY_TILT_END: CameraKey = { pos: [-1.0, 2.7, -3.0], look: [0, 0.45, 0] };
-  const KEY_RECEDE_END: CameraKey = { pos: [0, 1.0, 7.0], look: [0, 0, 0] };
+  const KEY_FAR_IN: CameraKey = { pos: [0, 0.08, 8.4], look: [0, 0, 0] };
+  const KEY_MID: CameraKey = { pos: [0, 0.2, 3.6], look: [0, 0, 0] };
+  const KEY_FAR_OUT: CameraKey = { pos: [0, 0.6, 8.2], look: [0, 0, 0] };
 
-  // Polar coordinates of approach-end (used as the orbit start point so the
-  // approach→orbit hand-off has no positional jump).
-  const ORBIT_R_START = Math.hypot(KEY_APPROACH_END.pos[0], KEY_APPROACH_END.pos[2]);
-  const ORBIT_R_END = Math.hypot(KEY_ORBIT_END.pos[0], KEY_ORBIT_END.pos[2]);
-  const ORBIT_A_START = Math.atan2(KEY_APPROACH_END.pos[2], KEY_APPROACH_END.pos[0]);
-  // Angle of orbit-end — unwrapped so we always orbit counterclockwise via the
-  // back of the armillary (rings cross in front/behind as the brief asks).
-  const ORBIT_A_END = (() => {
-    const raw = Math.atan2(KEY_ORBIT_END.pos[2], KEY_ORBIT_END.pos[0]);
-    return raw < ORBIT_A_START ? raw + Math.PI * 2 : raw;
-  })();
+  // Orbit shape: just under one full turn so the visitor sees the full sphere
+  // and a bit. Radius drifts in slightly during the orbit so the scene feels
+  // alive. Y-bob: one sine arch (0 → peak → 0) replaces v3's abrupt tilt-up.
+  const ORBIT_R_START = 3.6;
+  const ORBIT_R_END = 3.2;
+  const ORBIT_TURNS = 0.9;
+  const ORBIT_Y_PEAK = 0.35;
+  const ORBIT_A_START = Math.atan2(KEY_MID.pos[2], KEY_MID.pos[0]);
+  const ORBIT_A_END_REL = Math.PI * 2 * ORBIT_TURNS;
 
   export const cameraKeyAtProgress = (p: number): CameraKey => {
-    // Entry: gentle drift FAR → ENTRY_END. Not static — keeps velocity
-    // continuous through the boundary with the approach phase.
-    if (p <= cameraPhases.entry.range[1]) {
-      const t = smootherstep(p, cameraPhases.entry.range[0], cameraPhases.entry.range[1]);
+    // Zoom-in: dolly from far to mid, always looking at origin.
+    if (p <= cameraPhases.zoomIn.range[1]) {
+      const t = smootherstep(p, cameraPhases.zoomIn.range[0], cameraPhases.zoomIn.range[1]);
       return {
-        pos: v3lerp(KEY_FAR.pos, KEY_ENTRY_END.pos, t),
-        look: v3lerp(KEY_FAR.look, KEY_ENTRY_END.look, t),
+        pos: v3lerp(KEY_FAR_IN.pos, KEY_MID.pos, t),
+        look: [0, 0, 0],
       };
     }
-    // Approach: dolly forward from entry-end to approach-end.
-    if (p <= cameraPhases.approach.range[1]) {
-      const t = smootherstep(p, cameraPhases.approach.range[0], cameraPhases.approach.range[1]);
-      return {
-        pos: v3lerp(KEY_ENTRY_END.pos, KEY_APPROACH_END.pos, t),
-        look: v3lerp(KEY_ENTRY_END.look, KEY_APPROACH_END.look, t),
-      };
-    }
-    // Orbit: ONE continuous polar arc from approach-end's polar form to
-    // orbit-end's, going via the back. No mid-phase kink.
+    // Orbit: continuous polar arc on a slightly inclined plane (handled by
+    // the y-bob). Radius pulls in 3.6 → 3.2, y bobs through ORBIT_Y_PEAK.
     if (p <= cameraPhases.orbit.range[1]) {
       const t = smootherstep(p, cameraPhases.orbit.range[0], cameraPhases.orbit.range[1]);
-      const a = lerp(ORBIT_A_START, ORBIT_A_END, t);
+      const a = ORBIT_A_START + t * ORBIT_A_END_REL;
       const r = lerp(ORBIT_R_START, ORBIT_R_END, t);
-      const y = lerp(KEY_APPROACH_END.pos[1], KEY_ORBIT_END.pos[1], t);
+      const y = KEY_MID.pos[1] + ORBIT_Y_PEAK * Math.sin(t * Math.PI);
       return {
         pos: [Math.cos(a) * r, y, Math.sin(a) * r],
-        look: v3lerp(KEY_APPROACH_END.look, KEY_ORBIT_END.look, t),
+        look: [0, 0, 0],
       };
     }
-    // Tilt up.
-    if (p <= cameraPhases.tiltUp.range[1]) {
-      const t = smootherstep(p, cameraPhases.tiltUp.range[0], cameraPhases.tiltUp.range[1]);
-      return {
-        pos: v3lerp(KEY_ORBIT_END.pos, KEY_TILT_END.pos, t),
-        look: v3lerp(KEY_ORBIT_END.look, KEY_TILT_END.look, t),
-      };
-    }
-    // Recede.
-    const t = smootherstep(p, cameraPhases.recede.range[0], cameraPhases.recede.range[1]);
+    // Zoom-out: from the orbit-end point straight back out.
+    const t = smootherstep(p, cameraPhases.zoomOut.range[0], cameraPhases.zoomOut.range[1]);
+    const a1 = ORBIT_A_START + ORBIT_A_END_REL;
+    const orbitEnd: Vec3 = [Math.cos(a1) * ORBIT_R_END, KEY_MID.pos[1], Math.sin(a1) * ORBIT_R_END];
     return {
-      pos: v3lerp(KEY_TILT_END.pos, KEY_RECEDE_END.pos, t),
-      look: v3lerp(KEY_TILT_END.look, KEY_RECEDE_END.look, t),
+      pos: v3lerp(orbitEnd, KEY_FAR_OUT.pos, t),
+      look: [0, 0, 0],
     };
   };
 
-  // Sigil overlay visibility envelope. Wider fade windows + smootherstep so
-  // the sigils don't pop in/out at phase boundaries.
+  // Sigil overlay visibility envelope, re-tuned for the 3-phase timing.
+  // The sigils are most legible during the orbit phase (0.25 → 0.75) when
+  // the camera is close in; fade in across the zoom-in and out across the
+  // zoom-out. Smootherstep on both edges so opacity has no velocity step.
   export const sigilOverlayOpacity = (p: number): number => {
-    const fadeIn = smootherstep(p, 0.14, 0.42);
-    const fadeOut = 1 - smootherstep(p, 0.78, 1.0);
+    const fadeIn = smootherstep(p, 0.1, 0.32);
+    const fadeOut = 1 - smootherstep(p, 0.7, 0.95);
     return fadeIn * fadeOut;
   };
 

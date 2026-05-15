@@ -10,100 +10,110 @@ type Props = {
   mobile?: boolean;
 };
 
-// Three parallax layers of painted ink-dot sprites. Painted texture variants
-// would normally drive variety here; until they ship, every star uses a small
-// `<pointsMaterial>` with vertexColors so each individual star has its own ink
-// brightness. The three layers differ in Z, density, and parallax response.
+// A single spherical shell of small, crisp painted dots distributed uniformly
+// around the camera at radii 4–8 world units — in front of the dome at ~90.
+// Replaces v2's three Z-plane parallax layers (which left the back hemisphere
+// blank when the camera rotated). About 10% of the points are larger gilt
+// accents; the rest are cream-warm ink. A slow per-material opacity sine
+// gives the field a quiet twinkle without paying per-vertex shader cost.
 export function CosmosStarField({ mobile = false }: Props) {
-  return (
-    <group>
-      <StarLayer layerId="far" />
-      <StarLayer layerId="mid" />
-      {!mobile ? <StarLayer layerId="near" /> : null}
-    </group>
-  );
-}
-
-function StarLayer({ layerId }: { layerId: Cosmos.StarLayer["id"] }) {
-  const layer = Cosmos.starLayers.find((l) => l.id === layerId);
-  if (!layer) return null;
-  const stars = Cosmos.starLayerStars[layerId];
-
   const materialRef = useRef<THREE.PointsMaterial>(null);
+  const accentMaterialRef = useRef<THREE.PointsMaterial>(null);
   const groupRef = useRef<THREE.Group>(null);
   const sprite = useMemo(() => getStarSprite(), []);
 
-  const { positions, colors, phases, baseAlpha } = useMemo(() => {
-    const positions = new Float32Array(stars.length * 3);
-    const colors = new Float32Array(stars.length * 3);
-    const phases = new Float32Array(stars.length);
-    // Warm ink with a hint of cobalt — keeps stars from reading neutral grey.
-    const ink = new THREE.Color("#2f2536");
-    stars.forEach((s, i) => {
-      positions[i * 3 + 0] = s.x;
-      positions[i * 3 + 1] = s.y;
-      positions[i * 3 + 2] = layer.z;
-      const c = ink.clone().multiplyScalar(0.4 + s.brightness * 0.95);
-      colors[i * 3 + 0] = c.r;
-      colors[i * 3 + 1] = c.g;
-      colors[i * 3 + 2] = c.b;
-      phases[i] = s.phase;
-    });
-    // Near layer is darkest and most opaque; far layer fades into the ground.
-    const baseAlpha = layer.id === "near" ? 0.95 : layer.id === "mid" ? 0.78 : 0.6;
-    return { positions, colors, phases, baseAlpha };
-  }, [layer, stars]);
+  // Split the deterministic shell into two buffer geometries: cream-warm ink
+  // (common) and gilt accents (rare, slightly larger). Each uses its own
+  // `pointsMaterial` with a distinct base size so the rare accents are
+  // visibly different without per-vertex size shaders.
+  const { commonPositions, commonSizesAvg, accentPositions, accentSizesAvg } = useMemo(() => {
+    const all = Cosmos.starShellPoints;
+    // On mobile, halve the shell density for fillrate. Take every other point.
+    const used = mobile ? all.filter((_, i) => i % 2 === 0) : all;
 
-  // Point size in *world units* (sizeAttenuation: true) so far stars look small
-  // and near stars look bigger as the camera moves through them.
-  const pointSize = layer.id === "near" ? 0.07 : layer.id === "mid" ? 0.05 : 0.038;
+    const common = used.filter((p) => !p.accent);
+    const accent = used.filter((p) => p.accent);
+
+    const flatten = (pts: ReadonlyArray<Cosmos.StarShellPoint>): Float32Array => {
+      const arr = new Float32Array(pts.length * 3);
+      for (let i = 0; i < pts.length; i++) {
+        arr[i * 3 + 0] = pts[i].pos[0];
+        arr[i * 3 + 1] = pts[i].pos[1];
+        arr[i * 3 + 2] = pts[i].pos[2];
+      }
+      return arr;
+    };
+
+    const avgSize = (pts: ReadonlyArray<Cosmos.StarShellPoint>): number =>
+      pts.length === 0 ? 0.05 : pts.reduce((s, p) => s + p.size, 0) / pts.length;
+
+    return {
+      commonPositions: flatten(common),
+      commonSizesAvg: avgSize(common),
+      accentPositions: flatten(accent),
+      accentSizesAvg: avgSize(accent) * 1.35, // accents read clearly larger
+    };
+  }, [mobile]);
 
   useFrame((state) => {
     const t = state.clock.getElapsedTime();
-    // Aggregate twinkle: one slow sine modulates the whole layer's opacity ~0.5Hz.
-    // Per-star phases are baked into per-vertex colors; modulating a single uniform
-    // alpha keeps this cheap.
+    // Slow twinkle on the whole shell — one sine for common stars, a
+    // phase-shifted sine for accents so the gilt dots don't pulse in lockstep
+    // with the cream ones.
     if (materialRef.current) {
-      const twinkle = 0.9 + 0.1 * Math.sin(t * 0.55 + (layer.id === "far" ? 1.2 : 0));
-      materialRef.current.opacity = baseAlpha * twinkle;
+      materialRef.current.opacity = 0.88 + 0.1 * Math.sin(t * 0.55);
+    }
+    if (accentMaterialRef.current) {
+      accentMaterialRef.current.opacity = 0.92 + 0.08 * Math.sin(t * 0.55 + 1.7);
     }
     if (groupRef.current) {
-      // A very faint, layer-specific drift so the field isn't dead-static.
-      const drift = layer.id === "near" ? 0.02 : layer.id === "mid" ? 0.012 : 0.006;
-      groupRef.current.position.x = Math.sin(t * 0.04) * drift;
-      groupRef.current.position.y = Math.cos(t * 0.05) * drift;
+      // A very faint drift so the field isn't dead-static — well below the
+      // threshold of conscious perception but enough to feel alive.
+      groupRef.current.position.x = Math.sin(t * 0.04) * 0.01;
+      groupRef.current.position.y = Math.cos(t * 0.05) * 0.01;
     }
   });
-
-  // Discard `phases` from runtime use after seeding colours — TS would warn on
-  // unused destructuring otherwise; reference it once so the bundler keeps it
-  // and a future shader-based twinkle has the data ready.
-  void phases;
 
   return (
     <group ref={groupRef}>
       <points>
         <bufferGeometry>
-          <bufferAttribute attach="attributes-position" args={[positions, 3]} />
-          <bufferAttribute attach="attributes-color" args={[colors, 3]} />
+          <bufferAttribute attach="attributes-position" args={[commonPositions, 3]} />
         </bufferGeometry>
         <pointsMaterial
           ref={materialRef}
-          // The procedural sprite gives each point a soft circular falloff so
-          // stars read as little painted dots instead of square pixels. Warm
-          // ink colour comes from the per-vertex `vertexColors` attribute and
-          // multiplies the sprite. `alphaTest` discards corners so points
-          // composite correctly against neighbours.
           map={sprite ?? undefined}
-          size={pointSize}
+          // Cream-warm ink dot — bright core, quick falloff. The sprite's own
+          // rgba supplies the warmth; this base colour just modulates value.
+          color="#fff0dc"
+          size={commonSizesAvg}
           sizeAttenuation
-          vertexColors
           transparent
           alphaTest={0.02}
-          opacity={baseAlpha}
+          opacity={0.9}
           depthWrite={false}
         />
       </points>
+
+      {accentPositions.length > 0 ? (
+        <points>
+          <bufferGeometry>
+            <bufferAttribute attach="attributes-position" args={[accentPositions, 3]} />
+          </bufferGeometry>
+          <pointsMaterial
+            ref={accentMaterialRef}
+            map={sprite ?? undefined}
+            // Gilt accent — slightly more saturated warm.
+            color="#f5d782"
+            size={accentSizesAvg}
+            sizeAttenuation
+            transparent
+            alphaTest={0.02}
+            opacity={0.95}
+            depthWrite={false}
+          />
+        </points>
+      ) : null}
     </group>
   );
 }

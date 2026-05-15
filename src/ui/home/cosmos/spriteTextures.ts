@@ -17,7 +17,7 @@ function makeTexture(canvas: HTMLCanvasElement): THREE.Texture {
   tex.colorSpace = THREE.SRGBColorSpace;
   tex.minFilter = THREE.LinearFilter;
   tex.magFilter = THREE.LinearFilter;
-  tex.premultiplyAlpha = true;
+  tex.premultiplyAlpha = false;
   tex.needsUpdate = true;
   return tex;
 }

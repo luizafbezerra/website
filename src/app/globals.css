@@ -485,6 +485,10 @@
 
   .cosmos-sigil-popover-visible {
     opacity: 1;
+    /* Let the visitor move onto the popover to read it without dismissing the
+       parent sigil's hover state. `.cosmos-sigil-overlay` is `pointer-events:
+       none` so the popover only catches pointer events when it's visible. */
+    pointer-events: auto;
   }
 
   /* Painted Bayer engraving inside the popover. A small square plate that

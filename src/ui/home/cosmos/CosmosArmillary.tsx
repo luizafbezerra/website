@@ -5,6 +5,7 @@ import { useContext, useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
 import { Cosmos } from "@/core";
 import { CosmosEnvContext } from "./CosmosEnvContext";
+import { getSunGlowSprite } from "./spriteTextures";
 import { useOptionalTexture } from "./useOptionalTexture";
 
 export type SigilScreenPosition = { x: number; y: number; visible: boolean };
@@ -64,9 +65,10 @@ export function CosmosArmillary({ sigilScreenPositionsRef, activeSigilId }: Prop
   // Texture loading.
   //   - `ringRoughnessMap`: brushed-brass photo desaturated to a roughness
   //     micro-variation map. Drives per-pixel roughness on the PBR rings.
-  //   - `sunTex`: gilt sun — still consumed as a basic-material colour map.
+  //   - `sunGlowSprite`: procedural warm gilt radial used additively so the
+  //     sun reads as a celestial body, not a flat dot at orbit distance.
   const ringRoughnessMap = useOptionalTexture(Cosmos.textures.ringBrushedRoughness);
-  const sunTex = useOptionalTexture(Cosmos.textures.sunGilt);
+  const sunGlowSprite = useMemo(() => getSunGlowSprite(), []);
   const envCubeMap = useContext(CosmosEnvContext);
 
   // Tile the roughness map around each ring's major circumference so a single
@@ -155,13 +157,20 @@ export function CosmosArmillary({ sigilScreenPositionsRef, activeSigilId }: Prop
         </mesh>
       ))}
 
-      {/* Central gilt sun — emissive `MeshBasicMaterial`, unaffected by the
-          scene lighting. Its diffuse contribution to the rings is provided by
-          the `pointLight` placed at the same position in the scene root. */}
-      <mesh position={[0, 0, 0]}>
-        <sphereGeometry args={[Cosmos.armillary.sunRadius, 32, 24]} />
-        <meshBasicMaterial map={sunTex ?? undefined} color="#ffffff" toneMapped={false} />
-      </mesh>
+      {/* Central sun — additive gilt-warm glow sprite. Always camera-facing,
+          so the sun reads as a discrete light source from every orbit angle.
+          The previous textured sphere was so small at orbit distance that its
+          engraving detail couldn't resolve and it read as a flat white dot. */}
+      <sprite position={[0, 0, 0]} scale={[0.42, 0.42, 1]}>
+        <spriteMaterial
+          map={sunGlowSprite ?? undefined}
+          color="#ffffff"
+          transparent
+          blending={THREE.AdditiveBlending}
+          depthWrite={false}
+          toneMapped={false}
+        />
+      </sprite>
 
       {/* Invisible 3D anchors for the sigil overlay. No mesh — just an Object3D
           positioned on the ecliptic so its world position can be projected. */}

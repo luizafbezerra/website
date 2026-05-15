@@ -279,7 +279,9 @@ export namespace Cosmos {
     count: 4000,
     radiusMin: 30,
     radiusMax: 80,
-    size: 0.6,
+    // 0.45 (down from 0.6) keeps the deep field reading as a textured sky
+    // without paying as much fillrate for alpha-tested sprites at high DPR.
+    size: 0.45,
     // Cumulative palette weights — sampled by `pickStarColor` below.
     // Cream-warm dominant; gilt accent; rare terracotta warm-reds; rare cool
     // blue-whites that lend "cosmic" punctuation without breaking the brief.
@@ -297,7 +299,7 @@ export namespace Cosmos {
     count: 1200,
     radiusMin: 30,
     radiusMax: 80,
-    size: 0.55,
+    size: 0.42,
     // Normal to the great-circle plane (NOT normalized — consumer normalizes).
     planeNormal: [0.2, 1.0, 0.15] as const,
     halfWidthDeg: 12,
@@ -312,8 +314,10 @@ export namespace Cosmos {
   // No time uniform: static painterly wash.
   export const nebulae = {
     radius: 100,
-    sphereSegments: 64,
-    sphereRings: 32,
+    // 32×16 = 512 triangles. The nebula texture is a low-frequency painterly
+    // wash so vertex density never matters; this is geometry-only savings.
+    sphereSegments: 32,
+    sphereRings: 16,
   } as const;
 
   // ---- Armillary sphere ------------------------------------------------------
@@ -352,8 +356,12 @@ export namespace Cosmos {
     wobbleAmpDeg: 3, // ±3° secondary tilt.
     wobblePeriodSec: 8,
     sunRadius: 0.085,
-    ringSegments: 96,
-    tubularSegments: 16,
+    // 64 ring segments × 12 tubular = 768 triangles per ring. Below 64 the
+    // rings start to read as faceted polygons; above that the silhouette is
+    // visually identical. 12 tubular keeps the cross-section round enough at
+    // tube radii ~0.014–0.018.
+    ringSegments: 64,
+    tubularSegments: 12,
   } as const;
 
   // 3D positions for the twelve sigils on the *ecliptic* ring.

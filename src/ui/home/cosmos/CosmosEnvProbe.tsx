@@ -7,7 +7,6 @@ import { CosmosEnvContext } from "./CosmosEnvContext";
 
 type Props = {
   children: React.ReactNode;
-  mobile?: boolean;
 };
 
 // Bakes the surrounding universe (nebula shader + deep field + galaxy band)
@@ -20,13 +19,14 @@ type Props = {
 // a single bake at mount is enough. Re-bakes on window resize as a cheap
 // safety net in case the renderer drops the texture.
 //
-// Mobile drops the cube resolution from 128 → 64. Brass roughness ~0.32 blurs
-// the reflection anyway, so the visual loss is invisible.
-export function CosmosEnvProbe({ children, mobile = false }: Props) {
+// 64×6 resolution everywhere. Brass roughness ~0.32 blurs the reflection
+// heavily — at that roughness the cube map gets mipmap-blurred down to ~16²
+// per face anyway, so the apparent fidelity loss from 128 → 64 is invisible.
+export function CosmosEnvProbe({ children }: Props) {
   const gl = useThree((s) => s.gl);
   const scene = useThree((s) => s.scene);
 
-  const resolution = mobile ? 64 : 128;
+  const resolution = 64;
 
   const cubeRenderTarget = useMemo(
     () =>

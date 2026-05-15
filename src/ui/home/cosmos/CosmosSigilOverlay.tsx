@@ -15,6 +15,11 @@ type Props = {
 
 const SIGIL_COUNT = 12;
 const POPOVER_FADE_MS = 280;
+// On mouseLeave, wait this long before deactivating. Lets the visitor move
+// the cursor from sigil → popover (or sigil → another sigil) without the
+// popover blinking out underneath them. Matched to common hover-intent
+// timings (~150–200ms).
+const HOVER_INTENT_MS = 180;
 const SIGIL_RADIUS = 20; // approx half-size of a sigil button, in px
 const POPOVER_MARGIN = 14; // gap between sigil and popover edge
 
@@ -43,6 +48,32 @@ export function CosmosSigilOverlay({
   useEffect(() => {
     activeSigilIdRef.current = activeSigilId;
   }, [activeSigilId]);
+
+  // Hover-intent: mouseLeave doesn't deactivate immediately; instead it queues
+  // a short timer. mouseEnter on any sigil or on the popover cancels the
+  // pending timer, so the visitor can move from sigil → popover or sigil →
+  // sigil without the popover disappearing under their cursor.
+  const intentTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const cancelIntent = () => {
+    if (intentTimerRef.current) {
+      clearTimeout(intentTimerRef.current);
+      intentTimerRef.current = null;
+    }
+  };
+  const scheduleDeactivate = () => {
+    cancelIntent();
+    intentTimerRef.current = setTimeout(() => {
+      intentTimerRef.current = null;
+      onDeactivate();
+    }, HOVER_INTENT_MS);
+  };
+  const activateNow = (id: Cosmos.SigilId) => {
+    cancelIntent();
+    onActivate(id);
+  };
+  useEffect(() => {
+    return () => cancelIntent();
+  }, []);
 
   // `displayedSigilId` is the sigil whose content is currently rendered in
   // the popover. On activate it follows immediately; on deactivate it lingers
@@ -171,10 +202,10 @@ export function CosmosSigilOverlay({
               isActive && "cosmos-sigil-active",
               isDim && "cosmos-sigil-dim",
             )}
-            onMouseEnter={() => onActivate(sigil.id)}
-            onMouseLeave={onDeactivate}
-            onFocus={() => onActivate(sigil.id)}
-            onBlur={onDeactivate}
+            onMouseEnter={() => activateNow(sigil.id)}
+            onMouseLeave={scheduleDeactivate}
+            onFocus={() => activateNow(sigil.id)}
+            onBlur={scheduleDeactivate}
           >
             <span aria-hidden="true" className="cosmos-sigil-glyph">
               {sigil.glyph}
@@ -192,6 +223,11 @@ export function CosmosSigilOverlay({
         aria-live="polite"
         aria-atomic="true"
         role="status"
+        // Moving the cursor onto the popover cancels the pending deactivate,
+        // so the popover stays open while the visitor reads. Leaving the
+        // popover re-queues the deactivation timer.
+        onMouseEnter={cancelIntent}
+        onMouseLeave={scheduleDeactivate}
       >
         {displayedSigil ? (
           <>

@@ -72,7 +72,7 @@ export function CosmosCanvas({
     >
       {!mobile ? <CosmosCameraRig progressRef={progressRef} /> : null}
 
-      <CosmosEnvProbe mobile={mobile}>
+      <CosmosEnvProbe>
         {/* Background — layer 1 enabled so the env probe captures it. */}
         <CosmosNebulae />
         <CosmosDeepField mobile={mobile} />

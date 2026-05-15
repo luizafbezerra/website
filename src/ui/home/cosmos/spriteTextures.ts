@@ -11,6 +11,7 @@ import * as THREE from "three";
 let _starSprite: THREE.Texture | null = null;
 let _cometHead: THREE.Texture | null = null;
 let _cometTail: THREE.Texture | null = null;
+let _sunGlow: THREE.Texture | null = null;
 
 function makeTexture(canvas: HTMLCanvasElement): THREE.Texture {
   const tex = new THREE.CanvasTexture(canvas);
@@ -48,6 +49,27 @@ export function getStarSprite(): THREE.Texture | null {
     [1.0, "rgba(245, 224, 188, 0)"],
   ]);
   return _starSprite;
+}
+
+// Sun glow — large warm gilt radial that reads as a celestial body. Bright
+// gilt core, gilt mid-band, terracotta corona, faded edge. Drawn additively
+// so it blends into the cosmos behind it rather than presenting as an opaque
+// disc. Replaces the v3 small textured sphere, which read as a flat white
+// dot at orbit distance because its rich engraving detail was below the
+// per-pixel resolution.
+export function getSunGlowSprite(): THREE.Texture | null {
+  if (typeof document === "undefined") return null;
+  if (_sunGlow) return _sunGlow;
+  _sunGlow = radialDisc(256, [
+    [0.0, "rgba(255, 246, 210, 1)"],
+    [0.1, "rgba(255, 228, 152, 0.96)"],
+    [0.25, "rgba(245, 196, 100, 0.78)"],
+    [0.45, "rgba(210, 138, 66, 0.42)"],
+    [0.7, "rgba(160, 90, 50, 0.15)"],
+    [0.9, "rgba(120, 70, 40, 0.04)"],
+    [1.0, "rgba(120, 70, 40, 0)"],
+  ]);
+  return _sunGlow;
 }
 
 // Gilt-warm comet head — bright hot center, ochre falloff, transparent edges.

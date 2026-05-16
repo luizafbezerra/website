@@ -7,6 +7,11 @@ import { CosmosEnvContext } from "./CosmosEnvContext";
 
 type Props = {
   children: React.ReactNode;
+  // Where the cube camera samples from. Defaults to the scene origin —
+  // override when the universe content is translated (e.g.
+  // `[0, UNIVERSE_Y_OFFSET, 0]`) so the cube map captures the universe
+  // from its actual center, not from below it.
+  center?: [number, number, number];
 };
 
 // Bakes the surrounding universe (nebula shader + deep field + galaxy band)
@@ -22,7 +27,7 @@ type Props = {
 // 64×6 resolution everywhere. Brass roughness ~0.32 blurs the reflection
 // heavily — at that roughness the cube map gets mipmap-blurred down to ~16²
 // per face anyway, so the apparent fidelity loss from 128 → 64 is invisible.
-export function CosmosEnvProbe({ children }: Props) {
+export function CosmosEnvProbe({ children, center = [0, 0, 0] }: Props) {
   const gl = useThree((s) => s.gl);
   const scene = useThree((s) => s.scene);
 
@@ -54,8 +59,8 @@ export function CosmosEnvProbe({ children }: Props) {
 
     const bake = () => {
       if (!alive) return;
-      // Position at the scene origin where the armillary sits.
-      cubeCamera.position.set(0, 0, 0);
+      // Position at the armillary's center so reflection geometry matches.
+      cubeCamera.position.set(center[0], center[1], center[2]);
       cubeCamera.update(gl, scene);
       setEnvMap(cubeRenderTarget.texture);
     };
@@ -75,7 +80,7 @@ export function CosmosEnvProbe({ children }: Props) {
       if (raf) cancelAnimationFrame(raf);
       window.removeEventListener("resize", onResize);
     };
-  }, [gl, scene, cubeCamera, cubeRenderTarget]);
+  }, [gl, scene, cubeCamera, cubeRenderTarget, center]);
 
   useEffect(() => {
     return () => {

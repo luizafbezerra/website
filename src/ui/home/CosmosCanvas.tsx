@@ -91,33 +91,38 @@ export function CosmosCanvas({
     >
       {!mobile ? <CosmosCameraRig progressRef={progressRef} /> : null}
 
-      <CosmosEnvProbe>
-        {/* Background — layer 1 enabled so the env probe captures it. */}
-        <CosmosNebulae />
-        <CosmosDeepField mobile={mobile} />
-        <CosmosGalaxyBand mobile={mobile} />
+      <CosmosEnvProbe center={[0, Cosmos.UNIVERSE_Y_OFFSET, 0]}>
+        {/* Universe content — translated up to `UNIVERSE_Y_OFFSET` so the
+            armillary lives in the sky rather than on the painted ground.
+            The painted prelude stays at world origin; the camera rises up
+            through the prelude clouds and arrives at the elevated universe. */}
+        <group position={[0, Cosmos.UNIVERSE_Y_OFFSET, 0]}>
+          {/* Background — layer 1 enabled so the env probe captures it. */}
+          <CosmosNebulae />
+          <CosmosDeepField mobile={mobile} />
+          <CosmosGalaxyBand mobile={mobile} />
 
-        {/* Foreground — layer 0 only; excluded from the env reflection. */}
-        <CosmosStarField mobile={mobile} />
+          {/* Foreground — layer 0 only; excluded from the env reflection. */}
+          <CosmosStarField mobile={mobile} />
 
-        {/* Constellation strokes sit between the foreground star shell
-            (radii 4–8) and the deep-field stars (30–80) so they read as
-            the "near sky" without being baked into the brass reflection. */}
-        {!mobile ? <CosmosConstellationLines progressRef={progressRef} /> : null}
+          {/* Constellation strokes sit between the foreground star shell
+              (radii 4–8) and the deep-field stars (30–80) so they read as
+              the "near sky" without being baked into the brass reflection. */}
+          {!mobile ? <CosmosConstellationLines progressRef={progressRef} /> : null}
 
-        <CosmosArmillary
-          sigilScreenPositionsRef={sigilScreenPositionsRef}
-          activeSigilId={activeSigilId}
-          progressRef={progressRef}
-        />
+          <CosmosArmillary
+            sigilScreenPositionsRef={sigilScreenPositionsRef}
+            activeSigilId={activeSigilId}
+            progressRef={progressRef}
+          />
 
-        {!mobile ? <CosmosComets progressRef={progressRef} /> : null}
+          {!mobile ? <CosmosComets progressRef={progressRef} /> : null}
+        </group>
 
         {/* Painted prelude — discrete cut-out props (clouds, land, trees,
-            rocks, bush, single figure) between the start camera and the
-            universe. Rendered last so the transparent planes depth-sort
-            cleanly against the rest of the scene during the approach
-            phase. Skipped on mobile (no scroll cinema → no prelude). */}
+            rocks, bush, single figure) at world origin. Not translated:
+            the painted ground stays at world y=0 so the camera physically
+            rises up through it during the approach. */}
         {!mobile ? <CosmosPrelude progressRef={progressRef} /> : null}
       </CosmosEnvProbe>
     </Canvas>

@@ -30,10 +30,16 @@ export function CosmosPrelude({ progressRef }: Props) {
   const sources = useMemo(() => props.map((p) => Cosmos.preludeAssetPath(p.asset)), [props]);
   const textures = useOptionalTextures(sources);
 
-  // Per-prop refs. Material refs receive per-frame opacity writes; mesh refs
-  // receive per-frame position writes for cloud drift.
+  // Per-prop refs. Materials receive per-frame opacity writes; groups receive
+  // per-frame transform writes (cloud drift on `position.x`). Tree sway is
+  // implemented as a vertex-shader displacement (see `swayVertexInjection`
+  // below) — only the canopy bends, the trunk base stays planted — so it
+  // doesn't go through any per-frame transform on the mesh or group.
+  // `swayShaders` holds the patched `THREE.Shader` for each tree material so
+  // its `uTime` uniform can be advanced each frame.
   const materialRefs = useRef<Array<THREE.MeshBasicMaterial | null>>([]);
-  const meshRefs = useRef<Array<THREE.Mesh | null>>([]);
+  const groupRefs = useRef<Array<THREE.Group | null>>([]);
+  const swayShaders = useRef<Array<THREE.WebGLProgramParametersWithUniforms | null>>([]);
 
   // Per-cloud drift parameters: a slow horizontal sin oscillation. Distinct
   // speed/phase/amplitude per cloud so the six instances don't move in
@@ -58,6 +64,73 @@ export function CosmosPrelude({ progressRef }: Props) {
         };
       }),
     [props],
+  );
+
+  // Per-tree sway parameters. Driven into the material's vertex shader via
+  // `onBeforeCompile`, where each vertex gets a horizontal displacement
+  // weighted by a curve over its UV.y so the base of the sprite stays put
+  // while the canopy bends. `amplitude` is in world units of canopy-top
+  // displacement (≈ uv.y = 1). Bottom 25% has effectively zero displacement.
+  const swayState = useMemo(
+    () =>
+      props.map((p, i) => {
+        const isTree = p.asset === "tree-left" || p.asset === "tree-right";
+        if (!isTree) return null;
+        const seed = ((i * 37 + 11) % 100) / 100; // 0..1
+        return {
+          speed: 0.45 + seed * 0.35, // 0.45–0.80 rad/sec (period ~8–14s)
+          phase: seed * Math.PI * 2,
+          amplitude: 0.06 + seed * 0.06, // world units of canopy-top sway
+        };
+      }),
+    [props],
+  );
+
+  // Vertex shader injection for tree sway. Two replacement snippets:
+  //   1) After `void main() {`, declare the four custom uniforms.
+  //   2) After `#include <begin_vertex>` (which defines `vec3 transformed =
+  //      vec3(position);`), shear `transformed.x` by a sin oscillator weighted
+  //      by `pow(uv.y, 2.2)`. uv.y = 0 at the sprite's bottom, 1 at the top,
+  //      so the bottom rows barely move (pow(0, 2.2) = 0) and the canopy
+  //      bends most. The 2.2 exponent keeps the lower trunk almost rigid —
+  //      higher exponent = more aggressive bottom-flat curve.
+  const swayUniformDecls = useMemo(
+    () => `
+      uniform float uSwayTime;
+      uniform float uSwaySpeed;
+      uniform float uSwayPhase;
+      uniform float uSwayAmplitude;
+      void main() {`,
+    [],
+  );
+  const swayVertexInjection = useMemo(
+    () => `
+      #include <begin_vertex>
+      float swayWeight = pow(clamp(uv.y, 0.0, 1.0), 2.2);
+      transformed.x += sin(uSwayTime * uSwaySpeed + uSwayPhase) * uSwayAmplitude * swayWeight;`,
+    [],
+  );
+
+  // One `onBeforeCompile` per tree material, memoised so the material instance
+  // isn't rebuilt and re-compiled on every render. Captures that tree's
+  // sway parameters as initial uniform values and stashes the patched shader
+  // in `swayShaders` so the per-frame `useFrame` loop can advance `uSwayTime`.
+  const swayCallbacks = useMemo(
+    () =>
+      swayState.map((sway, i) => {
+        if (!sway) return undefined;
+        return (shader: THREE.WebGLProgramParametersWithUniforms) => {
+          shader.uniforms.uSwayTime = { value: 0 };
+          shader.uniforms.uSwaySpeed = { value: sway.speed };
+          shader.uniforms.uSwayPhase = { value: sway.phase };
+          shader.uniforms.uSwayAmplitude = { value: sway.amplitude };
+          shader.vertexShader = shader.vertexShader
+            .replace("void main() {", swayUniformDecls)
+            .replace("#include <begin_vertex>", swayVertexInjection);
+          swayShaders.current[i] = shader;
+        };
+      }),
+    [swayState, swayUniformDecls, swayVertexInjection],
   );
 
   // Per-cloud distance transparency: clouds at distance ≥ DIST_FAR are fully
@@ -87,10 +160,15 @@ export function CosmosPrelude({ progressRef }: Props) {
         m.opacity = op;
       }
       if (drift) {
-        const mesh = meshRefs.current[i];
-        if (mesh) {
-          mesh.position.x = drift.baseX + Math.sin(t * drift.speed + drift.phase) * drift.amplitude;
+        const group = groupRefs.current[i];
+        if (group) {
+          group.position.x =
+            drift.baseX + Math.sin(t * drift.speed + drift.phase) * drift.amplitude;
         }
+      }
+      const swayShader = swayShaders.current[i];
+      if (swayShader && swayShader.uniforms.uSwayTime) {
+        swayShader.uniforms.uSwayTime.value = t;
       }
     }
   });
@@ -110,32 +188,42 @@ export function CosmosPrelude({ progressRef }: Props) {
         const texAspect = img.width / img.height;
         const width = prop.scale * texAspect;
         const height = prop.scale;
-        // Bottom-anchored props: lift the mesh by half its height so
-        // `position.y` represents the prop's bottom edge — lets the call
-        // site place a tree at y=0 ("on the ground") without height math.
+        // The group's origin sits at the prop's world anchor point — its
+        // base for bottom-anchored props, its center for center-anchored
+        // props. The child mesh is offset upward by half its height so a
+        // bottom-anchored prop's geometry extends UP from the group origin.
         const yOffset = prop.anchor === "bottom" ? prop.scale / 2 : 0;
+        const swayCb = swayCallbacks[i];
+        // Sway-capable props get a tessellated geometry (16 vertical rows)
+        // so the per-vertex displacement curve renders as a smooth bend.
+        // Without enough rows the trunk just shears as a parallelogram.
+        // 1×16 = 17 verts × 2 rows = 34 verts / 32 tris — cheap, smooth.
+        const heightSegments = swayCb ? 16 : 1;
         return (
-          <mesh
+          <group
             key={prop.id}
-            ref={(mesh) => {
-              meshRefs.current[i] = mesh;
+            ref={(g) => {
+              groupRefs.current[i] = g;
             }}
-            position={[prop.position[0], prop.position[1] + yOffset, prop.position[2]]}
+            position={[prop.position[0], prop.position[1], prop.position[2]]}
           >
-            <planeGeometry args={[width, height]} />
-            <meshBasicMaterial
-              ref={(m) => {
-                materialRefs.current[i] = m;
-              }}
-              map={texture}
-              transparent
-              opacity={0}
-              alphaTest={0.02}
-              depthWrite
-              toneMapped={false}
-              side={THREE.FrontSide}
-            />
-          </mesh>
+            <mesh position={[0, yOffset, 0]} frustumCulled={!swayCb}>
+              <planeGeometry args={[width, height, 1, heightSegments]} />
+              <meshBasicMaterial
+                ref={(m) => {
+                  materialRefs.current[i] = m;
+                }}
+                map={texture}
+                transparent
+                opacity={0}
+                alphaTest={0.02}
+                depthWrite
+                toneMapped={false}
+                side={THREE.FrontSide}
+                onBeforeCompile={swayCb}
+              />
+            </mesh>
+          </group>
         );
       })}
     </group>

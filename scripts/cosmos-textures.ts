@@ -337,10 +337,28 @@ const PRELUDE_ASSET_SOURCES: Record<Cosmos.PreludeAssetId, string> = {
 // should own). Values are source-image fractions in [0..1].
 const PRELUDE_ASSET_CROPS: Partial<
   Record<Cosmos.PreludeAssetId, { top: number; left: number; width: number; height: number }>
-> = {};
+> = {
+  // Crop the upper 30% of the painted land. The source's top region is a
+  // baked sunset sky that the 3D nebula owns above; removing it widens
+  // the effective aspect (1.5:1 → ~2.14:1) so the prop can scale to
+  // cover the full screen width on wide viewports without becoming so
+  // tall that it dominates the frame vertically.
+  land: { top: 0.3, left: 0, width: 1.0, height: 0.7 },
+};
 
-// Cap the long side; smaller sources pass through at native size.
-const PRELUDE_MAX_DIM = 1024;
+// Subtle top-edge alpha fade per asset, as a fraction of cropped image
+// height. `land`'s painted sky at the top dissolves into the 3D nebula
+// behind it — a tiny ~5% fade softens the otherwise hard upper edge
+// without the heavy-handed look of a larger gradient.
+const PRELUDE_ASSET_TOP_FADE: Partial<Record<Cosmos.PreludeAssetId, number>> = {
+  land: 0.05,
+};
+
+// Cap the long side; smaller sources pass through at native size. 2048 is
+// a balance: large enough that the painted land doesn't upscale visibly on
+// 4K viewports, small enough that the WebP file size stays reasonable
+// (~hundreds of KB rather than megabytes).
+const PRELUDE_MAX_DIM = 2048;
 
 async function buildPreludeAsset(assetId: Cosmos.PreludeAssetId): Promise<string | null> {
   const filename = PRELUDE_ASSET_SOURCES[assetId];
@@ -366,11 +384,40 @@ async function buildPreludeAsset(assetId: Cosmos.PreludeAssetId): Promise<string
     }
   }
 
-  await pipe
+  const resized = await pipe
     .resize(PRELUDE_MAX_DIM, PRELUDE_MAX_DIM, { fit: "inside", withoutEnlargement: true })
-    .webp({ quality: 85, effort: 5 })
-    .toFile(dst);
+    .png()
+    .toBuffer();
 
+  const topFade = PRELUDE_ASSET_TOP_FADE[assetId];
+  if (topFade && topFade > 0) {
+    const meta = await sharp(resized).metadata();
+    const w = meta.width ?? 0;
+    const h = meta.height ?? 0;
+    if (w > 0 && h > 0) {
+      const fadeStop = Math.max(0, Math.min(1, topFade)) * 100;
+      // SVG linear gradient mask. `blend: "dest-in"` multiplies the
+      // base alpha by the mask, so only the top edge fades — interior
+      // pixels are untouched.
+      const fadeSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}">
+        <defs>
+          <linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="white" stop-opacity="0"/>
+            <stop offset="${fadeStop}%" stop-color="white" stop-opacity="1"/>
+            <stop offset="100%" stop-color="white" stop-opacity="1"/>
+          </linearGradient>
+        </defs>
+        <rect width="${w}" height="${h}" fill="url(#g)"/>
+      </svg>`;
+      await sharp(resized)
+        .composite([{ input: Buffer.from(fadeSvg), blend: "dest-in" }])
+        .webp({ quality: 85, effort: 5 })
+        .toFile(dst);
+      return dst;
+    }
+  }
+
+  await sharp(resized).webp({ quality: 85, effort: 5 }).toFile(dst);
   return dst;
 }
 

@@ -121,14 +121,17 @@ export function CosmosSigilOverlay({
       const positions = sigilScreenPositionsRef.current;
       const { w, h } = sizeRef.current;
 
-      // 1) Position every sigil button.
+      // 1) Position every sigil button. We write `style.transform` directly
+      //    instead of `--cosmos-x` / `--cosmos-y` CSS vars: a direct presentation
+      //    attribute bypasses the CSS variable cascade resolution and the
+      //    associated style recalc per element. The `translate(-50%, -50%)`
+      //    tail centers the button on its anchor point.
       for (let i = 0; i < SIGIL_COUNT; i++) {
         const btn = buttonRefs.current[i];
         const pos = positions[i];
         if (!btn || !pos) continue;
         if (pos.visible && w > 0 && h > 0) {
-          btn.style.setProperty("--cosmos-x", `${pos.x * w}px`);
-          btn.style.setProperty("--cosmos-y", `${pos.y * h}px`);
+          btn.style.transform = `translate3d(${pos.x * w}px, ${pos.y * h}px, 0) translate(-50%, -50%)`;
           if (btn.dataset.visible !== "1") btn.dataset.visible = "1";
         } else if (btn.dataset.visible !== "0") {
           btn.dataset.visible = "0";
@@ -162,8 +165,7 @@ export function CosmosSigilOverlay({
           // Final clamp inside the viewport.
           x = Math.max(pad, Math.min(x, w - popW - pad));
           y = Math.max(pad, Math.min(y, h - popH - pad));
-          popover.style.setProperty("--cosmos-x", `${x}px`);
-          popover.style.setProperty("--cosmos-y", `${y}px`);
+          popover.style.transform = `translate3d(${x}px, ${y}px, 0)`;
         }
       }
 

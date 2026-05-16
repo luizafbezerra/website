@@ -7,10 +7,33 @@ import * as THREE from "three";
 // same URL, and `dispose()` in cleanup releases GPU memory.
 const loader = new THREE.TextureLoader();
 
+// Cache the renderer's max anisotropy once. Set on first configure().
+let maxAniso = 0;
+function readMaxAniso(): number {
+  if (maxAniso > 0) return maxAniso;
+  const canvas = document.createElement("canvas");
+  const gl = canvas.getContext("webgl2") || canvas.getContext("webgl");
+  if (!gl) return (maxAniso = 1);
+  const ext =
+    gl.getExtension("EXT_texture_filter_anisotropic") ||
+    gl.getExtension("MOZ_EXT_texture_filter_anisotropic") ||
+    gl.getExtension("WEBKIT_EXT_texture_filter_anisotropic");
+  maxAniso = ext ? gl.getParameter(ext.MAX_TEXTURE_MAX_ANISOTROPY_EXT) : 1;
+  return maxAniso;
+}
+
 function configure(t: THREE.Texture): void {
   t.colorSpace = THREE.SRGBColorSpace;
-  t.minFilter = THREE.LinearFilter;
+  // Trilinear with auto-generated mipmaps. Without this, every minified
+  // sample of a large texture (clouds, land, brushed-brass roughness) is
+  // a full-resolution texel fetch, which produces shimmering AND becomes
+  // a fragment-shader bottleneck as soon as several textured surfaces
+  // overlap. WebGL2 (which three.js targets in modern browsers) handles
+  // NPOT mipmaps fine, so we don't need power-of-two dimensions.
+  t.minFilter = THREE.LinearMipmapLinearFilter;
   t.magFilter = THREE.LinearFilter;
+  t.generateMipmaps = true;
+  t.anisotropy = Math.min(8, readMaxAniso());
   t.needsUpdate = true;
 }
 

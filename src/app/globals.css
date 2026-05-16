@@ -398,32 +398,50 @@
      Opacity is driven by the same --cosmos-horizon-opacity var set by
      Cosmos.tsx — both DOM epigraph and 3D plane fade together. Smaller and
      narrower on small screens so it doesn't crowd the landscape silhouette. */
+  /* The epigraph sits over the descent-phase nebula — a low-contrast warm
+     dark image where text-shadow alone could not be relied on. A solid
+     dark ink card with a subtle parchment hairline reads as a tipped-in
+     marginalia plate on the cosmos and gives the cream text a guaranteed
+     contrast surface. backdrop-filter softens whatever passes behind. */
   .cosmos-epigraph {
     position: absolute;
     left: clamp(1.25rem, 4vw, 2.75rem);
     bottom: clamp(1.5rem, 5vh, 3rem);
     max-width: min(28rem, 60vw);
+    padding: 0.9rem 1.1rem 1rem;
+    background: color-mix(in oklch, var(--color-ink) 82%, transparent);
+    border: 1px solid color-mix(in oklch, var(--color-parchment) 28%, transparent);
+    border-radius: 3px;
+    box-shadow:
+      0 1px 0 color-mix(in oklch, var(--color-parchment) 18%, transparent) inset,
+      0 8px 24px -10px color-mix(in oklch, var(--color-ink) 80%, transparent);
+    backdrop-filter: blur(8px) saturate(1.05);
+    -webkit-backdrop-filter: blur(8px) saturate(1.05);
     pointer-events: none;
     z-index: 4;
     opacity: var(--cosmos-descent-opacity, 0);
     transition: opacity 320ms ease-out;
   }
 
+  /* Solid parchment text on the dark card — high static contrast (~16:1).
+     A 1px ink shadow keeps the glyph edges crisp even while the card is
+     partially transparent during fade-in. */
   .cosmos-epigraph-line {
     font-family: var(--font-display);
     font-style: italic;
-    color: var(--color-terracotta-deep);
+    color: var(--color-parchment);
     font-size: clamp(1.05rem, 1.6vw, 1.35rem);
     line-height: 1.42;
     text-wrap: balance;
     margin: 0;
+    text-shadow: 0 1px 0 color-mix(in oklch, var(--color-ink) 90%, transparent);
   }
 
   .cosmos-epigraph-attribution {
     margin: 0.5rem 0 0;
     font-family: var(--font-display);
     font-style: italic;
-    color: var(--color-ink-soft);
+    color: color-mix(in oklch, var(--color-parchment) 78%, var(--color-terracotta-soft));
     font-size: clamp(0.78rem, 1vw, 0.92rem);
     letter-spacing: 0.02em;
   }
@@ -446,7 +464,12 @@
     position: absolute;
     top: 0;
     left: 0;
-    transform: translate(var(--cosmos-x, 0), var(--cosmos-y, 0)) translate(-50%, -50%);
+    /* Transform is written each frame as a presentation attribute by the
+       overlay rAF — direct `style.transform = translate3d(...)` writes,
+       no CSS variables, no cascade resolution. The translate3d hint also
+       promotes the button to its own compositor layer so per-frame transform
+       updates stay GPU-only. */
+    will-change: transform;
     background: transparent;
     border: 0;
     margin: 0;
@@ -548,7 +571,11 @@
     position: absolute;
     top: 0;
     left: 0;
-    transform: translate(var(--cosmos-x, 0), var(--cosmos-y, 0));
+    /* Same direct-transform pattern as the sigil buttons: the overlay rAF
+       writes `style.transform = translate3d(...)` each frame, no CSS var
+       indirection. `will-change` keeps the popover on its own compositor
+       layer so transform updates don't re-paint the parchment card. */
+    will-change: transform;
     width: min(20rem, 78vw);
     padding: 0.7rem 0.95rem 0.8rem;
     background: color-mix(in oklch, var(--color-parchment) 84%, transparent);
@@ -563,10 +590,10 @@
     opacity: 0;
     pointer-events: none;
     z-index: 4;
-    transition:
-      opacity 280ms ease-out,
-      transform 280ms cubic-bezier(0.2, 0.8, 0.2, 1);
-    will-change: transform, opacity;
+    /* No transform transition — the popover follows the sigil per-frame
+       during scroll; any easing here would lag behind the canvas and
+       make the popover float free of its anchor. Only opacity transitions. */
+    transition: opacity 280ms ease-out;
   }
 
   .cosmos-sigil-popover-visible {

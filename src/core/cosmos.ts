@@ -527,155 +527,129 @@ export namespace Cosmos {
 
   export type CameraKey = { pos: Vec3; look: Vec3 };
 
-  // Orbit phase is extended to 0.85 (was 0.75) so the existing 0 → 0.85
-  // scroll feel is preserved; the new descent phase occupies only the final
-  // 15% of the scroll. Consumers (CSS-var driven overlays) read these to
-  // gate their own fade-in/out envelopes.
+  // Orbit phase ends at 0.70 and the descent phase owns the final 30% of
+  // the scroll. The earlier handoff lets the lookY ramp toward the descent
+  // endpoint start sooner so the armillary slides out of frame smoothly
+  // without a perceived velocity reversal at the boundary. Consumers
+  // (CSS-var driven overlays) read these to gate their own envelopes.
   export const cameraPhases = {
     zoomIn: { range: [0.0, 0.25] as const },
-    orbit: { range: [0.25, 0.85] as const },
-    descent: { range: [0.85, 1.0] as const },
+    orbit: { range: [0.25, 0.7] as const },
+    descent: { range: [0.7, 1.0] as const },
   };
 
   // Universe Y offset. The armillary, constellations, nebula sphere, deep
   // field, comets — everything except the painted prelude — is translated
   // up by this much in world space. The painted scene stays at world
   // y≈0; the universe lives at y≈OFFSET in the sky. The camera rises up
-  // through the painted ground + cloud layer during the approach and
-  // arrives at the elevated universe naturally, without a tilt-back-down.
+  // through the painted cloud layer during the approach and arrives at
+  // the elevated universe naturally, looking horizontally forward — no
+  // tilt-back-down.
   //
   // Consumers: `<CosmosCanvas>` wraps the universe content in
   // `<group position={[0, OFFSET, 0]}>`; `<CosmosEnvProbe>` positions its
   // cube camera at the same offset so the cube map reflection matches.
-  export const UNIVERSE_Y_OFFSET = 2.5;
+  export const UNIVERSE_Y_OFFSET = 7.0;
 
   // Approach starts far back (z=25) at human-eye level (y=1.4) so the
   // painted-scene prelude reads as "view FROM the ground." KEY_MID is the
   // orbit-start position — elevated to UNIVERSE_Y_OFFSET so the camera
   // ends up at the universe's altitude rather than at its world-y=0.
   const KEY_FAR_IN: CameraKey = { pos: [0, 1.4, 25], look: [0, 1.4, 0] };
+  // Camera ends at universe altitude, looking horizontally forward at the
+  // armillary center. No vertical offset between cam-y and look-y, so the
+  // approach can resolve to a flat horizontal gaze with no tilt-down.
   const KEY_MID: CameraKey = {
-    pos: [0, UNIVERSE_Y_OFFSET + 0.2, 3.6],
+    pos: [0, UNIVERSE_Y_OFFSET, 3.6],
     look: [0, UNIVERSE_Y_OFFSET, 0],
   };
-  // Descent endpoint: a wider, slightly elevated shot of the armillary
-  // surrounded by the dense constellation network. Camera pulls back from
-  // the orbit + lifts a touch + tilts up slightly so the visitor sees the
-  // armillary at the lower-mid of the frame with the constellations of the
-  // RA 18h region (Lyra, Cygnus, Hercules, Sagittarius, Scorpius, Aquila)
-  // filling the upper sky. Both axes offset by UNIVERSE_Y_OFFSET so the
-  // descent stays anchored to the elevated armillary.
+  // Descent endpoint: camera pulls back a bit and tilts the look WAY up so
+  // the armillary slides out of the bottom of the frame and the visitor
+  // ends the section looking at pure starscape / nebulae — the "focus on
+  // the stars before scrolling out" beat.
   const KEY_DESCENT: CameraKey = {
-    pos: [0, UNIVERSE_Y_OFFSET + 0.6, 7.6],
-    look: [0, UNIVERSE_Y_OFFSET + 1.1, 0],
+    pos: [0, UNIVERSE_Y_OFFSET, 7.6],
+    look: [0, UNIVERSE_Y_OFFSET + 7.0, 0],
   };
 
   // Orbit shape: just under one full turn so the visitor sees the full sphere
   // and a bit. Radius drifts in slightly during the orbit so the scene feels
-  // alive. Y-bob: one sine arch (0 → peak → 0) replaces v3's abrupt tilt-up.
+  // alive. The camera's Y holds at UNIVERSE_Y_OFFSET and the lookAt holds
+  // at KEY_MID.look — the orbit yaw alone provides motion, and the descent
+  // phase owns the upward lookY ramp so the whole timeline reads as a
+  // single monotonic lift with no mid-orbit bob or peak.
   const ORBIT_R_START = 3.6;
   const ORBIT_R_END = 3.2;
   const ORBIT_TURNS = 0.9;
-  const ORBIT_Y_PEAK = 0.35;
   const ORBIT_A_START = Math.atan2(KEY_MID.pos[2], KEY_MID.pos[0]);
   const ORBIT_A_END_REL = Math.PI * 2 * ORBIT_TURNS;
 
-  // Mid-orbit lookAt tilt-up. The camera's look target's Y rises from 0 to
-  // ORBIT_LOOK_UP_PEAK and back, so for a beat in the middle of the orbit
-  // the camera tilts upward and the high-Dec constellations (Cygnus,
-  // Cepheus, Cassiopeia, Hercules, Boötes) come into the upper frame while
-  // the armillary settles into the lower portion. Both edges use
-  // smootherstep so there's no perceptible discontinuity at orbit start /
-  // end where the lookAt is anchored back at the origin.
-  //
-  // Peak is kept modest (~1.8) so the armillary stays in the lower-frame
-  // — the brief is "a bit toward the top," not "a polar flyover."
-  const ORBIT_LOOK_UP_PEAK = 1.8;
-  const ORBIT_LOOK_UP_RISE = [0.15, 0.55] as const; // local_t window
-  const ORBIT_LOOK_UP_FALL = [0.55, 0.95] as const;
-
-  // Approach-phase camera arc. The dolly is split into two beats:
+  // Approach-phase camera arc. Two beats:
   //
   //   * p ∈ [0, INTRO_END] — first tick: pure forward dolly. The visitor
-  //     enters the painted ground composition; nothing tilts, the camera
-  //     just moves a touch closer so the props read as live.
-  //   * p ∈ [INTRO_END, 0.25] — sky beat: camera RISES (y bumps up through
-  //     the cloud layer at world y 2–5) AND look-Y tilts UP to peak well
-  //     above the cloud tops. The ground falls off the bottom of the
-  //     frame; the visitor flies up through the clouds, then both axes
-  //     resolve back to KEY_MID for the orbit hand-off.
-  //
-  // Numbers tuned so:
-  //   - Y-bump peak hits while camera Z ≈ 14 (middle of cloud Z range 11–17)
-  //   - Look-Y peak coincides so the sky fills the frame as we transit clouds
-  //   - Both bump + tilt return exactly to KEY_MID values at p=0.25 so the
-  //     orbit boundary has no positional/angular discontinuity.
+  //     enters the painted ground composition; nothing tilts.
+  //   * p ∈ [INTRO_END, 0.25] — rise: camera y AND look-y both lerp
+  //     monotonically toward `KEY_MID`. Crucially, look-y reaches its end
+  //     value FASTER than camera-y (different easing windows) — so the
+  //     look line stays ABOVE the camera throughout the rise, producing
+  //     a sustained upward tilt that resolves to horizontal exactly at
+  //     the orbit boundary. No look-y peak, no descent — the camera never
+  //     tilts back down.
   const APPROACH_INTRO_END = 0.04;
-  const APPROACH_LOOK_UP_PEAK = 6.0;
-  const APPROACH_LOOK_UP_RISE = [APPROACH_INTRO_END, 0.15] as const;
-  const APPROACH_LOOK_UP_FALL = [0.15, 0.25] as const;
-  const APPROACH_Y_BUMP_PEAK = 3.0;
-  const APPROACH_Y_BUMP_WINDOW = [APPROACH_INTRO_END, 0.25] as const;
+  // Position y lerps across the full post-intro window.
+  const APPROACH_Y_WINDOW = [APPROACH_INTRO_END, 0.25] as const;
+  // Look-y reaches its end value earlier than position so the camera tilts
+  // up during the rise. Once look reaches `KEY_MID.look[1]`, it plateaus
+  // there — camera y then catches up, and the tilt drops to zero by the
+  // orbit boundary without ever passing through "looking down."
+  const APPROACH_LOOK_WINDOW = [APPROACH_INTRO_END, 0.14] as const;
 
   export const cameraKeyAtProgress = (p: number): CameraKey => {
-    // Zoom-in: dolly forward, then rise + tilt up through the cloud layer.
-    // Resolves to KEY_MID at p=0.25 (no orbit-boundary kink).
+    // Zoom-in: forward dolly for the first tick, then monotonic rise where
+    // look-y leads camera-y so the camera always tilts UP (or horizontal),
+    // never down. Resolves exactly to KEY_MID at p=0.25 (no orbit kink).
     if (p <= cameraPhases.zoomIn.range[1]) {
-      const t = smootherstep(p, cameraPhases.zoomIn.range[0], cameraPhases.zoomIn.range[1]);
-      const tRise = smootherstep(p, APPROACH_LOOK_UP_RISE[0], APPROACH_LOOK_UP_RISE[1]);
-      const tFall = smootherstep(p, APPROACH_LOOK_UP_FALL[0], APPROACH_LOOK_UP_FALL[1]);
-      const startY = KEY_FAR_IN.look[1];
-      const endY = KEY_MID.look[1];
-      const peakY = startY + APPROACH_LOOK_UP_PEAK;
-      // Resolve to endY (the elevated universe's look-Y) at the orbit
-      // boundary instead of falling all the way to 0; the visitor stays
-      // looking at the elevated armillary rather than tilting back down
-      // to where the ground used to be.
-      const lookY = startY + tRise * APPROACH_LOOK_UP_PEAK - tFall * (peakY - endY);
-      // Half-sine y bump on the position. Zero at both ends, peak at the
-      // midpoint of [INTRO_END, 0.25] — so position resolves exactly to
-      // KEY_MID at the orbit boundary while peaking inside the cloud Z.
-      const bumpP = smootherstep(p, APPROACH_Y_BUMP_WINDOW[0], APPROACH_Y_BUMP_WINDOW[1]);
-      const yBump = Math.sin(bumpP * Math.PI) * APPROACH_Y_BUMP_PEAK;
-      const linear = v3lerp(KEY_FAR_IN.pos, KEY_MID.pos, t);
+      // Z position uses the full zoomIn range so the forward dolly starts
+      // immediately at p=0 (the "first tick is forward" beat).
+      const tZ = smootherstep(p, cameraPhases.zoomIn.range[0], cameraPhases.zoomIn.range[1]);
+      // Y position waits for the intro to finish, then rises slowly.
+      const tY = smootherstep(p, APPROACH_Y_WINDOW[0], APPROACH_Y_WINDOW[1]);
+      // Look-y rises faster, plateauing well before camera-y catches up.
+      const tLook = smootherstep(p, APPROACH_LOOK_WINDOW[0], APPROACH_LOOK_WINDOW[1]);
+      const camY = lerp(KEY_FAR_IN.pos[1], KEY_MID.pos[1], tY);
+      const camZ = lerp(KEY_FAR_IN.pos[2], KEY_MID.pos[2], tZ);
+      const lookY = lerp(KEY_FAR_IN.look[1], KEY_MID.look[1], tLook);
       return {
-        pos: [linear[0], linear[1] + yBump, linear[2]],
+        pos: [0, camY, camZ],
         look: [0, lookY, 0],
       };
     }
-    // Orbit: continuous polar arc on a slightly inclined plane (handled by
-    // the y-bob). Radius pulls in 3.6 → 3.2, y bobs through ORBIT_Y_PEAK.
-    // The lookAt target's Y rises mid-orbit to bring high-Dec constellations
-    // into the upper frame (see ORBIT_LOOK_UP_PEAK).
+    // Orbit: continuous polar yaw at the universe altitude. Radius pulls in
+    // 3.6 → 3.2 across the phase; camera Y and lookY both hold flat so the
+    // motion reads as a single horizontal sweep. The upward look ramp is
+    // owned entirely by the descent phase below.
     if (p <= cameraPhases.orbit.range[1]) {
       const t = smootherstep(p, cameraPhases.orbit.range[0], cameraPhases.orbit.range[1]);
       const a = ORBIT_A_START + t * ORBIT_A_END_REL;
       const r = lerp(ORBIT_R_START, ORBIT_R_END, t);
-      const y = KEY_MID.pos[1] + ORBIT_Y_PEAK * Math.sin(t * Math.PI);
-      // Smootherstep-shaped arc on the lookAt Y. Rises across the first
-      // window, falls across the second; product is 1 at the join, 0 at
-      // both ends. No perceptible velocity step at orbit boundaries
-      // because both smootherstep edges flatten to zero derivative.
-      const rise = smootherstep(t, ORBIT_LOOK_UP_RISE[0], ORBIT_LOOK_UP_RISE[1]);
-      const fall = 1 - smootherstep(t, ORBIT_LOOK_UP_FALL[0], ORBIT_LOOK_UP_FALL[1]);
-      // Base lookY anchors at the elevated universe; the mid-orbit arc
-      // adds an upward tilt on top so high-Dec constellations come into
-      // the upper frame as before.
-      const lookY = KEY_MID.look[1] + rise * fall * ORBIT_LOOK_UP_PEAK;
       return {
-        pos: [Math.cos(a) * r, y, Math.sin(a) * r],
-        look: [0, lookY, 0],
+        pos: [Math.cos(a) * r, KEY_MID.pos[1], Math.sin(a) * r],
+        look: [0, KEY_MID.look[1], 0],
       };
     }
-    // Descent: from the orbit-end point down/back to the hilltop view. Both
-    // pos and look interpolate, so the camera both pulls back AND tilts down
-    // toward the painted horizon in a single continuous motion.
+    // Descent: continues the orbit's horizontal sweep with a monotonic
+    // upward lookY ramp from KEY_MID.look (7.0) to KEY_DESCENT.look (14.0),
+    // so the armillary slides out the bottom of the frame as the camera
+    // pulls back. The look start anchors at KEY_MID.look — not at the
+    // origin — so the boundary is C0/C1 continuous with the orbit branch
+    // and the sequence reads as a single lift, not a drop-then-rise.
     const t = smootherstep(p, cameraPhases.descent.range[0], cameraPhases.descent.range[1]);
     const a1 = ORBIT_A_START + ORBIT_A_END_REL;
     const orbitEnd: Vec3 = [Math.cos(a1) * ORBIT_R_END, KEY_MID.pos[1], Math.sin(a1) * ORBIT_R_END];
+    const orbitEndLook: Vec3 = [0, KEY_MID.look[1], 0];
     return {
       pos: v3lerp(orbitEnd, KEY_DESCENT.pos, t),
-      look: v3lerp([0, 0, 0], KEY_DESCENT.look, t),
+      look: v3lerp(orbitEndLook, KEY_DESCENT.look, t),
     };
   };
 
@@ -771,16 +745,16 @@ export namespace Cosmos {
     { id: "cloud-4", asset: "cloud-dense", position: [-5.5, 5.5, 11], scale: 2.8 },
     { id: "cloud-5", asset: "cloud-soft", position: [1.5, 2.2, 16], scale: 1.6 },
     { id: "cloud-6", asset: "cloud-soft", position: [-2.0, 2.8, 17], scale: 1.4 },
-    // Horizon strip — painted dusk valley + distant mountains + river. No
-    // bake crop and no alpha mask; the full source painting shows. Scale
-    // overshoots a 2:1 viewport's frame width at z=20 so the painted
-    // strip covers edge-to-edge on wider aspects (no parchment slivers
-    // visible at L/R).
+    // Horizon strip — painted dusk valley + distant mountains + river.
+    // Source 1536×1024; bake crops top 30% (the painted sunset sky) so
+    // the effective aspect becomes ~2.14:1. Scale + position size the
+    // strip to cover the full screen width on wide viewports without
+    // dominating vertically.
     {
       id: "land",
       asset: "land",
       position: [0, 0.0, 20],
-      scale: 3.0,
+      scale: 3.6,
       anchor: "center",
     },
     // Trees — in front of the land (z > 20) so they aren't occluded by

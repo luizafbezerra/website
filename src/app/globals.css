@@ -395,37 +395,26 @@
   /* Descent-beat epigraph. Anchored bottom-left of the cosmos sticky frame
      so it shares the lower portion of the viewport with the painted horizon
      (which fills the lower third of the canvas via the descent camera).
-     Opacity is driven by the same --cosmos-horizon-opacity var set by
-     Cosmos.tsx — both DOM epigraph and 3D plane fade together. Smaller and
-     narrower on small screens so it doesn't crowd the landscape silhouette. */
-  /* The epigraph sits over the descent-phase nebula — a low-contrast warm
-     dark image where text-shadow alone could not be relied on. A solid
-     dark ink card with a subtle parchment hairline reads as a tipped-in
-     marginalia plate on the cosmos and gives the cream text a guaranteed
-     contrast surface. backdrop-filter softens whatever passes behind. */
+     Opacity fades together with the 3D descent plane via the shared
+     --cosmos-descent-opacity variable set by Cosmos.tsx. */
   .cosmos-epigraph {
     position: absolute;
     left: clamp(1.25rem, 4vw, 2.75rem);
     bottom: clamp(1.5rem, 5vh, 3rem);
     max-width: min(28rem, 60vw);
-    padding: 0.9rem 1.1rem 1rem;
-    background: color-mix(in oklch, var(--color-ink) 82%, transparent);
-    border: 1px solid color-mix(in oklch, var(--color-parchment) 28%, transparent);
-    border-radius: 3px;
-    box-shadow:
-      0 1px 0 color-mix(in oklch, var(--color-parchment) 18%, transparent) inset,
-      0 8px 24px -10px color-mix(in oklch, var(--color-ink) 80%, transparent);
-    backdrop-filter: blur(8px) saturate(1.05);
-    -webkit-backdrop-filter: blur(8px) saturate(1.05);
     pointer-events: none;
     z-index: 4;
     opacity: var(--cosmos-descent-opacity, 0);
     transition: opacity 320ms ease-out;
   }
 
-  /* Solid parchment text on the dark card — high static contrast (~16:1).
-     A 1px ink shadow keeps the glyph edges crisp even while the card is
-     partially transparent during fade-in. */
+  /* Cream text + heavy ink halo: against the dark nebula the parchment
+     text reads bright while the layered ink halo gives a dense backing
+     ring so the letterforms don't smear into the background. Five
+     compounding shadow layers (tight 1px hard ink, slightly wider hard
+     ink, medium-soft, wide soft, very-wide ambient) make the contrast
+     robust across the orange-to-blue gradient the descent nebula sweeps
+     through — no card backdrop needed. */
   .cosmos-epigraph-line {
     font-family: var(--font-display);
     font-style: italic;
@@ -434,16 +423,25 @@
     line-height: 1.42;
     text-wrap: balance;
     margin: 0;
-    text-shadow: 0 1px 0 color-mix(in oklch, var(--color-ink) 90%, transparent);
+    text-shadow:
+      0 0 1px var(--color-ink),
+      0 0 3px var(--color-ink),
+      0 0 8px color-mix(in oklch, var(--color-ink) 90%, transparent),
+      0 0 18px color-mix(in oklch, var(--color-ink) 70%, transparent),
+      0 0 36px color-mix(in oklch, var(--color-ink) 45%, transparent);
   }
 
   .cosmos-epigraph-attribution {
     margin: 0.5rem 0 0;
     font-family: var(--font-display);
     font-style: italic;
-    color: color-mix(in oklch, var(--color-parchment) 78%, var(--color-terracotta-soft));
+    color: color-mix(in oklch, var(--color-parchment) 88%, var(--color-terracotta-soft));
     font-size: clamp(0.78rem, 1vw, 0.92rem);
     letter-spacing: 0.02em;
+    text-shadow:
+      0 0 1px var(--color-ink),
+      0 0 4px color-mix(in oklch, var(--color-ink) 92%, transparent),
+      0 0 12px color-mix(in oklch, var(--color-ink) 65%, transparent);
   }
 
   /* v2 live overlay: DOM buttons positioned by 3D-to-2D projection each frame.

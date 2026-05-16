@@ -1,6 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Cosmos as Data } from "@/core";
 import { cn } from "@/lib";
@@ -141,6 +142,12 @@ export function Cosmos() {
           {Data.sectionDek}
         </p>
       </header>
+
+      {/* Painted prelude flattened to a single image for mobile + reduced-
+          motion paths (where the 3D scroll cinema is skipped). Decorative —
+          the sigil wheel and live marginalia below carry the section's
+          interactive content. */}
+      {isMobile || reducedMotion ? <PreludeStatic /> : null}
 
       <div ref={pinnedRef} className="cosmos-pinned">
         <div className="cosmos-sticky">
@@ -288,4 +295,22 @@ function StaticSigilWheel({
 // ship, this is a transparent layer so the page parchment shows through.
 function PosterFallback() {
   return <div className="cosmos-poster-fallback" role="presentation" aria-hidden="true" />;
+}
+
+// Static prelude composite for mobile + reduced-motion. The 3D prop scene is
+// pre-flattened to one image by `scripts/cosmos-textures.ts` so these paths
+// pay one decode instead of mounting the live canvas.
+function PreludeStatic() {
+  return (
+    <div className="cosmos-prelude-static" aria-hidden="true">
+      <Image
+        src={Data.preludeCompositeMobile}
+        alt=""
+        width={1024}
+        height={512}
+        sizes="(max-width: 767px) 100vw, 90vw"
+        className="cosmos-prelude-static-img"
+      />
+    </div>
+  );
 }

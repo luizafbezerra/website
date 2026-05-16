@@ -11,6 +11,7 @@ import { CosmosDeepField } from "./cosmos/CosmosDeepField";
 import { CosmosEnvProbe } from "./cosmos/CosmosEnvProbe";
 import { CosmosGalaxyBand } from "./cosmos/CosmosGalaxyBand";
 import { CosmosNebulae } from "./cosmos/CosmosNebulae";
+import { CosmosPrelude } from "./cosmos/CosmosPrelude";
 import { CosmosStarField } from "./cosmos/CosmosStarField";
 
 export type SigilScreenPosition = { x: number; y: number; visible: boolean };
@@ -27,7 +28,14 @@ type Props = {
   visible?: boolean;
 };
 
-// Scene root. Composes the v6 simulated universe:
+// Scene root. Composes the prelude → simulated universe:
+//   * Painted prelude (foreground, layer 0 — only meaningful while
+//     p ∈ [0.00, 0.30]; faded out elsewhere by per-prop opacity):
+//       - `<CosmosPrelude>` — a sparse arrangement of discrete cut-out props
+//         (clouds, land strip, trees, rocks, bush, single figure) positioned
+//         in 3D between the camera and the universe. Each prop fades as the
+//         camera passes its Z. The 3D nebula + deep field + comets ARE the
+//         sky behind them — no painted sky layer.
 //   * Background (layer 0 + layer 1 — baked into the brass armillary's
 //     reflection cube map by `<CosmosEnvProbe>`):
 //       - `<CosmosNebulae>` — baked FBM nebula on a textured inverted sphere.
@@ -39,12 +47,10 @@ type Props = {
 //       - `<CosmosConstellationLines>` — gilt strokes + bright vertex stars
 //         for ~20 real-RA/Dec constellations at radius 12; fades in mid-orbit.
 //       - `<CosmosArmillary>` — PBR brass rings + emissive gilt sun.
+//         Receives `progressRef` so its materials gate on
+//         `armillaryOpacity(p)`: invisible through the prelude, materializing
+//         across p ∈ [0.20, 0.30].
 //       - `<CosmosComets>` — occasional arcing comets, dimmed during descent.
-//
-// v6 dropped the FBM cloud plates (v5) — clouds read as pale grey-cream
-// strips that didn't pop against the cosmos and competed with the
-// constellation network. The section now ends as "the cosmos itself,
-// denser" rather than "the cosmos plus a fake painted weather front".
 //
 // v4-perf: dropped the `<pointLight>` at the sun position. The PBR rings now
 // take their illumination entirely from the env-probe cube map (which already
@@ -53,8 +59,9 @@ type Props = {
 //
 // `mobile` swaps in a simpler scene: no scroll-driven camera, no comets, the
 // foreground shell halves its count, and the env probe drops its cube
-// resolution from 128 → 64. `visible` pauses the frame loop when the section
-// is offscreen.
+// resolution from 128 → 64. The painted prelude is also skipped on mobile —
+// the static `composite-mobile.webp` above the canvas (rendered by
+// `<Cosmos>`) replaces it. `visible` pauses the frame loop when offscreen.
 export function CosmosCanvas({
   progressRef,
   sigilScreenPositionsRef,
@@ -64,7 +71,11 @@ export function CosmosCanvas({
 }: Props) {
   return (
     <Canvas
-      camera={{ position: [0, 0.08, 8.4], fov: 38, near: 0.1, far: 200 }}
+      // Start at KEY_FAR_IN's prelude position so the first rendered frame
+      // already reads as "view from the ground". The camera rig glides to
+      // `cameraKeyAtProgress(p)` each frame; matching this initial position
+      // eliminates the first-frame glide pop.
+      camera={{ position: [0, 1.4, 25], fov: 38, near: 0.1, far: 200 }}
       // Cap DPR at 1.5 on Retina/4K so the brass + star sprites don't pay full
       // pixel-density cost. The vignette mask hides edge sharpness anyway.
       dpr={[1, 1.5]}
@@ -97,9 +108,17 @@ export function CosmosCanvas({
         <CosmosArmillary
           sigilScreenPositionsRef={sigilScreenPositionsRef}
           activeSigilId={activeSigilId}
+          progressRef={progressRef}
         />
 
         {!mobile ? <CosmosComets progressRef={progressRef} /> : null}
+
+        {/* Painted prelude — discrete cut-out props (clouds, land, trees,
+            rocks, bush, single figure) between the start camera and the
+            universe. Rendered last so the transparent planes depth-sort
+            cleanly against the rest of the scene during the approach
+            phase. Skipped on mobile (no scroll cinema → no prelude). */}
+        {!mobile ? <CosmosPrelude progressRef={progressRef} /> : null}
       </CosmosEnvProbe>
     </Canvas>
   );

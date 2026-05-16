@@ -8,8 +8,10 @@
 // Run: `pnpm tsx scripts/cosmos-textures.ts`
 
 import { existsSync, mkdirSync, statSync } from "node:fs";
+import { readdir, unlink } from "node:fs/promises";
 import path from "node:path";
 import sharp from "sharp";
+import { Cosmos } from "@/core";
 
 const SOURCES = "references/cosmos-sources";
 const TARGET = "public/art/cosmos";
@@ -294,6 +296,231 @@ async function buildBrushedRoughness(): Promise<string | null> {
 // the descent beat.)
 
 // ---------------------------------------------------------------------------
+// v8 painted-prelude prop assets. Replaces the v7 five-band painted layers
+// with a sparse arrangement of discrete cut-out props (clouds, land strip,
+// trees, rocks, bush, single figure). The 3D nebula + deep field + comets
+// behind these props ARE the sky — no painted sky layer. Each prop is a
+// solid PNG with transparent alpha so the 3D cosmos shows through *between*
+// props but never *through* them.
+//
+// Source PNGs live in `references/cosmos-sources/prelude/` (gitignored —
+// AI-generated cut-outs supplied by the user). The bake just resizes them,
+// applies one bake-time crop to `land.png` (whose upper 30% is a baked sky
+// we discard so the 3D nebula owns the sky above the horizon strip), and
+// emits the WebPs at the paths declared by `Cosmos.preludeProps[i].src`.
+// ---------------------------------------------------------------------------
+
+const PRELUDE_SOURCE_DIR = `${SOURCES}/prelude`;
+const PRELUDE_TARGET_DIR = `${TARGET}/prelude`;
+
+// Source PNG filename per prop id. Sources live in `references/cosmos-sources/prelude/`;
+// the .gitignore in that directory keeps the AI-generated PNGs out of the repo.
+const PRELUDE_SOURCE_FILENAMES: Record<Cosmos.PreludePropId, string> = {
+  "cloud-far": "clouds02.png",
+  "cloud-near": "clouds.png",
+  land: "land.png",
+  "tree-left": "tree01.png",
+  "tree-right": "tree02.png",
+  "rock-near": "rock02.png",
+  "rock-far": "rock01.png",
+  bush: "bush01.png",
+  figure: "person01.png",
+};
+
+// Bake-time crop. Only `land.png` needs one — its upper 30% is a painted
+// sunset sky we drop so the 3D nebula owns the sky above the horizon strip.
+// Values are source-image fractions in [0..1].
+const PRELUDE_CROPS: Partial<
+  Record<Cosmos.PreludePropId, { top: number; left: number; width: number; height: number }>
+> = {
+  land: { top: 0.3, left: 0, width: 1.0, height: 0.7 },
+};
+
+// Cap the long side; smaller sources pass through at native size.
+const PRELUDE_MAX_DIM = 1024;
+
+async function buildPreludeProp(prop: Cosmos.PreludeProp): Promise<string | null> {
+  const filename = PRELUDE_SOURCE_FILENAMES[prop.id];
+  const src = `${PRELUDE_SOURCE_DIR}/${filename}`;
+  const dst = `${PRELUDE_TARGET_DIR}/${prop.id}.webp`;
+  if (!existsSync(src)) return null;
+
+  mkdirSync(path.dirname(dst), { recursive: true });
+
+  let pipe = sharp(src);
+  const crop = PRELUDE_CROPS[prop.id];
+  if (crop) {
+    const meta = await pipe.metadata();
+    const sw = meta.width ?? 0;
+    const sh = meta.height ?? 0;
+    if (sw > 0 && sh > 0) {
+      pipe = sharp(src).extract({
+        left: Math.max(0, Math.floor(crop.left * sw)),
+        top: Math.max(0, Math.floor(crop.top * sh)),
+        width: Math.min(sw, Math.floor(crop.width * sw)),
+        height: Math.min(sh, Math.floor(crop.height * sh)),
+      });
+    }
+  }
+
+  await pipe
+    .resize(PRELUDE_MAX_DIM, PRELUDE_MAX_DIM, { fit: "inside", withoutEnlargement: true })
+    .webp({ quality: 85, effort: 5 })
+    .toFile(dst);
+
+  return dst;
+}
+
+// 2D-flattened composite for the mobile / reduced-motion fallback. Projects
+// each prop from its 3D world position to image pixel coords as the camera
+// would see it at p=0 (camera at (0, 1.4, 25), look at (0, 1.4, 0), FOV =
+// `Cosmos.cameraFovDeg`), then composites the resized props over a parchment
+// background. Props that project entirely off-screen at p=0 are skipped —
+// the static image shows whatever IS in the frustum at p=0, matching the
+// desktop scene the visitor sees on first entry.
+
+const COMPOSITE_W = 1024;
+const COMPOSITE_H = 512;
+const COMPOSITE_BACKGROUND = "#f7f1e3"; // matches oklch(0.97 0.012 75) parchment
+
+async function buildPreludeComposite(): Promise<string | null> {
+  const dst = `${PRELUDE_TARGET_DIR}/composite-mobile.webp`;
+  mkdirSync(path.dirname(dst), { recursive: true });
+
+  const cameraY = 1.4;
+  const cameraZ = 25;
+  const fovTanHalf = Math.tan(((Cosmos.cameraFovDeg / 2) * Math.PI) / 180);
+  const aspect = COMPOSITE_W / COMPOSITE_H;
+
+  type Overlay = { input: Buffer; left: number; top: number };
+  const overlays: Overlay[] = [];
+
+  // Composite far props first so near props paint over them at seams.
+  const sorted = [...Cosmos.preludeProps].sort((a, b) => b.position[2] - a.position[2]);
+  for (const prop of sorted) {
+    const webpPath = `${PRELUDE_TARGET_DIR}/${prop.id}.webp`;
+    if (!existsSync(webpPath)) continue;
+
+    const meta = await sharp(webpPath).metadata();
+    const texW = meta.width ?? 0;
+    const texH = meta.height ?? 0;
+    if (texW === 0 || texH === 0) continue;
+    const texAspect = texW / texH;
+
+    const distance = cameraZ - prop.position[2];
+    if (distance <= 0) continue;
+
+    const yOffset = prop.anchor === "bottom" ? prop.scale / 2 : 0;
+    const worldX = prop.position[0];
+    const worldY = prop.position[1] + yOffset - cameraY;
+
+    const halfH = fovTanHalf * distance;
+    const halfW = halfH * aspect;
+
+    const ndcX = worldX / halfW;
+    const ndcY = worldY / halfH;
+
+    const propWorldHeight = prop.scale;
+    const propWorldWidth = prop.scale * texAspect;
+    const propPxH = Math.round((propWorldHeight / (2 * halfH)) * COMPOSITE_H);
+    const propPxW = Math.round((propWorldWidth / (2 * halfW)) * COMPOSITE_W);
+    if (propPxH < 1 || propPxW < 1) continue;
+
+    const centerPxX = ((ndcX + 1) / 2) * COMPOSITE_W;
+    const centerPxY = ((1 - ndcY) / 2) * COMPOSITE_H;
+    const left = Math.round(centerPxX - propPxW / 2);
+    const top = Math.round(centerPxY - propPxH / 2);
+
+    // Skip overlays that fall entirely outside the canvas.
+    const visLeft = Math.max(0, left);
+    const visTop = Math.max(0, top);
+    const visRight = Math.min(COMPOSITE_W, left + propPxW);
+    const visBot = Math.min(COMPOSITE_H, top + propPxH);
+    const visW = visRight - visLeft;
+    const visH = visBot - visTop;
+    if (visW <= 0 || visH <= 0) continue;
+
+    // Resize the source to its projected pixel size, then crop down to the
+    // canvas-visible region. Sharp's `.composite()` rejects overlays larger
+    // than the base image — a prop wider than `COMPOSITE_W` (e.g. `land`)
+    // must be cropped to its visible slice before it can be composited.
+    let resized = await sharp(webpPath).resize(propPxW, propPxH, { fit: "fill" }).png().toBuffer();
+    const insetX = visLeft - left;
+    const insetY = visTop - top;
+    if (insetX > 0 || insetY > 0 || visW < propPxW || visH < propPxH) {
+      resized = await sharp(resized)
+        .extract({ left: insetX, top: insetY, width: visW, height: visH })
+        .png()
+        .toBuffer();
+    }
+    overlays.push({ input: resized, left: visLeft, top: visTop });
+  }
+
+  if (overlays.length === 0) return null;
+
+  await sharp({
+    create: {
+      width: COMPOSITE_W,
+      height: COMPOSITE_H,
+      channels: 3,
+      background: COMPOSITE_BACKGROUND,
+    },
+  })
+    .composite(overlays.map((o) => ({ input: o.input, left: o.left, top: o.top })))
+    .webp({ quality: 80, effort: 5 })
+    .toFile(dst);
+
+  return dst;
+}
+
+// Remove v7-era WebPs from `public/art/cosmos/prelude/` that aren't in the
+// new prop set, so stale `sky.webp` / `far-mtn.webp` / `near-hill.webp` /
+// `foreground.webp` don't linger after the prelude inversion.
+async function cleanupPreludeArtifacts(): Promise<void> {
+  if (!existsSync(PRELUDE_TARGET_DIR)) return;
+  const validNames = new Set<string>([
+    ...Cosmos.preludeProps.map((p) => `${p.id}.webp`),
+    "composite-mobile.webp",
+  ]);
+  const entries = await readdir(PRELUDE_TARGET_DIR);
+  for (const name of entries) {
+    if (!name.endsWith(".webp")) continue;
+    if (validNames.has(name)) continue;
+    const full = path.join(PRELUDE_TARGET_DIR, name);
+    await unlink(full);
+    console.log(`RM   ${full}`);
+  }
+}
+
+async function buildPreludeProps(): Promise<string[]> {
+  const written: string[] = [];
+  mkdirSync(PRELUDE_SOURCE_DIR, { recursive: true });
+  mkdirSync(PRELUDE_TARGET_DIR, { recursive: true });
+
+  await cleanupPreludeArtifacts();
+
+  for (const prop of Cosmos.preludeProps) {
+    const dst = await buildPreludeProp(prop);
+    if (dst) {
+      written.push(dst);
+      const stat = statSync(dst);
+      console.log(`OK   ${dst} (${Math.round(stat.size / 1024)} KB)`);
+    } else {
+      console.log(`SKIP ${prop.id} (missing source)`);
+    }
+  }
+
+  const composite = await buildPreludeComposite();
+  if (composite) {
+    written.push(composite);
+    const stat = statSync(composite);
+    console.log(`OK   ${composite} (${Math.round(stat.size / 1024)} KB)`);
+  }
+
+  return written;
+}
+
+// ---------------------------------------------------------------------------
 // Runner — process simple resize tasks then the graded ones.
 // ---------------------------------------------------------------------------
 
@@ -343,6 +570,16 @@ async function processAll(): Promise<void> {
     totalSize += stat.size;
     ok++;
     console.log(`OK   ${dst} (${Math.round(stat.size / 1024)} KB)`);
+  }
+
+  // v8 painted-prelude props. Source PNGs live in
+  // `references/cosmos-sources/prelude/`; missing sources skip silently
+  // (the runtime mesh stays hidden until its texture loads).
+  const preludeWritten = await buildPreludeProps();
+  for (const dst of preludeWritten) {
+    const stat = statSync(dst);
+    totalSize += stat.size;
+    ok++;
   }
 
   console.log("");

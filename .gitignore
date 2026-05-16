@@ -21,3 +21,8 @@ src/payload-types.ts
 next-env.d.ts
 tsconfig.tsbuildinfo
 docs/
+
+# AI-generated prelude source PNGs. Staged into references/cosmos-sources/prelude/
+# for the bake (that dir has its own .gitignore blocking PNGs). Only the baked
+# WebPs in public/art/cosmos/prelude/ are checked in.
+generated/

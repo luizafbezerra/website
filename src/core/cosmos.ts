@@ -517,14 +517,13 @@ export namespace Cosmos {
   // Spawn cadence: after a traversal, wait this long before the next spawn.
   export const cometCooldownRange: readonly [number, number] = [30, 60];
 
-  // ---- Camera cinema (v5 — 3 phases: zoom-in → orbit → descent) ------------
-  // zoomIn → orbit → descent. A single graceful arc: dolly toward the
-  // armillary, ride a continuous polar arc around it (with a gentle y-bob in
-  // place of the v3 tilt-up jolt), then descend from orbit altitude to a
-  // hill-top view where the armillary sits in the upper half of the frame
-  // and the painted landscape horizon fills the lower portion. LookAt
-  // interpolates from origin to a point slightly below origin so the camera
-  // tilts down into the landscape during descent — no abrupt look swing.
+  // ---- Camera cinema (v7 — painted prelude → orbit → descent) -------------
+  // Three phases, identical scroll mapping to v5/v6: dolly approach,
+  // continuous polar orbit, descent pull-back. The approach phase doubles
+  // as the painted-scene prelude — five Z-staggered painted planes sit
+  // between the start camera and the universe; they fade as the camera
+  // passes through each, materializing into the simulated cosmos. The
+  // orbit and descent phases are unchanged from v6.
 
   export type CameraKey = { pos: Vec3; look: Vec3 };
 
@@ -538,7 +537,15 @@ export namespace Cosmos {
     descent: { range: [0.85, 1.0] as const },
   };
 
-  const KEY_FAR_IN: CameraKey = { pos: [0, 0.08, 8.4], look: [0, 0, 0] };
+  // v7: approach starts far back (z=25) and high-eyed (look-Y=1.4) so the
+  // painted-scene prelude reads as "view FROM the ground" — horizon in the
+  // lower third, sky in the upper portion, mountains + hills + a solitary
+  // figure stacked between. The camera dollies straight forward through five
+  // Z-staggered painted-layer planes to KEY_MID, the existing orbit-start
+  // position. Because KEY_MID is unchanged, the prelude → orbit seam is
+  // invisible — orbit angle is derived from KEY_MID and continues from
+  // exactly where the dolly ends.
+  const KEY_FAR_IN: CameraKey = { pos: [0, 1.4, 25], look: [0, 1.4, 0] };
   const KEY_MID: CameraKey = { pos: [0, 0.2, 3.6], look: [0, 0, 0] };
   // Descent endpoint: a wider, slightly elevated shot of the armillary
   // surrounded by the dense constellation network. Camera pulls back from
@@ -578,13 +585,34 @@ export namespace Cosmos {
   const ORBIT_LOOK_UP_RISE = [0.15, 0.55] as const; // local_t window
   const ORBIT_LOOK_UP_FALL = [0.55, 0.95] as const;
 
+  // Approach-phase look-Y arc. The visitor starts at "horizon-level" gaze
+  // (lookY = KEY_FAR_IN.look[1]), tilts upward across the middle of the
+  // approach so the camera "dives into the sky" as the painted layers
+  // dissolve, then settles back to the origin for the orbit phase. Both
+  // halves use smootherstep so the tilt + return read as one continuous
+  // gesture instead of two stitched lerps.
+  //
+  // Peak ~ 2.6 (1.2 above the start). The orbit's KEY_MID.look is (0,0,0),
+  // so the second half of the arc has to fall a full 2.6 units back to
+  // origin — that's why the down-coefficient looks larger than the up.
+  const APPROACH_LOOK_UP_PEAK = 1.2;
+  const APPROACH_LOOK_UP_RISE = [0.0, 0.18] as const;
+  const APPROACH_LOOK_UP_FALL = [0.18, 0.25] as const;
+
   export const cameraKeyAtProgress = (p: number): CameraKey => {
-    // Zoom-in: dolly from far to mid, always looking at origin.
+    // Zoom-in: dolly from far to mid. LookY rises from the painted-horizon
+    // start, peaks just as the prelude planes fade into the universe, and
+    // returns to origin (matching KEY_MID.look) at the orbit boundary.
     if (p <= cameraPhases.zoomIn.range[1]) {
       const t = smootherstep(p, cameraPhases.zoomIn.range[0], cameraPhases.zoomIn.range[1]);
+      const tRise = smootherstep(p, APPROACH_LOOK_UP_RISE[0], APPROACH_LOOK_UP_RISE[1]);
+      const tFall = smootherstep(p, APPROACH_LOOK_UP_FALL[0], APPROACH_LOOK_UP_FALL[1]);
+      const startY = KEY_FAR_IN.look[1];
+      const peakY = startY + APPROACH_LOOK_UP_PEAK;
+      const lookY = startY + tRise * APPROACH_LOOK_UP_PEAK - tFall * peakY;
       return {
         pos: v3lerp(KEY_FAR_IN.pos, KEY_MID.pos, t),
-        look: [0, 0, 0],
+        look: [0, lookY, 0],
       };
     }
     // Orbit: continuous polar arc on a slightly inclined plane (handled by
@@ -622,15 +650,172 @@ export namespace Cosmos {
 
   // Sigil overlay visibility envelope, re-tuned for the 3-phase timing.
   // The sigils are most legible during the orbit phase (0.25 → 0.85) when
-  // the camera is close in; fade in across the zoom-in and out before the
-  // descent begins so the final beat carries a single epigraph instead of
-  // twelve competing labels. Smootherstep on both edges so opacity has no
-  // velocity step.
+  // the camera is close in; fade in alongside the armillary as the painted
+  // prelude dissolves, and out before the descent begins so the final beat
+  // carries a single epigraph instead of twelve competing labels.
+  // Smootherstep on both edges so opacity has no velocity step. The fade-in
+  // window matches `armillaryOpacity` (0.20 → 0.30) so the brass rings and
+  // their riding sigils materialize together.
   export const sigilOverlayOpacity = (p: number): number => {
-    const fadeIn = smootherstep(p, 0.1, 0.32);
+    const fadeIn = smootherstep(p, 0.2, 0.3);
     const fadeOut = 1 - smootherstep(p, 0.78, 0.9);
     return fadeIn * fadeOut;
   };
+
+  // ---- v7 prelude helpers ---------------------------------------------------
+
+  // Armillary + sigil opacity envelope. The painted prelude owns the screen
+  // through p ∈ [0, 0.20]; the universe (armillary, sun sprite, sigil glyphs)
+  // materializes between p = 0.20 → 0.30 as the last painted layers fade out.
+  // Smootherstep so the dissolve has zero-derivative edges and the materials
+  // never visibly pop in or out.
+  export const armillaryOpacity = (p: number): number => smootherstep(p, 0.2, 0.3);
+
+  // Per-prop painted-plane opacity. A prop is fully visible while the
+  // camera is more than 1.5 world units in front of it, and fully invisible
+  // once the camera reaches or passes the prop's Z. Smootherstep gives the
+  // fade derivative-zero edges so prop transitions don't pop. Reverse-scroll
+  // works identically: as the camera retreats past a prop's Z + 1.5, the
+  // plane re-materializes.
+  export const preludePropOpacity = (cameraZ: number, propZ: number): number =>
+    smootherstep(cameraZ - propZ, -1.5, 0.0);
+
+  // Master scroll-driven fade for the entire painted prelude. Multiplied into
+  // each layer's per-layer (camera-Z) opacity so the painted scene is fully
+  // gone by p=0.20 — before the armillary + sigils start to materialize at
+  // p=0.20. Without this, the sky plane (z=5) would still be ~30% opaque at
+  // p=0.22 while the universe is already fading in behind it, producing a
+  // muddy overlap during the transition. With it, the painted scene exits
+  // cleanly, leaving the canvas blank for ~0.5 of a scroll-tick before the
+  // universe begins to develop.
+  export const preludeMasterOpacity = (p: number): number => 1 - smootherstep(p, 0.16, 0.2);
+
+  // Painted-prelude prop manifest. The 3D nebula + deep field + comets ARE
+  // the sky behind these props; the painted scene is a sparse arrangement of
+  // discrete cut-outs (clouds, land strip, trees, rocks, bush, single figure)
+  // positioned in 3D between camera (z=25) and the universe. Each prop is
+  // its own solid PNG alpha so the 3D sky shows through *between* props but
+  // never *through* them.
+  //
+  // `anchor: "bottom"` means `position.y` is the bottom edge of the prop
+  // (the runtime offsets the mesh's local y by `+scale/2`); ground-aligned
+  // props use this so a tree at y=0 stands on the horizon rather than being
+  // centred on it. `scale` is world-height in units; runtime computes the
+  // world-width from the texture's aspect at mount.
+  export type PreludePropId =
+    | "land"
+    | "tree-left"
+    | "tree-right"
+    | "rock-near"
+    | "rock-far"
+    | "bush"
+    | "figure"
+    | "cloud-near"
+    | "cloud-far";
+
+  export type PreludeProp = {
+    id: PreludePropId;
+    src: string;
+    position: Vec3;
+    scale: number;
+    anchor?: "center" | "bottom";
+  };
+
+  export const preludeProps: ReadonlyArray<PreludeProp> = [
+    // Clouds — two masses in the upper portion of the frame at different Z
+    // so the camera dolly produces parallax between them.
+    {
+      id: "cloud-far",
+      src: "/art/cosmos/prelude/cloud-far.webp",
+      position: [3.5, 4.5, 14],
+      scale: 3.0,
+      anchor: "center",
+    },
+    {
+      id: "cloud-near",
+      src: "/art/cosmos/prelude/cloud-near.webp",
+      position: [-3.0, 3.5, 16],
+      scale: 2.0,
+      anchor: "center",
+    },
+    // Horizon strip — painted dusk valley + distant mountains + river.
+    // Source PNG has baked sky in its upper 30%; cropped at bake time so
+    // only the mountain + valley region survives and the 3D sky takes
+    // over above it.
+    {
+      id: "land",
+      src: "/art/cosmos/prelude/land.webp",
+      position: [0, -0.3, 20],
+      scale: 2.0,
+      anchor: "center",
+    },
+    // Trees — bottom-anchored to the land strip at slightly different Z so
+    // they read as two distinct silhouettes against the cosmos sky.
+    {
+      id: "tree-left",
+      src: "/art/cosmos/prelude/tree-left.webp",
+      position: [-2.0, 0.3, 19],
+      scale: 2.0,
+      anchor: "bottom",
+    },
+    {
+      id: "tree-right",
+      src: "/art/cosmos/prelude/tree-right.webp",
+      position: [2.5, 0.0, 18.5],
+      scale: 1.8,
+      anchor: "bottom",
+    },
+    // Rocks — scattered foreground anchors, low in the frame.
+    {
+      id: "rock-near",
+      src: "/art/cosmos/prelude/rock-near.webp",
+      position: [-0.8, -0.9, 22],
+      scale: 0.8,
+      anchor: "bottom",
+    },
+    {
+      id: "rock-far",
+      src: "/art/cosmos/prelude/rock-far.webp",
+      position: [1.5, -0.5, 21],
+      scale: 0.6,
+      anchor: "bottom",
+    },
+    // Bush — closest prop to the camera, just inside the lower frame.
+    {
+      id: "bush",
+      src: "/art/cosmos/prelude/bush.webp",
+      position: [0.2, -1.0, 23],
+      scale: 0.5,
+      anchor: "bottom",
+    },
+    // Figure — single solitary silhouette (Wanderer archetype), beside
+    // rock-far. The practice is individual analysis, so the scene carries
+    // one figure, never a couple.
+    {
+      id: "figure",
+      src: "/art/cosmos/prelude/figure.webp",
+      position: [0.6, 0.05, 21.5],
+      scale: 1.2,
+      anchor: "bottom",
+    },
+  ];
+
+  // Mobile/reduced-motion static fallback. The prop scene pre-flattened at
+  // build time, so the static path pays one image decode instead of nine
+  // and renders without WebGL.
+  export const preludeCompositeMobile = "/art/cosmos/prelude/composite-mobile.webp";
+
+  // Camera FOV used by the cosmos canvas. Kept here so the prelude plane
+  // sizing logic can compute world-space extents that fill the frustum at
+  // each layer's Z without re-deriving the camera config.
+  export const cameraFovDeg = 38;
+
+  // World-space half-extent (vertical) of the frustum at a given distance
+  // from the camera. Each prelude plane scales to twice this in height +
+  // proportionally in width (using the runtime aspect ratio) so the painted
+  // content always fills the frame at p=0 regardless of Z.
+  export const frustumHalfHeightAt = (distance: number): number =>
+    Math.tan((cameraFovDeg / 2) * DEG) * distance;
 
   // Descent-beat fade envelope. Hidden through the orbit phase; fades in
   // across the first half of the descent (0.85 → 0.95) and holds at full

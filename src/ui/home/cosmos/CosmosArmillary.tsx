@@ -1,6 +1,7 @@
 "use client";
 
 import { useFrame } from "@react-three/fiber";
+import type { MutableRefObject } from "react";
 import { useContext, useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
 import { Cosmos } from "@/core";
@@ -13,6 +14,12 @@ export type SigilScreenPosition = { x: number; y: number; visible: boolean };
 type Props = {
   sigilScreenPositionsRef: React.MutableRefObject<SigilScreenPosition[]>;
   activeSigilId: Cosmos.SigilId | null;
+  // Scroll progress (0..1), read each frame to compute `armillaryOpacity` so
+  // the rings + sun materialize between p=0.20 and p=0.30 — the same window
+  // the last painted-prelude layers (sky, clouds) fade out across. When
+  // omitted (e.g. the env probe's deferred mount path), the armillary stays
+  // at full opacity.
+  progressRef?: MutableRefObject<number>;
 };
 
 const SIGIL_COUNT = 12;
@@ -35,9 +42,15 @@ const RING_TEXTURE_REPEATS = 8; // times the brushed-roughness map tiles around 
 // nebula + galaxy band, so the brass picks up colour and direction from the
 // reflection alone. `envMapIntensity` is raised to keep the rings reading
 // bright enough without per-fragment light math.
-export function CosmosArmillary({ sigilScreenPositionsRef, activeSigilId }: Props) {
+export function CosmosArmillary({ sigilScreenPositionsRef, activeSigilId, progressRef }: Props) {
   const groupRef = useRef<THREE.Group>(null);
   const sigilAnchorRefs = useRef<Array<THREE.Object3D | null>>(Array(SIGIL_COUNT).fill(null));
+  // Material refs for the per-frame opacity envelope. The rings share the
+  // armillary fade; the sun sprite gets the same opacity multiplier so the
+  // entire object resolves as one unit rather than the rings appearing
+  // before the sun (or vice versa).
+  const ringMaterialRefs = useRef<Array<THREE.MeshStandardMaterial | null>>([]);
+  const sunMaterialRef = useRef<THREE.SpriteMaterial | null>(null);
 
   // Reusable temporaries — `useFrame` runs every animation tick, so we avoid
   // allocating Vector3 / Quaternion instances per frame.
@@ -95,6 +108,19 @@ export function CosmosArmillary({ sigilScreenPositionsRef, activeSigilId }: Prop
       g.rotation.z = wobble;
     }
 
+    // Armillary fade envelope. The painted prelude owns the screen through
+    // p < 0.20; the brass + sun materialize across p ∈ [0.20, 0.30] as the
+    // last painted layers dissolve. Skipping the multiply when no progress
+    // ref is provided leaves the materials at 1.0 — useful for any future
+    // detached preview surface.
+    if (progressRef) {
+      const op = Cosmos.armillaryOpacity(Cosmos.clamp01(progressRef.current));
+      for (const m of ringMaterialRefs.current) {
+        if (m) m.opacity = op;
+      }
+      if (sunMaterialRef.current) sunMaterialRef.current.opacity = op;
+    }
+
     const camera = state.camera;
     for (let i = 0; i < SIGIL_COUNT; i++) {
       const anchor = sigilAnchorRefs.current[i];
@@ -134,7 +160,7 @@ export function CosmosArmillary({ sigilScreenPositionsRef, activeSigilId }: Prop
 
   return (
     <group ref={groupRef}>
-      {rings.map((ring) => (
+      {rings.map((ring, index) => (
         <mesh key={ring.id} rotation={ring.eulerRad} position={ring.offset}>
           <torusGeometry
             args={[
@@ -145,6 +171,9 @@ export function CosmosArmillary({ sigilScreenPositionsRef, activeSigilId }: Prop
             ]}
           />
           <meshStandardMaterial
+            ref={(m) => {
+              ringMaterialRefs.current[index] = m;
+            }}
             color="#b08850"
             metalness={0.92}
             roughness={0.32}
@@ -153,6 +182,11 @@ export function CosmosArmillary({ sigilScreenPositionsRef, activeSigilId }: Prop
             // Bumped from 1.4 → 1.8 to compensate for the dropped pointLight:
             // the brass now takes all of its illumination from the env probe.
             envMapIntensity={1.8}
+            // `transparent` opts the ring into the prelude-driven opacity
+            // envelope (`material.opacity = armillaryOpacity(p)` each
+            // frame). The default opacity of 1 keeps the rings fully opaque
+            // for the orbit + descent phases the moment the prelude is past.
+            transparent
           />
         </mesh>
       ))}
@@ -163,6 +197,9 @@ export function CosmosArmillary({ sigilScreenPositionsRef, activeSigilId }: Prop
           engraving detail couldn't resolve and it read as a flat white dot. */}
       <sprite position={[0, 0, 0]} scale={[0.42, 0.42, 1]}>
         <spriteMaterial
+          ref={(m) => {
+            sunMaterialRef.current = m;
+          }}
           map={sunGlowSprite ?? undefined}
           color="#ffffff"
           transparent

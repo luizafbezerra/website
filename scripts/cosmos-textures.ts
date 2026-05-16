@@ -304,20 +304,24 @@ async function buildBrushedRoughness(): Promise<string | null> {
 // props but never *through* them.
 //
 // Source PNGs live in `references/cosmos-sources/prelude/` (gitignored —
-// AI-generated cut-outs supplied by the user). The bake just resizes them,
-// applies one bake-time crop to `land.png` (whose upper 30% is a baked sky
-// we discard so the 3D nebula owns the sky above the horizon strip), and
-// emits the WebPs at the paths declared by `Cosmos.preludeProps[i].src`.
+// AI-generated cut-outs supplied by the user). The bake resizes each source
+// to a WebP at `public/art/cosmos/prelude/${assetId}.webp` (one bake per
+// asset; multiple prop instances in `Cosmos.preludeProps` can share an
+// asset). `land.png` also gets a bake-time top crop + top-edge alpha fade
+// so its painted strip dissolves into the 3D sky above it.
 // ---------------------------------------------------------------------------
 
 const PRELUDE_SOURCE_DIR = `${SOURCES}/prelude`;
 const PRELUDE_TARGET_DIR = `${TARGET}/prelude`;
 
-// Source PNG filename per prop id. Sources live in `references/cosmos-sources/prelude/`;
-// the .gitignore in that directory keeps the AI-generated PNGs out of the repo.
-const PRELUDE_SOURCE_FILENAMES: Record<Cosmos.PreludePropId, string> = {
-  "cloud-far": "clouds02.png",
-  "cloud-near": "clouds.png",
+// Source PNG filename per asset id. Sources live in
+// `references/cosmos-sources/prelude/`; the .gitignore in that directory keeps
+// the AI-generated PNGs out of the repo. Each asset bakes to one WebP; the
+// scene's prop instances reference assets by id (multiple instances can share
+// an asset — see `Cosmos.preludeProps`).
+const PRELUDE_ASSET_SOURCES: Record<Cosmos.PreludeAssetId, string> = {
+  "cloud-dense": "clouds02.png",
+  "cloud-soft": "clouds.png",
   land: "land.png",
   "tree-left": "tree01.png",
   "tree-right": "tree02.png",
@@ -327,28 +331,27 @@ const PRELUDE_SOURCE_FILENAMES: Record<Cosmos.PreludePropId, string> = {
   figure: "person01.png",
 };
 
-// Bake-time crop. Only `land.png` needs one — its upper 30% is a painted
-// sunset sky we drop so the 3D nebula owns the sky above the horizon strip.
-// Values are source-image fractions in [0..1].
-const PRELUDE_CROPS: Partial<
-  Record<Cosmos.PreludePropId, { top: number; left: number; width: number; height: number }>
-> = {
-  land: { top: 0.3, left: 0, width: 1.0, height: 0.7 },
-};
+// Bake-time crop per asset. Empty by default — sources are baked as-is. Add
+// an entry here if a source PNG includes baked content that conflicts with
+// the 3D scene (e.g., a baked sky inside a horizon plate that the 3D nebula
+// should own). Values are source-image fractions in [0..1].
+const PRELUDE_ASSET_CROPS: Partial<
+  Record<Cosmos.PreludeAssetId, { top: number; left: number; width: number; height: number }>
+> = {};
 
 // Cap the long side; smaller sources pass through at native size.
 const PRELUDE_MAX_DIM = 1024;
 
-async function buildPreludeProp(prop: Cosmos.PreludeProp): Promise<string | null> {
-  const filename = PRELUDE_SOURCE_FILENAMES[prop.id];
+async function buildPreludeAsset(assetId: Cosmos.PreludeAssetId): Promise<string | null> {
+  const filename = PRELUDE_ASSET_SOURCES[assetId];
   const src = `${PRELUDE_SOURCE_DIR}/${filename}`;
-  const dst = `${PRELUDE_TARGET_DIR}/${prop.id}.webp`;
+  const dst = `${PRELUDE_TARGET_DIR}/${assetId}.webp`;
   if (!existsSync(src)) return null;
 
   mkdirSync(path.dirname(dst), { recursive: true });
 
   let pipe = sharp(src);
-  const crop = PRELUDE_CROPS[prop.id];
+  const crop = PRELUDE_ASSET_CROPS[assetId];
   if (crop) {
     const meta = await pipe.metadata();
     const sw = meta.width ?? 0;
@@ -370,6 +373,10 @@ async function buildPreludeProp(prop: Cosmos.PreludeProp): Promise<string | null
 
   return dst;
 }
+
+// All asset IDs declared by `Cosmos.PreludeAssetId`. Derived from the
+// source-filename map so the two stay in sync.
+const PRELUDE_ASSET_IDS = Object.keys(PRELUDE_ASSET_SOURCES) as Cosmos.PreludeAssetId[];
 
 // 2D-flattened composite for the mobile / reduced-motion fallback. Projects
 // each prop from its 3D world position to image pixel coords as the camera
@@ -395,10 +402,11 @@ async function buildPreludeComposite(): Promise<string | null> {
   type Overlay = { input: Buffer; left: number; top: number };
   const overlays: Overlay[] = [];
 
-  // Composite far props first so near props paint over them at seams.
-  const sorted = [...Cosmos.preludeProps].sort((a, b) => b.position[2] - a.position[2]);
+  // Composite far props first so near props paint over them at seams. Sort
+  // by ascending z (smaller z = farther from camera at z=25 = composite earlier).
+  const sorted = [...Cosmos.preludeProps].sort((a, b) => a.position[2] - b.position[2]);
   for (const prop of sorted) {
-    const webpPath = `${PRELUDE_TARGET_DIR}/${prop.id}.webp`;
+    const webpPath = `${PRELUDE_TARGET_DIR}/${prop.asset}.webp`;
     if (!existsSync(webpPath)) continue;
 
     const meta = await sharp(webpPath).metadata();
@@ -473,13 +481,13 @@ async function buildPreludeComposite(): Promise<string | null> {
   return dst;
 }
 
-// Remove v7-era WebPs from `public/art/cosmos/prelude/` that aren't in the
-// new prop set, so stale `sky.webp` / `far-mtn.webp` / `near-hill.webp` /
-// `foreground.webp` don't linger after the prelude inversion.
+// Remove stale WebPs from `public/art/cosmos/prelude/` — old prop-id-keyed
+// files from before the asset/prop split (cloud-far.webp, cloud-near.webp,
+// etc.), plus anything from prior prelude iterations.
 async function cleanupPreludeArtifacts(): Promise<void> {
   if (!existsSync(PRELUDE_TARGET_DIR)) return;
   const validNames = new Set<string>([
-    ...Cosmos.preludeProps.map((p) => `${p.id}.webp`),
+    ...PRELUDE_ASSET_IDS.map((id) => `${id}.webp`),
     "composite-mobile.webp",
   ]);
   const entries = await readdir(PRELUDE_TARGET_DIR);
@@ -492,21 +500,21 @@ async function cleanupPreludeArtifacts(): Promise<void> {
   }
 }
 
-async function buildPreludeProps(): Promise<string[]> {
+async function buildPreludeAssets(): Promise<string[]> {
   const written: string[] = [];
   mkdirSync(PRELUDE_SOURCE_DIR, { recursive: true });
   mkdirSync(PRELUDE_TARGET_DIR, { recursive: true });
 
   await cleanupPreludeArtifacts();
 
-  for (const prop of Cosmos.preludeProps) {
-    const dst = await buildPreludeProp(prop);
+  for (const assetId of PRELUDE_ASSET_IDS) {
+    const dst = await buildPreludeAsset(assetId);
     if (dst) {
       written.push(dst);
       const stat = statSync(dst);
       console.log(`OK   ${dst} (${Math.round(stat.size / 1024)} KB)`);
     } else {
-      console.log(`SKIP ${prop.id} (missing source)`);
+      console.log(`SKIP ${assetId} (missing source)`);
     }
   }
 
@@ -572,10 +580,10 @@ async function processAll(): Promise<void> {
     console.log(`OK   ${dst} (${Math.round(stat.size / 1024)} KB)`);
   }
 
-  // v8 painted-prelude props. Source PNGs live in
+  // Painted-prelude assets. Source PNGs live in
   // `references/cosmos-sources/prelude/`; missing sources skip silently
   // (the runtime mesh stays hidden until its texture loads).
-  const preludeWritten = await buildPreludeProps();
+  const preludeWritten = await buildPreludeAssets();
   for (const dst of preludeWritten) {
     const stat = statSync(dst);
     totalSize += stat.size;

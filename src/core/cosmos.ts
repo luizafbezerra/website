@@ -697,12 +697,18 @@ export namespace Cosmos {
   // its own solid PNG alpha so the 3D sky shows through *between* props but
   // never *through* them.
   //
+  // `PreludeAssetId` enumerates the baked WebPs (one bake per asset);
+  // `PreludeProp.asset` says which asset a given instance loads. Multiple
+  // props can share an asset (the two cloud shapes are instanced several
+  // times across the upper portion of the frame so the cloud cover reads
+  // dense without paying for redundant bakes / network fetches).
+  //
   // `anchor: "bottom"` means `position.y` is the bottom edge of the prop
   // (the runtime offsets the mesh's local y by `+scale/2`); ground-aligned
   // props use this so a tree at y=0 stands on the horizon rather than being
   // centred on it. `scale` is world-height in units; runtime computes the
   // world-width from the texture's aspect at mount.
-  export type PreludePropId =
+  export type PreludeAssetId =
     | "land"
     | "tree-left"
     | "tree-right"
@@ -710,72 +716,71 @@ export namespace Cosmos {
     | "rock-far"
     | "bush"
     | "figure"
-    | "cloud-near"
-    | "cloud-far";
+    | "cloud-soft"
+    | "cloud-dense";
+
+  export const preludeAssetPath = (id: PreludeAssetId): string => `/art/cosmos/prelude/${id}.webp`;
 
   export type PreludeProp = {
-    id: PreludePropId;
-    src: string;
+    id: string;
+    asset: PreludeAssetId;
     position: Vec3;
     scale: number;
     anchor?: "center" | "bottom";
   };
 
   export const preludeProps: ReadonlyArray<PreludeProp> = [
-    // Clouds — two masses in the upper portion of the frame at different Z
-    // so the camera dolly produces parallax between them.
+    // Clouds — six instances of two shapes (cloud-soft from clouds.png,
+    // cloud-dense from clouds02.png) scattered across the upper portion of
+    // the sky at varied Z for parallax depth on the dolly. Cloud cover
+    // reads dense without baking six distinct WebPs.
+    { id: "cloud-1", asset: "cloud-dense", position: [3.5, 4.8, 13], scale: 3.2 },
+    { id: "cloud-2", asset: "cloud-soft", position: [-3.0, 4.2, 14], scale: 2.6 },
+    { id: "cloud-3", asset: "cloud-soft", position: [5.5, 3.0, 12], scale: 2.4 },
+    { id: "cloud-4", asset: "cloud-dense", position: [-5.5, 5.5, 11], scale: 2.8 },
+    { id: "cloud-5", asset: "cloud-soft", position: [1.5, 2.2, 16], scale: 1.6 },
+    { id: "cloud-6", asset: "cloud-soft", position: [-2.0, 2.8, 17], scale: 1.4 },
+    // Horizon strip — painted dusk valley + distant mountains + river. No
+    // bake crop and no alpha mask; the full source painting shows. Scale
+    // overshoots a 2:1 viewport's frame width at z=20 so the painted
+    // strip covers edge-to-edge on wider aspects (no parchment slivers
+    // visible at L/R).
     {
-      id: "cloud-far",
-      src: "/art/cosmos/prelude/cloud-far.webp",
-      position: [3.5, 4.5, 14],
+      id: "land",
+      asset: "land",
+      position: [0, 0.0, 20],
       scale: 3.0,
       anchor: "center",
     },
-    {
-      id: "cloud-near",
-      src: "/art/cosmos/prelude/cloud-near.webp",
-      position: [-3.0, 3.5, 16],
-      scale: 2.0,
-      anchor: "center",
-    },
-    // Horizon strip — painted dusk valley + distant mountains + river.
-    // Source PNG has baked sky in its upper 30%; cropped at bake time so
-    // only the mountain + valley region survives and the 3D sky takes
-    // over above it.
-    {
-      id: "land",
-      src: "/art/cosmos/prelude/land.webp",
-      position: [0, -0.3, 20],
-      scale: 2.0,
-      anchor: "center",
-    },
-    // Trees — bottom-anchored to the land strip at slightly different Z so
-    // they read as two distinct silhouettes against the cosmos sky.
+    // Trees — in front of the land (z > 20) so they aren't occluded by
+    // the land plane. y is set so the tree base sits just above the lower
+    // frame edge at z≈20.5 (camera y=1.4, frustum-half-height≈1.52 →
+    // frame y bottom ≈ -0.12). x stays inside the frustum on wide aspects.
     {
       id: "tree-left",
-      src: "/art/cosmos/prelude/tree-left.webp",
-      position: [-2.0, 0.3, 19],
-      scale: 2.0,
+      asset: "tree-left",
+      position: [-2.0, -0.1, 20.6],
+      scale: 1.8,
       anchor: "bottom",
     },
     {
       id: "tree-right",
-      src: "/art/cosmos/prelude/tree-right.webp",
-      position: [2.5, 0.0, 18.5],
-      scale: 1.8,
+      asset: "tree-right",
+      position: [2.2, -0.1, 20.4],
+      scale: 1.5,
       anchor: "bottom",
     },
     // Rocks — scattered foreground anchors, low in the frame.
     {
       id: "rock-near",
-      src: "/art/cosmos/prelude/rock-near.webp",
+      asset: "rock-near",
       position: [-0.8, -0.9, 22],
       scale: 0.8,
       anchor: "bottom",
     },
     {
       id: "rock-far",
-      src: "/art/cosmos/prelude/rock-far.webp",
+      asset: "rock-far",
       position: [1.5, -0.5, 21],
       scale: 0.6,
       anchor: "bottom",
@@ -783,19 +788,21 @@ export namespace Cosmos {
     // Bush — closest prop to the camera, just inside the lower frame.
     {
       id: "bush",
-      src: "/art/cosmos/prelude/bush.webp",
+      asset: "bush",
       position: [0.2, -1.0, 23],
       scale: 0.5,
       anchor: "bottom",
     },
-    // Figure — single solitary silhouette (Wanderer archetype), beside
-    // rock-far. The practice is individual analysis, so the scene carries
-    // one figure, never a couple.
+    // Figure — single solitary silhouette (Wanderer archetype). Source PNG
+    // is 93x190; placed just IN FRONT of the land (z=20.5, > land's z=20 so
+    // it isn't occluded) and at a small world scale so the projected size
+    // stays close to the source pixel height and the silhouette renders
+    // crisply rather than upscaled.
     {
       id: "figure",
-      src: "/art/cosmos/prelude/figure.webp",
-      position: [0.6, 0.05, 21.5],
-      scale: 1.2,
+      asset: "figure",
+      position: [-0.7, 0.3, 20.5],
+      scale: 0.22,
       anchor: "bottom",
     },
   ];

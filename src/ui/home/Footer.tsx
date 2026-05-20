@@ -33,6 +33,16 @@ export function Footer() {
               ))}
               <li>
                 <a
+                  href={Luiza.instagramUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="display-italic text-foreground hover:text-terracotta no-underline transition-colors"
+                >
+                  Instagram
+                </a>
+              </li>
+              <li>
+                <a
                   href={Luiza.whatsappUrl}
                   target="_blank"
                   rel="noopener noreferrer"

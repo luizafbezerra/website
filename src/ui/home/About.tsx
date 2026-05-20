@@ -17,7 +17,6 @@ export function About() {
               height={520}
               sizes="(min-width: 1024px) 22rem, 18rem"
               className="mx-auto block w-[min(18rem,80%)] lg:w-full lg:max-w-[22rem]"
-              imgClassName="vignette"
             />
             <p className="marginalia mt-6 mx-auto max-w-[22rem] text-center lg:text-left">
               <span className="display-italic text-terracotta-deep">Quaternidade.</span> Centro e

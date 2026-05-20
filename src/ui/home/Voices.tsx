@@ -34,12 +34,12 @@ export function Voices() {
 
         <div aria-hidden="true" className="mt-24 hidden justify-center sm:flex">
           <PaintedAsset
-            src="squared-mandala"
+            src="serpent-flame"
             width={520}
-            height={520}
-            sizes="20rem"
+            height={693}
+            sizes="16rem"
             className="opacity-80"
-            imgClassName="vignette w-full max-w-[20rem]"
+            imgClassName="w-full max-w-[16rem]"
           />
         </div>
       </div>

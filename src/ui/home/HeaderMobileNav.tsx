@@ -117,7 +117,7 @@ export function HeaderMobileNav() {
               </ul>
             </nav>
 
-            <div className="mt-auto border-rule-soft border-t px-7 py-6">
+            <div className="mt-auto border-rule-soft flex flex-col gap-4 border-t px-7 py-6">
               <a
                 href={Luiza.whatsappUrl}
                 target="_blank"
@@ -129,6 +129,19 @@ export function HeaderMobileNav() {
                 <span>WhatsApp</span>
                 <span aria-hidden="true" className="text-terracotta">
                   →
+                </span>
+              </a>
+              <a
+                href={Luiza.instagramUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => setOpen(false)}
+                className="display-italic text-foreground hover:text-terracotta inline-flex items-baseline gap-2 text-[1rem] no-underline transition-colors"
+                aria-label={`Símbolos no Instagram, ${Luiza.instagramHandle}, abre em nova aba`}
+              >
+                <span>Instagram</span>
+                <span className="marginalia text-quill text-[0.82rem]">
+                  {Luiza.instagramHandle}
                 </span>
               </a>
             </div>

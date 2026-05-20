@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import {
   WHEEL_SECTOR_PATHS,
   WHEEL_VIEWBOX,
@@ -9,7 +9,7 @@ import {
   signRotationDeg,
   type WheelSign,
 } from "@/core/wheel";
-import { ZODIAC_CONTENT } from "@/core/zodiacContent";
+import { VEDIC_CONTENT, ZODIAC_CONTENT } from "@/core/zodiacContent";
 import { cn } from "@/lib";
 
 type ActiveState = { sign: WheelSign | null; pinned: boolean };
@@ -230,6 +230,7 @@ export function Symbols() {
         <div hidden>
           {WHEEL_ZODIAC.map((sign) => {
             const content = ZODIAC_CONTENT[sign.id];
+            const vedic = VEDIC_CONTENT[sign.id];
             return (
               <div key={sign.id} data-wheel-detail={sign.id}>
                 <h3>{sign.label}</h3>
@@ -247,6 +248,21 @@ export function Symbols() {
                   <dd>{content.archetype}</dd>
                 </dl>
                 <p>{content.paragraph}</p>
+                <h4>Tradição védica — três mansões lunares</h4>
+                <dl>
+                  {vedic.nakshatras.map((n) => (
+                    <Fragment key={n.name}>
+                      <dt>
+                        {n.name}
+                        {n.range ? ` (${n.range})` : ""}
+                      </dt>
+                      <dd>
+                        Divindade: {n.deity}. Regente: {n.ruler}. Símbolo: {n.symbol}. {n.motif}
+                      </dd>
+                    </Fragment>
+                  ))}
+                </dl>
+                <p>{vedic.paragraph}</p>
               </div>
             );
           })}
@@ -264,6 +280,7 @@ type WheelDetailProps = {
 
 function WheelDetail({ sign, pinned, visible }: WheelDetailProps) {
   const content = sign ? ZODIAC_CONTENT[sign.id] : null;
+  const vedic = sign ? VEDIC_CONTENT[sign.id] : null;
 
   return (
     <aside
@@ -271,13 +288,14 @@ function WheelDetail({ sign, pinned, visible }: WheelDetailProps) {
       aria-atomic="true"
       data-pinned={pinned ? "true" : "false"}
       data-placeholder={content?._isPlaceholder ? "true" : undefined}
+      data-vedic-placeholder={vedic?._isPlaceholder ? "true" : undefined}
       className={cn(
-        "mx-auto max-w-[52ch] lg:mx-0 lg:min-h-[20rem]",
+        "mx-auto max-w-[52ch] lg:mx-0 lg:min-h-[34rem]",
         "transition-opacity duration-200 ease-out motion-reduce:transition-none",
         visible ? "opacity-100" : "opacity-0",
       )}
     >
-      {sign && content ? (
+      {sign && content && vedic ? (
         <>
           <h3 className="display text-foreground text-[clamp(1.4rem,2.6vw,1.9rem)] leading-[1.15] tracking-[-0.004em]">
             {sign.label}
@@ -298,6 +316,31 @@ function WheelDetail({ sign, pinned, visible }: WheelDetailProps) {
           <p className="body-italic text-ink mt-6 text-[1.06rem] leading-[1.75]">
             {content.paragraph}
           </p>
+
+          <div className="bg-terracotta/40 mt-10 h-px w-12" aria-hidden="true" />
+          <h4 className="tracked-ink text-foreground mt-8">Tradição védica</h4>
+          <p className="marginalia mt-1">Três mansões lunares</p>
+
+          <ul className="mt-6 space-y-5">
+            {vedic.nakshatras.map((n) => (
+              <li key={n.name}>
+                <p className="display-italic text-foreground text-[1.05rem] leading-[1.25]">
+                  {n.name}
+                  {n.range ? (
+                    <span className="marginalia text-terracotta-deep"> ({n.range})</span>
+                  ) : null}
+                </p>
+                <p className="marginalia mt-1">
+                  {n.deity} · {n.ruler} · {n.symbol}
+                </p>
+                <p className="body-italic text-ink mt-1 text-[0.95rem] leading-[1.65]">{n.motif}</p>
+              </li>
+            ))}
+          </ul>
+
+          <p className="body-italic text-ink mt-6 text-[0.95rem] leading-[1.65]">
+            {vedic.paragraph}
+          </p>
         </>
       ) : (
         <>
@@ -309,14 +352,15 @@ function WheelDetail({ sign, pinned, visible }: WheelDetailProps) {
           </p>
           <p className="body-italic text-ink mt-4 text-[1.06rem] leading-[1.75]">
             O anel externo recolhe as vinte e sete <em>nakshatras</em> — as &ldquo;mansões
-            lunares&rdquo; da astronomia védica indiana, uma para cada parada que a Lua atravessa ao
-            percorrer o céu. Onde o zodíaco ocidental conta o ano pela posição do Sol, as nakshatras
-            o contam pela Lua: outro vocabulário, mais íntimo e cíclico, para nomear o tempo
-            interior.
+            lunares&rdquo; da astronomia védica indiana. Onde o zodíaco ocidental conta o ano pelo
+            Sol, as nakshatras o contam pela Lua.
           </p>
           <p className="marginalia mt-6">
             Passe o cursor — ou navegue com o teclado — por uma das doze figuras. Toque para fixar
             os detalhes.
+          </p>
+          <p className="marginalia mt-4">
+            Cada signo abre, ao lado de seu retrato, um segundo capítulo védico.
           </p>
         </>
       )}

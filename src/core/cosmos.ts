@@ -547,8 +547,8 @@ export namespace Cosmos {
   // tilt-back-down.
   //
   // Consumers: `<CosmosCanvas>` wraps the universe content in
-  // `<group position={[0, OFFSET, 0]}>`; `<CosmosEnvProbe>` positions its
-  // cube camera at the same offset so the cube map reflection matches.
+  // `<group position={[0, OFFSET, 0]}>`; `bakeArmillaryMatcap` positions its
+  // cube camera at the same offset so the baked reflection matches.
   export const UNIVERSE_Y_OFFSET = 7.0;
 
   // Approach starts far back (z=25) at human-eye level (y=1.4) so the

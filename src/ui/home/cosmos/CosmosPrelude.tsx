@@ -146,9 +146,16 @@ export function CosmosPrelude({ progressRef }: Props) {
     return MIN_COEF + (1 - MIN_COEF) * t;
   };
 
+  // Once the master opacity has fallen to zero AND we've written `0` to every
+  // material at least once, the prelude has nothing left to animate for the
+  // rest of the scroll. Skip the entire per-prop loop until master > 0 again
+  // (e.g. the visitor scrolls back up).
+  const idleRef = useRef<boolean>(false);
+
   useFrame((state) => {
     const cameraZ = state.camera.position.z;
     const master = Cosmos.preludeMasterOpacity(Cosmos.clamp01(progressRef.current));
+    if (master <= 0 && idleRef.current) return;
     const t = state.clock.elapsedTime;
     for (let i = 0; i < props.length; i++) {
       const propZ = props[i].position[2];
@@ -171,6 +178,7 @@ export function CosmosPrelude({ progressRef }: Props) {
         swayShader.uniforms.uSwayTime.value = t;
       }
     }
+    idleRef.current = master <= 0;
   });
 
   return (

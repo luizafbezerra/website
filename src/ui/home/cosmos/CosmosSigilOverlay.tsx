@@ -11,6 +11,11 @@ type Props = {
   activeSigilId: Cosmos.SigilId | null;
   onActivate: (id: Cosmos.SigilId) => void;
   onDeactivate: () => void;
+  // Mirrors the canvas's IntersectionObserver gate. When the section is
+  // scrolled fully out of view, the rAF loop keeps running but skips all
+  // DOM writes — saves 12 × `style.transform` writes + the popover's
+  // forced-layout read every frame for the rest of the page.
+  isVisible?: boolean;
 };
 
 const SIGIL_COUNT = 12;
@@ -36,6 +41,7 @@ export function CosmosSigilOverlay({
   activeSigilId,
   onActivate,
   onDeactivate,
+  isVisible = true,
 }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const buttonRefs = useRef<Array<HTMLButtonElement | null>>(Array(SIGIL_COUNT).fill(null));
@@ -48,6 +54,14 @@ export function CosmosSigilOverlay({
   useEffect(() => {
     activeSigilIdRef.current = activeSigilId;
   }, [activeSigilId]);
+
+  // Visibility mirror — same pattern. The loop stays alive (so it resumes
+  // instantly when the section scrolls back into view) but the tick body
+  // returns early when this is false.
+  const isVisibleRef = useRef<boolean>(isVisible);
+  useEffect(() => {
+    isVisibleRef.current = isVisible;
+  }, [isVisible]);
 
   // Hover-intent: mouseLeave doesn't deactivate immediately; instead it queues
   // a short timer. mouseEnter on any sigil or on the popover cancels the
@@ -118,6 +132,10 @@ export function CosmosSigilOverlay({
 
     const tick = () => {
       if (!alive) return;
+      if (!isVisibleRef.current) {
+        raf = requestAnimationFrame(tick);
+        return;
+      }
       const positions = sigilScreenPositionsRef.current;
       const { w, h } = sizeRef.current;
 

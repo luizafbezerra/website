@@ -15,8 +15,8 @@ import { nebulaBakeFragmentShader, nebulaBakeVertexShader } from "./nebulaShader
 // per-frame nebula cost off the GPU; the visual is identical because the noise
 // has no time uniform.
 //
-// Enables layer 1 in addition to the default layer 0 so `<CosmosEnvProbe>` can
-// bake it into the brass armillary's reflection cube map.
+// Enables layer 1 in addition to the default layer 0 so the armillary's
+// one-shot matcap bake (`bakeArmillaryMatcap`) captures it.
 export function CosmosNebulae() {
   const gl = useThree((s) => s.gl);
 

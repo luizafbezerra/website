@@ -1,11 +1,11 @@
 "use client";
 
-import { useFrame } from "@react-three/fiber";
+import { useFrame, useThree } from "@react-three/fiber";
 import type { MutableRefObject } from "react";
-import { useContext, useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 import { Cosmos } from "@/core";
-import { CosmosEnvContext } from "./CosmosEnvContext";
+import { bakeArmillaryMatcap } from "./bakeArmillaryMatcap";
 import { getSunGlowSprite } from "./spriteTextures";
 import { useOptionalTexture } from "./useOptionalTexture";
 
@@ -17,13 +17,12 @@ type Props = {
   // Scroll progress (0..1), read each frame to compute `armillaryOpacity` so
   // the rings + sun materialize between p=0.20 and p=0.30 — the same window
   // the last painted-prelude layers (sky, clouds) fade out across. When
-  // omitted (e.g. the env probe's deferred mount path), the armillary stays
-  // at full opacity.
+  // omitted (e.g. a detached preview surface), the armillary stays at full
+  // opacity.
   progressRef?: MutableRefObject<number>;
 };
 
 const SIGIL_COUNT = 12;
-const RING_TEXTURE_REPEATS = 8; // times the brushed-roughness map tiles around each circumference
 
 // Five concentric brass rings + a central gilt sun. The group rotates slowly
 // around Y and wobbles ±3° around Z on an ~8s cycle (precession feel). The
@@ -32,24 +31,25 @@ const RING_TEXTURE_REPEATS = 8; // times the brushed-roughness map tiles around 
 // sigil overlay consumes. The visible glyph + popover (with painted Bayer
 // engraving) live in the DOM, where focus / tab order / a11y are native.
 //
-// v4: rings are real PBR metal (`MeshStandardMaterial`, metalness ≈ 0.92,
-// roughness ≈ 0.32) that reflect the procedural universe via the env-probe's
-// cube map. The brass photo is sampled as a roughness micro-variation map
-// (brushed-striation character), NOT as a base colour map — base colour is a
-// flat warm brass. The sun stays emissive (`MeshBasicMaterial`).
-//
-// v4-perf: no direct light. The env-probe cube map already includes the warm
-// nebula + galaxy band, so the brass picks up colour and direction from the
-// reflection alone. `envMapIntensity` is raised to keep the rings reading
-// bright enough without per-fragment light math.
+// v5-perf: rings render with `MeshMatcapMaterial` driven by a matcap baked
+// once at mount from the same `MeshStandardMaterial` setup (metalness 0.92,
+// roughness 0.32, env-mapped against the procedural universe). The brass
+// response is identical from any single camera angle; the view-space matcap
+// trades the rotating world-space cube reflection for a single texel fetch
+// per fragment. See `bakeArmillaryMatcap.ts`.
 export function CosmosArmillary({ sigilScreenPositionsRef, activeSigilId, progressRef }: Props) {
+  const gl = useThree((s) => s.gl);
+  const scene = useThree((s) => s.scene);
+
   const groupRef = useRef<THREE.Group>(null);
   const sigilAnchorRefs = useRef<Array<THREE.Object3D | null>>(Array(SIGIL_COUNT).fill(null));
   // Material refs for the per-frame opacity envelope. The rings share the
   // armillary fade; the sun sprite gets the same opacity multiplier so the
   // entire object resolves as one unit rather than the rings appearing
   // before the sun (or vice versa).
-  const ringMaterialRefs = useRef<Array<THREE.MeshStandardMaterial | null>>([]);
+  const ringMaterialRefs = useRef<Array<THREE.MeshMatcapMaterial | THREE.MeshBasicMaterial | null>>(
+    [],
+  );
   const sunMaterialRef = useRef<THREE.SpriteMaterial | null>(null);
 
   // Reusable temporaries — `useFrame` runs every animation tick, so we avoid
@@ -75,26 +75,60 @@ export function CosmosArmillary({ sigilScreenPositionsRef, activeSigilId, progre
     [],
   );
 
-  // Texture loading.
-  //   - `ringRoughnessMap`: brushed-brass photo desaturated to a roughness
-  //     micro-variation map. Drives per-pixel roughness on the PBR rings.
-  //   - `sunGlowSprite`: procedural warm gilt radial used additively so the
-  //     sun reads as a celestial body, not a flat dot at orbit distance.
+  // Brushed-brass roughness map is sampled only during the one-shot bake to
+  // imprint its micro-variation into the matcap. Once the matcap exists,
+  // ring fragments don't sample it any more.
   const ringRoughnessMap = useOptionalTexture(Cosmos.textures.ringBrushedRoughness);
   const sunGlowSprite = useMemo(() => getSunGlowSprite(), []);
-  const envCubeMap = useContext(CosmosEnvContext);
 
-  // Tile the roughness map around each ring's major circumference so a single
-  // sample reads as a continuous brushed band rather than one stretched plate.
-  // Roughness maps are linear data, not colour — switch off sRGB decoding.
+  const [matcap, setMatcap] = useState<THREE.Texture | null>(null);
+  // Guards against re-baking if the roughness texture re-emits (it normally
+  // doesn't, but `useOptionalTexture` could in principle replace its value
+  // on a URL change). One bake per armillary mount is sufficient.
+  const bakedRef = useRef<boolean>(false);
+
+  // Bake the matcap once. Waits for the brushed-roughness texture to load so
+  // its micro-variation imprints into the matcap; falls back to a roughness-
+  // free bake after `MATCAP_BAKE_FALLBACK_MS` if the texture never arrives
+  // (404 or slow network) — the matcap is still dominated by the cube map,
+  // so a roughness-free brass is acceptable degradation.
   useEffect(() => {
-    if (!ringRoughnessMap) return;
-    ringRoughnessMap.colorSpace = THREE.NoColorSpace;
-    ringRoughnessMap.wrapS = THREE.RepeatWrapping;
-    ringRoughnessMap.wrapT = THREE.RepeatWrapping;
-    ringRoughnessMap.repeat.set(RING_TEXTURE_REPEATS, 1);
-    ringRoughnessMap.needsUpdate = true;
-  }, [ringRoughnessMap]);
+    if (bakedRef.current) return;
+    let alive = true;
+    let bakedTexture: THREE.Texture | null = null;
+
+    const fire = (roughness: THREE.Texture | null) => {
+      if (bakedRef.current || !alive) return;
+      bakedRef.current = true;
+      bakeArmillaryMatcap(gl, scene, [0, Cosmos.UNIVERSE_Y_OFFSET, 0], roughness).then((t) => {
+        if (!alive) {
+          t.dispose();
+          return;
+        }
+        bakedTexture = t;
+        setMatcap(t);
+      });
+    };
+
+    if (ringRoughnessMap) {
+      fire(ringRoughnessMap);
+    } else {
+      // 500ms fallback — long enough for the WebP roughness to decode on a
+      // cold cache, short enough that a 404'd asset doesn't leave the rings
+      // in their solid-brass fallback for the whole scroll.
+      const timer = setTimeout(() => fire(null), 500);
+      return () => {
+        alive = false;
+        clearTimeout(timer);
+        bakedTexture?.dispose();
+      };
+    }
+
+    return () => {
+      alive = false;
+      bakedTexture?.dispose();
+    };
+  }, [gl, scene, ringRoughnessMap]);
 
   useFrame((state) => {
     const t = state.clock.getElapsedTime();
@@ -113,13 +147,19 @@ export function CosmosArmillary({ sigilScreenPositionsRef, activeSigilId, progre
     // last painted layers dissolve. Skipping the multiply when no progress
     // ref is provided leaves the materials at 1.0 — useful for any future
     // detached preview surface.
+    const op = progressRef ? Cosmos.armillaryOpacity(Cosmos.clamp01(progressRef.current)) : 1;
     if (progressRef) {
-      const op = Cosmos.armillaryOpacity(Cosmos.clamp01(progressRef.current));
       for (const m of ringMaterialRefs.current) {
         if (m) m.opacity = op;
       }
       if (sunMaterialRef.current) sunMaterialRef.current.opacity = op;
     }
+
+    // Skip the 12 × `getWorldPosition` + `project` work while the rings are
+    // invisible — there's nothing for the DOM overlay to align to during the
+    // prelude window. The overlay reads `visible: false` from the previous
+    // frame's writes until the rings emerge.
+    if (op <= 0) return;
 
     const camera = state.camera;
     for (let i = 0; i < SIGIL_COUNT; i++) {
@@ -170,24 +210,27 @@ export function CosmosArmillary({ sigilScreenPositionsRef, activeSigilId, progre
               Cosmos.armillary.ringSegments,
             ]}
           />
-          <meshStandardMaterial
-            ref={(m) => {
-              ringMaterialRefs.current[index] = m;
-            }}
-            color="#b08850"
-            metalness={0.92}
-            roughness={0.32}
-            roughnessMap={ringRoughnessMap ?? undefined}
-            envMap={envCubeMap ?? undefined}
-            // Bumped from 1.4 → 1.8 to compensate for the dropped pointLight:
-            // the brass now takes all of its illumination from the env probe.
-            envMapIntensity={1.8}
-            // `transparent` opts the ring into the prelude-driven opacity
-            // envelope (`material.opacity = armillaryOpacity(p)` each
-            // frame). The default opacity of 1 keeps the rings fully opaque
-            // for the orbit + descent phases the moment the prelude is past.
-            transparent
-          />
+          {matcap ? (
+            <meshMatcapMaterial
+              ref={(m) => {
+                ringMaterialRefs.current[index] = m;
+              }}
+              matcap={matcap}
+              color="#b08850"
+              transparent
+            />
+          ) : (
+            // Pre-bake fallback (~16ms window). Solid warm brass keeps the
+            // rings legible during the bake instead of flashing black or
+            // showing a single-frame default-grey.
+            <meshBasicMaterial
+              ref={(m) => {
+                ringMaterialRefs.current[index] = m;
+              }}
+              color="#8a6a3e"
+              transparent
+            />
+          )}
         </mesh>
       ))}
 

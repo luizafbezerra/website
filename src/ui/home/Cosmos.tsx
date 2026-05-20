@@ -203,6 +203,7 @@ function CosmosBody({ onDismissForever }: { onDismissForever: () => void }) {
               activeSigilId={activeSigil}
               onActivate={focusSigil}
               onDeactivate={blurSigil}
+              isVisible={isVisible}
             />
           ) : (
             <StaticSigilWheel

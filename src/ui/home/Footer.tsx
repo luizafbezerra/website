@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Luiza, Navigation } from "@/core";
+import { FooterCosmosRestore } from "./FooterCosmosRestore";
 
 export function Footer() {
   const year = new Date().getFullYear();
@@ -48,7 +49,10 @@ export function Footer() {
           <p className="text-quill">
             © {year} {Luiza.fullName}. Todos os direitos reservados.
           </p>
-          <p className="marginalia">Site construído como um manuscrito iluminado.</p>
+          <div className="flex flex-col gap-2 sm:items-end">
+            <p className="marginalia">Site construído como um manuscrito iluminado.</p>
+            <FooterCosmosRestore />
+          </div>
         </div>
       </div>
     </footer>

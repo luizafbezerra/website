@@ -4,7 +4,7 @@ import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Cosmos as Data } from "@/core";
-import { cn } from "@/lib";
+import { cn, useCosmosShow } from "@/lib";
 import type { SigilScreenPosition } from "./CosmosCanvas";
 import { CosmosMarginalia } from "./CosmosMarginalia";
 import { CosmosSigilOverlay } from "./cosmos/CosmosSigilOverlay";
@@ -19,7 +19,35 @@ const SIGIL_COUNT = 12;
 const initialSigilPositions = (): SigilScreenPosition[] =>
   Array.from({ length: SIGIL_COUNT }, () => ({ x: 0.5, y: 0.5, visible: false }));
 
+// Gate. Renders nothing when the visitor has opted out via the in-cosmos
+// "Continuar a leitura" button or the footer toggle. Wrapping the heavy
+// body in its own component lets it mount/unmount cleanly when the
+// preference flips — IntersectionObservers and scroll listeners inside the
+// body get torn down + reattached to the fresh section element instead of
+// leaking onto a detached node.
+//
+// On the true → false transition, after the body unmounts, we scroll the
+// visitor to Pillars so they land at the next section instead of being left
+// at the top of the page.
 export function Cosmos() {
+  const [show, setShow] = useCosmosShow();
+  const prevShowRef = useRef<boolean>(show);
+
+  useEffect(() => {
+    if (prevShowRef.current && !show) {
+      document.getElementById("abordagem")?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }
+    prevShowRef.current = show;
+  }, [show]);
+
+  if (!show) return null;
+  return <CosmosBody onDismissForever={() => setShow(false)} />;
+}
+
+function CosmosBody({ onDismissForever }: { onDismissForever: () => void }) {
   const sectionRef = useRef<HTMLElement>(null);
   const pinnedRef = useRef<HTMLDivElement>(null);
   const progressRef = useRef<number>(0);
@@ -120,7 +148,11 @@ export function Cosmos() {
   const focusSigil = useCallback((id: Data.SigilId) => setActiveSigil(id), []);
   const blurSigil = useCallback(() => setActiveSigil(null), []);
 
-  const showLiveCanvas = mountCanvas && !reducedMotion;
+  const showLiveCanvas = mountCanvas && !reducedMotion && !isMobile;
+
+  // Mobile + reduced-motion both flow through the flat layout that
+  // `.cosmos-reduced` styles supply; the canvas never mounts in either case.
+  const isFlatFlow = reducedMotion || isMobile;
 
   return (
     <section
@@ -129,7 +161,7 @@ export function Cosmos() {
       aria-label={Data.sectionAriaLabel}
       className={cn(
         "cosmos-section relative",
-        reducedMotion && "cosmos-reduced",
+        isFlatFlow && "cosmos-reduced",
         isMobile && "cosmos-mobile",
       )}
     >
@@ -206,6 +238,19 @@ export function Cosmos() {
               </p>
             </aside>
           ) : null}
+
+          {/* Skip affordance. Mirrors the epigraph at bottom-right but lives
+              outside the descent-beat opacity envelope so it stays available
+              from the moment the scene mounts. Click unmounts cosmos for the
+              rest of this visit; the footer toggle brings it back. */}
+          <div className="cosmos-skip">
+            <button type="button" className="cosmos-skip-cta" onClick={onDismissForever}>
+              <span aria-hidden="true" className="cosmos-skip-dot">
+                ·
+              </span>
+              Continuar a leitura ↓
+            </button>
+          </div>
         </div>
       </div>
 

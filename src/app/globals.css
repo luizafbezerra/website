@@ -87,6 +87,16 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
+  /* When the cosmos section is mounted, drop smooth scroll for anchor links
+     so navigation past the 375vh scroll-pinned cinema doesn't fast-forward
+     the rig. The cosmos canvas auto-pauses (IntersectionObserver) once the
+     target is past it, so an instant jump lands the user cleanly without a
+     visible animation flash. Reduced motion already forces auto via the
+     :prefers-reduced-motion block below. */
+  html:has(.cosmos-section) {
+    scroll-behavior: auto;
+  }
+
   body {
     background-color: var(--color-parchment);
     color: var(--color-ink);
@@ -444,6 +454,65 @@
       0 0 12px color-mix(in oklch, var(--color-ink) 65%, transparent);
   }
 
+  /* Skip affordance. Mirrors the epigraph at bottom-right but stays at full
+     opacity through the whole pinned sequence. Parchment text + ink halo so
+     it reads against the dark canvas; the flat-flow override below restores
+     ink color for the mobile + reduced-motion paths where the cosmos sticky
+     sits on the parchment instead of a nebula. */
+  .cosmos-skip {
+    position: absolute;
+    right: clamp(1.25rem, 4vw, 2.75rem);
+    bottom: clamp(1.5rem, 5vh, 3rem);
+    z-index: 4;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.5rem;
+  }
+
+  .cosmos-skip-cta {
+    background: transparent;
+    border: 0;
+    padding: 0;
+    cursor: pointer;
+    font-family: var(--font-display);
+    font-style: italic;
+    color: var(--color-parchment);
+    font-size: clamp(0.95rem, 1.3vw, 1.1rem);
+    letter-spacing: 0.01em;
+    line-height: 1.3;
+    text-shadow:
+      0 0 1px var(--color-ink),
+      0 0 3px var(--color-ink),
+      0 0 8px color-mix(in oklch, var(--color-ink) 90%, transparent),
+      0 0 18px color-mix(in oklch, var(--color-ink) 70%, transparent);
+    transition: color 220ms ease-out;
+  }
+  .cosmos-skip-cta:hover,
+  .cosmos-skip-cta:focus-visible {
+    color: var(--color-terracotta-soft);
+  }
+
+  .cosmos-skip-dot {
+    color: var(--color-terracotta);
+    margin-right: 0.45em;
+  }
+
+  /* Flat-flow path: cosmos-sticky sits on parchment, no nebula behind.
+     Drop the halo, switch to ink palette, and inline-position so the link
+     joins the document flow under the static prelude + wheel. */
+  .cosmos-reduced .cosmos-skip {
+    position: relative;
+    right: auto;
+    bottom: auto;
+    align-items: center;
+    margin: 1.25rem auto 0;
+  }
+  .cosmos-reduced .cosmos-skip-cta {
+    color: var(--color-ink-soft);
+    text-shadow: none;
+  }
+
   /* v2 live overlay: DOM buttons positioned by 3D-to-2D projection each frame.
      The container fills the canvas layer; buttons set `--cosmos-x` / `--cosmos-y`
      in pixels via rAF so the transform updates are GPU-composited. No CSS
@@ -701,64 +770,20 @@
     height: min(78vw, 28rem);
   }
 
-  /* Mobile (< 768px): drop the scroll pin. With v2 the canvas still mounts
-     (simpler scene, fixed camera) so the sticky box gets an explicit height
-     instead of collapsing to 0. The reduced-motion branch keeps its own
-     flat-flow rules below and overrides this. */
+  /* Mobile (< 768px): live canvas never mounts here (gated in Cosmos.tsx);
+     the section flows through the same .cosmos-reduced flat-flow styling as
+     the reduced-motion path. Tighter inner padding for the smaller stage. */
   @media (max-width: 767px) {
-    .cosmos-section .cosmos-pinned {
-      height: auto;
-    }
-    .cosmos-section:not(.cosmos-reduced) .cosmos-sticky {
-      position: relative;
-      top: auto;
-      height: 78vh;
-      min-height: 440px;
-      overflow: hidden;
-    }
-    .cosmos-section:not(.cosmos-reduced) .cosmos-marginalia-frame {
-      bottom: 4%;
-      width: min(90%, 22rem);
-    }
     .cosmos-section.cosmos-reduced .cosmos-sticky {
-      position: relative;
-      height: auto;
-      min-height: 0;
       padding: 1.25rem 0 3rem;
-    }
-    .cosmos-section.cosmos-reduced .cosmos-stage-frame {
-      position: relative;
-      height: auto;
-      padding: 1.5rem 1rem;
     }
     .cosmos-section.cosmos-reduced .cosmos-stage {
       width: min(82vw, 26rem);
       height: min(82vw, 26rem);
     }
     .cosmos-section.cosmos-reduced .cosmos-marginalia-frame {
-      position: relative;
-      bottom: auto;
-      left: auto;
-      transform: none;
       margin: 0.75rem auto 0;
     }
-  }
-
-  /* JS-class echo of the mobile media query — post-hydration certainty when
-     the user has resized to mobile after first paint. */
-  .cosmos-section.cosmos-mobile:not(.cosmos-reduced) .cosmos-pinned {
-    height: auto;
-  }
-  .cosmos-section.cosmos-mobile:not(.cosmos-reduced) .cosmos-sticky {
-    position: relative;
-    top: auto;
-    height: 78vh;
-    min-height: 440px;
-    overflow: hidden;
-  }
-  .cosmos-section.cosmos-mobile:not(.cosmos-reduced) .cosmos-marginalia-frame {
-    bottom: 4%;
-    width: min(90%, 22rem);
   }
 
   @media (min-width: 1024px) {

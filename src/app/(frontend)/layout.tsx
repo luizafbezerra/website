@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Cardo, Vollkorn } from "next/font/google";
 import { getSettings } from "@/lib/payload";
+import { HashAnchorScroll } from "@/ui/lib/HashAnchorScroll";
 import "@/app/globals.css";
 
 const cardo = Cardo({
@@ -47,6 +48,7 @@ export default function FrontendLayout({ children }: { children: React.ReactNode
       suppressHydrationWarning
     >
       <body className="parchment-grain text-foreground antialiased">
+        <HashAnchorScroll />
         <a href="#main" className="skip-link">
           Pular para o conteúdo
         </a>

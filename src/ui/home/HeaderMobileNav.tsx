@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useId, useRef, useState } from "react";
 import { Luiza, Navigation } from "@/core";
+import { WhatsAppGlyph } from "./WhatsAppGlyph";
 
 export function HeaderMobileNav() {
   const [open, setOpen] = useState<boolean>(false);
@@ -123,13 +124,11 @@ export function HeaderMobileNav() {
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={() => setOpen(false)}
-                className="display-italic text-foreground decoration-terracotta hover:text-terracotta inline-flex items-baseline gap-2 text-[1.05rem] underline decoration-1 underline-offset-[0.3em] transition-colors"
+                className="display-italic text-foreground decoration-terracotta hover:text-terracotta inline-flex items-center gap-2 text-[1.05rem] underline decoration-1 underline-offset-[0.3em] transition-colors"
                 aria-label={`Iniciar conversa pelo WhatsApp ${Luiza.phoneDisplay}`}
               >
+                <WhatsAppGlyph className="text-terracotta h-[1.1em] w-[1.1em] -translate-y-px" />
                 <span>WhatsApp</span>
-                <span aria-hidden="true" className="text-terracotta">
-                  →
-                </span>
               </a>
               <a
                 href={Luiza.instagramUrl}

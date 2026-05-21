@@ -25,8 +25,7 @@ export function Faq({ entries }: Props) {
             id="faq-heading"
             className="display text-foreground text-balance text-center text-[clamp(1.9rem,3.6vw,2.65rem)] leading-[1.14] tracking-[-0.008em] sm:text-left"
           >
-            Antes de uma{" "}
-            <span className="display-italic text-terracotta-deep">primeira conversa</span>.
+            Antes de uma <span className="text-terracotta-deep">primeira conversa</span>.
           </h2>
         </header>
 

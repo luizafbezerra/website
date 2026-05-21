@@ -32,6 +32,15 @@ export const generateMetadata = async (): Promise<Metadata> => {
       template: `%s — ${settings?.siteName ?? SITE_NAME_DEFAULT}`,
     },
     description: settings?.description ?? DESCRIPTION_DEFAULT,
+    // Pre-launch belt-and-suspenders. Pair with robots.ts (Disallow: /) so the
+    // placeholder credential, portrait, and bio cannot be indexed before the
+    // content pass lands.
+    robots: {
+      index: false,
+      follow: false,
+      nocache: true,
+      googleBot: { index: false, follow: false },
+    },
     openGraph: {
       type: "website",
       locale: "pt_BR",

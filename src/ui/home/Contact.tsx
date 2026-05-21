@@ -6,7 +6,7 @@ export function Contact() {
     <section
       id="contato"
       aria-labelledby="contact-heading"
-      className="px-6 py-32 sm:px-10 sm:py-40 lg:py-48"
+      className="px-6 py-32 sm:px-10 sm:py-44 lg:py-52"
     >
       <div className="mx-auto max-w-3xl">
         <p className="tracked mb-6 text-center sm:text-left">Para começar</p>
@@ -79,14 +79,14 @@ export function Contact() {
           <dl className="text-quill mt-14 grid grid-cols-1 gap-y-8 sm:grid-cols-2 sm:gap-x-12">
             <div>
               <dt className="display text-quill mb-2 text-[0.96rem]">Atendimento presencial</dt>
-              <dd className="display-italic text-foreground text-[1.1rem] leading-[1.4]">
+              <dd className="text-foreground text-[1.1rem] leading-[1.4]">
                 {Luiza.city}–{Luiza.region}
               </dd>
             </div>
 
             <div>
               <dt className="display text-quill mb-2 text-[0.96rem]">Atendimento online</dt>
-              <dd className="display-italic text-foreground text-[1.1rem] leading-[1.4]">
+              <dd className="text-foreground text-[1.1rem] leading-[1.4]">
                 Em todo o {Luiza.country}
               </dd>
             </div>
@@ -94,7 +94,7 @@ export function Contact() {
             {Luiza.availability.hours && (
               <div>
                 <dt className="display text-quill mb-2 text-[0.96rem]">Faixa de horário</dt>
-                <dd className="display-italic text-foreground text-[1.1rem] leading-[1.4]">
+                <dd className="text-foreground text-[1.1rem] leading-[1.4]">
                   {Luiza.availability.hours}
                 </dd>
               </div>
@@ -103,7 +103,7 @@ export function Contact() {
             {Luiza.availability.responseNote && (
               <div>
                 <dt className="display text-quill mb-2 text-[0.96rem]">Tempo de resposta</dt>
-                <dd className="display-italic text-foreground text-[1.1rem] leading-[1.4]">
+                <dd className="text-foreground text-[1.1rem] leading-[1.4]">
                   {Luiza.availability.responseNote}
                 </dd>
               </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { Fragment, useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import {
   WHEEL_SECTOR_PATHS,
   WHEEL_VIEWBOX,
@@ -10,37 +10,17 @@ import {
   type WheelSign,
 } from "@/core/wheel";
 import { VEDIC_CONTENT, ZODIAC_CONTENT } from "@/core/zodiacContent";
-import { cn } from "@/lib";
 
 type ActiveState = { sign: WheelSign | null; pinned: boolean };
 
 export function Symbols() {
   const [active, setActive] = useState<ActiveState>({ sign: null, pinned: false });
-  const [displayedSign, setDisplayedSign] = useState<WheelSign | null>(null);
-  const [visible, setVisible] = useState<boolean>(true);
   const [rotationDeg, setRotationDeg] = useState<number>(0);
-  const swapTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     const target = active.pinned && active.sign ? signRotationDeg(active.sign) : 0;
     setRotationDeg((prev) => prev + shortestRotationDelta(prev, target));
   }, [active.pinned, active.sign]);
-
-  useEffect(() => {
-    if (swapTimer.current) clearTimeout(swapTimer.current);
-    if (active.sign?.id === displayedSign?.id) {
-      setVisible(true);
-      return;
-    }
-    setVisible(false);
-    swapTimer.current = setTimeout(() => {
-      setDisplayedSign(active.sign);
-      setVisible(true);
-    }, 160);
-    return () => {
-      if (swapTimer.current) clearTimeout(swapTimer.current);
-    };
-  }, [active.sign, displayedSign]);
 
   useEffect(() => {
     const clearIfActive = () =>
@@ -220,11 +200,11 @@ export function Symbols() {
               aria-live="polite"
               className="display-italic text-terracotta-deep mt-5 block min-h-[1.7em] text-center text-[1.05rem]"
             >
-              {displayedSign ? `${displayedSign.label} · ${displayedSign.dateRange}` : " "}
+              {active.sign ? `${active.sign.label} · ${active.sign.dateRange}` : " "}
             </output>
           </div>
 
-          <WheelDetail sign={displayedSign} pinned={active.pinned} visible={visible} />
+          <WheelDetail sign={active.sign} pinned={active.pinned} />
         </div>
 
         <div hidden>
@@ -275,10 +255,9 @@ export function Symbols() {
 type WheelDetailProps = {
   sign: WheelSign | null;
   pinned: boolean;
-  visible: boolean;
 };
 
-function WheelDetail({ sign, pinned, visible }: WheelDetailProps) {
+function WheelDetail({ sign, pinned }: WheelDetailProps) {
   const content = sign ? ZODIAC_CONTENT[sign.id] : null;
   const vedic = sign ? VEDIC_CONTENT[sign.id] : null;
 
@@ -289,11 +268,7 @@ function WheelDetail({ sign, pinned, visible }: WheelDetailProps) {
       data-pinned={pinned ? "true" : "false"}
       data-placeholder={content?._isPlaceholder ? "true" : undefined}
       data-vedic-placeholder={vedic?._isPlaceholder ? "true" : undefined}
-      className={cn(
-        "mx-auto max-w-[52ch] lg:mx-0 lg:min-h-[60rem]",
-        "transition-opacity duration-200 ease-out motion-reduce:transition-none",
-        visible ? "opacity-100" : "opacity-0",
-      )}
+      className="mx-auto max-w-[52ch] lg:mx-0 lg:min-h-[60rem]"
     >
       {sign && content && vedic ? (
         <>
@@ -344,23 +319,14 @@ function WheelDetail({ sign, pinned, visible }: WheelDetailProps) {
         </>
       ) : (
         <>
-          <p className="body-italic text-ink text-[1.06rem] leading-[1.75]">
-            Doze signos do zodíaco ocidental encontram aqui as vinte e sete nakshatras da tradição
-            védica, dispostas em torno da Terra. Não é instrumento de previsão; é um mapa simbólico
-            — um modo de imaginar como o psiquismo coletivo se organiza em padrões de ressonância,
-            arquétipos que cada análise reencontra à sua maneira.
-          </p>
-          <p className="body-italic text-ink mt-4 text-[1.06rem] leading-[1.75]">
-            O anel externo recolhe as vinte e sete <em>nakshatras</em> — as &ldquo;mansões
-            lunares&rdquo; da astronomia védica indiana. Onde o zodíaco ocidental conta o ano pelo
-            Sol, as nakshatras o contam pela Lua.
-          </p>
-          <p className="marginalia mt-6">
+          <p className="marginalia max-w-[44ch] text-[1rem]">
             Passe o cursor — ou navegue com o teclado — por uma das doze figuras. Toque para fixar
             os detalhes.
           </p>
-          <p className="marginalia mt-4">
-            Cada signo abre, ao lado de seu retrato, um segundo capítulo védico.
+          <p className="marginalia mt-6">
+            Cada signo abre, ao lado do seu retrato, um segundo capítulo védico — as
+            <em> nakshatras </em>
+            da tradição lunar indiana.
           </p>
         </>
       )}

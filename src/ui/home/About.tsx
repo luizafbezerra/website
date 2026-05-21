@@ -33,15 +33,14 @@ export function About() {
             className="display text-foreground text-balance text-[clamp(1.9rem,3.6vw,2.7rem)] leading-[1.14] tracking-[-0.008em]"
           >
             Uma escuta cuidadosa, na tradição{" "}
-            <span className="display-italic text-terracotta-deep">junguiana</span>.
+            <span className="text-terracotta-deep">junguiana</span>.
           </h2>
 
           {/* TODO: rewrite this bio with Luiza's voice and confirmed details (formação, ano, supervisão, especializações). */}
           <div className="body-prose text-ink mt-10 max-w-[60ch] text-[1.085rem] leading-[1.74]">
             <p>
-              Sou psicóloga clínica. Atendo em consultório e em sessões online para todo o{" "}
-              {Luiza.country}. O foco do trabalho está em adultos que atravessam ansiedade, lutos,
-              transições de carreira ou sofrimento nos vínculos.
+              Sou psicóloga clínica. O foco do trabalho está em adultos que atravessam ansiedade,
+              lutos, transições de carreira ou sofrimento nos vínculos.
             </p>
             <p>
               O ritmo importa tanto quanto o conteúdo. Nada do que costuma trazer alguém à análise —
@@ -54,18 +53,18 @@ export function About() {
           <dl className="text-quill mt-12 grid grid-cols-1 gap-y-6 text-[0.98rem] leading-[1.55] sm:grid-cols-[10rem_1fr] sm:gap-x-8 sm:gap-y-5">
             <dt className="display text-quill text-[0.96rem]">Formação</dt>
             {/* TODO: confirm exact formação, instituição e ano */}
-            <dd className="display-italic text-foreground">Psicologia clínica</dd>
+            <dd className="text-foreground">Psicologia clínica</dd>
 
             <dt className="display text-quill text-[0.96rem]">Registro</dt>
-            <dd className="display-italic text-foreground">{Luiza.credential}</dd>
+            <dd className="text-foreground">{Luiza.credential}</dd>
 
             <dt className="display text-quill text-[0.96rem]">Atendimento</dt>
-            <dd className="display-italic text-foreground">
+            <dd className="text-foreground">
               Presencial em {Luiza.city} · online em todo o {Luiza.country}
             </dd>
 
             <dt className="display text-quill text-[0.96rem]">Idiomas</dt>
-            <dd className="display-italic text-foreground">Português</dd>
+            <dd className="text-foreground">Português</dd>
           </dl>
         </div>
       </div>

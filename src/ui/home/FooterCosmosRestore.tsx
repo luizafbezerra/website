@@ -12,7 +12,7 @@ export function FooterCosmosRestore() {
       onClick={() => setShow(true)}
       className="display-italic text-quill hover:text-terracotta no-underline transition-colors"
     >
-      Mostrar abertura cósmica novamente
+      Reabrir a abertura cósmica ↻
     </button>
   );
 }

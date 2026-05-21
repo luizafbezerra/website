@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Luiza, Navigation } from "@/core";
 import { HeaderMobileNav } from "./HeaderMobileNav";
+import { WhatsAppGlyph } from "./WhatsAppGlyph";
 
 export function Header() {
   return (
@@ -53,13 +54,11 @@ export function Header() {
           href={Luiza.whatsappUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="display-italic text-foreground hover:text-terracotta decoration-terracotta/50 hover:decoration-terracotta ml-auto hidden items-baseline gap-2 text-[0.95rem] underline decoration-1 underline-offset-[0.3em] transition-colors md:ml-7 md:inline-flex md:text-[1rem]"
+          className="display-italic text-foreground hover:text-terracotta decoration-terracotta/50 hover:decoration-terracotta ml-auto hidden items-center gap-2 text-[0.95rem] underline decoration-1 underline-offset-[0.3em] transition-colors md:ml-7 md:inline-flex md:text-[1rem]"
           aria-label={`Iniciar conversa pelo WhatsApp ${Luiza.phoneDisplay}`}
         >
+          <WhatsAppGlyph className="text-terracotta h-[1.1em] w-[1.1em] -translate-y-px" />
           <span>WhatsApp</span>
-          <span aria-hidden="true" className="text-terracotta">
-            →
-          </span>
         </a>
 
         <div className="ml-auto md:hidden">

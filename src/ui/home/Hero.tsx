@@ -36,25 +36,23 @@ export function Hero() {
             </p>
           </div>
 
-          <div className="mt-14 flex flex-col items-baseline gap-4 sm:flex-row sm:gap-10">
+          <div className="mt-14 flex flex-col items-center gap-5 sm:items-start">
             <a
-              href="#abordagem"
-              className="display-italic text-foreground decoration-terracotta hover:text-terracotta inline-flex items-baseline gap-2 text-[1.05rem] underline decoration-1 underline-offset-[0.28em] transition-colors"
+              href="#contato"
+              className="border-terracotta-deep text-terracotta-deep hover:bg-terracotta-deep hover:text-parchment group inline-flex items-baseline gap-3 border px-6 py-3 no-underline transition-colors"
             >
-              <span>conhecer a abordagem</span>
-              <span aria-hidden="true" className="text-quill">
-                ↓
+              <span className="display-italic text-[1.05rem]">marcar uma conversa</span>
+              <span aria-hidden="true" className="transition-transform group-hover:translate-x-0.5">
+                →
               </span>
             </a>
 
             <a
-              href="#contato"
-              className="display-italic text-foreground decoration-terracotta hover:text-terracotta inline-flex items-baseline gap-2 text-[1.05rem] underline decoration-1 underline-offset-[0.28em] transition-colors"
+              href="#abordagem"
+              className="marginalia text-quill hover:text-terracotta decoration-terracotta/40 hover:decoration-terracotta inline-flex items-baseline gap-2 underline decoration-1 underline-offset-[0.28em] transition-colors"
             >
-              <span>marcar uma conversa</span>
-              <span aria-hidden="true" className="text-terracotta">
-                →
-              </span>
+              <span>conhecer a abordagem antes</span>
+              <span aria-hidden="true">↓</span>
             </a>
           </div>
         </div>

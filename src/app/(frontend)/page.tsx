@@ -10,7 +10,6 @@ import {
   Hero,
   Pillars,
   StickyHeaderShell,
-  Symbols,
   Voices,
   Writing,
 } from "@/ui/home";
@@ -113,7 +112,6 @@ export default async function Home() {
         <Pillars />
         <About />
         <Cosmos />
-        <Symbols />
         <Voices />
         <Writing posts={recentPosts} />
         <Contact />

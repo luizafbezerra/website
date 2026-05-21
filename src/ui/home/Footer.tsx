@@ -64,13 +64,13 @@ export function Footer() {
         </div>
 
         <div className="border-rule mt-12 flex flex-col gap-3 border-t pt-8 text-[0.85rem] sm:flex-row sm:items-baseline sm:justify-between">
-          <p className="text-quill">
-            © {year} {Luiza.fullName}. Todos os direitos reservados.
-          </p>
-          <div className="flex flex-col gap-2 sm:items-end">
-            <p className="marginalia">Site construído como um manuscrito iluminado.</p>
-            <FooterCosmosRestore />
+          <div className="flex flex-col gap-2">
+            <p className="text-quill">
+              © {year} {Luiza.fullName}. Todos os direitos reservados.
+            </p>
+            <p className="marginalia">Composto em Cardo &amp; Vollkorn.</p>
           </div>
+          <FooterCosmosRestore />
         </div>
       </div>
     </footer>

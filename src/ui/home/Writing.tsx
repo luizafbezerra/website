@@ -17,7 +17,7 @@ export function Writing({ posts }: Props) {
   return (
     <section
       aria-labelledby="writing-heading"
-      className="bg-parchment-deep px-6 py-28 sm:px-10 sm:py-36 lg:py-44"
+      className="bg-parchment-deep px-6 py-20 sm:px-10 sm:py-28 lg:py-32"
     >
       <div className="mx-auto max-w-3xl">
         <header className="mb-16 sm:mb-20">
@@ -26,13 +26,11 @@ export function Writing({ posts }: Props) {
             id="writing-heading"
             className="display text-foreground text-balance text-[clamp(1.9rem,3.6vw,2.65rem)] leading-[1.14] tracking-[-0.008em]"
           >
-            Algumas <span className="display-italic text-terracotta-deep">anotações</span> do
-            consultório.
+            Algumas <span className="text-terracotta-deep">anotações</span> do consultório.
           </h2>
           <p className="text-quill mt-6 max-w-[58ch] text-[1.04rem] leading-[1.7]">
-            Notas escritas no consultório, sobre o que costuma ficar dito nas entrelinhas da vida
-            adulta. Não substituem o trabalho clínico — fazem companhia entre as sessões e fora
-            delas.
+            Notas sobre o que costuma ficar dito nas entrelinhas da vida adulta. Não substituem o
+            trabalho clínico — fazem companhia entre as sessões e fora delas.
           </p>
         </header>
 

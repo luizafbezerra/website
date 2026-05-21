@@ -31,15 +31,6 @@ export function Header() {
             <span className="marginalia mt-0.5 hidden text-[0.76rem] sm:block">
               psicóloga · análise junguiana
             </span>
-            <a
-              href={Luiza.instagramUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label={`Símbolos no Instagram, ${Luiza.instagramHandle}, abre em nova aba`}
-              className="marginalia text-quill hover:text-terracotta focus-visible:ring-terracotta mt-0.5 hidden text-[0.72rem] no-underline transition-colors focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-offset-parchment sm:inline-block"
-            >
-              {Luiza.instagramHandle}
-            </a>
           </span>
         </div>
 

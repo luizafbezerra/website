@@ -31,45 +31,32 @@ export function Hero() {
             <p>
               Atendo adultos em momentos em que a vida cotidiana parece insuficiente para conter o
               que está acontecendo — uma <em>ansiedade</em> que não passa, um <em>luto</em> recente,
-              um trabalho que perdeu o sentido. O trabalho se faz na tradição junguiana, com sonhos,
-              símbolos e o caminho de individuação.
+              um trabalho que perdeu o sentido. Escuto o que insiste e o que ainda não encontrou
+              palavras.
             </p>
           </div>
 
-          <div className="mt-14 flex flex-col items-stretch gap-5 sm:flex-row sm:items-baseline sm:gap-8">
-            <a
-              href={Luiza.whatsappUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="bg-terracotta-deep hover:bg-foreground group inline-flex items-baseline justify-between gap-6 px-7 py-4 text-parchment no-underline transition-colors sm:justify-start"
-              aria-label={`Iniciar conversa pelo WhatsApp ${Luiza.phoneDisplay}`}
-            >
-              <span className="display-italic text-[1.1rem] sm:text-[1.15rem]">
-                Conversar pelo WhatsApp
-              </span>
-              <span
-                aria-hidden="true"
-                className="display text-[1.1rem] transition-transform group-hover:translate-x-1 sm:text-[1.15rem]"
-              >
-                →
-              </span>
-            </a>
-
+          <div className="mt-14 flex flex-col items-baseline gap-4 sm:flex-row sm:gap-10">
             <a
               href="#abordagem"
-              className="display-italic text-foreground decoration-terracotta hover:text-terracotta inline-flex items-baseline justify-center gap-2 underline decoration-1 underline-offset-[0.28em] transition-colors sm:justify-start"
+              className="display-italic text-foreground decoration-terracotta hover:text-terracotta inline-flex items-baseline gap-2 text-[1.05rem] underline decoration-1 underline-offset-[0.28em] transition-colors"
             >
               <span>conhecer a abordagem</span>
               <span aria-hidden="true" className="text-quill">
                 ↓
               </span>
             </a>
-          </div>
 
-          <p className="marginalia mt-6 max-w-[42ch] text-center sm:text-left">
-            Uma conversa breve, sem compromisso. A partir dela vemos juntos se faz sentido
-            seguirmos.
-          </p>
+            <a
+              href="#contato"
+              className="display-italic text-foreground decoration-terracotta hover:text-terracotta inline-flex items-baseline gap-2 text-[1.05rem] underline decoration-1 underline-offset-[0.28em] transition-colors"
+            >
+              <span>marcar uma conversa</span>
+              <span aria-hidden="true" className="text-terracotta">
+                →
+              </span>
+            </a>
+          </div>
         </div>
 
         {/* TODO: replace with portrait served from PayloadCMS once content extraction lands */}

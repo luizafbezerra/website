@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Luiza } from "@/core";
 
 export function Contact() {
@@ -23,7 +24,7 @@ export function Contact() {
           <p>
             O caminho mais simples é o WhatsApp. Você me escreve uma mensagem curta — não precisa
             contar tudo de uma vez — e combinamos um horário para uma primeira conversa, sem
-            compromisso. A partir dela decidimos juntos se faz sentido começar.
+            compromisso. A partir dela decidimos juntos como seguir.
           </p>
         </div>
 
@@ -60,6 +61,18 @@ export function Contact() {
               >
                 {Luiza.email}
               </a>
+            </p>
+
+            <p className="marginalia mt-3">
+              <Link
+                href="/perguntas"
+                className="text-quill hover:text-terracotta decoration-terracotta/40 hover:decoration-terracotta underline decoration-1 underline-offset-[0.25em] transition-colors"
+              >
+                Perguntas frequentes antes da primeira conversa
+              </Link>{" "}
+              <span aria-hidden="true" className="text-terracotta/70">
+                →
+              </span>
             </p>
           </div>
 

@@ -40,21 +40,21 @@ export function Pillars() {
             id="approach-heading"
             className="display text-foreground text-balance text-center text-[clamp(1.95rem,3.8vw,2.75rem)] leading-[1.13] tracking-[-0.008em] sm:text-left"
           >
-            Sonhos, símbolos e o caminho de{" "}
-            <span className="display-italic text-terracotta-deep">individuação</span>.
+            O que se repete costuma ter algo{" "}
+            <span className="display-italic text-terracotta-deep">a dizer</span>.
           </h2>
 
-          <div className="body-prose dropcap text-ink mt-10 max-w-[60ch] text-[1.085rem] leading-[1.74]">
+          <div className="body-prose text-ink mt-10 max-w-[60ch] text-[1.085rem] leading-[1.74]">
             <p>
-              Tomo a sério aquilo que se manifesta em sonhos, fantasias, imagens recorrentes e
-              sintomas. Eles não são ruído: são as maneiras pelas quais a psique fala sobre o que
-              ainda não cabe em palavras.
+              Tomo a sério aquilo que se manifesta em sonhos, fantasias, imagens e sintomas. Eles
+              não são ruído: são as maneiras pelas quais a psique fala sobre o que ainda não cabe em
+              palavras.
             </p>
             <p>
-              No trabalho clínico, isso aparece como uma escuta lenta, uma atenção a tudo o que se
-              repete, e uma curiosidade pelo que está por trás daquilo que dói. Não trato de remover
-              sintomas com pressa: ajudo a entender o que eles vieram dizer, para que o caminho à
-              frente seja escolhido — e não apenas suportado.
+              No trabalho clínico, isso aparece como uma atenção demorada — uma curiosidade pelo que
+              está por trás daquilo que dói. Não trato de remover sintomas com pressa: ajudo a
+              entender o que vieram dizer, para que o caminho à frente seja escolhido — e não apenas
+              suportado.
             </p>
           </div>
         </header>
@@ -63,8 +63,8 @@ export function Pillars() {
 
         <div className="mb-14 sm:mb-20">
           <p className="display-italic text-quill max-w-[58ch] text-[1.02rem] leading-[1.7]">
-            Três frentes que costumam trazer alguém para a análise — quase sempre se cruzam, e a
-            escuta começa por onde dói mais agora.
+            Três frentes que costumam trazer alguém para a análise — quase sempre se cruzam, e o
+            trabalho começa por onde dói mais agora.
           </p>
         </div>
 

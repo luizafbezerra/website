@@ -27,15 +27,16 @@ const initialSigilPositions = (): SigilScreenPosition[] =>
 // leaking onto a detached node.
 //
 // On the true → false transition, after the body unmounts, we scroll the
-// visitor to Pillars so they land at the next section instead of being left
-// at the top of the page.
+// visitor to Symbols — the section that follows Cosmos in DOM order — so
+// they land at the next section instead of being left at the top of the
+// page or sent backwards through content they already read.
 export function Cosmos() {
   const [show, setShow] = useCosmosShow();
   const prevShowRef = useRef<boolean>(show);
 
   useEffect(() => {
     if (prevShowRef.current && !show) {
-      document.getElementById("abordagem")?.scrollIntoView({
+      document.getElementById("simbolos")?.scrollIntoView({
         behavior: "smooth",
         block: "start",
       });

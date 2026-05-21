@@ -16,7 +16,6 @@ import {
 } from "@/ui/home";
 import {
   BreadcrumbJsonLd,
-  FaqJsonLd,
   LocalBusinessJsonLd,
   PersonJsonLd,
   ReviewsJsonLd,
@@ -44,18 +43,6 @@ export const revalidate = 3600;
 export default async function Home() {
   const posts = await getAllPosts("pt-BR");
   const recentPosts = posts.slice(0, 3);
-
-  const faqEntries = [
-    ...Luiza.pillars.map((pillar) => ({
-      question: `Quando procurar análise para ${pillar.title.toLowerCase()}?`,
-      answer: pillar.paragraph,
-    })),
-    {
-      question: "Como começo a análise com Luiza?",
-      answer:
-        "O caminho mais simples é o WhatsApp. Você envia uma mensagem curta e combinamos uma primeira conversa, sem compromisso, para decidirmos juntos se faz sentido começar. O contato também pode ser feito por e-mail.",
-    },
-  ];
 
   return (
     <>
@@ -105,8 +92,6 @@ export default async function Home() {
         inLanguage="pt-BR"
       />
 
-      <FaqJsonLd entries={faqEntries} />
-
       <BreadcrumbJsonLd items={[{ name: "Início", url: BASE_URL }]} />
 
       {Luiza.testimonials.length > 0 && (
@@ -125,9 +110,9 @@ export default async function Home() {
       </StickyHeaderShell>
       <main id="main">
         <Hero />
-        <Cosmos />
         <Pillars />
         <About />
+        <Cosmos />
         <Symbols />
         <Voices />
         <Writing posts={recentPosts} />

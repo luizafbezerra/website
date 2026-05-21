@@ -30,8 +30,9 @@ export function Writing({ posts }: Props) {
             consultório.
           </h2>
           <p className="text-quill mt-6 max-w-[58ch] text-[1.04rem] leading-[1.7]">
-            Notas sobre sonhos, símbolos, leitura junguiana de questões da vida cotidiana. Não
-            substituem o trabalho clínico — fazem companhia entre as sessões e fora delas.
+            Notas escritas no consultório, sobre o que costuma ficar dito nas entrelinhas da vida
+            adulta. Não substituem o trabalho clínico — fazem companhia entre as sessões e fora
+            delas.
           </p>
         </header>
 

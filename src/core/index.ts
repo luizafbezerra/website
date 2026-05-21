@@ -1,6 +1,6 @@
 export { Blog } from "./blog";
-export { Contact } from "./contact";
 export { Cosmos } from "./cosmos";
+export { Faq } from "./faq";
 export { Luiza } from "./luiza";
 export { Navigation } from "./navigation";
 export { Social } from "./social";

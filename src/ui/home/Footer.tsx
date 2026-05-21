@@ -32,6 +32,14 @@ export function Footer() {
                 </li>
               ))}
               <li>
+                <Link
+                  href="/perguntas"
+                  className="text-foreground hover:text-terracotta no-underline transition-colors"
+                >
+                  Perguntas frequentes
+                </Link>
+              </li>
+              <li>
                 <a
                   href={Luiza.instagramUrl}
                   target="_blank"

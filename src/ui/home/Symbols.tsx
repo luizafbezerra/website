@@ -126,7 +126,7 @@ export function Symbols() {
           </p>
         </div>
 
-        <div className="mt-14 grid items-center gap-12 lg:mt-20 lg:grid-cols-[auto_1fr] lg:gap-16">
+        <div className="mt-14 grid items-center gap-12 lg:mt-20 lg:grid-cols-[auto_1fr] lg:items-start lg:gap-16">
           <div className="mx-auto w-[min(48rem,90vw)] lg:mx-0">
             <div
               data-active={activeId ? "true" : "false"}
@@ -290,7 +290,7 @@ function WheelDetail({ sign, pinned, visible }: WheelDetailProps) {
       data-placeholder={content?._isPlaceholder ? "true" : undefined}
       data-vedic-placeholder={vedic?._isPlaceholder ? "true" : undefined}
       className={cn(
-        "mx-auto max-w-[52ch] lg:mx-0 lg:min-h-[34rem]",
+        "mx-auto max-w-[52ch] lg:mx-0 lg:min-h-[60rem]",
         "transition-opacity duration-200 ease-out motion-reduce:transition-none",
         visible ? "opacity-100" : "opacity-0",
       )}

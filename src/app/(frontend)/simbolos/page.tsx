@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { Luiza } from "@/core";
 import { Footer, Header, StickyHeaderShell, Symbols } from "@/ui/home";
 import { BreadcrumbJsonLd } from "@/ui/lib/jsonLd";
@@ -35,6 +36,20 @@ export default function SimbolosPage() {
         <Header />
       </StickyHeaderShell>
       <main id="main">
+        <nav aria-label="Trilha" className="px-6 pt-24 sm:px-10 sm:pt-28 lg:pt-32">
+          <p className="marginalia mx-auto max-w-7xl">
+            <Link
+              href="/"
+              className="text-quill hover:text-terracotta decoration-terracotta/30 hover:decoration-terracotta underline decoration-1 underline-offset-[0.28em] transition-colors"
+            >
+              Início
+            </Link>{" "}
+            <span aria-hidden="true" className="text-terracotta/60">
+              ·
+            </span>{" "}
+            <span className="text-foreground">Mandala dos signos</span>
+          </p>
+        </nav>
         <Symbols />
       </main>
       <Footer />

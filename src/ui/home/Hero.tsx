@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { Luiza } from "@/core";
+import { WhatsAppGlyph } from "./WhatsAppGlyph";
 
 export function Hero() {
   return (
@@ -73,6 +74,24 @@ export function Hero() {
             <span className="display-italic text-terracotta-deep">{Luiza.shortName}</span> —
             atendimento presencial e online em todo o {Luiza.country}.
           </figcaption>
+
+          {/* Above-the-fold action on mobile only. Desktop already shows the
+              outlined "marcar uma conversa" button in the left column above
+              the figure; on phones the portrait-first ordering pushes that
+              button below the fold, so this tiny WhatsApp affordance gives
+              hesitant phone visitors a tappable next step without scrolling. */}
+          <a
+            href={Luiza.whatsappUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-terracotta-deep hover:text-terracotta mt-4 inline-flex items-baseline gap-2 text-[0.95rem] no-underline transition-colors lg:hidden"
+            aria-label={`Iniciar conversa pelo WhatsApp ${Luiza.phoneDisplay}`}
+          >
+            <WhatsAppGlyph className="text-terracotta h-[1.05em] w-[1.05em] -translate-y-px" />
+            <span className="display-italic decoration-terracotta/40 underline decoration-1 underline-offset-[0.28em]">
+              Conversar agora
+            </span>
+          </a>
         </figure>
       </div>
     </section>

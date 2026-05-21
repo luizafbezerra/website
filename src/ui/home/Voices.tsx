@@ -1,8 +1,12 @@
 import { Luiza } from "@/core";
 import { PaintedAsset } from "./PaintedAsset";
 
+// Auto-hides when no testimonials exist. The brief calls Voices the trust
+// anchor of the page — shipping an empty "Em preparação" placeholder reads as
+// apology, which is worse than the section being absent. Once testimonials are
+// collected (with consent + initials, per luiza.ts TODO), the section returns.
 export function Voices() {
-  const hasTestimonials = Luiza.testimonials.length > 0;
+  if (Luiza.testimonials.length === 0) return null;
 
   return (
     <section aria-labelledby="voices-heading" className="px-6 py-20 sm:px-10 sm:py-28 lg:py-32">
@@ -13,30 +17,24 @@ export function Voices() {
             id="voices-heading"
             className="display text-foreground text-balance text-[clamp(1.7rem,3vw,2.3rem)] leading-[1.16]"
           >
-            {hasTestimonials ? "Pacientes contam" : "Em preparação"}
+            Pacientes contam
           </h2>
         </header>
 
-        {hasTestimonials ? (
-          <ul className="space-y-28 sm:space-y-32">
-            {Luiza.testimonials.map((quote) => (
-              <li key={quote.attribution}>
-                <figure className="mx-auto max-w-[58ch]">
-                  <blockquote className="display-italic text-ink text-balance text-center text-[clamp(1.25rem,2.1vw,1.55rem)] leading-[1.45]">
-                    {quote.body}
-                  </blockquote>
-                  <figcaption className="marginalia mt-8 text-center">
-                    — {quote.attribution}
-                  </figcaption>
-                </figure>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p className="marginalia mx-auto max-w-[44ch] text-center">
-            Os testemunhos voltam em breve — com a autorização de quem os escreveu.
-          </p>
-        )}
+        <ul className="space-y-28 sm:space-y-32">
+          {Luiza.testimonials.map((quote) => (
+            <li key={quote.attribution}>
+              <figure className="mx-auto max-w-[58ch]">
+                <blockquote className="display-italic text-ink text-balance text-center text-[clamp(1.25rem,2.1vw,1.55rem)] leading-[1.45]">
+                  {quote.body}
+                </blockquote>
+                <figcaption className="marginalia mt-8 text-center">
+                  — {quote.attribution}
+                </figcaption>
+              </figure>
+            </li>
+          ))}
+        </ul>
 
         <div aria-hidden="true" className="mt-24 flex justify-center">
           <PaintedAsset

@@ -268,7 +268,7 @@ function WheelDetail({ sign, pinned }: WheelDetailProps) {
       data-pinned={pinned ? "true" : "false"}
       data-placeholder={content?._isPlaceholder ? "true" : undefined}
       data-vedic-placeholder={vedic?._isPlaceholder ? "true" : undefined}
-      className="mx-auto max-w-[52ch] lg:mx-0 lg:min-h-[60rem]"
+      className="mx-auto max-w-[52ch] lg:mx-0 lg:min-h-[44rem]"
     >
       {sign && content && vedic ? (
         <>

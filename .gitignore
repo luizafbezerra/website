@@ -26,3 +26,4 @@ docs/
 # for the bake (that dir has its own .gitignore blocking PNGs). Only the baked
 # WebPs in public/art/cosmos/prelude/ are checked in.
 generated/
+.vercel

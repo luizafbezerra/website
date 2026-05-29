@@ -66,7 +66,7 @@ export default async function OpengraphImage() {
             color: TERRACOTTA,
           }}
         >
-          {Luiza.role} · {Luiza.city}
+          {`${Luiza.role} · ${Luiza.city}`}
         </div>
 
         <div
@@ -91,7 +91,7 @@ export default async function OpengraphImage() {
             lineHeight: 1.2,
           }}
         >
-          {Luiza.tradition} — para a vida adulta
+          {`${Luiza.tradition} — para a vida adulta`}
         </div>
 
         <div
@@ -103,8 +103,7 @@ export default async function OpengraphImage() {
             maxWidth: 560,
           }}
         >
-          Para adultos que atravessam ansiedade, lutos, relações ou propósito. Atendimento
-          presencial em {Luiza.city} e online em todo o {Luiza.country}.
+          {`Para adultos que atravessam ansiedade, lutos, relações ou propósito. Atendimento presencial em ${Luiza.city} e online em todo o ${Luiza.country}.`}
         </div>
       </div>
     </div>,

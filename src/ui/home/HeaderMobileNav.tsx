@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useId, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { Luiza, Navigation } from "@/core";
 import { WhatsAppGlyph } from "./WhatsAppGlyph";
 
@@ -9,7 +10,7 @@ export function HeaderMobileNav() {
   const [open, setOpen] = useState<boolean>(false);
   const drawerRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
-  const firstLinkRef = useRef<HTMLAnchorElement>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
   const titleId = useId();
 
   useEffect(() => {
@@ -41,7 +42,10 @@ export function HeaderMobileNav() {
     };
 
     window.addEventListener("keydown", onKey);
-    firstLinkRef.current?.focus();
+    // Focus the round close button (consistent with the icon-button focus
+    // vocabulary) rather than the first nav link — auto-focusing a text link
+    // stamped a boxed outline that read as off-brand on the manuscript page.
+    closeButtonRef.current?.focus();
 
     return () => {
       window.removeEventListener("keydown", onKey);
@@ -67,86 +71,99 @@ export function HeaderMobileNav() {
         </span>
       </button>
 
-      {open && (
-        <div
-          className="fixed inset-0 z-40 md:hidden"
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby={titleId}
-        >
-          <button
-            type="button"
-            aria-label="Fechar navegação"
-            onClick={() => setOpen(false)}
-            className="bg-ink/30 absolute inset-0 cursor-default"
-            tabIndex={-1}
-          />
+      {/* Portaled to <body> so it escapes the StickyHeaderShell ancestor,
+          whose `transform`/`will-change` would otherwise become the containing
+          block for this `position: fixed` overlay and collapse it to the
+          header's height. */}
+      {open &&
+        createPortal(
           <div
-            ref={drawerRef}
-            className="bg-parchment border-rule-soft absolute inset-y-0 right-0 flex h-full w-[min(20rem,86vw)] flex-col border-l shadow-[-12px_0_40px_-24px_rgba(0,0,0,0.18)]"
+            className="fixed inset-0 z-40 md:hidden"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby={titleId}
           >
-            <div className="flex items-center justify-between px-7 pt-7 pb-4">
-              <span id={titleId} className="tracked">
-                Navegação
-              </span>
-              <button
-                type="button"
-                onClick={() => setOpen(false)}
-                aria-label="Fechar navegação"
-                className="text-foreground hover:text-terracotta focus-visible:ring-terracotta inline-flex h-10 w-10 items-center justify-center rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-parchment"
-              >
-                <span aria-hidden="true" className="display text-[1.4rem] leading-none">
-                  ×
+            <button
+              type="button"
+              aria-label="Fechar navegação"
+              onClick={() => setOpen(false)}
+              className="bg-ink/30 absolute inset-0 cursor-default"
+              tabIndex={-1}
+            />
+            <div
+              ref={drawerRef}
+              className="bg-parchment border-rule-soft absolute inset-y-0 right-0 flex h-full w-[min(20rem,86vw)] flex-col border-l shadow-[-12px_0_40px_-24px_rgba(0,0,0,0.18)]"
+            >
+              <div className="flex items-center justify-between px-7 pt-7 pb-4">
+                <span id={titleId} className="tracked">
+                  Navegação
                 </span>
-              </button>
-            </div>
+                <button
+                  ref={closeButtonRef}
+                  type="button"
+                  onClick={() => setOpen(false)}
+                  aria-label="Fechar navegação"
+                  className="text-foreground hover:text-terracotta focus-visible:ring-terracotta inline-flex h-10 w-10 items-center justify-center rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-parchment"
+                >
+                  <span aria-hidden="true" className="display text-[1.4rem] leading-none">
+                    ×
+                  </span>
+                </button>
+              </div>
 
-            <nav aria-label="Principal" className="px-7 pt-2 pb-6">
-              <ul className="flex flex-col gap-5">
-                {Navigation.links.map((link, idx) => (
-                  <li key={link.href}>
-                    <Link
-                      ref={idx === 0 ? firstLinkRef : undefined}
-                      href={link.href}
-                      onClick={() => setOpen(false)}
-                      className="display-italic text-foreground hover:text-terracotta text-[1.2rem] no-underline transition-colors"
-                    >
-                      {link.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </nav>
+              <nav aria-label="Principal" className="px-7 pt-2 pb-6">
+                <ul className="flex flex-col gap-5">
+                  {Navigation.links.map((link) => (
+                    <li key={link.href}>
+                      <Link
+                        href={link.href}
+                        onClick={() => setOpen(false)}
+                        className="display-italic text-foreground hover:text-terracotta text-[1.2rem] no-underline transition-colors"
+                      >
+                        {link.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </nav>
 
-            <div className="mt-auto border-rule-soft flex flex-col gap-4 border-t px-7 py-6">
-              <a
-                href={Luiza.whatsappUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() => setOpen(false)}
-                className="display-italic text-foreground decoration-terracotta hover:text-terracotta inline-flex items-center gap-2 text-[1.05rem] underline decoration-1 underline-offset-[0.3em] transition-colors"
-                aria-label={`Iniciar conversa pelo WhatsApp ${Luiza.phoneDisplay}`}
-              >
-                <WhatsAppGlyph className="text-terracotta h-[1.1em] w-[1.1em] -translate-y-px" />
-                <span>WhatsApp</span>
-              </a>
-              <a
-                href={Luiza.instagramUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() => setOpen(false)}
-                className="display-italic text-foreground hover:text-terracotta inline-flex items-baseline gap-2 text-[1rem] no-underline transition-colors"
-                aria-label={`Símbolos no Instagram, ${Luiza.instagramHandle}, abre em nova aba`}
-              >
-                <span>Instagram</span>
-                <span className="marginalia text-quill text-[0.82rem]">
-                  {Luiza.instagramHandle}
-                </span>
-              </a>
+              {/* Quiet reassurance line — names the practice and where she
+                  works, and gives the drawer's mid-section content so it
+                  doesn't read as a half-empty panel. */}
+              <p className="marginalia px-7 pt-1 pb-2 text-[0.92rem] leading-[1.5]">
+                Análise junguiana · atende em {Luiza.city} e online em todo o {Luiza.country}.
+              </p>
+
+              <div className="mt-auto border-rule-soft flex flex-col gap-4 border-t px-7 py-6">
+                <a
+                  href={Luiza.whatsappUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => setOpen(false)}
+                  className="display-italic text-foreground decoration-terracotta hover:text-terracotta inline-flex items-center gap-2 text-[1.05rem] underline decoration-1 underline-offset-[0.3em] transition-colors"
+                  aria-label={`Iniciar conversa pelo WhatsApp ${Luiza.phoneDisplay}`}
+                >
+                  <WhatsAppGlyph className="text-terracotta h-[1.1em] w-[1.1em] -translate-y-px" />
+                  <span>WhatsApp</span>
+                </a>
+                <a
+                  href={Luiza.instagramUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => setOpen(false)}
+                  className="display-italic text-foreground hover:text-terracotta inline-flex items-baseline gap-2 text-[1rem] no-underline transition-colors"
+                  aria-label={`Símbolos no Instagram, ${Luiza.instagramHandle}, abre em nova aba`}
+                >
+                  <span>Instagram</span>
+                  <span className="marginalia text-quill text-[0.82rem]">
+                    {Luiza.instagramHandle}
+                  </span>
+                </a>
+              </div>
             </div>
-          </div>
-        </div>
-      )}
+          </div>,
+          document.body,
+        )}
     </>
   );
 }

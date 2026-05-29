@@ -348,11 +348,22 @@ function StaticSigilWheel({
   );
 }
 
-// Painted-poster fallback. The rasterized keyframe + 12 projected sigil
-// positions (Section 9 of the design brief) are not yet wired; until they
-// ship, this is a transparent layer so the page parchment shows through.
+// Painted still shown when the live canvas isn't mounted yet (or WebGL is
+// unavailable). Renders the same flattened prelude composite the mobile path
+// uses, so the section degrades to a painted plate — never a blank dark void.
+// The `.cosmos-canvas-layer` radial mask feathers its edges into the parchment.
 function PosterFallback() {
-  return <div className="cosmos-poster-fallback" role="presentation" aria-hidden="true" />;
+  return (
+    <div className="cosmos-poster-fallback" role="presentation" aria-hidden="true">
+      <Image
+        src={Data.preludeCompositeMobile}
+        alt=""
+        fill
+        sizes="100vw"
+        className="h-full w-full object-cover object-[center_60%]"
+      />
+    </div>
+  );
 }
 
 // Static prelude composite for mobile + reduced-motion. The 3D prop scene is

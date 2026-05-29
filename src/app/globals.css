@@ -193,6 +193,7 @@
     text-transform: uppercase;
     font-size: 0.74rem;
     color: var(--color-quill);
+    hyphens: none;
   }
 
   .tracked-ink {
@@ -201,6 +202,15 @@
     text-transform: uppercase;
     font-size: 0.74rem;
     color: var(--color-ink);
+    hyphens: none;
+  }
+
+  /* All-caps tracked labels over-fragment at phone widths; ease the tracking. */
+  @media (max-width: 640px) {
+    .tracked,
+    .tracked-ink {
+      letter-spacing: 0.16em;
+    }
   }
 
   .marginalia {

@@ -1,5 +1,6 @@
 import type { GlobalConfig } from "payload";
 import { revalidatePath } from "next/cache";
+import { accentHeadingField } from "../fields/accentHeading";
 
 /**
  * Homepage structure: the orderable/toggleable body sections and the editable
@@ -66,6 +67,111 @@ export const Home: GlobalConfig = {
         },
       ],
     },
+    // ── Hero (pinned first) ───────────────────────────────────────────────
+    {
+      name: "hero",
+      type: "group",
+      label: "Início (hero)",
+      fields: [
+        {
+          name: "subtitle",
+          type: "text",
+          label: "Subtítulo",
+          admin: { description: 'Linha sob o nome, ex.: "Para a vida adulta".' },
+        },
+        { name: "lead", type: "richText", label: "Parágrafo de abertura" },
+        { name: "ctaPrimaryLabel", type: "text", label: "Botão principal" },
+        { name: "ctaSecondaryLabel", type: "text", label: "Link secundário" },
+        {
+          name: "portrait",
+          type: "upload",
+          relationTo: "media",
+          label: "Retrato",
+          admin: { description: "Foto da Luiza. Em branco, usa a imagem padrão do código." },
+        },
+      ],
+    },
+
+    // ── Pillars (Como trabalho) ───────────────────────────────────────────
+    {
+      name: "pillars",
+      type: "group",
+      label: "Como trabalho (pilares)",
+      fields: [
+        { name: "eyebrow", type: "text", label: "Sobrescrito" },
+        accentHeadingField({ label: "Título", defaultAccentStyle: "terracotta" }),
+        { name: "intro", type: "richText", label: "Introdução" },
+        { name: "note", type: "textarea", label: "Nota das frentes" },
+        {
+          name: "items",
+          type: "array",
+          label: "Pilares",
+          labels: { singular: "Pilar", plural: "Pilares" },
+          fields: [
+            {
+              name: "numeral",
+              type: "text",
+              label: "Numeral",
+              admin: { description: "Ex.: I, II, III." },
+            },
+            { name: "title", type: "text", label: "Título" },
+            { name: "paragraph", type: "textarea", label: "Parágrafo" },
+          ],
+        },
+      ],
+    },
+
+    // ── About (Sobre) ─────────────────────────────────────────────────────
+    {
+      name: "about",
+      type: "group",
+      label: "Sobre",
+      fields: [
+        { name: "eyebrow", type: "text", label: "Sobrescrito" },
+        accentHeadingField({ label: "Título", defaultAccentStyle: "cobalt" }),
+        { name: "bio", type: "richText", label: "Biografia" },
+        { name: "formacao", type: "text", label: "Formação" },
+        { name: "idiomas", type: "text", label: "Idiomas" },
+      ],
+    },
+
+    // ── Voices (depoimentos) ──────────────────────────────────────────────
+    {
+      name: "voices",
+      type: "group",
+      label: "Vozes (depoimentos)",
+      fields: [
+        { name: "eyebrow", type: "text", label: "Sobrescrito" },
+        { name: "heading", type: "text", label: "Título" },
+      ],
+    },
+
+    // ── Writing (Escrita) ─────────────────────────────────────────────────
+    {
+      name: "writing",
+      type: "group",
+      label: "Escrita (blog)",
+      fields: [
+        { name: "eyebrow", type: "text", label: "Sobrescrito" },
+        accentHeadingField({ label: "Título", defaultAccentStyle: "terracotta" }),
+        { name: "intro", type: "textarea", label: "Introdução" },
+      ],
+    },
+
+    // ── Contact (Contato) ─────────────────────────────────────────────────
+    {
+      name: "contact",
+      type: "group",
+      label: "Contato",
+      fields: [
+        { name: "eyebrow", type: "text", label: "Sobrescrito" },
+        accentHeadingField({ label: "Título", defaultAccentStyle: "terracotta" }),
+        { name: "body", type: "richText", label: "Texto" },
+        { name: "whatsappLabel", type: "text", label: "Rótulo do botão WhatsApp" },
+        { name: "faqLinkLabel", type: "text", label: "Rótulo do link de perguntas" },
+      ],
+    },
+
     {
       name: "navExtraLinks",
       type: "array",

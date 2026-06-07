@@ -1,8 +1,12 @@
 import Image from "next/image";
+import type { Home } from "@/core/home";
 import type { Identity } from "@/core/identity";
+import { RichTextProse } from "./RichTextProse";
 import { WhatsAppGlyph } from "./WhatsAppGlyph";
 
-export function Hero({ identity }: { identity: Identity }) {
+const PORTRAIT_FALLBACK = "/portrait/luiza.jpg";
+
+export function Hero({ identity, content }: { identity: Identity; content: Home["hero"] }) {
   return (
     <section
       aria-labelledby="hero-heading"
@@ -23,7 +27,7 @@ export function Hero({ identity }: { identity: Identity }) {
           >
             <span className="block">{identity.fullName}</span>
             <span className="display-italic text-terracotta-deep mt-3 block text-[0.42em] tracking-[0.05em]">
-              Para a vida adulta
+              {content.subtitle}
             </span>
           </h1>
         </div>
@@ -35,7 +39,7 @@ export function Hero({ identity }: { identity: Identity }) {
         <figure className="mx-auto w-[min(17rem,72%)] lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:mx-0 lg:w-full lg:max-w-[26rem] lg:self-start lg:pt-2">
           <div className="relative aspect-[4/5] overflow-hidden">
             <Image
-              src="/portrait/luiza.jpg"
+              src={content.portraitUrl ?? PORTRAIT_FALLBACK}
               alt={`Retrato de ${identity.fullName}, ${identity.role.toLowerCase()}`}
               fill
               priority
@@ -72,21 +76,17 @@ export function Hero({ identity }: { identity: Identity }) {
             <span className="bg-terracotta/70 h-px w-24" />
           </div>
 
-          <div className="body-prose dropcap text-ink max-w-[60ch] text-[1.115rem] leading-[1.72]">
-            <p>
-              Atendo adultos em momentos em que a vida cotidiana parece insuficiente para conter o
-              que está acontecendo — uma <em>ansiedade</em> que não passa, um <em>luto</em> recente,
-              um trabalho que perdeu o sentido. Escuto o que insiste e o que ainda não encontrou
-              palavras.
-            </p>
-          </div>
+          <RichTextProse
+            data={content.lead}
+            className="body-prose dropcap text-ink max-w-[60ch] text-[1.115rem] leading-[1.72]"
+          />
 
           <div className="mt-12 flex flex-col items-center gap-5 sm:items-start">
             <a
               href="#contato"
               className="bg-terracotta-deep hover:bg-foreground group inline-flex items-baseline gap-3 px-7 py-4 text-parchment no-underline transition-colors"
             >
-              <span className="display-italic text-[1.05rem]">marcar uma conversa</span>
+              <span className="display-italic text-[1.05rem]">{content.ctaPrimaryLabel}</span>
               <span aria-hidden="true" className="transition-transform group-hover:translate-x-0.5">
                 →
               </span>
@@ -96,7 +96,7 @@ export function Hero({ identity }: { identity: Identity }) {
               href="#abordagem"
               className="marginalia text-quill hover:text-terracotta decoration-terracotta/40 hover:decoration-terracotta inline-flex items-baseline gap-2 underline decoration-1 underline-offset-[0.28em] transition-colors"
             >
-              <span>conhecer a abordagem antes</span>
+              <span>{content.ctaSecondaryLabel}</span>
               <span aria-hidden="true">↓</span>
             </a>
           </div>

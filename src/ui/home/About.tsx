@@ -1,7 +1,10 @@
+import type { Home } from "@/core/home";
 import type { Identity } from "@/core/identity";
+import { AccentHeading } from "./AccentHeading";
 import { PaintedAsset } from "./PaintedAsset";
+import { RichTextProse } from "./RichTextProse";
 
-export function About({ identity }: { identity: Identity }) {
+export function About({ identity, content }: { identity: Identity; content: Home["about"] }) {
   return (
     <section
       id="sobre"
@@ -27,32 +30,22 @@ export function About({ identity }: { identity: Identity }) {
         </aside>
 
         <div className="order-1 lg:order-2">
-          <p className="tracked mb-5">Sobre Luiza</p>
+          <p className="tracked mb-5">{content.eyebrow}</p>
           <h2
             id="about-heading"
             className="display text-foreground text-balance text-[clamp(1.9rem,3.6vw,2.7rem)] leading-[1.14] tracking-[-0.008em]"
           >
-            Uma escuta cuidadosa, na tradição <span className="text-cobalt">junguiana</span>.
+            <AccentHeading heading={content.heading} />
           </h2>
 
-          {/* TODO: rewrite this bio with Luiza's voice and confirmed details (formação, ano, supervisão, especializações). */}
-          <div className="body-prose text-ink mt-10 max-w-[60ch] text-[1.085rem] leading-[1.74]">
-            <p>
-              Sou psicóloga clínica. O foco do trabalho está em adultos que atravessam ansiedade,
-              lutos, transições de carreira ou sofrimento nos vínculos.
-            </p>
-            <p>
-              O ritmo importa tanto quanto o conteúdo. Nada do que costuma trazer alguém à análise —
-              sintomas persistentes, sonhos que voltam, símbolos que tocam algo antes de termos
-              palavras — se entende com pressa.
-            </p>
-            <p>As primeiras sessões servem para compreendermos juntos se podemos seguir juntos.</p>
-          </div>
+          <RichTextProse
+            data={content.bio}
+            className="body-prose text-ink mt-10 max-w-[60ch] text-[1.085rem] leading-[1.74]"
+          />
 
           <dl className="text-quill mt-12 grid grid-cols-1 gap-y-6 text-[0.98rem] leading-[1.55] sm:grid-cols-[10rem_1fr] sm:gap-x-8 sm:gap-y-5">
             <dt className="display text-quill text-[0.96rem]">Formação</dt>
-            {/* TODO: confirm exact formação, instituição e ano */}
-            <dd className="text-foreground">Psicologia clínica</dd>
+            <dd className="text-foreground">{content.formacao}</dd>
 
             <dt className="display text-quill text-[0.96rem]">Registro</dt>
             <dd className="text-foreground">{identity.credential}</dd>
@@ -63,7 +56,7 @@ export function About({ identity }: { identity: Identity }) {
             </dd>
 
             <dt className="display text-quill text-[0.96rem]">Idiomas</dt>
-            <dd className="text-foreground">Português</dd>
+            <dd className="text-foreground">{content.idiomas}</dd>
           </dl>
         </div>
       </div>

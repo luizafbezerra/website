@@ -60,12 +60,12 @@ export default async function Home() {
   // Hero is pinned first and Footer last; these body sections render in the
   // order configured on the Home global, skipping any that are disabled.
   const sectionNodes: Record<SectionType, ReactNode> = {
-    pillars: <Pillars />,
-    about: <About identity={identity} />,
+    pillars: <Pillars content={home.pillars} />,
+    about: <About identity={identity} content={home.about} />,
     cosmos: <Cosmos />,
-    voices: <Voices testimonials={testimonials} />,
-    writing: <Writing posts={recentPosts} />,
-    contact: <Contact identity={identity} />,
+    voices: <Voices testimonials={testimonials} content={home.voices} />,
+    writing: <Writing posts={recentPosts} content={home.writing} />,
+    contact: <Contact identity={identity} content={home.contact} />,
   };
 
   return (
@@ -133,7 +133,7 @@ export default async function Home() {
         <Header identity={identity} navLinks={navLinks} />
       </StickyHeaderShell>
       <main id="main">
-        <Hero identity={identity} />
+        <Hero identity={identity} content={home.hero} />
         {home.sections
           .filter((s) => s.enabled)
           .map((s) => (

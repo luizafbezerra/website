@@ -31,6 +31,7 @@
     "@payloadcms/next": "3.78.0",
     "@payloadcms/richtext-lexical": "3.78.0",
     "@payloadcms/storage-vercel-blob": "3.78.0",
+    "@payloadcms/translations": "3.78.0",
     "@react-three/fiber": "^9.0.0",
     "@tailwindcss/typography": "^0.5.19",
     "class-variance-authority": "^0.7.1",

@@ -21,6 +21,7 @@ const revalidateBlog = (slug?: string) => {
 
 export const Posts: CollectionConfig = {
   slug: "posts",
+  labels: { singular: "Publicação", plural: "Publicações" },
   admin: {
     useAsTitle: "title",
     defaultColumns: ["title", "_status", "publishedDate", "updatedAt"],
@@ -32,12 +33,14 @@ export const Posts: CollectionConfig = {
     {
       name: "title",
       type: "text",
+      label: "Título",
       required: true,
       localized: true,
     },
     {
       name: "slug",
       type: "text",
+      label: "Endereço (slug)",
       unique: true,
       index: true,
       admin: {
@@ -48,6 +51,7 @@ export const Posts: CollectionConfig = {
     {
       name: "description",
       type: "textarea",
+      label: "Descrição",
       required: true,
       localized: true,
     },
@@ -55,6 +59,7 @@ export const Posts: CollectionConfig = {
       name: "coverImage",
       type: "upload",
       relationTo: "media",
+      label: "Imagem de capa",
       required: false,
       admin: {
         description: "Optional hero image for the post.",
@@ -63,16 +68,19 @@ export const Posts: CollectionConfig = {
     {
       name: "content",
       type: "richText",
+      label: "Conteúdo",
       required: true,
       localized: true,
     },
     {
       name: "tags",
       type: "array",
+      label: "Tags",
       fields: [
         {
           name: "tag",
           type: "text",
+          label: "Tag",
           required: true,
         },
       ],
@@ -80,6 +88,7 @@ export const Posts: CollectionConfig = {
     {
       name: "publishedDate",
       type: "date",
+      label: "Data de publicação",
       required: true,
       admin: {
         position: "sidebar",
@@ -92,6 +101,7 @@ export const Posts: CollectionConfig = {
     {
       name: "featured",
       type: "checkbox",
+      label: "Destaque",
       defaultValue: false,
       admin: {
         position: "sidebar",

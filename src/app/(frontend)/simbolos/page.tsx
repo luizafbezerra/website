@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { getNavigation } from "@/app/actions/home";
 import { getIdentity } from "@/app/actions/identity";
 import { Footer, Header, StickyHeaderShell, Symbols } from "@/ui/home";
 import { BreadcrumbJsonLd } from "@/ui/lib/jsonLd";
@@ -26,7 +27,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export const revalidate = 86400;
 
 export default async function SimbolosPage() {
-  const identity = await getIdentity();
+  const [identity, navLinks] = await Promise.all([getIdentity(), getNavigation()]);
   return (
     <>
       <BreadcrumbJsonLd
@@ -37,7 +38,7 @@ export default async function SimbolosPage() {
       />
 
       <StickyHeaderShell>
-        <Header identity={identity} />
+        <Header identity={identity} navLinks={navLinks} />
       </StickyHeaderShell>
       <main id="main">
         <nav aria-label="Trilha" className="px-6 pt-24 sm:px-10 sm:pt-28 lg:pt-32">
@@ -56,7 +57,7 @@ export default async function SimbolosPage() {
         </nav>
         <Symbols />
       </main>
-      <Footer identity={identity} />
+      <Footer identity={identity} navLinks={navLinks} />
     </>
   );
 }

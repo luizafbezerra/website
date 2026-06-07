@@ -2,13 +2,16 @@ import { buildConfig } from "payload";
 import { vercelPostgresAdapter } from "@payloadcms/db-vercel-postgres";
 import { vercelBlobStorage } from "@payloadcms/storage-vercel-blob";
 import { lexicalEditor } from "@payloadcms/richtext-lexical";
+import { pt } from "@payloadcms/translations/languages/pt";
 import path from "path";
 import { fileURLToPath } from "url";
 
 import { Users } from "./collections/Users";
 import { Media } from "./collections/Media";
 import { Posts } from "./collections/Posts";
+import { Testimonials } from "./collections/Testimonials";
 import { LexicalCodeFeature } from "./features/lexicalCode/feature.server";
+import { Home } from "./globals/Home";
 import { Settings } from "./globals/Settings";
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -18,8 +21,14 @@ export default buildConfig({
     user: Users.slug,
     importMap: { baseDir: path.resolve(dirname) },
   },
-  collections: [Users, Media, Posts],
-  globals: [Settings],
+  // Single-locale admin: the practice is pt-BR, so the panel chrome renders in
+  // Portuguese. Field labels are set per-field across the collections/globals.
+  i18n: {
+    supportedLanguages: { pt },
+    fallbackLanguage: "pt",
+  },
+  collections: [Users, Media, Posts, Testimonials],
+  globals: [Settings, Home],
   editor: lexicalEditor({
     features: ({ defaultFeatures }) => [...defaultFeatures, LexicalCodeFeature()],
   }),

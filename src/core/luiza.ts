@@ -25,36 +25,8 @@ export namespace Luiza {
   export const tagline =
     "Psicoterapia para adultos na tradição da psicologia analítica de C. G. Jung — presencial em Guarulhos e online em todo o Brasil.";
 
-  // The three pillar titles come from the brief and are confirmed.
-  // TODO: pillar paragraphs — confirm or rewrite with Luiza
-  export const pillars = [
-    {
-      numeral: "I",
-      title: "Ansiedade & humor",
-      paragraph:
-        "Ansiedade que aperta o peito, episódios de tristeza, medos que paralisam, uma melancolia que se instala sem nome. O trabalho começa por ouvir o que esses estados estão tentando dizer.",
-    },
-    {
-      numeral: "II",
-      title: "Relações & vida",
-      paragraph:
-        "Lutos, separações, conflitos com a família, solidão, carências antigas. Os vínculos formam quem somos; quando ruem ou pesam, vale voltar à própria interioridade para entender o que pertence a nós e o que pertence ao outro.",
-    },
-    {
-      numeral: "III",
-      title: "Carreira & propósito",
-      paragraph:
-        "Insatisfação profissional, estresse no trabalho, a sensação de estar no caminho errado, a busca por uma vocação que faça sentido. A análise abre espaço para escutar o que a psique já sabe.",
-    },
-  ] as const;
-
-  // Empty until Luiza provides real testimonials with permission.
-  // The Voices section auto-hides while this array is empty.
-  // TODO: collect 3–5 testimonials from existing patients (with consent + initials only).
-  export const testimonials: ReadonlyArray<{
-    body: string;
-    attribution: string;
-  }> = [];
+  // Pillars now live in the Home global (`core/home.ts` HOME_DEFAULTS.pillars),
+  // and testimonials in the `testimonials` collection — both removed from here.
 
   // TODO: confirm hours and response window with Luiza before publishing.
   export const availability = {

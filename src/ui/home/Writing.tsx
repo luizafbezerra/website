@@ -1,5 +1,7 @@
 import Link from "next/link";
 import type { Blog } from "@/core";
+import type { Home } from "@/core/home";
+import { AccentHeading } from "./AccentHeading";
 
 const PT_BR_DATE = new Intl.DateTimeFormat("pt-BR", {
   day: "numeric",
@@ -9,9 +11,10 @@ const PT_BR_DATE = new Intl.DateTimeFormat("pt-BR", {
 
 type Props = {
   posts: Blog.Post[];
+  content: Home["writing"];
 };
 
-export function Writing({ posts }: Props) {
+export function Writing({ posts, content }: Props) {
   if (posts.length === 0) return null;
 
   return (
@@ -21,16 +24,15 @@ export function Writing({ posts }: Props) {
     >
       <div className="mx-auto max-w-3xl">
         <header className="mb-16 sm:mb-20">
-          <p className="tracked mb-5">Escrita</p>
+          <p className="tracked mb-5">{content.eyebrow}</p>
           <h2
             id="writing-heading"
             className="display text-foreground text-balance text-[clamp(1.9rem,3.6vw,2.65rem)] leading-[1.14] tracking-[-0.008em]"
           >
-            Algumas <span className="text-terracotta-deep">anotações</span> do consultório.
+            <AccentHeading heading={content.heading} />
           </h2>
           <p className="text-quill mt-6 max-w-[58ch] text-[1.04rem] leading-[1.7]">
-            Notas sobre o que costuma ficar dito nas entrelinhas da vida adulta. Não substituem o
-            trabalho clínico — fazem companhia entre as sessões e fora delas.
+            {content.intro}
           </p>
         </header>
 

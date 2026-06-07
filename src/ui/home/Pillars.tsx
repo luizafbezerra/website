@@ -1,8 +1,10 @@
-import { Luiza } from "@/core";
+import type { Home } from "@/core/home";
+import { AccentHeading } from "./AccentHeading";
 import { Ornament } from "./Ornament";
 import { PaintedAsset } from "./PaintedAsset";
+import { RichTextProse } from "./RichTextProse";
 
-export function Pillars() {
+export function Pillars({ content }: { content: Home["pillars"] }) {
   return (
     <section
       id="abordagem"
@@ -12,41 +14,30 @@ export function Pillars() {
       <div className="mx-auto max-w-3xl lg:grid lg:max-w-5xl lg:grid-cols-[minmax(0,40rem)_1fr] lg:gap-x-16 xl:gap-x-24">
         <div className="lg:col-start-1">
           <header className="mb-16 sm:mb-20">
-            <p className="tracked mb-5 text-center sm:text-left">Como trabalho</p>
+            <p className="tracked mb-5 text-center sm:text-left">{content.eyebrow}</p>
             <h2
               id="approach-heading"
               className="display text-foreground text-balance text-center text-[clamp(1.95rem,3.8vw,2.75rem)] leading-[1.13] tracking-[-0.008em] sm:text-left"
             >
-              O que se repete costuma ter algo{" "}
-              <span className="display-italic text-terracotta-deep">a dizer</span>.
+              <AccentHeading heading={content.heading} />
             </h2>
 
-            <div className="body-prose text-ink mt-10 max-w-[60ch] text-[1.085rem] leading-[1.74]">
-              <p>
-                Tomo a sério aquilo que se manifesta em sonhos, fantasias, imagens e sintomas. Eles
-                não são ruído: são as maneiras pelas quais a psique fala sobre o que ainda não cabe
-                em palavras.
-              </p>
-              <p>
-                No trabalho clínico, isso aparece como uma atenção demorada — uma curiosidade pelo
-                que está por trás daquilo que dói. Não trato de remover sintomas com pressa: ajudo a
-                entender o que vieram dizer, para que o caminho à frente seja escolhido — e não
-                apenas suportado.
-              </p>
-            </div>
+            <RichTextProse
+              data={content.intro}
+              className="body-prose text-ink mt-10 max-w-[60ch] text-[1.085rem] leading-[1.74]"
+            />
           </header>
 
           <Ornament variant="trinity" className="mb-20 sm:mb-24" />
 
           <div className="mb-14 sm:mb-20">
             <p className="display-italic text-quill max-w-[58ch] text-[1.02rem] leading-[1.7]">
-              Três frentes que costumam trazer alguém para a análise — quase sempre se cruzam, e o
-              trabalho começa por onde dói mais agora.
+              {content.note}
             </p>
           </div>
 
           <ol className="space-y-24 sm:space-y-28">
-            {Luiza.pillars.map((pillar) => (
+            {content.items.map((pillar) => (
               <li key={pillar.numeral} className="group">
                 <article className="relative">
                   <span

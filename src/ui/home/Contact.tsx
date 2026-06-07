@@ -1,7 +1,10 @@
 import Link from "next/link";
+import type { Home } from "@/core/home";
 import type { Identity } from "@/core/identity";
+import { AccentHeading } from "./AccentHeading";
+import { RichTextProse } from "./RichTextProse";
 
-export function Contact({ identity }: { identity: Identity }) {
+export function Contact({ identity, content }: { identity: Identity; content: Home["contact"] }) {
   return (
     <section
       id="contato"
@@ -9,24 +12,19 @@ export function Contact({ identity }: { identity: Identity }) {
       className="bg-parchment-deep px-6 py-32 sm:px-10 sm:py-44 lg:py-52"
     >
       <div className="mx-auto max-w-3xl">
-        <p className="tracked mb-6 text-center sm:text-left">Para começar</p>
+        <p className="tracked mb-6 text-center sm:text-left">{content.eyebrow}</p>
 
         <h2
           id="contact-heading"
           className="display text-foreground text-balance text-center text-[clamp(2rem,4.4vw,3rem)] leading-[1.12] tracking-[-0.01em] sm:text-left"
         >
-          Uma conversa breve costuma ser{" "}
-          <span className="display-italic text-terracotta-deep">o suficiente</span> para vermos se
-          faz sentido.
+          <AccentHeading heading={content.heading} />
         </h2>
 
-        <div className="body-prose text-ink mt-12 max-w-[58ch] text-[1.085rem] leading-[1.74]">
-          <p>
-            O caminho mais simples é o WhatsApp. Você me escreve uma mensagem curta — não precisa
-            contar tudo de uma vez — e combinamos um horário para uma primeira conversa, sem
-            compromisso. A partir dela decidimos juntos como seguir.
-          </p>
-        </div>
+        <RichTextProse
+          data={content.body}
+          className="body-prose text-ink mt-12 max-w-[58ch] text-[1.085rem] leading-[1.74]"
+        />
 
         <address className="not-italic block">
           <div className="mt-14">
@@ -39,7 +37,7 @@ export function Contact({ identity }: { identity: Identity }) {
             >
               <span className="flex flex-col items-start gap-1">
                 <span className="display-italic text-[1.2rem] sm:text-[1.3rem]">
-                  Conversar pelo WhatsApp
+                  {content.whatsappLabel}
                 </span>
                 <span className="text-parchment/75 text-[0.92rem] tracking-wide">
                   {identity.phoneDisplay}
@@ -68,7 +66,7 @@ export function Contact({ identity }: { identity: Identity }) {
                 href="/perguntas"
                 className="text-quill hover:text-terracotta decoration-terracotta/40 hover:decoration-terracotta underline decoration-1 underline-offset-[0.25em] transition-colors"
               >
-                Perguntas frequentes antes da primeira conversa
+                {content.faqLinkLabel}
               </Link>{" "}
               <span aria-hidden="true" className="text-terracotta/70">
                 →

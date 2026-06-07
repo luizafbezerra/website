@@ -12,6 +12,7 @@ export function seoField(): Field {
   return {
     name: "seo",
     type: "group",
+    label: "SEO",
     admin: {
       description:
         "Per-page SEO overrides. Leave blank to inherit the site defaults from Settings.",
@@ -20,17 +21,20 @@ export function seoField(): Field {
       {
         name: "title",
         type: "text",
+        label: "Título",
         admin: { description: "Overrides the page <title>. Blank → Settings default." },
       },
       {
         name: "description",
         type: "textarea",
+        label: "Descrição",
         admin: { description: "Overrides the meta description. Blank → Settings default." },
       },
       {
         name: "ogImage",
         type: "upload",
         relationTo: "media",
+        label: "Imagem social (OG)",
         admin: {
           description: "Overrides the social-share image (1200×630). Blank → Settings default.",
         },

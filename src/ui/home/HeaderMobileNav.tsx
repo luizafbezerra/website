@@ -3,11 +3,17 @@
 import Link from "next/link";
 import { useEffect, useId, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { Navigation } from "@/core";
 import type { Identity } from "@/core/identity";
+import type { NavLink } from "@/core/navigation";
 import { WhatsAppGlyph } from "./WhatsAppGlyph";
 
-export function HeaderMobileNav({ identity }: { identity: Identity }) {
+export function HeaderMobileNav({
+  identity,
+  navLinks,
+}: {
+  identity: Identity;
+  navLinks: NavLink[];
+}) {
   const [open, setOpen] = useState<boolean>(false);
   const drawerRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -114,7 +120,7 @@ export function HeaderMobileNav({ identity }: { identity: Identity }) {
 
               <nav aria-label="Principal" className="px-7 pt-2 pb-6">
                 <ul className="flex flex-col gap-5">
-                  {Navigation.links.map((link) => (
+                  {navLinks.map((link) => (
                     <li key={link.href}>
                       <Link
                         href={link.href}

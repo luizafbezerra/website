@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { getNavigation } from "@/app/actions/home";
 import { getIdentity } from "@/app/actions/identity";
 import { Faq as FaqData } from "@/core";
 import { Footer, Header, StickyHeaderShell } from "@/ui/home";
@@ -28,7 +29,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export const revalidate = 86400;
 
 export default async function PerguntasPage() {
-  const identity = await getIdentity();
+  const [identity, navLinks] = await Promise.all([getIdentity(), getNavigation()]);
   return (
     <>
       <FaqJsonLd entries={[...FaqData.entries]} />
@@ -40,12 +41,12 @@ export default async function PerguntasPage() {
       />
 
       <StickyHeaderShell>
-        <Header identity={identity} />
+        <Header identity={identity} navLinks={navLinks} />
       </StickyHeaderShell>
       <main id="main">
         <Faq entries={FaqData.entries} />
       </main>
-      <Footer identity={identity} />
+      <Footer identity={identity} navLinks={navLinks} />
     </>
   );
 }

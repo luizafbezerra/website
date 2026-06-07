@@ -1,9 +1,9 @@
 import Link from "next/link";
-import { Navigation } from "@/core";
 import type { Identity } from "@/core/identity";
+import type { NavLink } from "@/core/navigation";
 import { FooterCosmosRestore } from "./FooterCosmosRestore";
 
-export function Footer({ identity }: { identity: Identity }) {
+export function Footer({ identity, navLinks }: { identity: Identity; navLinks: NavLink[] }) {
   const year = new Date().getFullYear();
 
   return (
@@ -22,7 +22,7 @@ export function Footer({ identity }: { identity: Identity }) {
 
           <nav aria-label="Rodapé">
             <ul className="display flex flex-col gap-2 text-[0.98rem] sm:items-end">
-              {Navigation.links.map((link) => (
+              {navLinks.map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}

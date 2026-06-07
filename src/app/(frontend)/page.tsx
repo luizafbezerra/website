@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
+import { Fragment, type ReactNode } from "react";
 import { getAllPosts } from "@/app/actions/blog";
+import { getHome, getNavigation } from "@/app/actions/home";
 import { getIdentity } from "@/app/actions/identity";
 import { getTestimonials } from "@/app/actions/testimonials";
+import type { SectionType } from "@/core/sections";
 import {
   About,
   Contact,
@@ -45,12 +48,25 @@ export async function generateMetadata(): Promise<Metadata> {
 export const revalidate = 3600;
 
 export default async function Home() {
-  const [identity, testimonials, posts] = await Promise.all([
+  const [identity, home, navLinks, testimonials, posts] = await Promise.all([
     getIdentity(),
+    getHome(),
+    getNavigation(),
     getTestimonials(),
     getAllPosts("pt-BR"),
   ]);
   const recentPosts = posts.slice(0, 3);
+
+  // Hero is pinned first and Footer last; these body sections render in the
+  // order configured on the Home global, skipping any that are disabled.
+  const sectionNodes: Record<SectionType, ReactNode> = {
+    pillars: <Pillars />,
+    about: <About identity={identity} />,
+    cosmos: <Cosmos />,
+    voices: <Voices testimonials={testimonials} />,
+    writing: <Writing posts={recentPosts} />,
+    contact: <Contact identity={identity} />,
+  };
 
   return (
     <>
@@ -114,18 +130,17 @@ export default async function Home() {
       )}
 
       <StickyHeaderShell>
-        <Header identity={identity} />
+        <Header identity={identity} navLinks={navLinks} />
       </StickyHeaderShell>
       <main id="main">
         <Hero identity={identity} />
-        <Pillars />
-        <About identity={identity} />
-        <Cosmos />
-        <Voices testimonials={testimonials} />
-        <Writing posts={recentPosts} />
-        <Contact identity={identity} />
+        {home.sections
+          .filter((s) => s.enabled)
+          .map((s) => (
+            <Fragment key={s.type}>{sectionNodes[s.type]}</Fragment>
+          ))}
       </main>
-      <Footer identity={identity} />
+      <Footer identity={identity} navLinks={navLinks} />
     </>
   );
 }

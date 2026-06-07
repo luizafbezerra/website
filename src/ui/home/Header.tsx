@@ -1,11 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Navigation } from "@/core";
 import type { Identity } from "@/core/identity";
+import type { NavLink } from "@/core/navigation";
 import { HeaderMobileNav } from "./HeaderMobileNav";
 import { WhatsAppGlyph } from "./WhatsAppGlyph";
 
-export function Header({ identity }: { identity: Identity }) {
+export function Header({ identity, navLinks }: { identity: Identity; navLinks: NavLink[] }) {
   return (
     <header className="bg-parchment border-rule-soft border-b">
       <div className="mx-auto flex max-w-6xl items-center gap-4 px-6 py-4 sm:px-10 sm:py-5">
@@ -38,7 +38,7 @@ export function Header({ identity }: { identity: Identity }) {
 
         <nav aria-label="Principal" className="ml-auto hidden md:block">
           <ul className="flex items-baseline gap-7">
-            {Navigation.links.map((link) => (
+            {navLinks.map((link) => (
               <li key={link.href}>
                 <Link
                   href={link.href}
@@ -63,7 +63,7 @@ export function Header({ identity }: { identity: Identity }) {
         </a>
 
         <div className="ml-auto md:hidden">
-          <HeaderMobileNav identity={identity} />
+          <HeaderMobileNav identity={identity} navLinks={navLinks} />
         </div>
       </div>
     </header>

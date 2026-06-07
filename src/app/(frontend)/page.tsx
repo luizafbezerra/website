@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { getAllPosts } from "@/app/actions/blog";
 import { getIdentity } from "@/app/actions/identity";
-import { Luiza } from "@/core";
+import { getTestimonials } from "@/app/actions/testimonials";
 import {
   About,
   Contact,
@@ -45,7 +45,11 @@ export async function generateMetadata(): Promise<Metadata> {
 export const revalidate = 3600;
 
 export default async function Home() {
-  const [identity, posts] = await Promise.all([getIdentity(), getAllPosts("pt-BR")]);
+  const [identity, testimonials, posts] = await Promise.all([
+    getIdentity(),
+    getTestimonials(),
+    getAllPosts("pt-BR"),
+  ]);
   const recentPosts = posts.slice(0, 3);
 
   return (
@@ -98,11 +102,11 @@ export default async function Home() {
 
       <BreadcrumbJsonLd items={[{ name: "Início", url: BASE_URL }]} />
 
-      {Luiza.testimonials.length > 0 && (
+      {testimonials.length > 0 && (
         <ReviewsJsonLd
           itemName={identity.fullName}
           itemUrl={BASE_URL}
-          reviews={Luiza.testimonials.map((t) => ({
+          reviews={testimonials.map((t) => ({
             body: t.body,
             author: t.attribution,
           }))}
@@ -117,7 +121,7 @@ export default async function Home() {
         <Pillars />
         <About identity={identity} />
         <Cosmos />
-        <Voices />
+        <Voices testimonials={testimonials} />
         <Writing posts={recentPosts} />
         <Contact identity={identity} />
       </main>

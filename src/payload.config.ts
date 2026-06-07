@@ -9,6 +9,7 @@ import { fileURLToPath } from "url";
 import { Users } from "./collections/Users";
 import { Media } from "./collections/Media";
 import { Posts } from "./collections/Posts";
+import { Testimonials } from "./collections/Testimonials";
 import { LexicalCodeFeature } from "./features/lexicalCode/feature.server";
 import { Settings } from "./globals/Settings";
 
@@ -25,7 +26,7 @@ export default buildConfig({
     supportedLanguages: { pt },
     fallbackLanguage: "pt",
   },
-  collections: [Users, Media, Posts],
+  collections: [Users, Media, Posts, Testimonials],
   globals: [Settings],
   editor: lexicalEditor({
     features: ({ defaultFeatures }) => [...defaultFeatures, LexicalCodeFeature()],

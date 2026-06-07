@@ -1,12 +1,12 @@
-import { Luiza } from "@/core";
+import type { Testimonial } from "@/core/testimonials";
 import { PaintedAsset } from "./PaintedAsset";
 
 // Auto-hides when no testimonials exist. The brief calls Voices the trust
 // anchor of the page — shipping an empty "Em preparação" placeholder reads as
-// apology, which is worse than the section being absent. Once testimonials are
-// collected (with consent + initials, per luiza.ts TODO), the section returns.
-export function Voices() {
-  if (Luiza.testimonials.length === 0) return null;
+// apology, which is worse than the section being absent. Testimonials are
+// managed in the Payload `testimonials` collection (consent + initials only).
+export function Voices({ testimonials }: { testimonials: Testimonial[] }) {
+  if (testimonials.length === 0) return null;
 
   return (
     <section aria-labelledby="voices-heading" className="px-6 py-20 sm:px-10 sm:py-28 lg:py-32">
@@ -22,7 +22,7 @@ export function Voices() {
         </header>
 
         <ul className="space-y-28 sm:space-y-32">
-          {Luiza.testimonials.map((quote) => (
+          {testimonials.map((quote) => (
             <li key={quote.attribution}>
               <figure className="mx-auto max-w-[58ch]">
                 <blockquote className="display-italic text-ink text-balance text-center text-[clamp(1.25rem,2.1vw,1.55rem)] leading-[1.45]">

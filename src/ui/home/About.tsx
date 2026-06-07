@@ -1,7 +1,7 @@
-import { Luiza } from "@/core";
+import type { Identity } from "@/core/identity";
 import { PaintedAsset } from "./PaintedAsset";
 
-export function About() {
+export function About({ identity }: { identity: Identity }) {
   return (
     <section
       id="sobre"
@@ -55,11 +55,11 @@ export function About() {
             <dd className="text-foreground">Psicologia clínica</dd>
 
             <dt className="display text-quill text-[0.96rem]">Registro</dt>
-            <dd className="text-foreground">{Luiza.credential}</dd>
+            <dd className="text-foreground">{identity.credential}</dd>
 
             <dt className="display text-quill text-[0.96rem]">Atendimento</dt>
             <dd className="text-foreground">
-              Presencial em {Luiza.city} · online em todo o {Luiza.country}
+              Presencial em {identity.city} · online em todo o {identity.country}
             </dd>
 
             <dt className="display text-quill text-[0.96rem]">Idiomas</dt>

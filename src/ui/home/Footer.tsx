@@ -1,8 +1,9 @@
 import Link from "next/link";
-import { Luiza, Navigation } from "@/core";
+import { Navigation } from "@/core";
+import type { Identity } from "@/core/identity";
 import { FooterCosmosRestore } from "./FooterCosmosRestore";
 
-export function Footer() {
+export function Footer({ identity }: { identity: Identity }) {
   const year = new Date().getFullYear();
 
   return (
@@ -14,9 +15,9 @@ export function Footer() {
               href="/"
               className="display-italic text-foreground hover:text-terracotta inline-block text-2xl no-underline transition-colors"
             >
-              {Luiza.fullName}
+              {identity.fullName}
             </Link>
-            <p className="marginalia mt-2">psicóloga clínica</p>
+            <p className="marginalia mt-2">{identity.footerByline}</p>
           </div>
 
           <nav aria-label="Rodapé">
@@ -41,7 +42,7 @@ export function Footer() {
               </li>
               <li>
                 <a
-                  href={Luiza.instagramUrl}
+                  href={identity.instagramUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="display-italic text-foreground hover:text-terracotta no-underline transition-colors"
@@ -51,7 +52,7 @@ export function Footer() {
               </li>
               <li>
                 <a
-                  href={Luiza.whatsappUrl}
+                  href={identity.whatsappUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="display-italic text-foreground hover:text-terracotta no-underline transition-colors"
@@ -66,7 +67,7 @@ export function Footer() {
         <div className="border-rule mt-12 flex flex-col gap-3 border-t pt-8 text-[0.85rem] sm:flex-row sm:items-baseline sm:justify-between">
           <div className="flex flex-col gap-2">
             <p className="text-quill">
-              © {year} {Luiza.fullName}. Todos os direitos reservados.
+              © {year} {identity.fullName}. Todos os direitos reservados.
             </p>
             <p className="marginalia">Composto em Cardo &amp; Vollkorn.</p>
           </div>

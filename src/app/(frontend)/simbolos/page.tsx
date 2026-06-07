@@ -1,28 +1,32 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Luiza } from "@/core";
+import { getIdentity } from "@/app/actions/identity";
 import { Footer, Header, StickyHeaderShell, Symbols } from "@/ui/home";
 import { BreadcrumbJsonLd } from "@/ui/lib/jsonLd";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? "https://example.com";
 
-export const metadata: Metadata = {
-  title: "Mandala dos signos",
-  description:
-    "Doze figuras pintadas, vinte e sete nakshatras, a Terra ao centro — um mapa de ressonâncias, na tradição da psicologia analítica.",
-  alternates: { canonical: `${BASE_URL}/simbolos` },
-  openGraph: {
-    title: `Mandala dos signos — ${Luiza.fullName}`,
-    description: "Doze figuras pintadas, vinte e sete nakshatras, a Terra ao centro.",
-    url: `${BASE_URL}/simbolos`,
-    locale: "pt_BR",
-    type: "article",
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const identity = await getIdentity();
+  return {
+    title: "Mandala dos signos",
+    description:
+      "Doze figuras pintadas, vinte e sete nakshatras, a Terra ao centro — um mapa de ressonâncias, na tradição da psicologia analítica.",
+    alternates: { canonical: `${BASE_URL}/simbolos` },
+    openGraph: {
+      title: `Mandala dos signos — ${identity.fullName}`,
+      description: "Doze figuras pintadas, vinte e sete nakshatras, a Terra ao centro.",
+      url: `${BASE_URL}/simbolos`,
+      locale: "pt_BR",
+      type: "article",
+    },
+  };
+}
 
 export const revalidate = 86400;
 
-export default function SimbolosPage() {
+export default async function SimbolosPage() {
+  const identity = await getIdentity();
   return (
     <>
       <BreadcrumbJsonLd
@@ -33,7 +37,7 @@ export default function SimbolosPage() {
       />
 
       <StickyHeaderShell>
-        <Header />
+        <Header identity={identity} />
       </StickyHeaderShell>
       <main id="main">
         <nav aria-label="Trilha" className="px-6 pt-24 sm:px-10 sm:pt-28 lg:pt-32">
@@ -52,7 +56,7 @@ export default function SimbolosPage() {
         </nav>
         <Symbols />
       </main>
-      <Footer />
+      <Footer identity={identity} />
     </>
   );
 }

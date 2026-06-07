@@ -1,8 +1,8 @@
 import Image from "next/image";
-import { Luiza } from "@/core";
+import type { Identity } from "@/core/identity";
 import { WhatsAppGlyph } from "./WhatsAppGlyph";
 
-export function Hero() {
+export function Hero({ identity }: { identity: Identity }) {
   return (
     <section
       aria-labelledby="hero-heading"
@@ -14,14 +14,14 @@ export function Hero() {
             top-left cell of the two-column grid. */}
         <div className="lg:col-start-1 lg:row-start-1">
           <p className="tracked mb-8 text-center sm:text-left">
-            Consultório psicológico · estabelecido em {Luiza.city}
+            Consultório psicológico · estabelecido em {identity.city}
           </p>
 
           <h1
             id="hero-heading"
             className="display text-foreground text-balance text-center text-[clamp(2.6rem,6vw,4.4rem)] leading-[1.05] tracking-[-0.012em] sm:text-left"
           >
-            <span className="block">{Luiza.fullName}</span>
+            <span className="block">{identity.fullName}</span>
             <span className="display-italic text-terracotta-deep mt-3 block text-[0.42em] tracking-[0.05em]">
               Para a vida adulta
             </span>
@@ -36,7 +36,7 @@ export function Hero() {
           <div className="relative aspect-[4/5] overflow-hidden">
             <Image
               src="/portrait/luiza.jpg"
-              alt={`Retrato de ${Luiza.fullName}, ${Luiza.role.toLowerCase()}`}
+              alt={`Retrato de ${identity.fullName}, ${identity.role.toLowerCase()}`}
               fill
               priority
               sizes="(min-width: 1024px) 26rem, 17rem"
@@ -44,19 +44,19 @@ export function Hero() {
             />
           </div>
           <figcaption className="marginalia mt-5 text-center lg:text-left">
-            <span className="display-italic text-ink-soft">{Luiza.shortName}</span> — atendimento
-            presencial e online em todo o {Luiza.country}.
+            <span className="display-italic text-ink-soft">{identity.shortName}</span> — atendimento
+            presencial e online em todo o {identity.country}.
           </figcaption>
 
           {/* A quiet WhatsApp affordance for hesitant phone visitors, right under
               the portrait. Desktop hides it — the solid primary button below
               already carries the action. */}
           <a
-            href={Luiza.whatsappUrl}
+            href={identity.whatsappUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="text-terracotta-deep hover:text-terracotta mt-4 inline-flex items-baseline gap-2 text-[0.95rem] no-underline transition-colors lg:hidden"
-            aria-label={`Iniciar conversa pelo WhatsApp ${Luiza.phoneDisplay}`}
+            aria-label={`Iniciar conversa pelo WhatsApp ${identity.phoneDisplay}`}
           >
             <WhatsAppGlyph className="text-terracotta h-[1.05em] w-[1.05em] -translate-y-px" />
             <span className="display-italic decoration-terracotta/40 underline decoration-1 underline-offset-[0.28em]">

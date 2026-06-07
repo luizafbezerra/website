@@ -3,10 +3,11 @@
 import Link from "next/link";
 import { useEffect, useId, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { Luiza, Navigation } from "@/core";
+import { Navigation } from "@/core";
+import type { Identity } from "@/core/identity";
 import { WhatsAppGlyph } from "./WhatsAppGlyph";
 
-export function HeaderMobileNav() {
+export function HeaderMobileNav({ identity }: { identity: Identity }) {
   const [open, setOpen] = useState<boolean>(false);
   const drawerRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -131,32 +132,32 @@ export function HeaderMobileNav() {
                   works, and gives the drawer's mid-section content so it
                   doesn't read as a half-empty panel. */}
               <p className="marginalia px-7 pt-1 pb-2 text-[0.92rem] leading-[1.5]">
-                Análise junguiana · atende em {Luiza.city} e online em todo o {Luiza.country}.
+                Análise junguiana · atende em {identity.city} e online em todo o {identity.country}.
               </p>
 
               <div className="mt-auto border-rule-soft flex flex-col gap-4 border-t px-7 py-6">
                 <a
-                  href={Luiza.whatsappUrl}
+                  href={identity.whatsappUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={() => setOpen(false)}
                   className="display-italic text-foreground decoration-terracotta hover:text-terracotta inline-flex items-center gap-2 text-[1.05rem] underline decoration-1 underline-offset-[0.3em] transition-colors"
-                  aria-label={`Iniciar conversa pelo WhatsApp ${Luiza.phoneDisplay}`}
+                  aria-label={`Iniciar conversa pelo WhatsApp ${identity.phoneDisplay}`}
                 >
                   <WhatsAppGlyph className="text-terracotta h-[1.1em] w-[1.1em] -translate-y-px" />
                   <span>WhatsApp</span>
                 </a>
                 <a
-                  href={Luiza.instagramUrl}
+                  href={identity.instagramUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={() => setOpen(false)}
                   className="display-italic text-foreground hover:text-terracotta inline-flex items-baseline gap-2 text-[1rem] no-underline transition-colors"
-                  aria-label={`Símbolos no Instagram, ${Luiza.instagramHandle}, abre em nova aba`}
+                  aria-label={`Símbolos no Instagram, ${identity.instagramHandle}, abre em nova aba`}
                 >
                   <span>Instagram</span>
                   <span className="marginalia text-quill text-[0.82rem]">
-                    {Luiza.instagramHandle}
+                    {identity.instagramHandle}
                   </span>
                 </a>
               </div>

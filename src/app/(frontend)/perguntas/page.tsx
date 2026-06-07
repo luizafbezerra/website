@@ -1,29 +1,34 @@
 import type { Metadata } from "next";
-import { Faq as FaqData, Luiza } from "@/core";
+import { getIdentity } from "@/app/actions/identity";
+import { Faq as FaqData } from "@/core";
 import { Footer, Header, StickyHeaderShell } from "@/ui/home";
 import { Faq } from "@/ui/home/Faq";
 import { BreadcrumbJsonLd, FaqJsonLd } from "@/ui/lib/jsonLd";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? "https://example.com";
 
-export const metadata: Metadata = {
-  title: "Perguntas frequentes",
-  description:
-    "Como funciona uma primeira conversa, duração da análise, frequência das sessões, atendimento online e presencial.",
-  alternates: { canonical: `${BASE_URL}/perguntas` },
-  openGraph: {
-    title: `Perguntas frequentes — ${Luiza.fullName}`,
+export async function generateMetadata(): Promise<Metadata> {
+  const identity = await getIdentity();
+  return {
+    title: "Perguntas frequentes",
     description:
       "Como funciona uma primeira conversa, duração da análise, frequência das sessões, atendimento online e presencial.",
-    url: `${BASE_URL}/perguntas`,
-    locale: "pt_BR",
-    type: "article",
-  },
-};
+    alternates: { canonical: `${BASE_URL}/perguntas` },
+    openGraph: {
+      title: `Perguntas frequentes — ${identity.fullName}`,
+      description:
+        "Como funciona uma primeira conversa, duração da análise, frequência das sessões, atendimento online e presencial.",
+      url: `${BASE_URL}/perguntas`,
+      locale: "pt_BR",
+      type: "article",
+    },
+  };
+}
 
 export const revalidate = 86400;
 
-export default function PerguntasPage() {
+export default async function PerguntasPage() {
+  const identity = await getIdentity();
   return (
     <>
       <FaqJsonLd entries={[...FaqData.entries]} />
@@ -35,12 +40,12 @@ export default function PerguntasPage() {
       />
 
       <StickyHeaderShell>
-        <Header />
+        <Header identity={identity} />
       </StickyHeaderShell>
       <main id="main">
         <Faq entries={FaqData.entries} />
       </main>
-      <Footer />
+      <Footer identity={identity} />
     </>
   );
 }

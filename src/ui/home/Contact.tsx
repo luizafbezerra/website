@@ -1,7 +1,7 @@
 import Link from "next/link";
-import { Luiza } from "@/core";
+import type { Identity } from "@/core/identity";
 
-export function Contact() {
+export function Contact({ identity }: { identity: Identity }) {
   return (
     <section
       id="contato"
@@ -31,18 +31,18 @@ export function Contact() {
         <address className="not-italic block">
           <div className="mt-14">
             <a
-              href={Luiza.whatsappUrl}
+              href={identity.whatsappUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="bg-terracotta-deep hover:bg-foreground group inline-flex items-baseline justify-between gap-6 px-7 py-5 text-parchment no-underline transition-colors sm:justify-start"
-              aria-label={`Iniciar conversa pelo WhatsApp ${Luiza.phoneDisplay}`}
+              aria-label={`Iniciar conversa pelo WhatsApp ${identity.phoneDisplay}`}
             >
               <span className="flex flex-col items-start gap-1">
                 <span className="display-italic text-[1.2rem] sm:text-[1.3rem]">
                   Conversar pelo WhatsApp
                 </span>
                 <span className="text-parchment/75 text-[0.92rem] tracking-wide">
-                  {Luiza.phoneDisplay}
+                  {identity.phoneDisplay}
                 </span>
               </span>
               <span
@@ -56,10 +56,10 @@ export function Contact() {
             <p className="marginalia mt-5">
               ou por e-mail —{" "}
               <a
-                href={`mailto:${Luiza.email}`}
+                href={`mailto:${identity.email}`}
                 className="text-quill hover:text-terracotta decoration-terracotta/40 hover:decoration-terracotta underline decoration-1 underline-offset-[0.25em] transition-colors"
               >
-                {Luiza.email}
+                {identity.email}
               </a>
             </p>
 
@@ -80,31 +80,31 @@ export function Contact() {
             <div>
               <dt className="display text-quill mb-2 text-[0.96rem]">Atendimento presencial</dt>
               <dd className="text-foreground text-[1.1rem] leading-[1.4]">
-                {Luiza.city}–{Luiza.region}
+                {identity.city}–{identity.region}
               </dd>
             </div>
 
             <div>
               <dt className="display text-quill mb-2 text-[0.96rem]">Atendimento online</dt>
               <dd className="text-foreground text-[1.1rem] leading-[1.4]">
-                Em todo o {Luiza.country}
+                Em todo o {identity.country}
               </dd>
             </div>
 
-            {Luiza.availability.hours && (
+            {identity.availability.hours && (
               <div>
                 <dt className="display text-quill mb-2 text-[0.96rem]">Faixa de horário</dt>
                 <dd className="text-foreground text-[1.1rem] leading-[1.4]">
-                  {Luiza.availability.hours}
+                  {identity.availability.hours}
                 </dd>
               </div>
             )}
 
-            {Luiza.availability.responseNote && (
+            {identity.availability.responseNote && (
               <div>
                 <dt className="display text-quill mb-2 text-[0.96rem]">Tempo de resposta</dt>
                 <dd className="text-foreground text-[1.1rem] leading-[1.4]">
-                  {Luiza.availability.responseNote}
+                  {identity.availability.responseNote}
                 </dd>
               </div>
             )}

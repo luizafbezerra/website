@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { getAllPosts } from "@/app/actions/blog";
+import { getIdentity } from "@/app/actions/identity";
 import { Luiza } from "@/core";
 import {
   About,
@@ -23,35 +24,39 @@ import {
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? "https://example.com";
 
-export const metadata: Metadata = {
-  title: `${Luiza.fullName} — psicóloga junguiana em ${Luiza.city}`,
-  description:
-    "Psicoterapia junguiana para adultos. Ansiedade, lutos, relações e propósito — atendimento presencial e online em todo o Brasil.",
-  alternates: { canonical: BASE_URL },
-  openGraph: {
-    title: `${Luiza.fullName} — psicóloga junguiana em ${Luiza.city}`,
-    description: Luiza.tagline,
-    url: BASE_URL,
-    locale: "pt_BR",
-    type: "website",
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const identity = await getIdentity();
+  const title = `${identity.fullName} — psicóloga junguiana em ${identity.city}`;
+  return {
+    title,
+    description:
+      "Psicoterapia junguiana para adultos. Ansiedade, lutos, relações e propósito — atendimento presencial e online em todo o Brasil.",
+    alternates: { canonical: BASE_URL },
+    openGraph: {
+      title,
+      description: identity.tagline,
+      url: BASE_URL,
+      locale: "pt_BR",
+      type: "website",
+    },
+  };
+}
 
 export const revalidate = 3600;
 
 export default async function Home() {
-  const posts = await getAllPosts("pt-BR");
+  const [identity, posts] = await Promise.all([getIdentity(), getAllPosts("pt-BR")]);
   const recentPosts = posts.slice(0, 3);
 
   return (
     <>
       <PersonJsonLd
-        name={Luiza.fullName}
+        name={identity.fullName}
         url={BASE_URL}
-        jobTitle={`${Luiza.role} — ${Luiza.tradition}`}
-        email={Luiza.email}
-        telephone={Luiza.phoneE164}
-        description={Luiza.tagline}
+        jobTitle={`${identity.role} — ${identity.tradition}`}
+        email={identity.email}
+        telephone={identity.phoneE164}
+        description={identity.tagline}
         knowsAbout={[
           "Psicologia analítica",
           "Análise junguiana",
@@ -63,31 +68,31 @@ export default async function Home() {
         ]}
         knowsLanguage={["pt-BR"]}
         workLocation={{
-          city: Luiza.city,
-          region: Luiza.region,
-          country: Luiza.country,
+          city: identity.city,
+          region: identity.region,
+          country: identity.country,
         }}
       />
 
       <LocalBusinessJsonLd
         type="MedicalBusiness"
-        name={`Consultório de ${Luiza.fullName}`}
+        name={`Consultório de ${identity.fullName}`}
         url={BASE_URL}
-        description={`Consultório de psicologia clínica em ${Luiza.city}–${Luiza.region}. Análise junguiana para adultos. Atendimento presencial e online.`}
-        telephone={Luiza.phoneE164}
-        email={Luiza.email}
-        city={Luiza.city}
-        region={Luiza.region}
-        country={Luiza.country}
+        description={`Consultório de psicologia clínica em ${identity.city}–${identity.region}. Análise junguiana para adultos. Atendimento presencial e online.`}
+        telephone={identity.phoneE164}
+        email={identity.email}
+        city={identity.city}
+        region={identity.region}
+        country={identity.country}
         priceRange="$$"
-        areaServed={[Luiza.city, Luiza.region, Luiza.country]}
-        founder={{ name: Luiza.fullName, url: BASE_URL }}
+        areaServed={[identity.city, identity.region, identity.country]}
+        founder={{ name: identity.fullName, url: BASE_URL }}
       />
 
       <WebSiteJsonLd
-        name={Luiza.fullName}
+        name={identity.fullName}
         url={BASE_URL}
-        description={Luiza.tagline}
+        description={identity.tagline}
         inLanguage="pt-BR"
       />
 
@@ -95,7 +100,7 @@ export default async function Home() {
 
       {Luiza.testimonials.length > 0 && (
         <ReviewsJsonLd
-          itemName={Luiza.fullName}
+          itemName={identity.fullName}
           itemUrl={BASE_URL}
           reviews={Luiza.testimonials.map((t) => ({
             body: t.body,
@@ -105,18 +110,18 @@ export default async function Home() {
       )}
 
       <StickyHeaderShell>
-        <Header />
+        <Header identity={identity} />
       </StickyHeaderShell>
       <main id="main">
-        <Hero />
+        <Hero identity={identity} />
         <Pillars />
-        <About />
+        <About identity={identity} />
         <Cosmos />
         <Voices />
         <Writing posts={recentPosts} />
-        <Contact />
+        <Contact identity={identity} />
       </main>
-      <Footer />
+      <Footer identity={identity} />
     </>
   );
 }

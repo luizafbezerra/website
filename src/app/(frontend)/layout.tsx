@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Cardo, Vollkorn } from "next/font/google";
-import { getSettings } from "@/lib/payload";
+import { getIdentity } from "@/app/actions/identity";
 import { HashAnchorScroll } from "@/ui/lib/HashAnchorScroll";
 import "@/app/globals.css";
 
@@ -20,18 +20,17 @@ const vollkorn = Vollkorn({
   variable: "--font-vollkorn",
 });
 
-const SITE_NAME_DEFAULT = "Luiza Fernandes Bezerra — Psicóloga";
-const DESCRIPTION_DEFAULT =
-  "Psicóloga clínica em Guarulhos. Análise junguiana para ansiedade, relações e propósito. Atendimento online e presencial em pt-BR.";
-
 export const generateMetadata = async (): Promise<Metadata> => {
-  const settings = await getSettings();
+  // `getIdentity` always resolves (falls back to IDENTITY_DEFAULTS when Payload
+  // is off), so siteName/description are the single source for these defaults —
+  // no local duplicates needed.
+  const identity = await getIdentity();
   return {
     title: {
-      default: settings?.siteName ?? SITE_NAME_DEFAULT,
-      template: `%s — ${settings?.siteName ?? SITE_NAME_DEFAULT}`,
+      default: identity.siteName,
+      template: `%s — ${identity.siteName}`,
     },
-    description: settings?.description ?? DESCRIPTION_DEFAULT,
+    description: identity.description,
     // Pre-launch belt-and-suspenders. Pair with robots.ts (Disallow: /) so the
     // placeholder credential, portrait, and bio cannot be indexed before the
     // content pass lands.
@@ -44,7 +43,7 @@ export const generateMetadata = async (): Promise<Metadata> => {
     openGraph: {
       type: "website",
       locale: "pt_BR",
-      siteName: settings?.siteName ?? SITE_NAME_DEFAULT,
+      siteName: identity.siteName,
     },
   };
 };

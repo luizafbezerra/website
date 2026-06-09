@@ -3,6 +3,7 @@ import { Fragment, type ReactNode } from "react";
 import { getAllPosts } from "@/app/actions/blog";
 import { getHome, getNavigation } from "@/app/actions/home";
 import { getIdentity } from "@/app/actions/identity";
+import { getMandala } from "@/app/actions/mandala";
 import { getTestimonials } from "@/app/actions/testimonials";
 import type { SectionType } from "@/core/sections";
 import {
@@ -49,12 +50,13 @@ export async function generateMetadata(): Promise<Metadata> {
 export const revalidate = 3600;
 
 export default async function Home() {
-  const [identity, home, navLinks, testimonials, posts] = await Promise.all([
+  const [identity, home, navLinks, testimonials, posts, mandala] = await Promise.all([
     getIdentity(),
     getHome(),
     getNavigation(),
     getTestimonials(),
     getAllPosts("pt-BR"),
+    getMandala(),
   ]);
   const recentPosts = posts.slice(0, 3);
 
@@ -68,7 +70,7 @@ export default async function Home() {
     // a wide viewport. CSS gate (lg = ≥1024px) — SSR-safe, no client JS.
     symbols: (
       <div className="hidden lg:block">
-        <Symbols />
+        <Symbols content={mandala} />
       </div>
     ),
     voices: <Voices testimonials={testimonials} content={home.voices} />,

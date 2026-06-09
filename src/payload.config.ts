@@ -12,6 +12,7 @@ import { Posts } from "./collections/Posts";
 import { Testimonials } from "./collections/Testimonials";
 import { LexicalCodeFeature } from "./features/lexicalCode/feature.server";
 import { Home } from "./globals/Home";
+import { Mandala } from "./globals/Mandala";
 import { Settings } from "./globals/Settings";
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -28,7 +29,7 @@ export default buildConfig({
     fallbackLanguage: "pt",
   },
   collections: [Users, Media, Posts, Testimonials],
-  globals: [Settings, Home],
+  globals: [Settings, Home, Mandala],
   editor: lexicalEditor({
     features: ({ defaultFeatures }) => [...defaultFeatures, LexicalCodeFeature()],
   }),

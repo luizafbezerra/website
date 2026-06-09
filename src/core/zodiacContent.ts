@@ -1,4 +1,4 @@
-import type { WheelSign } from "./wheel";
+import { WHEEL_ZODIAC, type WheelSign } from "./wheel";
 
 export type Element = "fogo" | "terra" | "ar" | "água";
 export type Modality = "cardinal" | "fixo" | "mutável";
@@ -507,3 +507,69 @@ export const VEDIC_CONTENT: Record<WheelSign["id"], VedicContent> = {
     _isPlaceholder: true,
   },
 };
+
+// ---------------------------------------------------------------------------
+// CMS merge layer — the hybrid editability model
+// ---------------------------------------------------------------------------
+//
+// Only the two prose paragraphs of each sign — its sign text and its Vedic
+// summary — are editable from the Payload `mandala` global. Everything else
+// above (element / modality / ruler / body / archetype, and the full nakshatra
+// table) stays code-maintained: it is interlocking scholarly reference data,
+// not editorial voice, and the Vedic padas deliberately span sign boundaries.
+//
+// `mandalaFromPayload` overlays any non-empty CMS prose on top of these code
+// defaults. An empty CMS field falls back to the code text and the entry stays
+// flagged `_isPlaceholder` (still an un-edited draft). The `mandala` global
+// seeds its defaults from this same prose, so the rendered site is identical
+// until Luiza edits a paragraph.
+
+export type MandalaContent = {
+  zodiac: Record<WheelSign["id"], ZodiacContent>;
+  vedic: Record<WheelSign["id"], VedicContent>;
+};
+
+/** Code defaults: every sign's reference data plus its placeholder prose. */
+export const MANDALA_DEFAULTS: MandalaContent = {
+  zodiac: ZODIAC_CONTENT,
+  vedic: VEDIC_CONTENT,
+};
+
+/** Loose shape of the Payload `mandala` global read at depth 0. */
+export type PayloadMandala = Partial<
+  Record<WheelSign["id"], { paragraph?: string | null; vedicParagraph?: string | null } | null>
+> | null;
+
+/** A trimmed-non-empty string, or null when the value is blank/absent. */
+function filledText(value: string | null | undefined): string | null {
+  if (typeof value !== "string") return null;
+  return value.trim().length > 0 ? value : null;
+}
+
+/** Overlay editable CMS prose on the code reference, keyed by sign id. */
+export function mandalaFromPayload(doc: PayloadMandala): MandalaContent {
+  const zodiac = {} as Record<WheelSign["id"], ZodiacContent>;
+  const vedic = {} as Record<WheelSign["id"], VedicContent>;
+
+  for (const { id } of WHEEL_ZODIAC) {
+    const baseZodiac = ZODIAC_CONTENT[id];
+    const baseVedic = VEDIC_CONTENT[id];
+    const cms = doc?.[id] ?? null;
+
+    const paragraph = filledText(cms?.paragraph);
+    const vedicParagraph = filledText(cms?.vedicParagraph);
+
+    zodiac[id] = {
+      ...baseZodiac,
+      paragraph: paragraph ?? baseZodiac.paragraph,
+      _isPlaceholder: paragraph === null,
+    };
+    vedic[id] = {
+      ...baseVedic,
+      paragraph: vedicParagraph ?? baseVedic.paragraph,
+      _isPlaceholder: vedicParagraph === null,
+    };
+  }
+
+  return { zodiac, vedic };
+}

@@ -1,6 +1,7 @@
 import config from "@payload-config";
 import { getPayload } from "payload";
 import { seedHome } from "./home";
+import { seedMandala } from "./mandala";
 import { seedSettings } from "./settings";
 
 /**
@@ -20,6 +21,7 @@ async function main() {
 
   await seedSettings(payload);
   await seedHome(payload);
+  await seedMandala(payload);
 
   payload.logger.info("Seed complete.");
 }

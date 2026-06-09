@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { getNavigation } from "@/app/actions/home";
 import { getIdentity } from "@/app/actions/identity";
+import { getMandala } from "@/app/actions/mandala";
 import { Footer, Header, StickyHeaderShell, Symbols } from "@/ui/home";
 import { BreadcrumbJsonLd } from "@/ui/lib/jsonLd";
 
@@ -27,7 +28,11 @@ export async function generateMetadata(): Promise<Metadata> {
 export const revalidate = 86400;
 
 export default async function SimbolosPage() {
-  const [identity, navLinks] = await Promise.all([getIdentity(), getNavigation()]);
+  const [identity, navLinks, mandala] = await Promise.all([
+    getIdentity(),
+    getNavigation(),
+    getMandala(),
+  ]);
   return (
     <>
       <BreadcrumbJsonLd
@@ -55,7 +60,7 @@ export default async function SimbolosPage() {
             <span className="text-foreground">Mandala dos signos</span>
           </p>
         </nav>
-        <Symbols />
+        <Symbols content={mandala} />
       </main>
       <Footer identity={identity} navLinks={navLinks} />
     </>

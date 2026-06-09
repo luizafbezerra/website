@@ -9,11 +9,12 @@ import {
   signRotationDeg,
   type WheelSign,
 } from "@/core/wheel";
-import { VEDIC_CONTENT, ZODIAC_CONTENT } from "@/core/zodiacContent";
+import type { MandalaContent } from "@/core/zodiacContent";
 
 type ActiveState = { sign: WheelSign | null; pinned: boolean };
 
-export function Symbols() {
+export function Symbols({ content }: { content: MandalaContent }) {
+  const { zodiac, vedic } = content;
   const [active, setActive] = useState<ActiveState>({ sign: null, pinned: false });
   const [rotationDeg, setRotationDeg] = useState<number>(0);
 
@@ -30,7 +31,10 @@ export function Symbols() {
 
     const handlePointer = (e: Event) => {
       const target = e.target as Element | null;
-      if (target?.closest("[data-wheel-sector]")) return;
+      // Keep the active sign when the pointer lands on a sector (to re-pin) or
+      // anywhere inside the detail panel — selecting/copying the prose there must
+      // not dismiss it. Only a genuine press *outside* the wheel clears.
+      if (target?.closest("[data-wheel-sector],[data-wheel-detail-panel]")) return;
       clearIfActive();
     };
 
@@ -204,33 +208,33 @@ export function Symbols() {
             </output>
           </div>
 
-          <WheelDetail sign={active.sign} pinned={active.pinned} />
+          <WheelDetail sign={active.sign} pinned={active.pinned} zodiac={zodiac} vedic={vedic} />
         </div>
 
         <div hidden>
           {WHEEL_ZODIAC.map((sign) => {
-            const content = ZODIAC_CONTENT[sign.id];
-            const vedic = VEDIC_CONTENT[sign.id];
+            const z = zodiac[sign.id];
+            const v = vedic[sign.id];
             return (
               <div key={sign.id} data-wheel-detail={sign.id}>
                 <h3>{sign.label}</h3>
                 <p>{sign.dateRange}</p>
                 <dl>
                   <dt>Elemento</dt>
-                  <dd>{content.element}</dd>
+                  <dd>{z.element}</dd>
                   <dt>Modalidade</dt>
-                  <dd>{content.modality}</dd>
+                  <dd>{z.modality}</dd>
                   <dt>Regente</dt>
-                  <dd>{content.ruler}</dd>
+                  <dd>{z.ruler}</dd>
                   <dt>Corpo</dt>
-                  <dd>{content.bodyPart}</dd>
+                  <dd>{z.bodyPart}</dd>
                   <dt>Arquétipo</dt>
-                  <dd>{content.archetype}</dd>
+                  <dd>{z.archetype}</dd>
                 </dl>
-                <p>{content.paragraph}</p>
+                <p>{z.paragraph}</p>
                 <h4>Tradição védica — três mansões lunares</h4>
                 <dl>
-                  {vedic.nakshatras.map((n) => (
+                  {v.nakshatras.map((n) => (
                     <Fragment key={n.name}>
                       <dt>
                         {n.name}
@@ -242,7 +246,7 @@ export function Symbols() {
                     </Fragment>
                   ))}
                 </dl>
-                <p>{vedic.paragraph}</p>
+                <p>{v.paragraph}</p>
               </div>
             );
           })}
@@ -255,22 +259,25 @@ export function Symbols() {
 type WheelDetailProps = {
   sign: WheelSign | null;
   pinned: boolean;
+  zodiac: MandalaContent["zodiac"];
+  vedic: MandalaContent["vedic"];
 };
 
-function WheelDetail({ sign, pinned }: WheelDetailProps) {
-  const content = sign ? ZODIAC_CONTENT[sign.id] : null;
-  const vedic = sign ? VEDIC_CONTENT[sign.id] : null;
+function WheelDetail({ sign, pinned, zodiac, vedic }: WheelDetailProps) {
+  const content = sign ? zodiac[sign.id] : null;
+  const vedicEntry = sign ? vedic[sign.id] : null;
 
   return (
     <aside
       aria-live="polite"
       aria-atomic="true"
+      data-wheel-detail-panel
       data-pinned={pinned ? "true" : "false"}
       data-placeholder={content?._isPlaceholder ? "true" : undefined}
-      data-vedic-placeholder={vedic?._isPlaceholder ? "true" : undefined}
+      data-vedic-placeholder={vedicEntry?._isPlaceholder ? "true" : undefined}
       className="mx-auto max-w-[52ch] lg:mx-0 lg:min-h-[44rem]"
     >
-      {sign && content && vedic ? (
+      {sign && content && vedicEntry ? (
         <>
           <h3 className="display text-foreground text-[clamp(1.4rem,2.6vw,1.9rem)] leading-[1.15] tracking-[-0.004em]">
             {sign.label}
@@ -297,7 +304,7 @@ function WheelDetail({ sign, pinned }: WheelDetailProps) {
           <p className="marginalia mt-1">Três mansões lunares</p>
 
           <ul className="mt-6 space-y-5">
-            {vedic.nakshatras.map((n) => (
+            {vedicEntry.nakshatras.map((n) => (
               <li key={n.name}>
                 <p className="display-italic text-foreground text-[1.05rem] leading-[1.25]">
                   {n.name}
@@ -314,7 +321,7 @@ function WheelDetail({ sign, pinned }: WheelDetailProps) {
           </ul>
 
           <p className="body-italic text-ink mt-6 text-[0.95rem] leading-[1.65]">
-            {vedic.paragraph}
+            {vedicEntry.paragraph}
           </p>
         </>
       ) : (

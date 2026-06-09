@@ -122,6 +122,20 @@ export namespace Blog {
   }
 
   /**
+   * Rough token estimate (~chars / 4) for AI-consumption metadata — surfaced as
+   * `ai:token-count` on posts, in `/llms.txt`, and in `/blog/<slug>.md`
+   * front-matter. Accepts either a Lexical SerializedEditorState (walks its text
+   * nodes via the same `extractText` as reading time) or an already-serialized
+   * string (e.g. the rendered Markdown), so callers count whichever artifact the
+   * agent actually consumes.
+   */
+  export function estimateTokens(input: SerializedEditorState | string): number {
+    const text =
+      typeof input === "string" ? input : extractText(input.root as unknown as LexicalNode);
+    return Math.ceil(text.length / 4);
+  }
+
+  /**
    * Slugify a heading text for use as an HTML id attribute.
    */
   function slugifyHeading(text: string): string {

@@ -1,4 +1,4 @@
-import { getHasPublishedPosts } from "@/app/actions/blog";
+import { getAllPosts, getHasPublishedPosts } from "@/app/actions/blog";
 import type { MetadataRoute } from "next";
 
 export const revalidate = 3600;
@@ -24,7 +24,24 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "weekly",
       priority: 0.8,
     });
+
+    const posts = await getAllPosts("pt-BR");
+    for (const post of posts) {
+      entries.push({
+        url: `${BASE_URL}/blog/${post.slug}`,
+        lastModified: new Date(post.updatedAt ?? post.date),
+        changeFrequency: "yearly",
+        priority: 0.7,
+      });
+    }
   }
+
+  entries.push({
+    url: `${BASE_URL}/simbolos`,
+    lastModified: new Date(),
+    changeFrequency: "yearly",
+    priority: 0.5,
+  });
 
   entries.push({
     url: `${BASE_URL}/perguntas`,

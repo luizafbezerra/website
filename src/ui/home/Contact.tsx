@@ -51,15 +51,17 @@ export function Contact({ identity, content }: { identity: Identity; content: Ho
               </span>
             </a>
 
-            <p className="marginalia mt-5">
-              ou por e-mail —{" "}
-              <a
-                href={`mailto:${identity.email}`}
-                className="text-quill hover:text-terracotta decoration-terracotta/40 hover:decoration-terracotta underline decoration-1 underline-offset-[0.25em] transition-colors"
-              >
-                {identity.email}
-              </a>
-            </p>
+            {identity.email && (
+              <p className="marginalia mt-5">
+                ou por e-mail —{" "}
+                <a
+                  href={`mailto:${identity.email}`}
+                  className="text-quill hover:text-terracotta decoration-terracotta/40 hover:decoration-terracotta underline decoration-1 underline-offset-[0.25em] transition-colors"
+                >
+                  {identity.email}
+                </a>
+              </p>
+            )}
 
             <p className="marginalia mt-3">
               <Link

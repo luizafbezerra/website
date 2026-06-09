@@ -15,20 +15,22 @@ export function seoField(): Field {
     label: "SEO",
     admin: {
       description:
-        "Per-page SEO overrides. Leave blank to inherit the site defaults from Settings.",
+        "Substituições de SEO por página. Deixe em branco para herdar os padrões do site em Configurações.",
     },
     fields: [
       {
         name: "title",
         type: "text",
         label: "Título",
-        admin: { description: "Overrides the page <title>. Blank → Settings default." },
+        admin: {
+          description: "Substitui o <title> da página. Em branco → padrão de Configurações.",
+        },
       },
       {
         name: "description",
         type: "textarea",
         label: "Descrição",
-        admin: { description: "Overrides the meta description. Blank → Settings default." },
+        admin: { description: "Substitui a meta descrição. Em branco → padrão de Configurações." },
       },
       {
         name: "ogImage",
@@ -36,7 +38,8 @@ export function seoField(): Field {
         relationTo: "media",
         label: "Imagem social (OG)",
         admin: {
-          description: "Overrides the social-share image (1200×630). Blank → Settings default.",
+          description:
+            "Substitui a imagem de compartilhamento social (1200×630). Em branco → padrão de Configurações.",
         },
       },
     ],

@@ -23,13 +23,13 @@ type BlogListProps = {
 
 export function BlogList({ posts }: BlogListProps) {
   // @ts-ignore
-  const noPostsLabel = "No posts yet.";
+  const noPostsLabel = "Ainda não há publicações.";
   // @ts-ignore
-  const readingTimeFn = (minutes: number) => `${minutes} min read`;
+  const readingTimeFn = (minutes: number) => `${minutes} min de leitura`;
   // @ts-ignore
-  const updatedFn = (date: string) => `Updated ${date}`;
+  const updatedFn = (date: string) => `Atualizado em ${date}`;
   // @ts-ignore
-  const readMoreLabel = "Read more";
+  const readMoreLabel = "Ler mais";
 
   // Detect locale for date formatting; fall back to "en"
   // @ts-ignore
@@ -57,7 +57,7 @@ export function BlogList({ posts }: BlogListProps) {
             <CardHeader className="pb-3">
               <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
                 <Badge variant="default" className="mb-1">
-                  Featured
+                  Destaque
                 </Badge>
                 <span className="flex items-center gap-1">
                   <Calendar className="size-4" />

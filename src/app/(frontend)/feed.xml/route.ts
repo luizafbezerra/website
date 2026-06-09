@@ -1,4 +1,4 @@
-import { getAllPosts } from "@/app/actions/blog";
+import { getAllPosts, getHasPublishedPosts } from "@/app/actions/blog";
 import { NextResponse } from "next/server";
 
 export const revalidate = 3600;
@@ -18,6 +18,11 @@ function escapeXml(str: string): string {
 
 export async function GET(): Promise<NextResponse> {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? "https://example.com";
+
+  // Don't advertise an empty feed — nothing links here when there are no posts.
+  if (!(await getHasPublishedPosts())) {
+    return new NextResponse(null, { status: 404 });
+  }
 
   try {
     const posts = await getAllPosts();
@@ -47,10 +52,10 @@ ${categories}
     const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Blog</title>
+    <title>Escrita</title>
     <link>${baseUrl}/blog</link>
-    <description>Articles about software development, web technologies, and engineering.</description>
-    <language>en</language>
+    <description>Notas sobre o que costuma ficar nas entrelinhas da vida adulta, pela psicóloga Luiza Fernandes Bezerra.</description>
+    <language>pt-BR</language>
     <atom:link href="${baseUrl}/feed.xml" rel="self" type="application/rss+xml" />
     <lastBuildDate>${new Date().toUTCString()}</lastBuildDate>
 ${items}
@@ -65,6 +70,6 @@ ${items}
     });
   } catch (error) {
     console.error("RSS feed generation failed:", error);
-    return new NextResponse("Failed to generate RSS feed.", { status: 500 });
+    return new NextResponse("Não foi possível gerar o feed RSS.", { status: 500 });
   }
 }

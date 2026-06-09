@@ -14,6 +14,9 @@ function slugify(text: string): string {
 
 const revalidateBlog = (slug?: string) => {
   revalidatePath("/blog", "layout");
+  // The nav lives in the root layout and the homepage "Escrita" section depends
+  // on post count, so the 0↔1 transition must refresh "/" (all pages) too.
+  revalidatePath("/", "layout");
   if (slug) {
     revalidatePath(`/blog/${slug}`, "layout");
   }
@@ -45,7 +48,8 @@ export const Posts: CollectionConfig = {
       index: true,
       admin: {
         position: "sidebar",
-        description: "Auto-generated from the English title on create. Can be edited manually.",
+        description:
+          "Gerado automaticamente a partir do título ao criar. Pode ser editado manualmente.",
       },
     },
     {
@@ -62,7 +66,7 @@ export const Posts: CollectionConfig = {
       label: "Imagem de capa",
       required: false,
       admin: {
-        description: "Optional hero image for the post.",
+        description: "Imagem de capa opcional para a publicação.",
       },
     },
     {

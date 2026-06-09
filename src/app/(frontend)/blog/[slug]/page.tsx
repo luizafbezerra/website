@@ -74,7 +74,7 @@ export async function generateMetadata({
     };
   } catch {
     return {
-      title: "Post Not Found",
+      title: "Publicação não encontrada",
     };
   }
 }
@@ -98,7 +98,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     const postUrl = `${BASE_URL}/blog/${slug}`;
     const coverImageUrl = post.coverImage?.heroUrl ?? post.coverImage?.url;
     // @ts-ignore
-    const tocLabel = "Table of Contents";
+    const tocLabel = "Sumário";
 
     return (
       <>
@@ -118,7 +118,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             className="mb-8 inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
           >
             <ArrowLeft className="size-4" />
-            Back to Blog
+            Voltar para a Escrita
           </Link>
 
           {/* Cover image hero */}
@@ -134,12 +134,12 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
               {post.readingTime > 0 && (
                 <span className="flex items-center gap-1.5">
                   <Clock className="size-4" />
-                  {`${post.readingTime} min read`}
+                  {`${post.readingTime} min de leitura`}
                 </span>
               )}
               {showUpdated && post.updatedAt && (
                 <Badge variant="outline" className="text-xs">
-                  {`Updated ${formatDate(post.updatedAt, locale)}`}
+                  {`Atualizado em ${formatDate(post.updatedAt, locale)}`}
                 </Badge>
               )}
             </div>

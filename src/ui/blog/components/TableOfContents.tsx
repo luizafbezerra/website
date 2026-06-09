@@ -11,7 +11,7 @@ type TableOfContentsProps = {
 
 export function TableOfContents({ headings }: TableOfContentsProps) {
   // @ts-ignore
-  const tocLabel = "Table of Contents";
+  const tocLabel = "Sumário";
 
   const [activeId, setActiveId] = useState<string>("");
   const [isOpen, setIsOpen] = useState(false);

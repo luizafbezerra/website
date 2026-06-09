@@ -10,13 +10,13 @@ type ShareButtonsProps = {
 
 export function ShareButtons({ url, title }: ShareButtonsProps) {
   // @ts-ignore
-  const sharePostLabel = "Share post";
+  const sharePostLabel = "Compartilhar";
   // @ts-ignore
-  const copyLinkLabel = "Copy link";
+  const copyLinkLabel = "Copiar link";
   // @ts-ignore
-  const linkCopiedLabel = "Link copied!";
+  const linkCopiedLabel = "Link copiado!";
   // @ts-ignore
-  const opensInNewTabLabel = "opens in new tab";
+  const opensInNewTabLabel = "abre em nova aba";
 
   const [copied, setCopied] = useState(false);
   // Start as false so server and initial client render agree (no navigator on server).
@@ -79,7 +79,7 @@ export function ShareButtons({ url, title }: ShareButtonsProps) {
             href={`https://x.com/intent/tweet?text=${encodedTitle}&url=${encodedUrl}`}
             target="_blank"
             rel="noopener noreferrer"
-            aria-label={`Share on X / Twitter — ${opensInNewTabLabel}`}
+            aria-label={`Compartilhar no X / Twitter — ${opensInNewTabLabel}`}
             className={buttonClass}
           >
             <Twitter className="size-4" />X
@@ -88,7 +88,7 @@ export function ShareButtons({ url, title }: ShareButtonsProps) {
             href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`}
             target="_blank"
             rel="noopener noreferrer"
-            aria-label={`Share on LinkedIn — ${opensInNewTabLabel}`}
+            aria-label={`Compartilhar no LinkedIn — ${opensInNewTabLabel}`}
             className={buttonClass}
           >
             <Linkedin className="size-4" />

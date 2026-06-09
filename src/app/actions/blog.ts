@@ -32,6 +32,22 @@ export const getAllPosts = cache(async function getAllPosts(
   return (docs as PayloadPost[]).map((doc) => Blog.fromPayload(doc, locale));
 });
 
+/**
+ * Cheap existence check used to hide the blog's entry points (nav link, sitemap
+ * entry, RSS feed) when there is nothing published. Counts published posts
+ * without loading them.
+ */
+export const getHasPublishedPosts = cache(async function getHasPublishedPosts(): Promise<boolean> {
+  const payload = await getPayloadSafe();
+  if (!payload) return false;
+  const { totalDocs } = await payload.count({
+    collection: "posts",
+    where: { _status: { equals: "published" } },
+    overrideAccess: true,
+  });
+  return totalDocs > 0;
+});
+
 /** Return a deduplicated, alphabetically sorted list of all tags in use. */
 export const getAllTags = cache(async function getAllTags(locale = "en"): Promise<string[]> {
   const posts = await getAllPosts(locale);

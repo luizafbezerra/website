@@ -7,7 +7,7 @@ const SCROLL_THRESHOLD = 300;
 
 export function BackToTop() {
   // @ts-ignore
-  const backToTopLabel = "Back to top";
+  const backToTopLabel = "Voltar ao topo";
 
   const [visible, setVisible] = useState(false);
 

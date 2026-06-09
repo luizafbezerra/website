@@ -11,11 +11,11 @@ export const revalidate = 3600;
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? "https://example.com";
 
 export const metadata: Metadata = {
-  title: "Blog",
-  description: "Articles and posts.",
+  title: "Escrita",
+  description: "Notas sobre o que costuma ficar nas entrelinhas da vida adulta.",
   openGraph: {
-    title: "Blog",
-    description: "Articles and posts.",
+    title: "Escrita",
+    description: "Notas sobre o que costuma ficar nas entrelinhas da vida adulta.",
     url: `${BASE_URL}/blog`,
   },
   alternates: {
@@ -45,12 +45,12 @@ export default async function BlogPage(props: BlogPageProps) {
       <div className="mb-12 text-center">
         <div className="relative inline-block">
           <h1 id="blog-heading" className="mb-4 text-4xl font-bold">
-            Blog
+            Escrita
           </h1>
           <a
             href="/feed.xml"
-            aria-label="RSS feed"
-            title="RSS feed"
+            aria-label="Feed RSS"
+            title="Feed RSS"
             className="absolute -right-8 top-1 text-muted-foreground transition-colors hover:text-orange-500"
             target="_blank"
             rel="noopener noreferrer"
@@ -58,7 +58,9 @@ export default async function BlogPage(props: BlogPageProps) {
             <Rss className="h-5 w-5" />
           </a>
         </div>
-        <p className="text-lg text-muted-foreground">Articles and posts.</p>
+        <p className="text-lg text-muted-foreground">
+          Notas sobre o que costuma ficar nas entrelinhas da vida adulta.
+        </p>
       </div>
 
       <Suspense>

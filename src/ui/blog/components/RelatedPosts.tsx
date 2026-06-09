@@ -12,9 +12,9 @@ type RelatedPostsProps = {
 
 export async function RelatedPosts({ posts, locale }: RelatedPostsProps) {
   // @ts-ignore
-  const relatedPostsLabel = "Related Posts";
+  const relatedPostsLabel = "Publicações relacionadas";
   // @ts-ignore
-  const readingTimeFn = (minutes: number) => `${minutes} min read`;
+  const readingTimeFn = (minutes: number) => `${minutes} min de leitura`;
 
   if (posts.length === 0) return null;
 

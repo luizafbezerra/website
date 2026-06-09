@@ -1,3 +1,4 @@
+import { getHasPublishedPosts } from "@/app/actions/blog";
 import type { MetadataRoute } from "next";
 
 export const revalidate = 3600;
@@ -15,12 +16,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 1.0,
   });
 
-  entries.push({
-    url: `${BASE_URL}/blog`,
-    lastModified: new Date(),
-    changeFrequency: "weekly",
-    priority: 0.8,
-  });
+  // Only advertise the blog when there is something published.
+  if (await getHasPublishedPosts()) {
+    entries.push({
+      url: `${BASE_URL}/blog`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.8,
+    });
+  }
 
   entries.push({
     url: `${BASE_URL}/perguntas`,

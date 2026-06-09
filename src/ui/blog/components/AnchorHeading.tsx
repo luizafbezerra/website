@@ -17,9 +17,9 @@ export function AnchorHeading({ id, level, children, className }: AnchorHeadingP
   const Tag = `h${level}` as "h2" | "h3" | "h4" | "h5" | "h6";
 
   // @ts-ignore
-  const copyLinkLabel = "Copy link";
+  const copyLinkLabel = "Copiar link";
   // @ts-ignore
-  const linkCopiedLabel = "Link copied!";
+  const linkCopiedLabel = "Link copiado!";
 
   const handleCopy = async () => {
     const url = `${window.location.origin}${window.location.pathname}#${id}`;

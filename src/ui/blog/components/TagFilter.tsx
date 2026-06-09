@@ -10,9 +10,9 @@ type TagFilterProps = {
 
 export function TagFilter({ tags }: TagFilterProps) {
   // @ts-ignore
-  const allTagsLabel = "All";
+  const allTagsLabel = "Todas";
   // @ts-ignore
-  const filterByTagLabel = "Filter by tag";
+  const filterByTagLabel = "Filtrar por tag";
 
   const router = useRouter();
   const pathname = usePathname();

@@ -43,20 +43,36 @@ export function About({ identity, content }: { identity: Identity; content: Home
             className="body-prose text-ink mt-10 max-w-[60ch] text-[1.085rem] leading-[1.74]"
           />
 
+          {/* Each row renders only when it has a real value, so clearing a
+              field in the CMS (or an unset CRP) hides the row instead of
+              leaving a dangling label. "Atendimento" is derived from the NAP
+              and always present. */}
           <dl className="text-quill mt-12 grid grid-cols-1 gap-y-6 text-[0.98rem] leading-[1.55] sm:grid-cols-[10rem_1fr] sm:gap-x-8 sm:gap-y-5">
-            <dt className="display text-quill text-[0.96rem]">Formação</dt>
-            <dd className="text-foreground">{content.formacao}</dd>
+            {content.formacao && (
+              <>
+                <dt className="display text-quill text-[0.96rem]">Formação</dt>
+                <dd className="text-foreground">{content.formacao}</dd>
+              </>
+            )}
 
-            <dt className="display text-quill text-[0.96rem]">Registro</dt>
-            <dd className="text-foreground">{identity.credential}</dd>
+            {identity.credential && (
+              <>
+                <dt className="display text-quill text-[0.96rem]">Registro</dt>
+                <dd className="text-foreground">{identity.credential}</dd>
+              </>
+            )}
 
             <dt className="display text-quill text-[0.96rem]">Atendimento</dt>
             <dd className="text-foreground">
               Presencial em {identity.city} · online em todo o {identity.country}
             </dd>
 
-            <dt className="display text-quill text-[0.96rem]">Idiomas</dt>
-            <dd className="text-foreground">{content.idiomas}</dd>
+            {content.idiomas && (
+              <>
+                <dt className="display text-quill text-[0.96rem]">Idiomas</dt>
+                <dd className="text-foreground">{content.idiomas}</dd>
+              </>
+            )}
           </dl>
         </div>
       </div>

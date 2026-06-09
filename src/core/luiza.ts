@@ -16,10 +16,11 @@ export namespace Luiza {
   export const instagramUrl = "https://www.instagram.com/simbolos.do.self/";
   export const instagramHandle = "@simbolos.do.self";
 
-  // TODO: move credential to Payload Settings global so Luiza can edit without a
-  // deploy. Current value is a clearly-template placeholder; replace with her real
-  // CRP (e.g. "CRP 06/123456") before launch.
-  export const credential = "CRP 00/00000";
+  // Empty until Luiza supplies her real CRP. Left blank (not a placeholder like
+  // "CRP 00/00000") so the "Registro" row in About hides instead of advertising a
+  // fake registration. Editable via the Payload Settings → identity.credential
+  // field; set it there (e.g. "CRP 06/123456") and the row reappears.
+  export const credential = "";
 
   // TODO: confirm with Luiza — used as meta description fallback and in OG tags
   export const tagline =

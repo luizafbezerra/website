@@ -41,15 +41,25 @@ export function Footer({ identity, navLinks }: { identity: Identity; navLinks: N
                 </Link>
               </li>
               <li>
-                <a
-                  href={identity.instagramUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="display-italic text-foreground hover:text-terracotta no-underline transition-colors"
+                <Link
+                  href="/privacidade"
+                  className="text-foreground hover:text-terracotta no-underline transition-colors"
                 >
-                  Instagram
-                </a>
+                  Privacidade
+                </Link>
               </li>
+              {identity.instagramUrl && (
+                <li>
+                  <a
+                    href={identity.instagramUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="display-italic text-foreground hover:text-terracotta no-underline transition-colors"
+                  >
+                    Instagram
+                  </a>
+                </li>
+              )}
               <li>
                 <a
                   href={identity.whatsappUrl}
@@ -65,12 +75,9 @@ export function Footer({ identity, navLinks }: { identity: Identity; navLinks: N
         </div>
 
         <div className="border-rule mt-12 flex flex-col gap-3 border-t pt-8 text-[0.85rem] sm:flex-row sm:items-baseline sm:justify-between">
-          <div className="flex flex-col gap-2">
-            <p className="text-quill">
-              © {year} {identity.fullName}. Todos os direitos reservados.
-            </p>
-            <p className="marginalia">Composto em Cardo &amp; Vollkorn.</p>
-          </div>
+          <p className="text-quill">
+            © {year} {identity.fullName}. Todos os direitos reservados.
+          </p>
           <FooterCosmosRestore />
         </div>
       </div>

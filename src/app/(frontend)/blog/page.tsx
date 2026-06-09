@@ -1,7 +1,11 @@
 import { getAllPosts, getAllTags } from "@/app/actions/blog";
+import { getNavigation } from "@/app/actions/home";
+import { getIdentity } from "@/app/actions/identity";
 import { Blog } from "@/core/blog";
 import { BlogList } from "@/ui/blog/components/BlogList";
 import { TagFilter } from "@/ui/blog/components/TagFilter";
+import { Footer, Header, StickyHeaderShell } from "@/ui/home";
+import { BreadcrumbJsonLd } from "@/ui/lib/jsonLd";
 import { Rss } from "lucide-react";
 import type { Metadata } from "next";
 import { Suspense } from "react";
@@ -35,39 +39,58 @@ export default async function BlogPage(props: BlogPageProps) {
   // Normalise tag param to a single string (use the first if multiple provided)
   const activeTag = Array.isArray(tag) ? tag[0] : tag;
 
-  // @ts-ignore
-  const [allPosts, tags] = await Promise.all([getAllPosts(undefined, activeTag), getAllTags()]);
+  const [allPosts, tags, identity, navLinks] = await Promise.all([
+    getAllPosts("pt-BR", activeTag),
+    getAllTags("pt-BR"),
+    getIdentity(),
+    getNavigation(),
+  ]);
 
   const posts = Blog.sortFeaturedFirst(allPosts);
 
   return (
-    <section aria-labelledby="blog-heading" className="container mx-auto max-w-4xl px-4 py-20">
-      <div className="mb-12 text-center">
-        <div className="relative inline-block">
-          <h1 id="blog-heading" className="mb-4 text-4xl font-bold">
-            Escrita
-          </h1>
-          <a
-            href="/feed.xml"
-            aria-label="Feed RSS"
-            title="Feed RSS"
-            className="absolute -right-8 top-1 text-muted-foreground transition-colors hover:text-orange-500"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Rss className="h-5 w-5" />
-          </a>
-        </div>
-        <p className="text-lg text-muted-foreground">
-          Notas sobre o que costuma ficar nas entrelinhas da vida adulta.
-        </p>
-      </div>
+    <>
+      <BreadcrumbJsonLd
+        items={[
+          { name: "Início", url: BASE_URL },
+          { name: "Escrita", url: `${BASE_URL}/blog` },
+        ]}
+      />
 
-      <Suspense>
-        <TagFilter tags={tags} />
-      </Suspense>
+      <StickyHeaderShell>
+        <Header identity={identity} navLinks={navLinks} />
+      </StickyHeaderShell>
+      <main id="main">
+        <section aria-labelledby="blog-heading" className="container mx-auto max-w-4xl px-4 py-20">
+          <div className="mb-12 text-center">
+            <div className="relative inline-block">
+              <h1 id="blog-heading" className="mb-4 text-4xl font-bold">
+                Escrita
+              </h1>
+              <a
+                href="/feed.xml"
+                aria-label="Feed RSS"
+                title="Feed RSS"
+                className="absolute -right-8 top-1 text-muted-foreground transition-colors hover:text-orange-500"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Rss className="h-5 w-5" />
+              </a>
+            </div>
+            <p className="text-lg text-muted-foreground">
+              Notas sobre o que costuma ficar nas entrelinhas da vida adulta.
+            </p>
+          </div>
 
-      <BlogList posts={posts} tags={tags} />
-    </section>
+          <Suspense>
+            <TagFilter tags={tags} />
+          </Suspense>
+
+          <BlogList posts={posts} tags={tags} />
+        </section>
+      </main>
+      <Footer identity={identity} navLinks={navLinks} />
+    </>
   );
 }

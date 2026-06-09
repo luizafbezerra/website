@@ -1,15 +1,20 @@
 import { getAllPosts, getPost, getRelatedPosts } from "@/app/actions/blog";
+import { getNavigation } from "@/app/actions/home";
+import { getIdentity } from "@/app/actions/identity";
+import { Blog } from "@/core/blog";
 import { formatDate } from "@/lib/date";
 import { enrichCodeBlocks } from "@/ui/blog/lib/highlightCode";
 import { BackToTop } from "@/ui/blog/components/BackToTop";
 import { BlogPost } from "@/ui/blog/components/BlogPost";
+import { CopyForAI } from "@/ui/blog/components/CopyForAI";
 import { CoverImage } from "@/ui/blog/components/CoverImage";
 import { ReadingProgressBar } from "@/ui/blog/components/ReadingProgressBar";
 import { RelatedPosts } from "@/ui/blog/components/RelatedPosts";
 import { ShareButtons } from "@/ui/blog/components/ShareButtons";
 import { TableOfContents } from "@/ui/blog/components/TableOfContents";
 import { Badge } from "@/ui/components/ui/badge";
-import { BlogPostingJsonLd } from "@/ui/lib/jsonLd";
+import { Footer, Header, StickyHeaderShell } from "@/ui/home";
+import { BlogPostingJsonLd, BreadcrumbJsonLd } from "@/ui/lib/jsonLd";
 import { ArrowLeft, Calendar, Clock } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
@@ -40,17 +45,18 @@ export async function generateMetadata({
   const slug = resolvedParams.slug;
 
   try {
-    const { post } = await getPost(slug);
+    const { post, content } = await getPost(slug, "pt-BR");
     const showUpdated = isUpdatedAfterPublish(post.date, post.updatedAt);
     const coverImageUrl = post.coverImage?.heroUrl ?? post.coverImage?.url;
-    // @ts-ignore
     const metaUrl = `${BASE_URL}/blog/${slug}`;
-    // @ts-ignore
     const metaAlternates = { canonical: metaUrl };
 
     return {
       title: post.title,
       description: post.description,
+      // Server-side token estimate (~chars/4) so agents can budget before
+      // fetching the full post or its /blog/<slug>.md companion.
+      other: { "ai:token-count": String(Blog.estimateTokens(content)) },
       openGraph: {
         title: post.title,
         description: post.description,
@@ -83,36 +89,53 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
   const resolvedParams = await params;
   const slug = resolvedParams.slug;
 
-  // @ts-ignore
-  const locale = "en";
+  const locale = "pt-BR";
 
+  let postData: Awaited<ReturnType<typeof getPost>>;
   try {
-    const { post, content: rawContent, headings } = await getPost(slug);
-    const [content, relatedPosts] = await Promise.all([
-      enrichCodeBlocks(rawContent),
-      getRelatedPosts(slug, post.tags, undefined, 3),
-    ]);
+    postData = await getPost(slug, locale);
+  } catch {
+    notFound();
+  }
 
-    const showUpdated = isUpdatedAfterPublish(post.date, post.updatedAt);
-    // @ts-ignore
-    const postUrl = `${BASE_URL}/blog/${slug}`;
-    const coverImageUrl = post.coverImage?.heroUrl ?? post.coverImage?.url;
-    // @ts-ignore
-    const tocLabel = "Sumário";
+  const { post, content: rawContent, headings } = postData;
+  const [content, relatedPosts, identity, navLinks] = await Promise.all([
+    enrichCodeBlocks(rawContent),
+    getRelatedPosts(slug, post.tags, locale, 3),
+    getIdentity(),
+    getNavigation(),
+  ]);
 
-    return (
-      <>
-        <ReadingProgressBar />
+  const showUpdated = isUpdatedAfterPublish(post.date, post.updatedAt);
+  const postUrl = `${BASE_URL}/blog/${slug}`;
+  const coverImageUrl = post.coverImage?.heroUrl ?? post.coverImage?.url;
+  const tocLabel = "Sumário";
 
+  return (
+    <>
+      <BlogPostingJsonLd
+        post={post}
+        locale={locale}
+        authorName={identity.fullName}
+        dateModified={showUpdated && post.updatedAt ? post.updatedAt : undefined}
+        image={coverImageUrl}
+        wordCount={post.readingTime * 200}
+      />
+      <BreadcrumbJsonLd
+        items={[
+          { name: "Início", url: BASE_URL },
+          { name: "Escrita", url: `${BASE_URL}/blog` },
+          { name: post.title, url: postUrl },
+        ]}
+      />
+
+      <ReadingProgressBar />
+
+      <StickyHeaderShell>
+        <Header identity={identity} navLinks={navLinks} />
+      </StickyHeaderShell>
+      <main id="main">
         <section aria-labelledby="post-heading" className="container mx-auto max-w-5xl px-4 py-20">
-          <BlogPostingJsonLd
-            post={post}
-            locale={locale}
-            dateModified={showUpdated && post.updatedAt ? post.updatedAt : undefined}
-            image={coverImageUrl}
-            wordCount={post.readingTime * 200}
-          />
-
           <Link
             href="/blog"
             className="mb-8 inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
@@ -147,12 +170,15 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
               {post.title}
             </h1>
             <p className="mb-6 text-lg text-muted-foreground">{post.description}</p>
-            <div className="flex flex-wrap gap-2">
-              {post.tags.map((tag) => (
-                <Badge key={tag} variant="secondary">
-                  {tag}
-                </Badge>
-              ))}
+            <div className="flex flex-wrap items-center justify-between gap-4">
+              <div className="flex flex-wrap gap-2">
+                {post.tags.map((tag) => (
+                  <Badge key={tag} variant="secondary">
+                    {tag}
+                  </Badge>
+                ))}
+              </div>
+              <CopyForAI slug={slug} />
             </div>
           </header>
 
@@ -186,11 +212,10 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           {/* Related posts */}
           <RelatedPosts posts={relatedPosts} locale={locale} />
         </section>
+      </main>
+      <Footer identity={identity} navLinks={navLinks} />
 
-        <BackToTop />
-      </>
-    );
-  } catch {
-    notFound();
-  }
+      <BackToTop />
+    </>
+  );
 }

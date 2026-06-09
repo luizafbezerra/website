@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Cardo, Vollkorn } from "next/font/google";
 import { getIdentity } from "@/app/actions/identity";
+import { SITE_INDEXABLE } from "@/lib/site";
 import { HashAnchorScroll } from "@/ui/lib/HashAnchorScroll";
 import "@/app/globals.css";
 
@@ -33,13 +34,18 @@ export const generateMetadata = async (): Promise<Metadata> => {
     description: identity.description,
     // Pre-launch belt-and-suspenders. Pair with robots.ts (Disallow: /) so the
     // placeholder credential, portrait, and bio cannot be indexed before the
-    // content pass lands.
-    robots: {
-      index: false,
-      follow: false,
-      nocache: true,
-      googleBot: { index: false, follow: false },
-    },
+    // content pass lands. Once NEXT_PUBLIC_SITE_INDEXABLE flips at launch, the
+    // `robots` key is dropped entirely so pages become indexable by default.
+    ...(SITE_INDEXABLE
+      ? {}
+      : {
+          robots: {
+            index: false,
+            follow: false,
+            nocache: true,
+            googleBot: { index: false, follow: false },
+          },
+        }),
     openGraph: {
       type: "website",
       locale: "pt_BR",

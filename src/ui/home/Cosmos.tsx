@@ -27,9 +27,11 @@ const initialSigilPositions = (): SigilScreenPosition[] =>
 // leaking onto a detached node.
 //
 // On the true → false transition, after the body unmounts, we scroll the
-// visitor to Symbols — the section that follows Cosmos in DOM order — so
-// they land at the next section instead of being left at the top of the
-// page or sent backwards through content they already read.
+// visitor to the Symbols wheel (`id="simbolos"`) — the desktop-only section
+// that follows Cosmos in DOM order — so they land at the next section instead
+// of being left at the top of the page or sent backwards through content they
+// already read. The `getElementById("simbolos")` lookup below optional-chains,
+// so on mobile (where the wheel is hidden) it simply no-ops.
 export function Cosmos() {
   const [show, setShow] = useCosmosShow();
   const prevShowRef = useRef<boolean>(show);

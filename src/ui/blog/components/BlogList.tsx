@@ -7,7 +7,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/ui/
 import { ArrowRight, Calendar, Clock, RefreshCw } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
 
 const ONE_DAY_MS = 24 * 60 * 60 * 1000;
 
@@ -31,12 +30,9 @@ export function BlogList({ posts }: BlogListProps) {
   // @ts-ignore
   const readMoreLabel = "Ler mais";
 
-  // Detect locale for date formatting; fall back to "en"
-  // @ts-ignore
-  const [locale, setLocale] = useState("en");
-  useEffect(() => {
-    setLocale(navigator.language.split("-")[0] ?? "en");
-  }, []);
+  // pt-BR throughout — the practice is Brazilian; matches the homepage's
+  // Writing section, which formats dates with a fixed pt-BR formatter.
+  const locale = "pt-BR";
 
   if (posts.length === 0) {
     return (

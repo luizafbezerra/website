@@ -7,12 +7,20 @@
 // type → component map lives in `ui/` (components can't be imported here).
 // ---------------------------------------------------------------------------
 
-export type SectionType = "pillars" | "about" | "cosmos" | "voices" | "writing" | "contact";
+export type SectionType =
+  | "pillars"
+  | "about"
+  | "cosmos"
+  | "symbols"
+  | "voices"
+  | "writing"
+  | "contact";
 
 export const SECTION_TYPES: readonly SectionType[] = [
   "pillars",
   "about",
   "cosmos",
+  "symbols",
   "voices",
   "writing",
   "contact",
@@ -29,6 +37,11 @@ export const SECTION_REGISTRY: Record<SectionType, SectionMeta> = {
   pillars: { anchorId: "abordagem", navLabel: "Como trabalho" },
   about: { anchorId: "sobre", navLabel: "Sobre" },
   cosmos: {},
+  // Desktop-only on the homepage (CSS-gated in page.tsx). No anchor/navLabel so
+  // it never emits a nav link that would dead-end on mobile, where the wheel is
+  // hidden. The Symbols component still renders its own `id="simbolos"`, which
+  // the Cosmos dismiss-scroll targets on desktop.
+  symbols: {},
   voices: {},
   writing: {},
   contact: { anchorId: "contato", navLabel: "Contato" },

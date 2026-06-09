@@ -14,6 +14,7 @@ import {
   Hero,
   Pillars,
   StickyHeaderShell,
+  Symbols,
   Voices,
   Writing,
 } from "@/ui/home";
@@ -63,6 +64,13 @@ export default async function Home() {
     pillars: <Pillars content={home.pillars} />,
     about: <About identity={identity} content={home.about} />,
     cosmos: <Cosmos />,
+    // Desktop-only: the painted wheel needs the room and pointer affordances of
+    // a wide viewport. CSS gate (lg = ≥1024px) — SSR-safe, no client JS.
+    symbols: (
+      <div className="hidden lg:block">
+        <Symbols />
+      </div>
+    ),
     voices: <Voices testimonials={testimonials} content={home.voices} />,
     writing: <Writing posts={recentPosts} content={home.writing} />,
     contact: <Contact identity={identity} content={home.contact} />,

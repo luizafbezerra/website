@@ -584,11 +584,17 @@ export namespace Cosmos {
   const ORBIT_A_START = Math.atan2(KEY_MID.pos[2], KEY_MID.pos[0]);
   const ORBIT_A_END_REL = Math.PI * 2 * ORBIT_TURNS;
 
-  // Approach-phase camera arc. Two beats:
+  // Approach-phase camera arc. A front dwell, then two beats:
   //
-  //   * p ∈ [0, INTRO_END] — first tick: pure forward dolly. The visitor
-  //     enters the painted ground composition; nothing tilts.
-  //   * p ∈ [INTRO_END, 0.25] — rise: camera y AND look-y both lerp
+  //   * p ∈ [0, APPROACH_HOLD] — dwell: the camera holds dead-still at
+  //     KEY_FAR_IN so the painted ground composition can be read before any
+  //     motion. The remaining [HOLD, 0.25] is linearly remapped back onto the
+  //     full [0, 0.25] domain (see cameraKeyAtProgress) and fed into the two
+  //     windows below unchanged — so the beats play out exactly as before,
+  //     just compressed into the post-dwell scroll.
+  //   * (remapped) [0, INTRO_END] — first tick: pure forward dolly. The
+  //     visitor sits in the painted ground composition; nothing tilts.
+  //   * (remapped) [INTRO_END, 0.25] — rise: camera y AND look-y both lerp
   //     monotonically toward `KEY_MID`. Crucially, look-y reaches its end
   //     value FASTER than camera-y (different easing windows) — so the
   //     look line stays ABOVE the camera throughout the rise, producing
@@ -604,18 +610,50 @@ export namespace Cosmos {
   // orbit boundary without ever passing through "looking down."
   const APPROACH_LOOK_WINDOW = [APPROACH_INTRO_END, 0.14] as const;
 
+  // Front-of-phase dwell. The section is pinned and fully fills the screen at
+  // p=0; for the first APPROACH_HOLD of scroll the camera holds dead-still at
+  // KEY_FAR_IN (no Z dolly, no Y rise, no look tilt) so the painted ground is
+  // read before any motion. Because the post-dwell remap scales all three
+  // easing windows proportionally, the look-leads-camera up-tilt is preserved
+  // exactly (peak lookY − camY ≈ 3.68, same as before the dwell).
+  //
+  // 0.08 ≈ 22vh of motionless scroll (p × 275vh) — a slight dwell that keeps
+  // the prelude envelopes in sync: the camera clears the last painted prop
+  // (lowest propZ = 11, so camZ ≤ 9.5) at p ≈ 0.186, while preludeMasterOpacity
+  // is still ≈ 0.23 into its 0.16 → 0.20 fade — per-prop and master fades stay
+  // co-directional with healthy margin, so no prop snap-fades mid-frame. Do not
+  // raise above ~0.10: at 0.12 the camera clears the last prop only after the
+  // master fade has finished, snap-fading cloud-4.
+  const APPROACH_HOLD = 0.08;
+
   export const cameraKeyAtProgress = (p: number): CameraKey => {
-    // Zoom-in: forward dolly for the first tick, then monotonic rise where
-    // look-y leads camera-y so the camera always tilts UP (or horizontal),
-    // never down. Resolves exactly to KEY_MID at p=0.25 (no orbit kink).
+    // Zoom-in: a front dwell (camera still at KEY_FAR_IN), then a monotonic
+    // rise where look-y leads camera-y so the camera always tilts UP (or
+    // horizontal), never down. Resolves exactly to KEY_MID at p=0.25 (no orbit
+    // kink).
     if (p <= cameraPhases.zoomIn.range[1]) {
-      // Z position uses the full zoomIn range so the forward dolly starts
-      // immediately at p=0 (the "first tick is forward" beat).
-      const tZ = smootherstep(p, cameraPhases.zoomIn.range[0], cameraPhases.zoomIn.range[1]);
-      // Y position waits for the intro to finish, then rises slowly.
-      const tY = smootherstep(p, APPROACH_Y_WINDOW[0], APPROACH_Y_WINDOW[1]);
+      const zoomEnd = cameraPhases.zoomIn.range[1];
+      // Dwell: for the first APPROACH_HOLD of scroll the camera is completely
+      // still at KEY_FAR_IN — no Z dolly, no Y rise, no look tilt.
+      if (p <= APPROACH_HOLD) {
+        return {
+          pos: [KEY_FAR_IN.pos[0], KEY_FAR_IN.pos[1], KEY_FAR_IN.pos[2]],
+          look: [KEY_FAR_IN.look[0], KEY_FAR_IN.look[1], KEY_FAR_IN.look[2]],
+        };
+      }
+      // Linearly remap [APPROACH_HOLD, zoomEnd] back onto [0, zoomEnd], then
+      // feed that adjusted progress into the EXISTING smootherstep windows
+      // unchanged. adj(zoomEnd) === zoomEnd, so the curve still resolves to
+      // KEY_MID at p=0.25 with no orbit-boundary pop, and scaling all three
+      // windows proportionally preserves the look-leads-camera up-tilt.
+      // smootherstep's zero start-derivative means motion begins from rest, so
+      // velocity stays continuous across the dwell boundary (no kink).
+      const adj = ((p - APPROACH_HOLD) / (zoomEnd - APPROACH_HOLD)) * zoomEnd;
+      const tZ = smootherstep(adj, cameraPhases.zoomIn.range[0], zoomEnd);
+      // Y position waits for the (remapped) intro to finish, then rises slowly.
+      const tY = smootherstep(adj, APPROACH_Y_WINDOW[0], APPROACH_Y_WINDOW[1]);
       // Look-y rises faster, plateauing well before camera-y catches up.
-      const tLook = smootherstep(p, APPROACH_LOOK_WINDOW[0], APPROACH_LOOK_WINDOW[1]);
+      const tLook = smootherstep(adj, APPROACH_LOOK_WINDOW[0], APPROACH_LOOK_WINDOW[1]);
       const camY = lerp(KEY_FAR_IN.pos[1], KEY_MID.pos[1], tY);
       const camZ = lerp(KEY_FAR_IN.pos[2], KEY_MID.pos[2], tZ);
       const lookY = lerp(KEY_FAR_IN.look[1], KEY_MID.look[1], tLook);

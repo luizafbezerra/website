@@ -60,9 +60,15 @@ function CosmosBody({ onDismissForever }: { onDismissForever: () => void }) {
   const [reducedMotion, setReducedMotion] = useState<boolean>(false);
   const [isMobile, setIsMobile] = useState<boolean>(false);
   const [activeSigil, setActiveSigil] = useState<Data.SigilId | null>(null);
-  // Drives `<Canvas frameloop>` so per-frame WebGL work pauses when the
-  // section is scrolled completely off the viewport.
+  // Tracks the section's current intersection with the 30%-expanded viewport.
+  // Combined with `isPrimed` it forms the reveal trigger AND drives the Canvas
+  // frameloop (per-frame WebGL work pauses once the section is scrolled past).
   const [isVisible, setIsVisible] = useState<boolean>(false);
+  // Set once the off-screen warm-up (shader compile + first warm frame +
+  // texture uploads) reports back via `handlePrimed` — or the fallback timeout
+  // fires. Until then the painted poster holds the screen; the reveal
+  // cross-fade waits for both this and `isVisible`.
+  const [isPrimed, setIsPrimed] = useState<boolean>(false);
 
   // Reduced motion preference.
   useEffect(() => {
@@ -82,30 +88,90 @@ function CosmosBody({ onDismissForever }: { onDismissForever: () => void }) {
     return () => mq.removeEventListener("change", onChange);
   }, []);
 
-  // IntersectionObserver gate. Two concerns wired through the same observer:
-  //   * `mountCanvas` is set once the first time the section gets within
-  //     ~30vh of the viewport. Never unset — once mounted, the canvas + env
-  //     probe + nebula bake stay alive in memory.
-  //   * `isVisible` tracks current intersection. Drives the Canvas's
-  //     `frameloop` so per-frame WebGL work pauses when the user scrolls
-  //     completely past the section.
-  // Reduced-motion never mounts the canvas.
+  // Two IntersectionObservers, decoupling warm-up from reveal:
+  //
+  //   * WARM (wide, ~1 viewport early): sets `mountCanvas` once, so the canvas
+  //     mounts hidden at opacity:0 behind the poster and runs its bakes +
+  //     shader compile + texture uploads during the approach. Never unset —
+  //     once warmed, the scene stays alive in memory.
+  //   * REVEAL (30%): tracks current intersection into `isVisible`. Combined
+  //     with `isPrimed` this triggers the cross-fade AND drives the Canvas
+  //     frameloop (per-frame work pauses once scrolled fully past).
+  //
+  // Neither runs for reduced-motion / mobile — those paths keep the static
+  // composite + StaticSigilWheel and never mount the canvas.
   useEffect(() => {
-    if (reducedMotion) return;
+    if (reducedMotion || isMobile) return;
     const el = sectionRef.current;
     if (!el) return;
-    const io = new IntersectionObserver(
+
+    const warm = new IntersectionObserver(
       (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) setMountCanvas(true);
-          setIsVisible(entry.isIntersecting);
-        }
+        if (entries.some((e) => e.isIntersecting)) setMountCanvas(true);
+      },
+      { rootMargin: "120% 0px 120% 0px", threshold: 0 },
+    );
+    const reveal = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) setIsVisible(entry.isIntersecting);
       },
       { rootMargin: "30% 0px 30% 0px", threshold: 0 },
     );
-    io.observe(el);
-    return () => io.disconnect();
-  }, [reducedMotion]);
+    warm.observe(el);
+    reveal.observe(el);
+    return () => {
+      warm.disconnect();
+      reveal.disconnect();
+    };
+  }, [reducedMotion, isMobile]);
+
+  // Idle texture preload. Warms the painted-prelude WebPs + the brushed-brass
+  // roughness map into the HTTP cache during an idle slice, so the shared
+  // `THREE.TextureLoader` fetches in `useOptionalTexture` are cache hits —
+  // lifting the network leg out of the warm/reveal budget. A warm roughness
+  // map also lets the armillary matcap bake take its immediate path instead of
+  // the 500ms cold-cache fallback. The 12 sigils stay lazy (popover-only).
+  useEffect(() => {
+    if (reducedMotion || isMobile) return;
+    let cancelled = false;
+    const warm = () => {
+      if (cancelled) return;
+      for (const url of Data.warmupTextureUrls) {
+        // `window.Image`, not the `next/image` default import in scope.
+        const img = new window.Image();
+        img.decoding = "async";
+        img.src = url;
+        // Force the decode now (off the main thread) rather than lazily at
+        // first GPU upload; swallow 404 / abort.
+        img.decode().catch(() => {});
+      }
+    };
+    const ric = window.requestIdleCallback;
+    if (typeof ric === "function") {
+      const id = ric(warm, { timeout: 3000 });
+      return () => {
+        cancelled = true;
+        window.cancelIdleCallback?.(id);
+      };
+    }
+    // Safari / older Firefox: no requestIdleCallback — defer past first paint.
+    const timer = setTimeout(warm, 1500);
+    return () => {
+      cancelled = true;
+      clearTimeout(timer);
+    };
+  }, [reducedMotion, isMobile]);
+
+  // Fallback prime. If the off-screen warm-up never reports back — a device
+  // without KHR_parallel_shader_compile where `compileAsync` stalls, a
+  // backgrounded tab throttling rAF, a thrown compile — prime anyway a few
+  // seconds after the canvas mounts so the reveal gate never hangs. The warm
+  // work has had ample time by then.
+  useEffect(() => {
+    if (reducedMotion || isMobile || !mountCanvas || isPrimed) return;
+    const timer = setTimeout(() => setIsPrimed(true), 3500);
+    return () => clearTimeout(timer);
+  }, [reducedMotion, isMobile, mountCanvas, isPrimed]);
 
   // Scroll progress → progressRef (consumed by CosmosCameraRig inside the
   // canvas) + CSS vars (consumed by the sigil overlay for its fade envelope).
@@ -150,12 +216,18 @@ function CosmosBody({ onDismissForever }: { onDismissForever: () => void }) {
 
   const focusSigil = useCallback((id: Data.SigilId) => setActiveSigil(id), []);
   const blurSigil = useCallback(() => setActiveSigil(null), []);
-
-  const showLiveCanvas = mountCanvas && !reducedMotion && !isMobile;
+  const handlePrimed = useCallback(() => setIsPrimed(true), []);
 
   // Mobile + reduced-motion both flow through the flat layout that
   // `.cosmos-reduced` styles supply; the canvas never mounts in either case.
   const isFlatFlow = reducedMotion || isMobile;
+
+  // Warm: the canvas is mounted (hidden behind the poster) and priming.
+  const warmCanvas = mountCanvas && !isFlatFlow;
+  // Reveal: the section is on-screen AND the warm-up has primed the GPU.
+  // Drives the cross-fade (poster out, canvas in), the live-overlay swap, and
+  // the Canvas frameloop ("always" only here).
+  const revealed = warmCanvas && isVisible && isPrimed;
 
   return (
     <section
@@ -186,21 +258,35 @@ function CosmosBody({ onDismissForever }: { onDismissForever: () => void }) {
 
       <div ref={pinnedRef} className="cosmos-pinned">
         <div className="cosmos-sticky">
-          <div className="cosmos-canvas-layer" aria-hidden="true">
-            {showLiveCanvas ? (
-              <CosmosCanvas
-                progressRef={progressRef}
-                sigilScreenPositionsRef={sigilScreenPositionsRef}
-                activeSigilId={activeSigil}
-                mobile={isMobile}
-                visible={isVisible}
-              />
-            ) : (
-              <PosterFallback />
-            )}
+          <div
+            className={cn("cosmos-canvas-layer", revealed && "cosmos-revealed")}
+            aria-hidden="true"
+          >
+            {/* Live canvas — mounted ~1 viewport early at opacity:0 behind the
+                poster so its bakes + shader compile + texture uploads run
+                off-screen. The `.cosmos-revealed` cross-fade brings it in once
+                primed + visible; until then it stays hidden but at real layout
+                size (a 0×0 / display:none canvas would break the bakes). */}
+            {warmCanvas ? (
+              <div className="cosmos-canvas-live">
+                <CosmosCanvas
+                  progressRef={progressRef}
+                  sigilScreenPositionsRef={sigilScreenPositionsRef}
+                  activeSigilId={activeSigil}
+                  mobile={isMobile}
+                  active={revealed}
+                  onPrimed={handlePrimed}
+                />
+              </div>
+            ) : null}
+
+            {/* Painted plate. Holds the screen through the warm-up, cross-fades
+                out on reveal, and stays the standing fallback if the canvas
+                never mounts (or never primes). */}
+            <PosterFallback />
           </div>
 
-          {showLiveCanvas ? (
+          {revealed ? (
             <CosmosSigilOverlay
               sigilScreenPositionsRef={sigilScreenPositionsRef}
               activeSigilId={activeSigil}
@@ -219,7 +305,7 @@ function CosmosBody({ onDismissForever }: { onDismissForever: () => void }) {
           {/* The gutter marginalia is only used in the static-wheel fallback.
               In live mode, the floating popover inside CosmosSigilOverlay
               renders the active sigil's marginalia near the sigil itself. */}
-          {!showLiveCanvas ? (
+          {!revealed ? (
             <div className="cosmos-marginalia-frame">
               <CosmosMarginalia activeSigilId={activeSigil} />
             </div>
@@ -231,7 +317,7 @@ function CosmosBody({ onDismissForever }: { onDismissForever: () => void }) {
               sticky frame; closes the section with a single Jungian line
               under the dense constellation network. Copy is a placeholder
               for Luiza's review before publish. */}
-          {showLiveCanvas ? (
+          {revealed ? (
             <aside className="cosmos-epigraph" aria-hidden="true">
               <p className="cosmos-epigraph-line">{Data.descentEpigraph.line}</p>
               <p className="cosmos-epigraph-attribution">

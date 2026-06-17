@@ -817,6 +817,23 @@ export namespace Cosmos {
   // and renders without WebGL.
   export const preludeCompositeMobile = "/art/cosmos/prelude/composite-mobile.webp";
 
+  // Texture URLs warmed during the cosmos approach (idle preload in
+  // `<CosmosBody>`), so the shared `THREE.TextureLoader` fetches inside
+  // `useOptionalTexture` resolve from the HTTP cache rather than contending
+  // for bandwidth at reveal time — the project loads these raw `/art/...`
+  // paths (not `next/image`), so a `new Image()` warm shares the same cache
+  // key. Built from the unique painted prelude assets (clouds, land, trees,
+  // rocks, bush, figure) plus the brushed-brass roughness map (sampled once
+  // during the armillary matcap bake; warming it lets that bake take its
+  // immediate path instead of the 500ms cold-cache fallback). The twelve
+  // zodiac sigils are intentionally excluded — they stay lazy in the sigil
+  // popover, loaded only when the visitor opens one.
+  export const warmupTextureUrls: ReadonlyArray<string> = [
+    ...new Set(preludeProps.map((p) => p.asset)),
+  ]
+    .map(preludeAssetPath)
+    .concat(textures.ringBrushedRoughness);
+
   // Camera FOV used by the cosmos canvas. Kept here so the prelude plane
   // sizing logic can compute world-space extents that fill the frustum at
   // each layer's Z without re-deriving the camera config.

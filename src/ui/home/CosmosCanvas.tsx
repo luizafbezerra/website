@@ -135,19 +135,35 @@ export function CosmosCanvas({
       // `cameraKeyAtProgress(p)` each frame; matching this initial position
       // eliminates the first-frame glide pop.
       camera={{ position: [0, 1.4, 25], fov: 38, near: 0.1, far: 200 }}
-      // Cap DPR at 1.25 on Retina/4K so the brass + star sprites don't pay
-      // full pixel-density cost. DPR scales fillrate quadratically and the
-      // vignette + matcap blur the difference visually.
-      dpr={[1, 1.25]}
+      // DPR pinned to 1 — the scroll-cinema is fillrate-bound (thousands of
+      // soft alpha-blended star sprites) and fill scales with DPR². At 1.25
+      // every sprite covered ~1.56× more fragments; pinning to 1 removes that
+      // overdraw on HiDPI/Retina. The vignette + matcap + soft sprites keep the
+      // WebGL layer reading as painterly rather than soft (DOM text and sigils
+      // are unaffected — they render at the device's native DPR).
+      dpr={1}
       // "always" only once revealed; "demand" during warm (renders the initial
       // frame + texture/shader uploads with no continuous rAF) and again once
       // scrolled fully past (pauses the rotating armillary, twinkle, comets,
       // camera rig, and sigil projection).
       frameloop={active ? "always" : "demand"}
       gl={{
-        antialias: true,
+        // MSAA off — it resolves every fragment of every alpha-blended sprite
+        // across multiple samples, multiplying the (already heavy) sprite
+        // overdraw fill cost ~1.5–2×. The scene is soft sprites + matcap brass
+        // with little hard geometric edge to alias, and the radial vignette
+        // feathers the canvas edge — so this is the single biggest fill cut for
+        // the scroll stutter at the smallest visual cost (slightly softer gilt
+        // constellation lines + ring silhouettes).
+        antialias: false,
         alpha: true,
-        powerPreference: "low-power",
+        // "high-performance" so dual-GPU laptops bind the WebGL context to the
+        // discrete GPU. The scroll-cinema is fillrate-bound (thousands of soft
+        // alpha-blended star sprites), so "low-power" — which forces the weak
+        // integrated GPU — was the worst case for it and a prime stutter cause.
+        // The frameloop is "demand" when idle, so the dGPU only spins up during
+        // the brief reveal/scroll window, not for the whole visit.
+        powerPreference: "high-performance",
       }}
       style={{ width: "100%", height: "100%" }}
     >

@@ -1,20 +1,17 @@
 // ---------------------------------------------------------------------------
-// Accent heading — a manuscript heading split into lead + coloured/italic
-// accent word + trail (e.g. "O que se repete costuma ter algo " · "a dizer" ·
-// "."). The CMS field (`src/fields/accentHeading.ts`) constrains the colour to
-// a select; this maps that choice to a locked Tailwind class so the typography
-// brief can't be broken from the admin. Pure (returns class strings).
+// Accent heading — a manuscript heading where one word carries a coloured
+// (optionally italic) treatment (e.g. "O que se repete costuma ter algo " +
+// "a dizer" + "."). The whole heading is now a single constrained rich-text
+// field (`src/fields/accentHeading.ts`): the editor types the line and marks
+// the accent word in bold ("destaque"); the renderer applies the section's
+// LOCKED colour + italic to the bold run, so the typography brief can't be
+// broken from the admin. Pure (returns class strings + a fixed lookup).
 // ---------------------------------------------------------------------------
 
 export type AccentStyle = "terracotta" | "cobalt";
 
-export type AccentHeading = {
-  lead: string;
-  accentWord: string;
-  trail: string;
-  accentStyle: AccentStyle;
-  accentItalic: boolean;
-};
+/** The locked visual treatment applied to a section's accent (destaque) word. */
+export type AccentTreatment = { accentStyle: AccentStyle; accentItalic: boolean };
 
 const ACCENT_CLASS: Record<AccentStyle, string> = {
   terracotta: "text-terracotta-deep",
@@ -22,32 +19,21 @@ const ACCENT_CLASS: Record<AccentStyle, string> = {
 };
 
 /** Locked colour (+ optional italic) class for an accent word. */
-export function accentWordClass(
-  heading: Pick<AccentHeading, "accentStyle" | "accentItalic">,
-): string {
-  const colour = ACCENT_CLASS[heading.accentStyle];
-  return heading.accentItalic ? `display-italic ${colour}` : colour;
+export function accentWordClass(treatment: AccentTreatment): string {
+  const colour = ACCENT_CLASS[treatment.accentStyle];
+  return treatment.accentItalic ? `display-italic ${colour}` : colour;
 }
 
-export type PayloadAccentHeading = {
-  lead?: string | null;
-  accentWord?: string | null;
-  trail?: string | null;
-  accentStyle?: string | null;
-  accentItalic?: boolean | null;
+/**
+ * Per-section accent treatment, fixed in code. The CMS only decides WHICH word
+ * is the accent (bold in the constrained heading editor); the colour + italic
+ * live here so they always match the brief regardless of who edits the copy.
+ */
+export type AccentSection = "pillars" | "about" | "writing" | "contact";
+
+export const SECTION_ACCENT: Record<AccentSection, AccentTreatment> = {
+  pillars: { accentStyle: "terracotta", accentItalic: true },
+  about: { accentStyle: "cobalt", accentItalic: false },
+  writing: { accentStyle: "terracotta", accentItalic: false },
+  contact: { accentStyle: "terracotta", accentItalic: true },
 };
-
-export function accentHeadingFromPayload(
-  raw: PayloadAccentHeading | null | undefined,
-  fallback: AccentHeading,
-): AccentHeading {
-  if (!raw) return fallback;
-  const accentStyle: AccentStyle = raw.accentStyle === "cobalt" ? "cobalt" : "terracotta";
-  return {
-    lead: raw.lead ?? fallback.lead,
-    accentWord: raw.accentWord ?? fallback.accentWord,
-    trail: raw.trail ?? fallback.trail,
-    accentStyle: raw.accentStyle == null ? fallback.accentStyle : accentStyle,
-    accentItalic: raw.accentItalic ?? fallback.accentItalic,
-  };
-}

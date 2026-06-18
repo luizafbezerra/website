@@ -121,7 +121,7 @@ export const IDENTITY_DEFAULTS: Identity = {
   tagline: Luiza.tagline,
   siteName: "Luiza Fernandes Bezerra — Psicóloga",
   description:
-    "Psicóloga clínica em Guarulhos. Análise junguiana para ansiedade, relações e propósito. Atendimento online e presencial em pt-BR.",
+    "Psicóloga clínica em Guarulhos. Análise junguiana para ansiedade, relações e propósito. Atendimento online e presencial.",
   ogImageUrl: null,
   social: [],
 };

@@ -198,7 +198,7 @@ export namespace Cosmos {
   export const sectionEyebrow = "Atlas celeste";
   export const sectionTitle = "Sob o céu interior";
   export const sectionDek =
-    "Para Jung, o céu noturno é uma das linguagens mais antigas que temos para conversar com nós mesmos — não como prescrição, mas como um vocabulário de padrões. Estas constelações não predizem; elas nomeiam.";
+    "Para Jung, o céu noturno é uma das formas mais antigas de a humanidade conversar consigo mesma: não como prescrição, mas como um vocabulário de padrões. Estas constelações não predizem; nomeiam.";
   export const sectionDisclaimer = "Não é uma análise astrológica; é uma evocação simbólica.";
 
   // Descent-beat epigraph. Anchored bottom-left of the cosmos sticky frame

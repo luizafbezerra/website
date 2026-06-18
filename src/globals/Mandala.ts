@@ -1,7 +1,7 @@
 import type { Field, GlobalConfig } from "payload";
 import { revalidatePath } from "next/cache";
 import { WHEEL_ZODIAC } from "../core/wheel";
-import { VEDIC_CONTENT, ZODIAC_CONTENT } from "../core/zodiacContent";
+import { type Element, VEDIC_CONTENT, ZODIAC_CONTENT } from "../core/zodiacContent";
 
 /**
  * "Mandala dos signos" — the editable prose of the painted zodiac wheel.
@@ -11,38 +11,45 @@ import { VEDIC_CONTENT, ZODIAC_CONTENT } from "../core/zodiacContent";
  * in `src/core/zodiacContent.ts`, since it is interlocking scholarly data, not
  * editorial voice. See `mandalaFromPayload` for the merge.
  *
- * Each sign is one labelled group, seeded by reference from the code defaults,
- * so the rendered wheel is unchanged until Luiza edits a paragraph and a blank
- * field falls back to the code text.
+ * The twelve sign groups are partitioned into four UNNAMED tabs by element
+ * (Fogo/Terra/Ar/Água) so an editor finds a sign quickly. Unnamed tabs are
+ * presentational — each sign group keeps its existing data path, so this is a
+ * pure admin reorganization with no migration.
  */
-const signGroups: Field[] = WHEEL_ZODIAC.map(
-  (sign): Field => ({
-    name: sign.id,
-    type: "group",
-    label: sign.label,
-    admin: {
-      description: `${sign.dateRange} · ${ZODIAC_CONTENT[sign.id].archetype}`,
+const signGroup = (sign: (typeof WHEEL_ZODIAC)[number]): Field => ({
+  name: sign.id,
+  type: "group",
+  label: sign.label,
+  admin: {
+    description: `${sign.dateRange} · ${ZODIAC_CONTENT[sign.id].archetype}`,
+  },
+  fields: [
+    {
+      name: "paragraph",
+      type: "textarea",
+      label: "Texto do signo",
+      defaultValue: ZODIAC_CONTENT[sign.id].paragraph,
     },
-    fields: [
-      {
-        name: "paragraph",
-        type: "textarea",
-        label: "Texto do signo",
-        defaultValue: ZODIAC_CONTENT[sign.id].paragraph,
-      },
-      {
-        name: "vedicParagraph",
-        type: "textarea",
-        label: "Texto védico — três mansões lunares",
-        defaultValue: VEDIC_CONTENT[sign.id].paragraph,
-      },
-    ],
-  }),
-);
+    {
+      name: "vedicParagraph",
+      type: "textarea",
+      label: "Texto védico — três mansões lunares",
+      defaultValue: VEDIC_CONTENT[sign.id].paragraph,
+    },
+  ],
+});
+
+const ELEMENT_TABS: { element: Element; label: string }[] = [
+  { element: "fogo", label: "Fogo" },
+  { element: "terra", label: "Terra" },
+  { element: "ar", label: "Ar" },
+  { element: "água", label: "Água" },
+];
 
 export const Mandala: GlobalConfig = {
   slug: "mandala",
   label: "Mandala dos signos",
+  admin: { group: "Páginas" },
   access: {
     read: () => true,
     update: ({ req }) => req.user?.role === "admin",
@@ -57,5 +64,15 @@ export const Mandala: GlobalConfig = {
       },
     ],
   },
-  fields: signGroups,
+  fields: [
+    {
+      type: "tabs",
+      tabs: ELEMENT_TABS.map(({ element, label }) => ({
+        label,
+        fields: WHEEL_ZODIAC.filter((sign) => ZODIAC_CONTENT[sign.id].element === element).map(
+          signGroup,
+        ),
+      })),
+    },
+  ],
 };

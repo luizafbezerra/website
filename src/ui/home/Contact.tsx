@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { SECTION_ACCENT } from "@/core/accentHeading";
 import type { Home } from "@/core/home";
 import type { Identity } from "@/core/identity";
 import { AccentHeading } from "./AccentHeading";
@@ -12,13 +13,15 @@ export function Contact({ identity, content }: { identity: Identity; content: Ho
       className="bg-parchment-deep px-6 py-32 sm:px-10 sm:py-44 lg:py-52"
     >
       <div className="mx-auto max-w-3xl">
-        <p className="tracked mb-6 text-center sm:text-left">{content.eyebrow}</p>
+        {content.eyebrow && (
+          <p className="tracked mb-6 text-center sm:text-left">{content.eyebrow}</p>
+        )}
 
         <h2
           id="contact-heading"
           className="display text-foreground text-balance text-center text-[clamp(2rem,4.4vw,3rem)] leading-[1.12] tracking-[-0.01em] sm:text-left"
         >
-          <AccentHeading heading={content.heading} />
+          <AccentHeading heading={content.heading} accent={SECTION_ACCENT.contact} />
         </h2>
 
         <RichTextProse

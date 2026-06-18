@@ -27,27 +27,39 @@ const initialSigilPositions = (): SigilScreenPosition[] =>
 // leaking onto a detached node.
 //
 // On the true → false transition, after the body unmounts, we scroll the
-// visitor to the Symbols wheel (`id="simbolos"`) — the desktop-only section
-// that follows Cosmos in DOM order — so they land at the next section instead
-// of being left at the top of the page or sent backwards through content they
-// already read. The `getElementById("simbolos")` lookup below optional-chains,
-// so on mobile (where the wheel is hidden) it simply no-ops.
+// visitor to wherever the cinema began — a document Y captured before the
+// unmount — so they land on whatever section now follows it (the order is
+// CMS-driven) instead of being left at the top of the page or sent past
+// content. Capturing a position rather than a hardcoded anchor keeps this
+// correct no matter how sections are ordered or which optional ones are present.
 export function Cosmos() {
   const [show, setShow] = useCosmosShow();
   const prevShowRef = useRef<boolean>(show);
+  const dismissYRef = useRef<number | null>(null);
+
+  // Snapshot the cinema's document position the moment the reader dismisses it,
+  // before React unmounts the section on the next render.
+  const dismiss = useCallback(() => {
+    const el = document.getElementById(Data.sectionAnchorId);
+    dismissYRef.current = el ? el.getBoundingClientRect().top + window.scrollY : null;
+    setShow(false);
+  }, [setShow]);
 
   useEffect(() => {
-    if (prevShowRef.current && !show) {
-      document.getElementById("simbolos")?.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
+    if (prevShowRef.current && !show && dismissYRef.current != null) {
+      const padTop = parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop) || 0;
+      const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      window.scrollTo({
+        top: Math.max(0, dismissYRef.current - padTop),
+        behavior: reduced ? "auto" : "smooth",
       });
+      dismissYRef.current = null;
     }
     prevShowRef.current = show;
   }, [show]);
 
   if (!show) return null;
-  return <CosmosBody onDismissForever={() => setShow(false)} />;
+  return <CosmosBody onDismissForever={dismiss} />;
 }
 
 function CosmosBody({ onDismissForever }: { onDismissForever: () => void }) {

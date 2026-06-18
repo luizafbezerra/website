@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Blog } from "@/core";
+import { SECTION_ACCENT } from "@/core/accentHeading";
 import type { Home } from "@/core/home";
 import { AccentHeading } from "./AccentHeading";
 
@@ -24,12 +25,11 @@ export function Writing({ posts, content }: Props) {
     >
       <div className="mx-auto max-w-3xl">
         <header className="mb-16 sm:mb-20">
-          <p className="tracked mb-5">{content.eyebrow}</p>
           <h2
             id="writing-heading"
             className="display text-foreground text-balance text-[clamp(1.9rem,3.6vw,2.65rem)] leading-[1.14] tracking-[-0.008em]"
           >
-            <AccentHeading heading={content.heading} />
+            <AccentHeading heading={content.heading} accent={SECTION_ACCENT.writing} />
           </h2>
           <p className="text-quill mt-6 max-w-[58ch] text-[1.04rem] leading-[1.7]">
             {content.intro}

@@ -1,16 +1,32 @@
-import { type AccentHeading as AccentHeadingContent, accentWordClass } from "@/core/accentHeading";
+import { type AccentTreatment, accentWordClass } from "@/core/accentHeading";
+import { extractRuns, type RichTextContent } from "@/core/richText";
 
 /**
- * Renders the inline content of an accent heading (lead + coloured/italic
- * accent word + trail). Place inside the section's own <h1>/<h2> so each
- * section keeps its heading element and sizing classes.
+ * Renders the inline content of an accent heading: the editor's typed line with
+ * the marked (bold) run wrapped in the section's locked accent treatment
+ * (colour + optional italic). Place inside the section's own <h1>/<h2> so each
+ * section keeps its heading element and sizing classes. A small inline
+ * serializer — headings are a single line, so paragraph breaks are collapsed.
  */
-export function AccentHeading({ heading }: { heading: AccentHeadingContent }) {
+export function AccentHeading({
+  heading,
+  accent,
+}: {
+  heading: RichTextContent;
+  accent: AccentTreatment;
+}) {
+  const runs = extractRuns(heading);
   return (
     <>
-      {heading.lead}
-      <span className={accentWordClass(heading)}>{heading.accentWord}</span>
-      {heading.trail}
+      {runs.map((run, i) =>
+        run.bold ? (
+          <span key={i} className={accentWordClass(accent)}>
+            {run.text}
+          </span>
+        ) : (
+          run.text
+        ),
+      )}
     </>
   );
 }

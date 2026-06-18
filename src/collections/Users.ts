@@ -5,6 +5,7 @@ export const Users: CollectionConfig = {
   labels: { singular: "Usuário", plural: "Usuários" },
   auth: true,
   admin: {
+    group: "Sistema",
     useAsTitle: "email",
   },
   access: {

@@ -1,3 +1,4 @@
+import { SECTION_ACCENT } from "@/core/accentHeading";
 import type { Home } from "@/core/home";
 import type { Identity } from "@/core/identity";
 import { AccentHeading } from "./AccentHeading";
@@ -23,19 +24,17 @@ export function About({ identity, content }: { identity: Identity; content: Home
             />
             <p className="marginalia mt-6 mx-auto max-w-[22rem] text-center lg:text-left">
               <span className="display-italic text-ink-soft">Quaternidade.</span> Centro e quatro
-              direções — uma das imagens que costumam reaparecer ao longo de um caminho de
-              individuação.
+              direções, uma das imagens que retornam ao longo de um caminho de individuação.
             </p>
           </div>
         </aside>
 
         <div className="order-1 lg:order-2">
-          <p className="tracked mb-5">{content.eyebrow}</p>
           <h2
             id="about-heading"
             className="display text-foreground text-balance text-[clamp(1.9rem,3.6vw,2.7rem)] leading-[1.14] tracking-[-0.008em]"
           >
-            <AccentHeading heading={content.heading} />
+            <AccentHeading heading={content.heading} accent={SECTION_ACCENT.about} />
           </h2>
 
           <RichTextProse

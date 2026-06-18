@@ -27,3 +27,4 @@ docs/
 # WebPs in public/art/cosmos/prelude/ are checked in.
 generated/
 .vercel
+.impeccable

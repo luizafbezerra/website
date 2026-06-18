@@ -10,8 +10,17 @@ import { Users } from "./collections/Users";
 import { Media } from "./collections/Media";
 import { Posts } from "./collections/Posts";
 import { Testimonials } from "./collections/Testimonials";
+import { Faq } from "./collections/Faq";
 import { LexicalCodeFeature } from "./features/lexicalCode/feature.server";
-import { Home } from "./globals/Home";
+import {
+  HomeAbout,
+  HomeContact,
+  HomeHero,
+  HomePillars,
+  HomeStructure,
+  HomeVoices,
+  HomeWriting,
+} from "./globals/home";
 import { Mandala } from "./globals/Mandala";
 import { Settings } from "./globals/Settings";
 
@@ -28,8 +37,18 @@ export default buildConfig({
     supportedLanguages: { pt },
     fallbackLanguage: "pt",
   },
-  collections: [Users, Media, Posts, Testimonials],
-  globals: [Settings, Home, Mandala],
+  collections: [Users, Media, Posts, Testimonials, Faq],
+  globals: [
+    Settings,
+    HomeStructure,
+    HomeHero,
+    HomePillars,
+    HomeAbout,
+    HomeVoices,
+    HomeWriting,
+    HomeContact,
+    Mandala,
+  ],
   editor: lexicalEditor({
     features: ({ defaultFeatures }) => [...defaultFeatures, LexicalCodeFeature()],
   }),

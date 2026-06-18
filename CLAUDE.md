@@ -30,6 +30,7 @@ Primary jobs: (1) decide whether to book a first session, (2) read the blog for 
 ### Brand Personality
 
 **Warm · Human · Approachable** — interpreted through Jungian/depth-psychology craft, NOT wellness-startup pastel cheer.
+
 - Warm = earth pigments and parchment, not white-and-mint.
 - Human = hand-textured, painterly, slightly imperfect — opposite of vector-flat.
 - Approachable = contemplative, not clinical. The site invites; it does not sell.
@@ -38,7 +39,7 @@ Emotional goals: confidence, calm, curiosity. A reading room, not a clinic.
 
 ### Aesthetic Direction
 
-**The page as an illuminated manuscript.** References (`/references/01.jpg` through `05.jpg`, `/references/logo.jpg`, and [@simbolos.do.self](https://www.instagram.com/simbolos.do.self/)) sit in the tradition of Jung's *Red Book* (Liber Novus): hand-painted mandalas, alchemical illustration, archetypal symbols.
+**The page as an illuminated manuscript.** References (`/references/01.jpg` through `05.jpg`, `/references/logo.jpg`, and [@simbolos.do.self](https://www.instagram.com/simbolos.do.self/)) sit in the tradition of Jung's _Red Book_ (Liber Novus): hand-painted mandalas, alchemical illustration, archetypal symbols.
 
 - **Painterly, not generated.** Real painted assets carry the aesthetic. No parametric SVG mandalas, no AI flourishes.
 - **Symbols are content, not decoration** — they appear because they carry meaning at that point.
@@ -49,12 +50,14 @@ Emotional goals: confidence, calm, curiosity. A reading room, not a clinic.
 **Theme**: Light, warm parchment cream — never stark white, never dark with glowing accents.
 
 **Typography starting points** (refine in `/impeccable craft`):
+
 - Display: `Cardo` (Bembo-derived, scholarly, exquisite italic).
 - Body: `Vollkorn` or `EB Garamond` / `Source Serif 4`. Warm humanist serif that holds at small sizes.
 - BANNED for this project: Inter, Fraunces, Cormorant family, Playfair, Newsreader, Crimson family, IBM Plex family, Space Grotesk, Outfit, DM Sans/Serif, Plus Jakarta, Instrument family — and any monospace used as "technical" shorthand.
 - Italics carry voice (the way printed books use them). All choices must support Portuguese diacritics.
 
 **Indicative palette** (OKLCH, light theme):
+
 - Background (parchment): `oklch(0.97 0.012 75)`
 - Surface: `oklch(0.94 0.018 75)`
 - Ink (foreground): `oklch(0.22 0.02 35)` — never `#000`
@@ -108,4 +111,4 @@ The two audiences (humans + agents) reinforce each other: if a design choice sat
 5. **Trust, not urgency.** No sticky CTAs, no countdown timers. The visitor books because the page gave them a calm, clear sense of the practitioner.
 6. **Designed for two audiences at once.** Beautiful and scannable for humans; structured, semantic, token-efficient for AI agents.
 
-Full version with rationale, palette specifics, and implementation requirements: `/.impeccable.md`.
+Full version with rationale, palette specifics, and implementation requirements: `DESIGN.md` (aesthetic + craft) and `PRODUCT.md` (product context).

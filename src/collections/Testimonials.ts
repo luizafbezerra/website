@@ -10,6 +10,7 @@ export const Testimonials: CollectionConfig = {
   slug: "testimonials",
   labels: { singular: "Depoimento", plural: "Depoimentos" },
   admin: {
+    group: "Página inicial",
     useAsTitle: "attribution",
     defaultColumns: ["attribution", "consentGiven", "_status"],
     description: "Depoimentos de pacientes. Publique apenas com consentimento e use iniciais.",
@@ -58,7 +59,10 @@ export const Testimonials: CollectionConfig = {
       type: "checkbox",
       label: "Consentimento confirmado",
       defaultValue: false,
-      admin: { description: "Só publique com consentimento explícito do paciente." },
+      admin: {
+        position: "sidebar",
+        description: "Só publique com consentimento explícito do paciente.",
+      },
     },
     {
       name: "order",

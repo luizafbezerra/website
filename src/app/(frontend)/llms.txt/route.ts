@@ -1,7 +1,7 @@
 import { getAllPosts } from "@/app/actions/blog";
+import { getFaq } from "@/app/actions/faq";
 import { getIdentity } from "@/app/actions/identity";
 import { Blog } from "@/core/blog";
-import { Faq } from "@/core";
 import { NextResponse } from "next/server";
 
 export const revalidate = 3600;
@@ -30,12 +30,16 @@ function postTokens(readingTimeMinutes: number): number {
 // counts. Served as text/plain regardless of the launch gate; harmless while
 // robots.txt is locked.
 export async function GET(): Promise<NextResponse> {
-  const [identity, posts] = await Promise.all([getIdentity(), getAllPosts("pt-BR")]);
+  const [identity, posts, faqEntries] = await Promise.all([
+    getIdentity(),
+    getAllPosts("pt-BR"),
+    getFaq(),
+  ]);
 
   // Computed from the live FAQ copy (cheap + accurate); Início/Mandala are
   // coarse page-size hints since their copy is spread across many components.
   const faqTokens = Blog.estimateTokens(
-    Faq.entries.map((e) => `${e.question} ${e.answer}`).join(" "),
+    faqEntries.map((e) => `${e.question} ${e.answer}`).join(" "),
   );
 
   const staticPages = [

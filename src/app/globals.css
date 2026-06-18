@@ -342,6 +342,31 @@
     );
   }
 
+  /* Warm → reveal cross-fade. The live canvas mounts ~1 viewport early inside
+     this wrapper at opacity:0 — kept at real layout size (inset:0), NOT
+     display:none, since a 0×0 drawing buffer would break the render-to-target
+     bakes — warming behind the poster. When `.cosmos-revealed` lands on the
+     parent layer (section on-screen AND GPU primed) the wrapper fades in while
+     the painted poster fades out. Only the wrapper opacity animates: the
+     layer's radial mask and the scroll-driven `--cosmos-*` vars stay untouched. */
+  .cosmos-canvas-live {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+  }
+  .cosmos-revealed .cosmos-canvas-live {
+    opacity: 1;
+  }
+  .cosmos-revealed .cosmos-poster-fallback {
+    opacity: 0;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .cosmos-canvas-live,
+    .cosmos-poster-fallback {
+      transition: opacity 520ms ease-in-out;
+    }
+  }
+
   .cosmos-stage-frame {
     position: absolute;
     inset: 0;

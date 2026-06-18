@@ -1,3 +1,4 @@
+import { SECTION_ACCENT } from "@/core/accentHeading";
 import type { Home } from "@/core/home";
 import { AccentHeading } from "./AccentHeading";
 import { Ornament } from "./Ornament";
@@ -14,12 +15,14 @@ export function Pillars({ content }: { content: Home["pillars"] }) {
       <div className="mx-auto max-w-3xl lg:grid lg:max-w-5xl lg:grid-cols-[minmax(0,40rem)_1fr] lg:gap-x-16 xl:gap-x-24">
         <div className="lg:col-start-1">
           <header className="mb-16 sm:mb-20">
-            <p className="tracked mb-5 text-center sm:text-left">{content.eyebrow}</p>
+            {content.eyebrow && (
+              <p className="tracked mb-5 text-center sm:text-left">{content.eyebrow}</p>
+            )}
             <h2
               id="approach-heading"
               className="display text-foreground text-balance text-center text-[clamp(1.95rem,3.8vw,2.75rem)] leading-[1.13] tracking-[-0.008em] sm:text-left"
             >
-              <AccentHeading heading={content.heading} />
+              <AccentHeading heading={content.heading} accent={SECTION_ACCENT.pillars} />
             </h2>
 
             <RichTextProse
@@ -70,9 +73,8 @@ export function Pillars({ content }: { content: Home["pillars"] }) {
               sizes="(min-width: 1024px) 16rem, 0px"
               className="w-full max-w-[16rem]"
             />
-            {/* TODO: confirm marginalia wording with Luiza */}
             <p className="marginalia mt-5 max-w-[16rem] text-[0.86rem] leading-[1.5]">
-              Uma imagem de centramento — das que reaparecem quando algo interno procura ordem.
+              Uma imagem de centramento, das que reaparecem quando algo interno procura ordem.
             </p>
           </div>
         </aside>

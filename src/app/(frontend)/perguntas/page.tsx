@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
+import { getFaq } from "@/app/actions/faq";
 import { getNavigation } from "@/app/actions/home";
 import { getIdentity } from "@/app/actions/identity";
-import { Faq as FaqData } from "@/core";
 import { Footer, Header, StickyHeaderShell } from "@/ui/home";
 import { Faq } from "@/ui/home/Faq";
 import { BreadcrumbJsonLd, FaqJsonLd } from "@/ui/lib/jsonLd";
@@ -29,10 +29,14 @@ export async function generateMetadata(): Promise<Metadata> {
 export const revalidate = 86400;
 
 export default async function PerguntasPage() {
-  const [identity, navLinks] = await Promise.all([getIdentity(), getNavigation()]);
+  const [identity, navLinks, faqEntries] = await Promise.all([
+    getIdentity(),
+    getNavigation(),
+    getFaq(),
+  ]);
   return (
     <>
-      <FaqJsonLd entries={[...FaqData.entries]} />
+      <FaqJsonLd entries={faqEntries} />
       <BreadcrumbJsonLd
         items={[
           { name: "Início", url: BASE_URL },
@@ -44,7 +48,7 @@ export default async function PerguntasPage() {
         <Header identity={identity} navLinks={navLinks} />
       </StickyHeaderShell>
       <main id="main">
-        <Faq entries={FaqData.entries} />
+        <Faq entries={faqEntries} />
       </main>
       <Footer identity={identity} navLinks={navLinks} />
     </>

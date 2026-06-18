@@ -11,18 +11,18 @@ export type SectionType =
   | "pillars"
   | "about"
   | "cosmos"
-  | "symbols"
   | "voices"
   | "writing"
+  | "symbols"
   | "contact";
 
 export const SECTION_TYPES: readonly SectionType[] = [
   "pillars",
   "about",
   "cosmos",
-  "symbols",
   "voices",
   "writing",
+  "symbols",
   "contact",
 ];
 
@@ -39,8 +39,8 @@ export const SECTION_REGISTRY: Record<SectionType, SectionMeta> = {
   cosmos: {},
   // Desktop-only on the homepage (CSS-gated in page.tsx). No anchor/navLabel so
   // it never emits a nav link that would dead-end on mobile, where the wheel is
-  // hidden. The Symbols component still renders its own `id="simbolos"`, which
-  // the Cosmos dismiss-scroll targets on desktop.
+  // hidden. The Symbols component still renders its own `id="simbolos"` (linked
+  // from the Cosmos footer and the full /simbolos page).
   symbols: {},
   voices: {},
   writing: {},

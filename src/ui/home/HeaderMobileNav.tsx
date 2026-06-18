@@ -69,7 +69,7 @@ export function HeaderMobileNav({
         aria-expanded={open}
         aria-controls={titleId}
         aria-label="Abrir navegação"
-        className="text-foreground hover:text-terracotta focus-visible:ring-terracotta inline-flex h-10 w-10 items-center justify-center rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-parchment md:hidden"
+        className="text-foreground hover:text-terracotta focus-visible:ring-terracotta inline-flex h-11 w-11 items-center justify-center rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-parchment md:hidden"
       >
         <span aria-hidden="true" className="flex h-4 w-5 flex-col justify-between">
           <span className="bg-current block h-px w-full" />
@@ -110,7 +110,7 @@ export function HeaderMobileNav({
                   type="button"
                   onClick={() => setOpen(false)}
                   aria-label="Fechar navegação"
-                  className="text-foreground hover:text-terracotta focus-visible:ring-terracotta inline-flex h-10 w-10 items-center justify-center rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-parchment"
+                  className="text-foreground hover:text-terracotta focus-visible:ring-terracotta inline-flex h-11 w-11 items-center justify-center rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-parchment"
                 >
                   <span aria-hidden="true" className="display text-[1.4rem] leading-none">
                     ×

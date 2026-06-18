@@ -1,7 +1,8 @@
 "use client";
 
-import { Canvas } from "@react-three/fiber";
+import { Canvas, type RootState } from "@react-three/fiber";
 import type { MutableRefObject } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { Cosmos } from "@/core";
 import { CosmosArmillary } from "./cosmos/CosmosArmillary";
 import { CosmosCameraRig } from "./cosmos/CosmosCameraRig";
@@ -20,11 +21,24 @@ type Props = {
   sigilScreenPositionsRef: MutableRefObject<SigilScreenPosition[]>;
   activeSigilId: Cosmos.SigilId | null;
   mobile?: boolean;
-  // `false` switches the Canvas frameloop to "never" so the WebGL renderer
-  // stops doing per-frame work when the section is scrolled offscreen. The
-  // env-probe + nebula bake still run on mount, and the scene stays alive
-  // in memory; only the per-frame tick pauses.
-  visible?: boolean;
+  // `true` once the section is both on-screen (the parent's 30% observer) AND
+  // the warm-up has primed the GPU. Drives the Canvas frameloop: "always"
+  // when active, "demand" otherwise.
+  //
+  // During warm (mounted but not yet active) the canvas sits in "demand": it
+  // renders its initial frame plus a re-render as each baked texture / shader
+  // arrives (uploading them), with no continuous rAF cost — so the warm work
+  // lands while the canvas is still hidden behind the poster, not on the
+  // visible reveal frame. After reveal, scrolling fully past flips this back
+  // to "demand" so the per-frame WebGL work (rotation, twinkle, comets,
+  // camera rig, sigil projection) pauses again. The nebula + matcap bakes run
+  // imperatively on mount regardless; only the per-frame tick is gated.
+  active?: boolean;
+  // Fired once, after the off-screen warm-up has pre-linked the shader
+  // programs (`compileAsync`) and rendered a real warm frame. The parent
+  // flips `isPrimed`; combined with the 30% visibility observer that drives
+  // the reveal cross-fade.
+  onPrimed?: () => void;
 };
 
 // Scene root. Composes the prelude → simulated universe:
@@ -65,26 +79,91 @@ export function CosmosCanvas({
   sigilScreenPositionsRef,
   activeSigilId,
   mobile = false,
-  visible = true,
+  active = true,
+  onPrimed,
 }: Props) {
+  // `onCreated` is captured once when the renderer is created, so it can't
+  // close over a changing prop directly — read the latest `onPrimed` via ref.
+  const onPrimedRef = useRef(onPrimed);
+  useEffect(() => {
+    onPrimedRef.current = onPrimed;
+  }, [onPrimed]);
+
+  // Tracks unmount so a deferred warm callback never touches a torn-down
+  // renderer or sets state on an unmounted parent (the section can be
+  // dismissed mid-warm via the "Continuar a leitura" button).
+  const disposedRef = useRef(false);
+  useEffect(() => {
+    disposedRef.current = false;
+    return () => {
+      disposedRef.current = true;
+    };
+  }, []);
+
+  const handleCreated = useCallback((state: RootState) => {
+    // Defer one frame so the scene children (nebula sphere, deep field,
+    // armillary rings, prelude planes) have committed into the scene graph
+    // before we walk it to pre-link their GLSL programs.
+    requestAnimationFrame(() => {
+      if (disposedRef.current) return;
+      const prime = () => {
+        if (disposedRef.current) return;
+        // Under frameloop="demand" during warm — invalidate once so the
+        // freshly-linked programs draw and the baked textures upload here,
+        // off the (still-hidden) reveal frame.
+        state.invalidate();
+        onPrimedRef.current?.();
+      };
+      // `compileAsync` pre-links every material in the scene — using
+      // KHR_parallel_shader_compile when present, falling back to a
+      // synchronous compile otherwise (still a win: it runs while the canvas
+      // is hidden behind the poster, not on the visible reveal frame). prime()
+      // runs on both resolve and reject so an unsupported/throwing path never
+      // strands the reveal gate (the parent's fallback timeout backstops this
+      // too). Materials that don't exist yet at this instant (the matcap,
+      // texture-dependent props) compile on their own warm-frame draw — still
+      // off the reveal.
+      state.gl.compileAsync(state.scene, state.camera).then(prime, prime);
+    });
+  }, []);
+
   return (
     <Canvas
+      onCreated={handleCreated}
       // Start at KEY_FAR_IN's prelude position so the first rendered frame
       // already reads as "view from the ground". The camera rig glides to
       // `cameraKeyAtProgress(p)` each frame; matching this initial position
       // eliminates the first-frame glide pop.
       camera={{ position: [0, 1.4, 25], fov: 38, near: 0.1, far: 200 }}
-      // Cap DPR at 1.25 on Retina/4K so the brass + star sprites don't pay
-      // full pixel-density cost. DPR scales fillrate quadratically and the
-      // vignette + matcap blur the difference visually.
-      dpr={[1, 1.25]}
-      // Paused when offscreen — saves the per-frame cost of the rotating
-      // armillary, twinkle, comet, camera rig, and sigil projection.
-      frameloop={visible ? "always" : "never"}
+      // DPR pinned to 1 — the scroll-cinema is fillrate-bound (thousands of
+      // soft alpha-blended star sprites) and fill scales with DPR². At 1.25
+      // every sprite covered ~1.56× more fragments; pinning to 1 removes that
+      // overdraw on HiDPI/Retina. The vignette + matcap + soft sprites keep the
+      // WebGL layer reading as painterly rather than soft (DOM text and sigils
+      // are unaffected — they render at the device's native DPR).
+      dpr={1}
+      // "always" only once revealed; "demand" during warm (renders the initial
+      // frame + texture/shader uploads with no continuous rAF) and again once
+      // scrolled fully past (pauses the rotating armillary, twinkle, comets,
+      // camera rig, and sigil projection).
+      frameloop={active ? "always" : "demand"}
       gl={{
-        antialias: true,
+        // MSAA off — it resolves every fragment of every alpha-blended sprite
+        // across multiple samples, multiplying the (already heavy) sprite
+        // overdraw fill cost ~1.5–2×. The scene is soft sprites + matcap brass
+        // with little hard geometric edge to alias, and the radial vignette
+        // feathers the canvas edge — so this is the single biggest fill cut for
+        // the scroll stutter at the smallest visual cost (slightly softer gilt
+        // constellation lines + ring silhouettes).
+        antialias: false,
         alpha: true,
-        powerPreference: "low-power",
+        // "high-performance" so dual-GPU laptops bind the WebGL context to the
+        // discrete GPU. The scroll-cinema is fillrate-bound (thousands of soft
+        // alpha-blended star sprites), so "low-power" — which forces the weak
+        // integrated GPU — was the worst case for it and a prime stutter cause.
+        // The frameloop is "demand" when idle, so the dGPU only spins up during
+        // the brief reveal/scroll window, not for the whole visit.
+        powerPreference: "high-performance",
       }}
       style={{ width: "100%", height: "100%" }}
     >

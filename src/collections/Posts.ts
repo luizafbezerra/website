@@ -26,6 +26,7 @@ export const Posts: CollectionConfig = {
   slug: "posts",
   labels: { singular: "Publicação", plural: "Publicações" },
   admin: {
+    group: "Blog",
     useAsTitle: "title",
     defaultColumns: ["title", "_status", "publishedDate", "updatedAt"],
   },
@@ -33,12 +34,62 @@ export const Posts: CollectionConfig = {
     drafts: true,
   },
   fields: [
+    // Content fields in an UNNAMED "Conteúdo" tab (presentational only — field
+    // data paths are unchanged). The slug / date / featured fields stay in the
+    // sidebar via `admin.position`.
     {
-      name: "title",
-      type: "text",
-      label: "Título",
-      required: true,
-      localized: true,
+      type: "tabs",
+      tabs: [
+        {
+          label: "Conteúdo",
+          fields: [
+            {
+              name: "title",
+              type: "text",
+              label: "Título",
+              required: true,
+              localized: true,
+            },
+            {
+              name: "description",
+              type: "textarea",
+              label: "Descrição",
+              required: true,
+              localized: true,
+            },
+            {
+              name: "coverImage",
+              type: "upload",
+              relationTo: "media",
+              label: "Imagem de capa",
+              required: false,
+              admin: {
+                description: "Imagem de capa opcional para a publicação.",
+              },
+            },
+            {
+              name: "content",
+              type: "richText",
+              label: "Conteúdo",
+              required: true,
+              localized: true,
+            },
+            {
+              name: "tags",
+              type: "array",
+              label: "Tags",
+              fields: [
+                {
+                  name: "tag",
+                  type: "text",
+                  label: "Tag",
+                  required: true,
+                },
+              ],
+            },
+          ],
+        },
+      ],
     },
     {
       name: "slug",
@@ -51,43 +102,6 @@ export const Posts: CollectionConfig = {
         description:
           "Gerado automaticamente a partir do título ao criar. Pode ser editado manualmente.",
       },
-    },
-    {
-      name: "description",
-      type: "textarea",
-      label: "Descrição",
-      required: true,
-      localized: true,
-    },
-    {
-      name: "coverImage",
-      type: "upload",
-      relationTo: "media",
-      label: "Imagem de capa",
-      required: false,
-      admin: {
-        description: "Imagem de capa opcional para a publicação.",
-      },
-    },
-    {
-      name: "content",
-      type: "richText",
-      label: "Conteúdo",
-      required: true,
-      localized: true,
-    },
-    {
-      name: "tags",
-      type: "array",
-      label: "Tags",
-      fields: [
-        {
-          name: "tag",
-          type: "text",
-          label: "Tag",
-          required: true,
-        },
-      ],
     },
     {
       name: "publishedDate",

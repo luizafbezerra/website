@@ -11,7 +11,7 @@
     "payload": "payload",
     "generate:importmap": "payload generate:importmap",
     "generate:types": "payload generate:types",
-    "lint": "oxlint src/",
+    "lint": "oxlint --threads=2 src/",
     "format": "oxfmt --write src/ '!src/payload-types.ts'",
     "format:check": "oxfmt --check src/ '!src/payload-types.ts'",
     "typecheck": "tsgo --noEmit",

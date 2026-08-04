@@ -1,7 +1,7 @@
 import type { Field, GlobalConfig } from "payload";
 import { revalidatePath } from "next/cache";
-import { WHEEL_ZODIAC } from "../core/wheel";
-import { type Element, VEDIC_CONTENT, ZODIAC_CONTENT } from "../core/zodiacContent";
+import { WHEEL_ZODIAC } from "@/core/wheel";
+import { type Element, VEDIC_CONTENT, ZODIAC_CONTENT } from "@/core/zodiacContent";
 
 /**
  * "Mandala dos signos" — the editable prose of the painted zodiac wheel.

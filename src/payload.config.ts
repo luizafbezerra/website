@@ -6,20 +6,18 @@ import { pt } from "@payloadcms/translations/languages/pt";
 import path from "path";
 import { fileURLToPath } from "url";
 
-import { Users } from "./collections/Users";
-import { Media } from "./collections/Media";
-import { Testimonials } from "./collections/Testimonials";
-import { Faq } from "./collections/Faq";
-import {
-  HomeAbout,
-  HomeContact,
-  HomeHero,
-  HomePillars,
-  HomeStructure,
-  HomeVoices,
-} from "./globals/home";
-import { Mandala } from "./globals/Mandala";
-import { Settings } from "./globals/Settings";
+import { Users } from "./payload/collections/Users";
+import { Media } from "./payload/collections/Media";
+import { Testimonials } from "./payload/collections/Testimonials";
+import { Faq } from "./payload/collections/Faq";
+import { HomeStructure } from "./payload/globals/home/structure";
+import { HomeHero } from "./payload/globals/home/hero";
+import { HomePillars } from "./payload/globals/home/pillars";
+import { HomeAbout } from "./payload/globals/home/about";
+import { HomeVoices } from "./payload/globals/home/voices";
+import { HomeContact } from "./payload/globals/home/contact";
+import { Mandala } from "./payload/globals/Mandala";
+import { Settings } from "./payload/globals/Settings";
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
 

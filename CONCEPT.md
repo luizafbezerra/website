@@ -1,9 +1,12 @@
-# CONCEPT.md — Símbolos do Self · the website concept (v2)
+# CONCEPT.md — Símbolos do Self · the website concept (v3)
 
 > **Status: draft for agreement.** This describes the site as an experience — pages, sections,
 > images, identity, features — as if nothing were built yet. Copy is deliberately out of scope
 > (it lives in the CMS and will change). Once this is agreed, we write the implementation spec
 > that maps it onto the codebase, and PRODUCT.md / DESIGN.md get synced to match.
+>
+> **v3 (2026-08-04):** the site is bilingual (pt-BR + English) from launch — the language
+> decisions live in §6; the creative-menu verdicts are recorded in §9 and §14.
 
 ## 1. The two goals
 
@@ -52,8 +55,8 @@ Ranked by warmth × volume:
    from abroad. Served by the pt-BR site itself.
 4. **Portuguese natives** — reached by the same pt-BR funnel; need only explicit mention that
    Portugal is normal here.
-5. **English-speaking foreigners** — smallest, hardest segment. Need one complete English
-   page proving she is real, licensed, and works in English. (In English she is a _"clinical
+5. **English-speaking foreigners** — smallest, hardest segment. Served by the full English
+   mirror at /en — every page, translated. (In English she is a _"clinical
    psychologist working in the Jungian tradition"_ — never "Jungian analyst", a formally
    protected title.)
 6. **AI agents / LLM search** — co-equal machine audience; every page front-loads who/what/
@@ -217,19 +220,23 @@ list so they can never disagree.
 ├── 2  Para brasileiros terapia em português, no seu fuso — with city examples
 │      fora do Brasil   (Lisboa, Londres, Nova York)
 ├── 3  In English       one short English section: Jungian-oriented psychotherapy
-│                       and career guidance, online, in English (seeds /en)
+│                       and career guidance, online, in English (links to /en)
 ├── 4  Prático          time zones · international payment · video platform
 └── 5  Começar          → /primeira-conversa (international/English opener)
 
-/privacidade            footer only — finished text, one honest line: the site
-                        stores nothing about you; the note you write composes a
-                        WhatsApp link in your own browser
+/privacidade            footer only — finished text, short and honest: what the
+                        site keeps (your language choice, in your browser; anonymous
+                        aggregate visit statistics) and what it never does (identify
+                        you, read you, personalise for you); the note you write
+                        composes a WhatsApp link in your own browser
 
 HEADER (all pages)      mark + lockup left · Análise · Orientação profissional ·
-                        Sobre · Primeira conversa · [WhatsApp] as the visually
-                        distinct terminal item. Sticky, never hiding, never a
-                        floating bubble. (Perguntas and Internacional live in the
-                        footer and as contextual links where the doubt occurs.)
+                        Sobre · Primeira conversa · PT·EN (the quiet typographic
+                        language toggle — never a flag) · [WhatsApp] as the
+                        visually distinct terminal item. Sticky, never hiding,
+                        never a floating bubble. (Perguntas and Internacional live
+                        in the footer and as contextual links where the doubt
+                        occurs.)
 
 FOOTER (all pages)      three columns — A clínica (pages) · Começar (primeira
                         conversa, perguntas, internacional, WhatsApp, email,
@@ -239,15 +246,20 @@ FOOTER (all pages)      three columns — A clínica (pages) · Começar (primei
                         to her name + CRP, plate credits, © year
 ```
 
-**Reserved for the future (URLs decided now, zero cost):**
+**Languages (decided): bilingual from launch.**
 
-- **/en** is the root of all English content, forever. Day one (deferred): one complete,
-  self-contained English page — who she is, licensed Brazilian clinical psychologist, CRP,
-  22 years, the approach in three paragraphs, sessions in English, fee guidance in USD,
-  time-zone note, how the first conversation works, WhatsApp _and email at equal weight_,
-  an English pre-written opener. Never a teaser. At i18n time, /en grows into /en/\* with
-  translated slugs; pt-BR stays at the root as canonical; hreflang ships the day /en exists.
+- pt-BR lives at the root and is canonical; **/en** is the root of all English content,
+  forever — /en/\* mirrors the whole tree with translated slugs; hreflang ships day one.
   No URL ever migrates between phases.
+- First visit greets in the browser's own language; the header's **PT·EN** toggle switches,
+  and the site remembers the choice in the visitor's own browser — nothing stored
+  server-side, consistent with /privacidade. Never flags, never a modal asking you to choose.
+- English copy is translated from her Portuguese source and polished over time; the §3
+  register rule ("clinical psychologist working in the Jungian tradition") binds every
+  English page.
+
+**Reserved for the future (URL decided now, zero cost):**
+
 - **/vocabulario** — Jungian terms in her own words; no route until the words exist.
 
 ## 7. Art direction
@@ -260,7 +272,8 @@ FOOTER (all pages)      three columns — A clínica (pages) · Começar (primei
    practitioner's photo is consistently among the top decision factors in therapist choice.
    45 minutes, natural light, calm background, 2–3 frames. The hero stays _type-led_ (the
    lockup and her sentence speak first); the portrait enters as _the person who receives
-   you_ — editorially set, plate-like — never a full-bleed marketing headshot.
+   you_ — editorially set, plate-like — never a full-bleed marketing headshot. Until the
+   shoot happens, the selfie comes down and a labeled placeholder frame holds the slot (§11).
 2. **The plates — her curation becomes the site's visual matter.** A **plate** is one
    classical painting given a full editorial moment: generous parchment around it, never
    cropped into a card, never a texture behind text; a marginalia caption in the
@@ -302,15 +315,15 @@ set in decorative small type: marginalia is for voice, not for facts someone mus
 Ordered by conversion impact:
 
 1. **O bilhete** — the pre-written openers (§6, /primeira-conversa). Kills blank-message
-   paralysis at the moment of highest anxiety, and doubles as the site's entire analytics
+   paralysis at the moment of highest anxiety, and doubles as the site's service-attribution
    system: the opener's wording tells her which page and which service the conversation came
-   from. No tracking, LGPD-clean.
+   from. Nothing identifies the visitor; LGPD-clean.
 2. **Availability state** — one editable line, three states: _com horários disponíveis ·
    lista de espera curta · sem novos atendimentos no momento — escreva e eu aviso._ The
    third state is the anti-urgency move and prevents messages into silence.
 3. **Response window** — "respondo em até um dia útil (horário de Brasília)."
-4. **The live feed** — the site updates when she posts. CMS-curated tiles until the Meta
-   connection is done on her side; live thereafter.
+4. **The live feed** — the site updates when she posts. Labeled placeholder tiles simulating
+   the final carousel until the Meta connection is done on her side; live thereafter.
 5. **The rotating Jung passage** — drawn from a pool she grows in the CMS; the site says
    something new between visits.
 6. **The "por" lockup** — `SÍMBOLOS DO SELF · por Luiza Fernandes Bezerra` — the duality in
@@ -340,42 +353,47 @@ a vector stand-in inverts any of them into banned generated ornament.
    at near-1:1 scale — brushwork, craquelure, a face emerging — two or three rubricated
    captions surfacing at chosen details, ending on the whole plate with painter, year, and
    one line from her. Does the one thing a 1080px feed tile cannot: scale. Her curation, so
-   the wow is hers. _(medium)_
+   the wow is hers. _(medium)_ — **greenlit**
 2. **O quadro inteiro — the tile that un-crops.** In the Instagram section, each tile
    appears as the square followers know; tap, and the frame expands — the rest of the canvas
    fades in around the familiar fragment, with painter, year, and the Jung passage she
    paired. Performs the site's thesis in two seconds: _the feed shows the crop; the house
-   shows the whole painting._ _(medium)_
+   shows the whole painting._ _(medium)_ — **greenlit**
 3. **Sonho ampliado — her method, demonstrated.** On /analise: one archetypal dream motif
    ("sonhei que encontrava um cômodo desconhecido na minha casa") — touch it and three
    parallels arrange themselves beside it like plates on a table: a painting detail, a myth
    in one line, a Jung passage. Closing line in her voice. The only idea that _demonstrates_
    the method instead of decorating the page — and it amplifies the site's material, never
-   the visitor's. Her words required. _(medium)_
+   the visitor's. Her words required. _(medium)_ — **greenlit** (structure ships with
+   placeholders until her words exist)
 
-**The "alive" family — ship at most one to start:**
+**The "alive" family — the moon ships at launch; the real sky follows post-launch:**
 
 4. **A lua no colofão** — eight small painted moon-phase plates; the footer shows tonight's
    actual phase ("sob a lua minguante de agosto"). Books of hours tracked the moon; every
-   page gets a heartbeat for near-zero cost. Kept in the colophon, far from the CTA. _(small)_
+   page gets a heartbeat for near-zero cost. Kept in the colophon, far from the CTA.
+   _(small)_ — **greenlit**, kept discrete and simple
 5. **O céu desta noite** — the Cosmos driven by the real sky over São Paulo tonight,
    rendered through the existing painted vocabulary; a server-side static star-chart plate
    becomes the mobile/reduced-motion frame. The strongest "alive between visits" signal
-   possible. _(large)_
+   possible. _(large)_ — **greenlit as the first post-launch follow-up**; the Cosmos ships
+   with its data interface ready for it
 6. **Estações da casa** — the hero plate, section symbols and one colophon line rotate with
    the actual Brazilian season, from four CMS-scheduled sets she curates. Alive by curation —
    her actual skill — with a southern-hemisphere correctness that quietly says "this is
-   hers, not a template." _(medium; creates a 4×/year curation ritual)_
+   hers, not a template." _(medium; creates a 4×/year curation ritual)_ — **dropped** (too
+   much alongside the moon and the real sky)
 
 **Craft touches:**
 
 7. **O selo** — choosing a bilhete opener folds the note once and presses her mandala mark
    into it like a wax seal (<600ms, never blocking the WhatsApp handoff). The scariest tap
-   on the site becomes sending a letter to a person. _(small)_
+   on the site becomes sending a letter to a person. _(small)_ — **greenlit**
 8. **Glosa — the English line in the margin.** Real manuscript practice: one interlinear
    English sentence in the hero margin and on /sobre — "Sessions also in English — for
    Brazilians abroad and English speakers" → /internacional (later /en). One line, one place
-   per page; never a flag icon or language dropdown. _(small)_
+   per page; never a flag icon or language dropdown. _(small)_ — **dropped**: superseded by
+   the site-wide PT·EN toggle; the ban on flag icons stands
 9. **Iluminura que se pinta** — each core page's opening drop cap paints itself in (~1.2s,
    stroke-masked over a genuinely painted initial), then is still forever. Enacts
    "hand-made" instead of asserting it. Requires real painted initials first. _(medium)_
@@ -426,6 +444,13 @@ a vector stand-in inverts any of them into banned generated ornament.
   we never invent her voice. Nothing visitor-facing ships in her name that she didn't write
   or sign off. (This covers the wheel's readings: visual-only until her words exist.)
 - **Provenance:** every image verified public-domain or cleared before launch.
+- **Placeholders:** until an intended asset exists (the portrait, a plate, a feed tile), its
+  slot renders as a quiet labeled frame describing what belongs there — never a stand-in
+  stock image, never the casual selfie.
+- **Measurement:** aggregate and cookieless only — anonymous visit statistics (paths,
+  referrers, countries) answer "is the international reach working?", and the bilhete
+  attributes conversations to pages and services. Nothing identifies or personalises for a
+  visitor; no consent banner exists because none is needed; /privacidade states it plainly.
 - **Online-only:** no page, image or metadata may claim in-person practice.
 - **One page registry:** every navigation surface derives from a single canonical list.
 - **Consent:** testimonials render only when consent is recorded — structurally, not as
@@ -443,10 +468,14 @@ a vector stand-in inverts any of them into banned generated ornament.
 - The two-door service model, with /orientacao-profissional as a full service page
 - Her positioning sentence verbatim as the canonical line
 - Marca conjunta: "por" lockup + colophon sentence + credential line
-- Instagram bridge high on the home (curated tiles first, live feed when she completes the
-  Meta connection)
-- Cosmos on the home with a **designed mobile substitute** (A Lâmina or, minimally, a
-  full-bleed painted celestial plate) — the wheel on /analise, visual-first
+- Full bilingual site: pt-BR at the root (canonical) + the /en/\* English mirror with
+  translated slugs, hreflang, browser-language greeting, and the PT·EN header toggle
+- Instagram bridge high on the home (placeholder tiles first, live feed when she completes
+  the Meta connection)
+- Cosmos on the home with **A Lâmina** as the designed mobile substitute — the wheel on
+  /analise, visual-first
+- The greenlit touches: O selo · O quadro inteiro · Sonho ampliado · the moon colophon
+  (discrete) — placeholders stand in wherever her words or curation are still pending
 - /primeira-conversa with the service-aware bilhete (incl. the English opener)
 - /internacional with the expat logistics + the In-English section
 - The portrait (real one), the plate grammar, the mandala-mark system
@@ -457,21 +486,17 @@ a vector stand-in inverts any of them into banned generated ornament.
 
 ### SHOULD have
 
-- Fee published for Brazil (her call; international priced separately per §8.9)
-- /en as the complete English one-pager (gates: her English copy; the /en URL is reserved
-  regardless)
-- O selo + Glosa (the two small creative touches with outsized identity value)
-- One "alive" idea from the family (recommend the moon colophon as the cheap proof)
+- Fee published for Brazil (her call; the CMS falls back to "a combinar" until she sets it;
+  international priced separately per §8.9)
 - Her signature closing /sobre
 - Directory presence; testimonial consent round incl. one voice from abroad
-- Sonho ampliado and O quadro inteiro (her words/curation required)
 
 ### COULD have
 
-- O céu desta noite (the real-sky Cosmos upgrade) · Estações da casa · Iluminura que se
-  pinta · O fio · A mandala que respira · Vocabulário iluminado
+- O céu desta noite — greenlit as the first post-launch follow-up (the Cosmos ships with
+  its data interface ready)
+- Iluminura que se pinta · O fio · A mandala que respira · Vocabulário iluminado
 - /vocabulario when her definitions exist
-- Full i18n pass: /en/\* mirroring the tree (architecture already reserved)
 - A small painted crossroads plate as orientação's art moment
 
 ### WON'T have
@@ -483,7 +508,9 @@ a vector stand-in inverts any of them into banned generated ornament.
 - A blog (its old jobs are reassigned: companionship → the Instagram bridge + rotating
   passages; search depth → the service pages, FAQ and, later, /vocabulario)
 - Dark mode; auto-published content; zodiac imagery on the orientação page
-- English anywhere except the glosa lines, /internacional's In-English section, and /en
+- Flag icons or language dropdowns — the PT·EN toggle is typographic and quiet
+- Estações da casa and the Glosa margin line (dropped — the bilingual site and the toggle
+  do their jobs)
 
 ## 13. What we need from Luiza
 
@@ -500,14 +527,15 @@ a vector stand-in inverts any of them into banned generated ornament.
 7. **The Meta/Instagram connection** on her side (unblocks the live feed) and **the bio
    link fix** the day the site is live — the single highest-ROI minute of the project.
 8. **Domain confirmation** (simbolosdoself.com.br).
-9. Later, when ready: the wheel readings in her words; /en English copy; one testimonial
-   from a client abroad (consent-gated).
+9. Later, when ready: the wheel readings in her words; her polish pass over the English
+   translations; one testimonial from a client abroad (consent-gated).
 
 ## 14. Open points (the real ones)
 
-1. **Fee** — publish or not; value; international differential. Hers.
-2. **The wheel's readings** — her words, her sign-off on drafts, or visual-only at launch.
-   Recommendation: visual-only until her text exists.
-3. **Which creative touches get greenlit** — §9 is a menu, not a commitment. Recommendation:
-   A Lâmina (mobile wow) + O selo + Glosa + the moon colophon for launch; the rest by appetite.
-4. **Portrait logistics** — who shoots, when.
+1. **Fee** — value and international differential: hers. Mechanism decided: a CMS field
+   that falls back to "a combinar" until she sets it.
+2. **The wheel's readings** — decided: visual-only at launch; her words when they exist.
+3. **Creative touches** — decided: A Lâmina, O selo, O quadro inteiro, Sonho ampliado and
+   the moon colophon ship at launch; O céu desta noite follows post-launch; Estações da
+   casa and Glosa are dropped; the rest of §9 stays on the menu.
+4. **Portrait logistics** — who shoots, when. Until then the placeholder policy (§11) holds.

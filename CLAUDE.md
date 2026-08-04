@@ -10,7 +10,9 @@ Architecture: the four-layer layout from the `frontend:layered-frontend-architec
 - `src/app/` — Next.js routes, thin (fetch via domain action → serialize → render view page) + Payload admin.
 - `src/payload/` — CMS schema (collections, globals, seed) — backend, outside the frontend layers.
 
-Enforcement is the skill's review checklist + colocated vitest domain tests — there is no arch-check script. **Transitional note:** code still lives in the old `src/core|lib|ui` layout until Phase 2 of `plan/architecture-site-restructure-1.md` executes the migration.
+Two conventions the layers depend on: **no barrel files** (import from the defining module) and **named exports** everywhere except where a framework demands a default. Each concept splits into a type file, a mapper, and an action, so a client component can import `type Identity` without dragging a server-only Payload accessor into the bundle. The raw `PayloadX` response shapes live in `src/infrastructure/payload/` beside the accessor that returns them; the domain mapper imports them downward. Request-scoped `cache()` sits on the accessors, where the I/O is — never in `src/domain/`, which stays free of framework imports so its tests need no React.
+
+Enforcement is the skill's review checklist + colocated vitest domain tests (`pnpm test`, node env, `src/domain/**/*.test.ts`) — there is no arch-check script.
 
 For Payload admin: `pnpm payload` to create the first user. For Neon dev branch: `pnpm db:branch`.
 
@@ -24,7 +26,7 @@ Source-of-truth documents — read before any product or design work:
 - **`PRODUCT.md`** — canonical who/what/why: ranked audiences (Instagram followers → cold pt-BR searchers → Brazilians abroad → AI agents), positioning, offer, constraints, evidence on hand, the Cosmos carve-out.
 - **`DESIGN.md`** — the design system: tokens, the two-voice typography, plate grammar, components, do's and don'ts.
 
-> **Note:** the currently built site (blog, /simbolos, home sections) predates CONCEPT.md. A rewrite mapping the concept onto the codebase is planned; do not treat existing routes or content as product truth.
+> **Note:** the currently built site (the home sections, `/perguntas`, `/privacidade`) predates CONCEPT.md — its copy still describes in-person work in Guarulhos. The blog and `/simbolos` are already gone; the eight CONCEPT pages arrive in Phase 6 of `plan/architecture-site-restructure-1.md`. Do not treat existing routes or content as product truth.
 
 Facts that bind every session:
 
@@ -35,4 +37,4 @@ Facts that bind every session:
 - **Her supplied text is the source copy.** Nothing visitor-facing ships in her name that she didn't write or sign off.
 - **Trust, not urgency.** No sticky CTAs, countdowns, or scarcity; no forms, chatbots, popups, or newsletter modals; no blog; no dark mode.
 - **Painterly, not generated.** Earth pigments on warm parchment; the plates (public-domain classical paintings, provenance verified) are the only saturation on screen; all-serif (Cardo display + Vollkorn body); no parametric mandalas or AI decoration outside the Cosmos carve-out.
-- **Two audiences, both first-class** — humans and AI agents/LLM search. Front-load every page (who · what · for whom · how to reach); JSON-LD via `src/ui/lib/jsonLd.tsx` (never bypassed); Markdown twins of content pages + `/llms.txt`; WCAG 2.1 AA; reduced-motion alternatives everywhere; LCP < 2.5s on 4G; mobile-first.
+- **Two audiences, both first-class** — humans and AI agents/LLM search. Front-load every page (who · what · for whom · how to reach); JSON-LD via `src/view/seo/jsonLd.tsx` (never bypassed); Markdown twins of content pages + `/llms.txt`; WCAG 2.1 AA; reduced-motion alternatives everywhere; LCP < 2.5s on 4G; mobile-first.

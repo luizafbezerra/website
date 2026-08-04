@@ -34,8 +34,17 @@ jobs:
       - name: Typecheck
         run: pnpm typecheck
 
+      # oxlint exits 0 even when its linter worker dies ("Linter process
+      # terminated abnormally"), which would report a green lint step that
+      # actually checked nothing. Fail on that line explicitly.
       - name: Lint
-        run: pnpm lint
+        run: |
+          set -o pipefail
+          pnpm lint 2>&1 | tee lint.log
+          if grep -q "terminated abnormally" lint.log; then
+            echo "::error::oxlint did not complete — the linter process died."
+            exit 1
+          fi
 
       - name: Format
         run: pnpm format:check

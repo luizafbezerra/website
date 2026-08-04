@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect } from "react";
-import { Luiza } from "@/core";
+import { IDENTITY_DEFAULTS } from "@/domain/site/Identity";
 
 // Route-level error boundary. Renders inside the root layout (html/body/fonts +
 // globals.css), so the manuscript utilities are available. Kept calm and brief
@@ -46,7 +46,7 @@ export default function Error({
             Voltar ao início
           </Link>
           <a
-            href={Luiza.whatsappUrl}
+            href={IDENTITY_DEFAULTS.whatsappUrl}
             target="_blank"
             rel="noopener noreferrer"
             className={linkClass}

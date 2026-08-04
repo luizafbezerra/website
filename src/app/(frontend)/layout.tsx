@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { Cardo, Vollkorn } from "next/font/google";
-import { getIdentity } from "@/app/actions/identity";
-import { SITE_INDEXABLE } from "@/lib/site";
-import { HashAnchorScroll } from "@/ui/lib/HashAnchorScroll";
+import { getIdentity } from "@/domain/site/getIdentity";
+import { SITE_INDEXABLE } from "@/infrastructure/env/siteIndexable";
+import { HashAnchorScroll } from "@/view/routing/HashAnchorScroll";
 import "@/app/globals.css";
 
 const cardo = Cardo({

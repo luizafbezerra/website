@@ -1,0 +1,207 @@
+"use client";
+
+import { Canvas, type RootState } from "@react-three/fiber";
+import type { MutableRefObject } from "react";
+import { useCallback, useEffect, useRef } from "react";
+import { Cosmos } from "@/domain/cosmos/Cosmos";
+import { CosmosArmillary } from "./scene/CosmosArmillary";
+import { CosmosCameraRig } from "./scene/CosmosCameraRig";
+import { CosmosComets } from "./scene/CosmosComets";
+import { CosmosConstellationLines } from "./scene/CosmosConstellationLines";
+import { CosmosDeepField } from "./scene/CosmosDeepField";
+import { CosmosGalaxyBand } from "./scene/CosmosGalaxyBand";
+import { CosmosNebulae } from "./scene/CosmosNebulae";
+import { CosmosPrelude } from "./scene/CosmosPrelude";
+import { CosmosStarField } from "./scene/CosmosStarField";
+
+export type SigilScreenPosition = { x: number; y: number; visible: boolean };
+
+type Props = {
+  progressRef: MutableRefObject<number>;
+  sigilScreenPositionsRef: MutableRefObject<SigilScreenPosition[]>;
+  activeSigilId: Cosmos.SigilId | null;
+  mobile?: boolean;
+  // `true` once the section is both on-screen (the parent's 30% observer) AND
+  // the warm-up has primed the GPU. Drives the Canvas frameloop: "always"
+  // when active, "demand" otherwise.
+  //
+  // During warm (mounted but not yet active) the canvas sits in "demand": it
+  // renders its initial frame plus a re-render as each baked texture / shader
+  // arrives (uploading them), with no continuous rAF cost — so the warm work
+  // lands while the canvas is still hidden behind the poster, not on the
+  // visible reveal frame. After reveal, scrolling fully past flips this back
+  // to "demand" so the per-frame WebGL work (rotation, twinkle, comets,
+  // camera rig, sigil projection) pauses again. The nebula + matcap bakes run
+  // imperatively on mount regardless; only the per-frame tick is gated.
+  active?: boolean;
+  // Fired once, after the off-screen warm-up has pre-linked the shader
+  // programs (`compileAsync`) and rendered a real warm frame. The parent
+  // flips `isPrimed`; combined with the 30% visibility observer that drives
+  // the reveal cross-fade.
+  onPrimed?: () => void;
+};
+
+// Scene root. Composes the prelude → simulated universe:
+//   * Painted prelude (foreground, layer 0 — only meaningful while
+//     p ∈ [0.00, 0.30]; faded out elsewhere by per-prop opacity):
+//       - `<CosmosPrelude>` — a sparse arrangement of discrete cut-out props
+//         (clouds, land strip, trees, rocks, bush, single figure) positioned
+//         in 3D between the camera and the universe. Each prop fades as the
+//         camera passes its Z. The 3D nebula + deep field + comets ARE the
+//         sky behind them — no painted sky layer.
+//   * Background (layer 0 + layer 1 — captured once by the armillary's
+//     one-shot matcap bake, see `bakeArmillaryMatcap.ts`):
+//       - `<CosmosNebulae>` — baked FBM nebula on a textured inverted sphere.
+//       - `<CosmosDeepField>` — ~4000 stars at radii 30–80, warm distribution.
+//       - `<CosmosGalaxyBand>` — ~1200 stars along an inclined great-circle.
+//   * Foreground (default layer 0 only — excluded from the matcap bake so the
+//     brass doesn't reflect itself or the constellation network):
+//       - `<CosmosStarField>` — preserved v3 sphere shell at radii 4–8.
+//       - `<CosmosConstellationLines>` — gilt strokes + bright vertex stars
+//         for ~20 real-RA/Dec constellations at radius 12; fades in mid-orbit.
+//       - `<CosmosArmillary>` — brass rings (matcap) + emissive gilt sun.
+//         Receives `progressRef` so its materials gate on
+//         `armillaryOpacity(p)`: invisible through the prelude, materializing
+//         across p ∈ [0.20, 0.30].
+//       - `<CosmosComets>` — occasional arcing comets, dimmed during descent.
+//
+// v5-perf: rings switched from `MeshStandardMaterial` + cube-map envMap to
+// `MeshMatcapMaterial` driven by a 256² matcap baked once at mount from the
+// same brass-against-universe setup. Each ring fragment is now a single texel
+// fetch instead of the full Standard BRDF + cubemap-LOD sample.
+//
+// `mobile` swaps in a simpler scene: no scroll-driven camera, no comets, the
+// foreground shell halves its count. The painted prelude is also skipped on
+// mobile — the static `composite-mobile.webp` above the canvas (rendered by
+// `<Cosmos>`) replaces it. `visible` pauses the frame loop when offscreen.
+export function CosmosCanvas({
+  progressRef,
+  sigilScreenPositionsRef,
+  activeSigilId,
+  mobile = false,
+  active = true,
+  onPrimed,
+}: Props) {
+  // `onCreated` is captured once when the renderer is created, so it can't
+  // close over a changing prop directly — read the latest `onPrimed` via ref.
+  const onPrimedRef = useRef(onPrimed);
+  useEffect(() => {
+    onPrimedRef.current = onPrimed;
+  }, [onPrimed]);
+
+  // Tracks unmount so a deferred warm callback never touches a torn-down
+  // renderer or sets state on an unmounted parent (the section can be
+  // dismissed mid-warm via the "Continuar a leitura" button).
+  const disposedRef = useRef(false);
+  useEffect(() => {
+    disposedRef.current = false;
+    return () => {
+      disposedRef.current = true;
+    };
+  }, []);
+
+  const handleCreated = useCallback((state: RootState) => {
+    // Defer one frame so the scene children (nebula sphere, deep field,
+    // armillary rings, prelude planes) have committed into the scene graph
+    // before we walk it to pre-link their GLSL programs.
+    requestAnimationFrame(() => {
+      if (disposedRef.current) return;
+      const prime = () => {
+        if (disposedRef.current) return;
+        // Under frameloop="demand" during warm — invalidate once so the
+        // freshly-linked programs draw and the baked textures upload here,
+        // off the (still-hidden) reveal frame.
+        state.invalidate();
+        onPrimedRef.current?.();
+      };
+      // `compileAsync` pre-links every material in the scene — using
+      // KHR_parallel_shader_compile when present, falling back to a
+      // synchronous compile otherwise (still a win: it runs while the canvas
+      // is hidden behind the poster, not on the visible reveal frame). prime()
+      // runs on both resolve and reject so an unsupported/throwing path never
+      // strands the reveal gate (the parent's fallback timeout backstops this
+      // too). Materials that don't exist yet at this instant (the matcap,
+      // texture-dependent props) compile on their own warm-frame draw — still
+      // off the reveal.
+      state.gl.compileAsync(state.scene, state.camera).then(prime, prime);
+    });
+  }, []);
+
+  return (
+    <Canvas
+      onCreated={handleCreated}
+      // Start at KEY_FAR_IN's prelude position so the first rendered frame
+      // already reads as "view from the ground". The camera rig glides to
+      // `cameraKeyAtProgress(p)` each frame; matching this initial position
+      // eliminates the first-frame glide pop.
+      camera={{ position: [0, 1.4, 25], fov: 38, near: 0.1, far: 200 }}
+      // DPR pinned to 1 — the scroll-cinema is fillrate-bound (thousands of
+      // soft alpha-blended star sprites) and fill scales with DPR². At 1.25
+      // every sprite covered ~1.56× more fragments; pinning to 1 removes that
+      // overdraw on HiDPI/Retina. The vignette + matcap + soft sprites keep the
+      // WebGL layer reading as painterly rather than soft (DOM text and sigils
+      // are unaffected — they render at the device's native DPR).
+      dpr={1}
+      // "always" only once revealed; "demand" during warm (renders the initial
+      // frame + texture/shader uploads with no continuous rAF) and again once
+      // scrolled fully past (pauses the rotating armillary, twinkle, comets,
+      // camera rig, and sigil projection).
+      frameloop={active ? "always" : "demand"}
+      gl={{
+        // MSAA off — it resolves every fragment of every alpha-blended sprite
+        // across multiple samples, multiplying the (already heavy) sprite
+        // overdraw fill cost ~1.5–2×. The scene is soft sprites + matcap brass
+        // with little hard geometric edge to alias, and the radial vignette
+        // feathers the canvas edge — so this is the single biggest fill cut for
+        // the scroll stutter at the smallest visual cost (slightly softer gilt
+        // constellation lines + ring silhouettes).
+        antialias: false,
+        alpha: true,
+        // "high-performance" so dual-GPU laptops bind the WebGL context to the
+        // discrete GPU. The scroll-cinema is fillrate-bound (thousands of soft
+        // alpha-blended star sprites), so "low-power" — which forces the weak
+        // integrated GPU — was the worst case for it and a prime stutter cause.
+        // The frameloop is "demand" when idle, so the dGPU only spins up during
+        // the brief reveal/scroll window, not for the whole visit.
+        powerPreference: "high-performance",
+      }}
+      style={{ width: "100%", height: "100%" }}
+    >
+      {!mobile ? <CosmosCameraRig progressRef={progressRef} /> : null}
+
+      {/* Universe content — translated up to `UNIVERSE_Y_OFFSET` so the
+          armillary lives in the sky rather than on the painted ground.
+          The painted prelude stays at world origin; the camera rises up
+          through the prelude clouds and arrives at the elevated universe. */}
+      <group position={[0, Cosmos.UNIVERSE_Y_OFFSET, 0]}>
+        {/* Background — layer 1 enabled so the armillary's one-shot matcap
+            bake captures it. */}
+        <CosmosNebulae />
+        <CosmosDeepField mobile={mobile} />
+        <CosmosGalaxyBand mobile={mobile} />
+
+        {/* Foreground — layer 0 only; excluded from the matcap bake. */}
+        <CosmosStarField mobile={mobile} />
+
+        {/* Constellation strokes sit between the foreground star shell
+            (radii 4–8) and the deep-field stars (30–80) so they read as
+            the "near sky" without being baked into the brass reflection. */}
+        {!mobile ? <CosmosConstellationLines progressRef={progressRef} /> : null}
+
+        <CosmosArmillary
+          sigilScreenPositionsRef={sigilScreenPositionsRef}
+          activeSigilId={activeSigilId}
+          progressRef={progressRef}
+        />
+
+        {!mobile ? <CosmosComets progressRef={progressRef} /> : null}
+      </group>
+
+      {/* Painted prelude — discrete cut-out props (clouds, land, trees,
+          rocks, bush, single figure) at world origin. Not translated:
+          the painted ground stays at world y=0 so the camera physically
+          rises up through it during the approach. */}
+      {!mobile ? <CosmosPrelude progressRef={progressRef} /> : null}
+    </Canvas>
+  );
+}

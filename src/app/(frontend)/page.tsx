@@ -1,29 +1,28 @@
 import type { Metadata } from "next";
 import { Fragment, type ReactNode } from "react";
-import { getHome, getNavigation } from "@/app/actions/home";
-import { getIdentity } from "@/app/actions/identity";
-import { getMandala } from "@/app/actions/mandala";
-import { getTestimonials } from "@/app/actions/testimonials";
-import type { SectionType } from "@/core/sections";
-import {
-  About,
-  Contact,
-  Cosmos,
-  Footer,
-  Header,
-  Hero,
-  Pillars,
-  StickyHeaderShell,
-  Symbols,
-  Voices,
-} from "@/ui/home";
+import { getHome } from "@/domain/home/getHome";
+import type { SectionType } from "@/domain/sections/sectionRegistry";
+import { getIdentity } from "@/domain/site/getIdentity";
+import { getNavigation } from "@/domain/site/getNavigation";
+import { getTestimonials } from "@/domain/testimonials/getTestimonials";
+import { getMandala } from "@/domain/zodiac/getMandala";
+import { Footer } from "@/view/chrome/Footer";
+import { Header } from "@/view/chrome/Header";
+import { StickyHeaderShell } from "@/view/chrome/StickyHeaderShell";
+import { Cosmos } from "@/view/cosmos/Cosmos";
+import { About } from "@/view/home/About";
+import { Contact } from "@/view/home/Contact";
+import { Hero } from "@/view/home/Hero";
+import { Pillars } from "@/view/home/Pillars";
+import { Voices } from "@/view/home/Voices";
+import { Symbols } from "@/view/mandala/Symbols";
 import {
   BreadcrumbJsonLd,
   LocalBusinessJsonLd,
   PersonJsonLd,
   ReviewsJsonLd,
   WebSiteJsonLd,
-} from "@/ui/lib/jsonLd";
+} from "@/view/seo/jsonLd";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? "https://example.com";
 

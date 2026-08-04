@@ -15,7 +15,7 @@ type HeadingOptions = {
 /**
  * A manuscript heading as a single, constrained rich-text field. The editor
  * types the whole title and marks the accent word in bold ("destaque"); the
- * renderer (`@/ui/home/AccentHeading`) applies the section's LOCKED colour +
+ * renderer (`@/view/general/AccentHeading`) applies the section's LOCKED colour +
  * italic to the bold run, so the typography brief can't be broken from the
  * admin. The editor is restricted to paragraph + bold + inline toolbar — no
  * headings, lists, or links — so "destaque" is the only mark available.

@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { SITE_INDEXABLE } from "@/lib/site";
+import { SITE_INDEXABLE } from "@/infrastructure/env/siteIndexable";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? "https://example.com";
 

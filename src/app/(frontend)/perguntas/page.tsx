@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
-import { getFaq } from "@/app/actions/faq";
-import { getNavigation } from "@/app/actions/home";
-import { getIdentity } from "@/app/actions/identity";
-import { Footer, Header, StickyHeaderShell } from "@/ui/home";
-import { Faq } from "@/ui/home/Faq";
-import { BreadcrumbJsonLd, FaqJsonLd } from "@/ui/lib/jsonLd";
+import { getFaq } from "@/domain/faq/getFaq";
+import { getNavigation } from "@/domain/site/getNavigation";
+import { getIdentity } from "@/domain/site/getIdentity";
+import { Footer } from "@/view/chrome/Footer";
+import { Header } from "@/view/chrome/Header";
+import { StickyHeaderShell } from "@/view/chrome/StickyHeaderShell";
+import { Faq } from "@/view/faq/Faq";
+import { BreadcrumbJsonLd, FaqJsonLd } from "@/view/seo/jsonLd";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? "https://example.com";
 

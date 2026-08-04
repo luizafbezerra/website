@@ -1,5 +1,5 @@
 import type { Payload } from "payload";
-import { FAQ_DEFAULTS } from "@/core/faq";
+import { FAQ_DEFAULTS } from "@/domain/faq/FaqEntry";
 
 /**
  * Seed the `faq` collection from FAQ_DEFAULTS. Find-or-create by `question` so

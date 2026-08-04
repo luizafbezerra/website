@@ -1,6 +1,6 @@
 import type { Payload } from "payload";
-import { HOME_DEFAULTS } from "@/core/home";
-import type { RichTextContent } from "@/core/richText";
+import { HOME_DEFAULTS } from "@/domain/home/Home";
+import type { RichTextContent } from "@/domain/richText/RichTextContent";
 import type { HomeHero } from "@/payload-types";
 
 // Every richText field across the home globals shares the same Lexical editor

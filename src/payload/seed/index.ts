@@ -6,7 +6,7 @@ import { seedMandala } from "./mandala";
 import { seedSettings } from "./settings";
 
 /**
- * Seed Payload globals and collections from `core/*.defaults` — the same
+ * Seed Payload globals and collections from the domain layer's code defaults — the same
  * hardcoded values the site renders when Payload is disabled, so the DB and the
  * code fallback share a single source of truth.
  *
@@ -18,7 +18,7 @@ import { seedSettings } from "./settings";
  */
 async function main() {
   const payload = await getPayload({ config });
-  payload.logger.info("Seeding from core/*.defaults …");
+  payload.logger.info("Seeding from the domain defaults …");
 
   await seedSettings(payload);
   await seedHome(payload);

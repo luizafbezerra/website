@@ -2,11 +2,11 @@ import type { Field } from "payload";
 
 /**
  * Per-page SEO override group. Every field is optional; the SEO resolver
- * (`@/core/seo`) falls back to the Settings-global defaults when a field is
+ * (`@/domain/site/Identity`) falls back to the Settings-global defaults when a field is
  * blank — the per-page-override behaviour required by CLAUDE.md.
  *
  * Lives in `src/fields/` (a leaf that imports only Payload types) so it can be
- * reused by any page global without coupling the schema layer to `core`.
+ * reused by any page global without coupling the schema layer to the domain.
  */
 export function seoField(): Field {
   return {

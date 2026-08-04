@@ -1,5 +1,5 @@
 import type { Payload } from "payload";
-import { MANDALA_DEFAULTS } from "@/core/zodiacContent";
+import { MANDALA_DEFAULTS } from "@/domain/zodiac/MandalaContent";
 
 /**
  * Seed the `mandala` global from `MANDALA_DEFAULTS` — the two editable prose

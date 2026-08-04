@@ -11,7 +11,7 @@ import { existsSync, mkdirSync, statSync } from "node:fs";
 import { readdir, unlink } from "node:fs/promises";
 import path from "node:path";
 import sharp from "sharp";
-import { Cosmos } from "@/core";
+import { Cosmos } from "@/domain/cosmos/Cosmos";
 
 const SOURCES = "references/cosmos-sources";
 const TARGET = "public/art/cosmos";

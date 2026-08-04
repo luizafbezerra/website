@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { getNavigation } from "@/app/actions/home";
-import { getIdentity } from "@/app/actions/identity";
-import { Footer, Header, StickyHeaderShell } from "@/ui/home";
+import { getNavigation } from "@/domain/site/getNavigation";
+import { getIdentity } from "@/domain/site/getIdentity";
+import { Footer } from "@/view/chrome/Footer";
+import { Header } from "@/view/chrome/Header";
+import { StickyHeaderShell } from "@/view/chrome/StickyHeaderShell";
 
 export const metadata: Metadata = {
   title: "Página não encontrada",

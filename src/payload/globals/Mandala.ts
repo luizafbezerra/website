@@ -1,14 +1,14 @@
 import type { Field, GlobalConfig } from "payload";
 import { revalidatePath } from "next/cache";
-import { WHEEL_ZODIAC } from "@/core/wheel";
-import { type Element, VEDIC_CONTENT, ZODIAC_CONTENT } from "@/core/zodiacContent";
+import { WHEEL_ZODIAC } from "@/domain/wheel/wheelGeometry";
+import { type Element, VEDIC_CONTENT, ZODIAC_CONTENT } from "@/domain/zodiac/zodiacContent";
 
 /**
  * "Mandala dos signos" — the editable prose of the painted zodiac wheel.
  *
  * Only the two paragraphs per sign (the sign text and the Vedic summary) live
  * here; the structural reference (element, regente, the nakshatra table) stays
- * in `src/core/zodiacContent.ts`, since it is interlocking scholarly data, not
+ * in `src/domain/zodiac/zodiacContent.ts`, since it is interlocking scholarly data, not
  * editorial voice. See `mandalaFromPayload` for the merge.
  *
  * The twelve sign groups are partitioned into four UNNAMED tabs by element

@@ -1,6 +1,7 @@
-import { getFaq } from "@/app/actions/faq";
-import { getIdentity } from "@/app/actions/identity";
-import { estimateTokens, formatTokens } from "@/core/tokens";
+import { getFaq } from "@/domain/faq/getFaq";
+import { getIdentity } from "@/domain/site/getIdentity";
+import { estimateTokens } from "@/domain/tokens/estimateTokens";
+import { formatTokens } from "@/domain/tokens/formatTokens";
 import { NextResponse } from "next/server";
 
 export const revalidate = 3600;

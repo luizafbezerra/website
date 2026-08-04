@@ -1,10 +1,10 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { ImageResponse } from "next/og";
-import { Luiza } from "@/core";
+import { IDENTITY_DEFAULTS } from "@/domain/site/Identity";
 
 export const runtime = "nodejs";
-export const alt = `${Luiza.fullName} — psicóloga junguiana em ${Luiza.city}`;
+export const alt = `${IDENTITY_DEFAULTS.fullName} — psicóloga junguiana em ${IDENTITY_DEFAULTS.city}`;
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -66,7 +66,7 @@ export default async function OpengraphImage() {
             color: TERRACOTTA,
           }}
         >
-          {`${Luiza.role} · ${Luiza.city}`}
+          {`${IDENTITY_DEFAULTS.role} · ${IDENTITY_DEFAULTS.city}`}
         </div>
 
         <div
@@ -79,7 +79,7 @@ export default async function OpengraphImage() {
             letterSpacing: "-0.012em",
           }}
         >
-          {Luiza.fullName}
+          {IDENTITY_DEFAULTS.fullName}
         </div>
 
         <div
@@ -91,7 +91,7 @@ export default async function OpengraphImage() {
             lineHeight: 1.2,
           }}
         >
-          {`${Luiza.tradition} — para a vida adulta`}
+          {`${IDENTITY_DEFAULTS.tradition} — para a vida adulta`}
         </div>
 
         <div
@@ -103,7 +103,7 @@ export default async function OpengraphImage() {
             maxWidth: 560,
           }}
         >
-          {`Para adultos que atravessam ansiedade, lutos, relações ou propósito. Atendimento presencial em ${Luiza.city} e online em todo o ${Luiza.country}.`}
+          {`Para adultos que atravessam ansiedade, lutos, relações ou propósito. Atendimento presencial em ${IDENTITY_DEFAULTS.city} e online em todo o ${IDENTITY_DEFAULTS.country}.`}
         </div>
       </div>
     </div>,

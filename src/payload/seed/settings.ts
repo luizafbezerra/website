@@ -1,5 +1,5 @@
 import type { Payload } from "payload";
-import { IDENTITY_DEFAULTS } from "@/core/identity";
+import { IDENTITY_DEFAULTS } from "@/domain/site/Identity";
 
 /**
  * Seed the `settings` global from `IDENTITY_DEFAULTS` — the same hardcoded

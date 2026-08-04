@@ -30,7 +30,6 @@ export const HomeStructure: GlobalConfig = {
         { type: "about", enabled: true },
         { type: "cosmos", enabled: true },
         { type: "voices", enabled: true },
-        { type: "writing", enabled: true },
         { type: "symbols", enabled: true },
         { type: "contact", enabled: true },
       ],
@@ -46,7 +45,6 @@ export const HomeStructure: GlobalConfig = {
             { label: "Cosmos (mandala dos signos)", value: "cosmos" },
             { label: "Mandala dos signos", value: "symbols" },
             { label: "Vozes (depoimentos)", value: "voices" },
-            { label: "Escrita (blog recente)", value: "writing" },
             { label: "Contato", value: "contact" },
           ],
         },
@@ -64,9 +62,9 @@ export const HomeStructure: GlobalConfig = {
       label: "Links extras de navegação",
       admin: {
         description:
-          "Links que não são seções da página (ex.: o blog). Aparecem após os links das seções.",
+          "Links que não são seções da página (ex.: uma página própria). Aparecem após os links das seções.",
       },
-      defaultValue: [{ label: "Escrita", href: "/blog" }],
+      defaultValue: [],
       fields: [
         { name: "label", type: "text", label: "Rótulo", required: true },
         { name: "href", type: "text", label: "Endereço", required: true },

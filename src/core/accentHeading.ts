@@ -29,11 +29,10 @@ export function accentWordClass(treatment: AccentTreatment): string {
  * is the accent (bold in the constrained heading editor); the colour + italic
  * live here so they always match the brief regardless of who edits the copy.
  */
-export type AccentSection = "pillars" | "about" | "writing" | "contact";
+export type AccentSection = "pillars" | "about" | "contact";
 
 export const SECTION_ACCENT: Record<AccentSection, AccentTreatment> = {
   pillars: { accentStyle: "terracotta", accentItalic: true },
   about: { accentStyle: "cobalt", accentItalic: false },
-  writing: { accentStyle: "terracotta", accentItalic: false },
   contact: { accentStyle: "terracotta", accentItalic: true },
 };

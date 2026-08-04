@@ -9,9 +9,9 @@ type Lexical = NonNullable<HomeHero["lead"]>;
 const rt = (content: RichTextContent): Lexical => content as unknown as Lexical;
 
 /**
- * Seed the seven home-section globals from `HOME_DEFAULTS` — the section order,
- * nav links, and editorial copy the site falls back to in code. Idempotent
- * (globals upsert). Skips revalidation so it can run outside a Next request.
+ * Seed the home-section globals from `HOME_DEFAULTS` — the section order, nav
+ * links, and editorial copy the site falls back to in code. Idempotent (globals
+ * upsert). Skips revalidation so it can run outside a Next request.
  */
 export async function seedHome(payload: Payload): Promise<void> {
   const d = HOME_DEFAULTS;
@@ -73,16 +73,6 @@ export async function seedHome(payload: Payload): Promise<void> {
   });
 
   await payload.updateGlobal({
-    slug: "home-writing",
-    overrideAccess: true,
-    context: ctx,
-    data: {
-      heading: rt(d.writing.heading),
-      intro: d.writing.intro,
-    },
-  });
-
-  await payload.updateGlobal({
     slug: "home-contact",
     overrideAccess: true,
     context: ctx,
@@ -95,5 +85,5 @@ export async function seedHome(payload: Payload): Promise<void> {
     },
   });
 
-  payload.logger.info("  ✓ home globals (structure + 6 sections)");
+  payload.logger.info("  ✓ home globals (structure + 5 sections)");
 }

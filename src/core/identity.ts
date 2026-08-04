@@ -39,7 +39,7 @@ export type Identity = {
 };
 
 // ---------------------------------------------------------------------------
-// Raw Payload `settings` global shape (loose, like blog.ts's PayloadPost).
+// Raw Payload `settings` global shape (loose, as everywhere in this layer).
 // Groups flatten to nested objects; every field is optional so the mapper can
 // fall back to defaults field-by-field.
 // ---------------------------------------------------------------------------

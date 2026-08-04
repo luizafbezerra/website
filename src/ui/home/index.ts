@@ -11,4 +11,3 @@ export { Pillars } from "./Pillars";
 export { StickyHeaderShell } from "./StickyHeaderShell";
 export { Symbols } from "./Symbols";
 export { Voices } from "./Voices";
-export { Writing } from "./Writing";

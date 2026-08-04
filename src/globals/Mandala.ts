@@ -58,9 +58,9 @@ export const Mandala: GlobalConfig = {
     afterChange: [
       ({ context }) => {
         if (context?.skipRevalidate) return;
-        // The wheel renders on the homepage (desktop) and on /simbolos.
+        // The wheel renders on the homepage (desktop only). It gains a second
+        // home on /analise in Phase 6; add that path with the page.
         revalidatePath("/");
-        revalidatePath("/simbolos");
       },
     ],
   },

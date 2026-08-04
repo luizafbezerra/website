@@ -1,6 +1,6 @@
 // ---------------------------------------------------------------------------
 // Testimonials domain — the shape the site renders, plus a mapper from the raw
-// Payload `testimonials` collection. Mirrors the identity/blog pattern: a loose
+// Payload `testimonials` collection. Mirrors the identity pattern: a loose
 // raw type, field-by-field guarding, and a defaults fallback (empty — Voices
 // auto-hides when there are none).
 // ---------------------------------------------------------------------------

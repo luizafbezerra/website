@@ -30,16 +30,13 @@ export default async function NotFound() {
             caminho.
           </h1>
           <p className="body-prose text-ink mt-8 max-w-[52ch] text-[1.085rem] leading-[1.74]">
-            O endereço que você procura não existe ou foi movido — acontece. Volte ao início, siga
-            para a Escrita ou, se preferir falar comigo, o WhatsApp está sempre por perto.
+            O endereço que você procura não existe ou foi movido — acontece. Volte ao início ou, se
+            preferir falar comigo, o WhatsApp está sempre por perto.
           </p>
 
           <div className="mt-12 flex flex-col gap-5 sm:flex-row sm:flex-wrap sm:items-center sm:gap-10">
             <Link href="/" className={linkClass}>
               Voltar ao início
-            </Link>
-            <Link href="/blog" className={linkClass}>
-              Ir para a Escrita
             </Link>
             <a
               href={identity.whatsappUrl}

@@ -9,9 +9,9 @@ import { cache } from "react";
 
 /**
  * The practitioner identity + practice metadata, from the Payload `settings`
- * global with a graceful fall back to `IDENTITY_DEFAULTS` (same degradation
- * model as `getAllPosts`). This is the single read path for the global; the
- * site, layout metadata, and JSON-LD all consume it.
+ * global with a graceful fall back to `IDENTITY_DEFAULTS` when Payload is off
+ * or the read fails. This is the single read path for the global; the site,
+ * layout metadata, and JSON-LD all consume it.
  */
 export const getIdentity = cache(async function getIdentity(): Promise<Identity> {
   const payload = await getPayloadSafe();

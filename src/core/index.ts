@@ -1,4 +1,3 @@
-export { Blog } from "./blog";
 export { Cosmos } from "./cosmos";
 export { type FaqEntry, FAQ_DEFAULTS, faqFromPayload, type PayloadFaq } from "./faq";
 export { Luiza } from "./luiza";

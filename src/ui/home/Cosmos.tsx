@@ -363,17 +363,6 @@ function CosmosBody({ onDismissForever }: { onDismissForever: () => void }) {
           </span>
           {Data.sectionDisclaimer}
         </p>
-        <p className="marginalia mt-3 text-center sm:text-left">
-          <a
-            href="/simbolos"
-            className="text-quill hover:text-terracotta decoration-terracotta/40 hover:decoration-terracotta underline decoration-1 underline-offset-[0.25em] transition-colors"
-          >
-            Para a mandala completa, com as vinte e sete nakshatras
-          </a>{" "}
-          <span aria-hidden="true" className="text-terracotta/70">
-            →
-          </span>
-        </p>
       </footer>
 
       {/* No-JS / hidden fallback: a flat list of the twelve sigils with their

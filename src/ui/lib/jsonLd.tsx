@@ -1,5 +1,3 @@
-import type { Blog } from "@/core/blog";
-
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? "https://example.com";
 
 type PersonJsonLdProps = {
@@ -259,51 +257,6 @@ export function BreadcrumbJsonLd({ items }: { items: BreadcrumbItem[] }) {
       item: item.url,
     })),
   };
-
-  return (
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-    />
-  );
-}
-
-type BlogPostingJsonLdProps = {
-  post: Blog.Post;
-  locale: string;
-  dateModified?: string;
-  image?: string;
-  wordCount?: number;
-  authorName?: string;
-};
-
-export function BlogPostingJsonLd({
-  post,
-  locale,
-  dateModified,
-  image,
-  wordCount,
-  authorName = "Author",
-}: BlogPostingJsonLdProps) {
-  const jsonLd: Record<string, unknown> = {
-    "@context": "https://schema.org",
-    "@type": "BlogPosting",
-    headline: post.title,
-    description: post.description,
-    datePublished: post.date,
-    inLanguage: locale,
-    author: {
-      "@type": "Person",
-      name: authorName,
-      url: BASE_URL,
-    },
-    url: `${BASE_URL}/blog/${post.slug}`,
-    keywords: post.tags.join(", "),
-  };
-
-  if (dateModified) jsonLd.dateModified = dateModified;
-  if (image) jsonLd.image = image;
-  if (wordCount !== undefined) jsonLd.wordCount = wordCount;
 
   return (
     <script

@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Fragment, type ReactNode } from "react";
-import { getAllPosts } from "@/app/actions/blog";
 import { getHome, getNavigation } from "@/app/actions/home";
 import { getIdentity } from "@/app/actions/identity";
 import { getMandala } from "@/app/actions/mandala";
@@ -17,7 +16,6 @@ import {
   StickyHeaderShell,
   Symbols,
   Voices,
-  Writing,
 } from "@/ui/home";
 import {
   BreadcrumbJsonLd,
@@ -50,15 +48,13 @@ export async function generateMetadata(): Promise<Metadata> {
 export const revalidate = 3600;
 
 export default async function Home() {
-  const [identity, home, navLinks, testimonials, posts, mandala] = await Promise.all([
+  const [identity, home, navLinks, testimonials, mandala] = await Promise.all([
     getIdentity(),
     getHome(),
     getNavigation(),
     getTestimonials(),
-    getAllPosts("pt-BR"),
     getMandala(),
   ]);
-  const recentPosts = posts.slice(0, 3);
 
   // Hero is pinned first and Footer last; these body sections render in the
   // order configured on the Home global, skipping any that are disabled.
@@ -74,7 +70,6 @@ export default async function Home() {
       </div>
     ),
     voices: <Voices testimonials={testimonials} content={home.voices} />,
-    writing: <Writing posts={recentPosts} content={home.writing} />,
     contact: <Contact identity={identity} content={home.contact} />,
   };
 

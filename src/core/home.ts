@@ -4,10 +4,10 @@ import { type SectionConfig, isSectionType, SECTIONS_DEFAULT } from "./sections"
 
 // ---------------------------------------------------------------------------
 // Home domain — the homepage's structure (section order + toggles), navigation
-// links, and editable section copy. The copy now lives across SEVEN small
-// Payload globals (one focused editor per section, all grouped under "Página
-// inicial") instead of one monolithic document; this file keeps the single
-// `Home` domain shape the page + components consume, plus a composing mapper.
+// links, and editable section copy. The copy lives across one small Payload
+// global per section (all grouped under "Página inicial") instead of one
+// monolithic document; this file keeps the single `Home` domain shape the page +
+// components consume, plus a composing mapper.
 //
 // Each accent heading is a single constrained rich-text field (the editor marks
 // the accent word in bold); the locked colour/italic per section lives in
@@ -41,7 +41,6 @@ export type Home = {
     idiomas: string;
   };
   voices: { heading: string };
-  writing: { heading: RichTextContent; intro: string };
   contact: {
     eyebrow: string;
     heading: RichTextContent;
@@ -125,13 +124,6 @@ export const HOME_DEFAULTS: Home = {
     idiomas: "Português",
   },
   voices: { heading: "Pacientes contam" },
-  writing: {
-    heading: richText([
-      [{ text: "Algumas " }, { text: "anotações", bold: true }, { text: " do consultório." }],
-    ]),
-    intro:
-      "Notas sobre o que costuma ficar nas entrelinhas da vida adulta. Não substituem o trabalho clínico; fazem companhia entre uma sessão e outra.",
-  },
   contact: {
     eyebrow: "Para começar",
     heading: richText([
@@ -189,11 +181,6 @@ export type PayloadHomeAbout = {
 
 export type PayloadHomeVoices = { heading?: string | null } | null;
 
-export type PayloadHomeWriting = {
-  heading?: PayloadRich;
-  intro?: string | null;
-} | null;
-
 export type PayloadHomeContact = {
   eyebrow?: string | null;
   heading?: PayloadRich;
@@ -202,14 +189,13 @@ export type PayloadHomeContact = {
   faqLinkLabel?: string | null;
 } | null;
 
-/** The seven home-section globals, read together and composed into `Home`. */
+/** The home-section globals, read together and composed into `Home`. */
 export type PayloadHomeGlobals = {
   structure?: PayloadHomeStructure | null;
   hero?: PayloadHomeHero;
   pillars?: PayloadHomePillars;
   about?: PayloadHomeAbout;
   voices?: PayloadHomeVoices;
-  writing?: PayloadHomeWriting;
   contact?: PayloadHomeContact;
 };
 
@@ -228,7 +214,7 @@ function portraitUrl(raw: PayloadMedia | undefined): string | null {
 
 export function homeFromPayload(docs: PayloadHomeGlobals): Home {
   const d = HOME_DEFAULTS;
-  const { structure, hero, pillars, about, voices, writing, contact } = docs;
+  const { structure, hero, pillars, about, voices, contact } = docs;
 
   const sections: SectionConfig[] = (Array.isArray(structure?.sections) ? structure.sections : [])
     .filter((s) => isSectionType(s?.type))
@@ -274,10 +260,6 @@ export function homeFromPayload(docs: PayloadHomeGlobals): Home {
     },
     voices: {
       heading: voices?.heading ?? d.voices.heading,
-    },
-    writing: {
-      heading: richOr(writing?.heading, d.writing.heading),
-      intro: writing?.intro ?? d.writing.intro,
     },
     contact: {
       eyebrow: contact?.eyebrow ?? d.contact.eyebrow,

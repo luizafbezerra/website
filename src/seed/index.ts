@@ -13,7 +13,7 @@ import { seedSettings } from "./settings";
  * Idempotent by design: globals upsert via `updateGlobal`; collections
  * find-or-create by a natural key. Seeders are added per implementation phase.
  *
- * Run with `pnpm seed` (forces NODE_ENV=production via shim.cjs so the adapter
+ * Run with `pnpm seed` (preloads scripts/no-schema-push.cjs so the adapter
  * never auto-pushes schema — apply migrations first).
  */
 async function main() {

@@ -8,10 +8,8 @@ import { fileURLToPath } from "url";
 
 import { Users } from "./collections/Users";
 import { Media } from "./collections/Media";
-import { Posts } from "./collections/Posts";
 import { Testimonials } from "./collections/Testimonials";
 import { Faq } from "./collections/Faq";
-import { LexicalCodeFeature } from "./features/lexicalCode/feature.server";
 import {
   HomeAbout,
   HomeContact,
@@ -19,7 +17,6 @@ import {
   HomePillars,
   HomeStructure,
   HomeVoices,
-  HomeWriting,
 } from "./globals/home";
 import { Mandala } from "./globals/Mandala";
 import { Settings } from "./globals/Settings";
@@ -37,7 +34,7 @@ export default buildConfig({
     supportedLanguages: { pt },
     fallbackLanguage: "pt",
   },
-  collections: [Users, Media, Posts, Testimonials, Faq],
+  collections: [Users, Media, Testimonials, Faq],
   globals: [
     Settings,
     HomeStructure,
@@ -45,13 +42,12 @@ export default buildConfig({
     HomePillars,
     HomeAbout,
     HomeVoices,
-    HomeWriting,
     HomeContact,
     Mandala,
   ],
-  editor: lexicalEditor({
-    features: ({ defaultFeatures }) => [...defaultFeatures, LexicalCodeFeature()],
-  }),
+  // The code-block feature existed for the blog only; editorial rich text needs
+  // nothing beyond the defaults.
+  editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET ?? "",
   typescript: { outputFile: path.resolve(dirname, "payload-types.ts") },
   db: vercelPostgresAdapter({ pool: { connectionString: process.env.POSTGRES_URL } }),

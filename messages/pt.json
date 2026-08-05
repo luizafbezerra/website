@@ -23,6 +23,27 @@
       "description": "Como os dados de quem visita e entra em contato são tratados, na forma da Lei Geral de Proteção de Dados (LGPD)."
     }
   },
+  "seo": {
+    "services": {
+      "analise": {
+        "name": "Análise junguiana (psicoterapia)",
+        "description": "Psicoterapia de orientação junguiana, on-line e semanal, em português e inglês, para todo o Brasil e o exterior."
+      },
+      "orientacaoProfissional": {
+        "name": "Orientação profissional e de carreira",
+        "description": "Programa on-line de até doze encontros semanais — testes psicológicos, conversas e atividades — para escolher ou reorientar a profissão."
+      }
+    },
+    "knowsAbout": [
+      "Psicologia analítica",
+      "Análise junguiana",
+      "Psicoterapia on-line",
+      "Sonhos",
+      "Individuação",
+      "Ansiedade",
+      "Orientação profissional"
+    ]
+  },
   "chrome": {
     "skipToContent": "Pular para o conteúdo",
     "headerByline": "psicóloga · análise junguiana",

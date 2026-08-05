@@ -23,6 +23,27 @@
       "description": "How the data of visitors and of people who get in touch is handled, under Brazil's General Data Protection Law (LGPD)."
     }
   },
+  "seo": {
+    "services": {
+      "analise": {
+        "name": "Jungian-oriented psychotherapy",
+        "description": "Weekly online psychotherapy in the Jungian tradition, in Portuguese and English, for Brazil and anywhere in the world."
+      },
+      "orientacaoProfissional": {
+        "name": "Career guidance",
+        "description": "An online programme of up to twelve weekly meetings — psychological tests, conversations and activities — to choose or rethink a profession."
+      }
+    },
+    "knowsAbout": [
+      "Analytical psychology",
+      "Jungian psychotherapy",
+      "Online psychotherapy",
+      "Dreams",
+      "Individuation",
+      "Anxiety",
+      "Career guidance"
+    ]
+  },
   "chrome": {
     "skipToContent": "Skip to content",
     "headerByline": "psychologist · Jungian tradition",

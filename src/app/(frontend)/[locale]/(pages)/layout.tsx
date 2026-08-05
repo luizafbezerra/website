@@ -5,6 +5,7 @@ import { getClinica } from "@/domain/clinica/getClinica";
 import { routing } from "@/i18n/routing";
 import { Footer } from "@/view/chrome/Footer";
 import { Header } from "@/view/chrome/Header";
+import { SiteEntityGraphJsonLd } from "@/view/seo/jsonLd";
 
 /**
  * The chrome every content page wears: header, the `<main>` landmark, footer.
@@ -35,6 +36,8 @@ export default async function PagesLayout({ children, params }: PagesLayoutProps
 
   return (
     <>
+      {/* One entity graph per page, from one place (REQ-011). */}
+      <SiteEntityGraphJsonLd clinica={clinica} locale={locale} />
       <Header clinica={clinica} locale={locale} />
       <main id="main">{children}</main>
       <Footer clinica={clinica} locale={locale} />

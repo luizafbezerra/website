@@ -4,7 +4,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { getClinica } from "@/domain/clinica/getClinica";
 import { HOME_DEFAULTS } from "@/domain/home/Home";
 import type { SectionType } from "@/domain/sections/sectionRegistry";
-import { type Locale, LOCALE_TAGS } from "@/domain/site/Locale";
+import type { Locale } from "@/domain/site/Locale";
 import { pagePath } from "@/domain/site/pagePath";
 import { getTestimonials } from "@/domain/testimonials/getTestimonials";
 import { MANDALA_DEFAULTS } from "@/domain/zodiac/MandalaContent";
@@ -16,13 +16,7 @@ import { Hero } from "@/view/home/Hero";
 import { Pillars } from "@/view/home/Pillars";
 import { Voices } from "@/view/home/Voices";
 import { Symbols } from "@/view/mandala/Symbols";
-import {
-  BreadcrumbJsonLd,
-  OnlineClinicJsonLd,
-  PersonJsonLd,
-  ReviewsJsonLd,
-  WebSiteJsonLd,
-} from "@/view/seo/jsonLd";
+import { BreadcrumbJsonLd, ReviewsJsonLd } from "@/view/seo/jsonLd";
 import { pageMetadata } from "@/view/seo/pageMetadata";
 
 type HomeProps = { params: Promise<{ locale: Locale }> };
@@ -72,52 +66,11 @@ export default async function Home({ params }: HomeProps) {
 
   return (
     <>
-      <PersonJsonLd
-        name={clinica.fullName}
-        url={url}
-        jobTitle={clinica.role}
-        email={clinica.email}
-        telephone={clinica.whatsappE164}
-        description={clinica.positioning}
-        knowsAbout={[
-          "Psicologia analítica",
-          "Análise junguiana",
-          "Psicoterapia",
-          "Sonhos",
-          "Individuação",
-          "Ansiedade",
-          "Luto",
-        ]}
-        // She works in both languages (CONCEPT §6) — for an anglophone searcher
-        // this is the signal that matters most.
-        knowsLanguage={[LOCALE_TAGS.pt, LOCALE_TAGS.en]}
-      />
-
-      <OnlineClinicJsonLd
-        name={clinica.clinicName}
-        url={url}
-        description={clinica.positioning}
-        telephone={clinica.whatsappE164}
-        email={clinica.email}
-        sameAs={clinica.instagramUrl ? [clinica.instagramUrl] : []}
-        // The international-reach signal, in the vocabulary a machine reads.
-        areaServed={["BR", "Worldwide"]}
-        founder={{ name: clinica.fullName, url }}
-      />
-
-      <WebSiteJsonLd
-        name={clinica.clinicName}
-        url={url}
-        description={clinica.positioning}
-        inLanguage={LOCALE_TAGS[locale]}
-      />
-
       <BreadcrumbJsonLd items={[{ name: t("inicio"), url }]} />
 
       {testimonials.length > 0 && (
         <ReviewsJsonLd
           itemName={clinica.clinicName}
-          itemUrl={url}
           reviews={testimonials.map((testimonial) => ({
             body: testimonial.body,
             author: testimonial.attribution,

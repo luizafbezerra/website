@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Analytics } from "@vercel/analytics/next";
 import { Cardo, Vollkorn } from "next/font/google";
 import { notFound } from "next/navigation";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
@@ -109,6 +110,12 @@ export default async function FrontendLayout({
           </a>
           {children}
         </NextIntlClientProvider>
+        {/* Vercel Web Analytics (SEC-001): aggregate and cookieless — paths,
+            referrers, countries, which is how we learn whether the
+            international reach is working. It sets no cookie and identifies no
+            visitor, so the site still needs no consent banner, and /privacidade
+            can describe it honestly. */}
+        <Analytics />
       </body>
     </html>
   );

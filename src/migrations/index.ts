@@ -10,6 +10,7 @@ import * as migration_20260805_041259_concept_v3_primeira_conversa from "./20260
 import * as migration_20260805_055245_concept_v3_phase6_pages from "./20260805_055245_concept_v3_phase6_pages";
 import * as migration_20260805_153311_instagram_auth_and_jobs from "./20260805_153311_instagram_auth_and_jobs";
 import * as migration_20260805_153332_inicio_instagram_tiles_drop from "./20260805_153332_inicio_instagram_tiles_drop";
+import * as migration_20260805_213941_instagram_refresh_workflow from "./20260805_213941_instagram_refresh_workflow";
 
 export const migrations = [
   {
@@ -71,5 +72,10 @@ export const migrations = [
     up: migration_20260805_153332_inicio_instagram_tiles_drop.up,
     down: migration_20260805_153332_inicio_instagram_tiles_drop.down,
     name: "20260805_153332_inicio_instagram_tiles_drop",
+  },
+  {
+    up: migration_20260805_213941_instagram_refresh_workflow.up,
+    down: migration_20260805_213941_instagram_refresh_workflow.down,
+    name: "20260805_213941_instagram_refresh_workflow",
   },
 ];

@@ -22,7 +22,7 @@ import { PagePerguntas } from "./payload/globals/pages/perguntas";
 import { PageInternacional } from "./payload/globals/pages/internacional";
 import { PagePrivacidade } from "./payload/globals/pages/privacidade";
 import { InstagramAuth } from "./payload/globals/instagramAuth";
-import { refreshInstagramTokenTask } from "./payload/jobs/refreshInstagramToken";
+import { refreshInstagramTokenWorkflow } from "./payload/jobs/refreshInstagramToken";
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -83,14 +83,37 @@ export default buildConfig({
   ],
   email,
   /**
-   * One scheduled task: renewing the Instagram token (see
-   * `payload/jobs/refreshInstagramToken.ts`). No `autoRun` — this deploys to
+   * One scheduled workflow: renewing the Instagram token (see
+   * `payload/jobs/refreshInstagramToken.ts` — two tasks, so a token fetched
+   * from Meta survives a failed save). No `autoRun` — this deploys to
    * serverless functions, where there is no long-lived process to hold a timer;
    * a Vercel cron pokes `/api/payload-jobs/run` daily and that endpoint
    * evaluates the schedules itself.
    */
   jobs: {
-    tasks: [refreshInstagramTokenTask],
+    workflows: [refreshInstagramTokenWorkflow],
+    // Required by the workflow's `concurrency` key, which keeps a retrying run
+    // and a freshly scheduled one from refreshing the token simultaneously.
+    enableConcurrencyControl: true,
+    /**
+     * Payload hides the jobs collection by default, which made every refresh
+     * run invisible — the audit trail existed but nobody could open it. Shown
+     * under Sistema instead. A successful run deletes its own row
+     * (`deleteJobOnComplete`, left at its default on purpose: the row's task
+     * log carries the fetched token, and a success has nothing to keep), so
+     * what appears here is exactly what needs attention — failures and
+     * pending retries. Success is recorded on the `instagram-auth` global;
+     * `pnpm instagram:status` prints both.
+     */
+    jobsCollectionOverrides: ({ defaultJobsCollection }) => ({
+      ...defaultJobsCollection,
+      admin: {
+        ...defaultJobsCollection.admin,
+        group: "Sistema",
+        hidden: false,
+      },
+      labels: { plural: "Tarefas agendadas", singular: "Tarefa agendada" },
+    }),
     access: {
       /**
        * `jobs.access.run` defaults to **public**, which would leave the job

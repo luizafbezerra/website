@@ -32,8 +32,8 @@ export async function alertInstagramTokenFailure(
     "do Instagram simplesmente deixa de aparecer — nenhuma página quebra.",
     "",
     "O que fazer: gerar um novo token de usuário de longa duração no painel do Meta para",
-    "@simbolos.do.self, atualizar INSTAGRAM_TOKEN na Vercel e limpar o campo do token no global",
-    '"instagram-auth" para que o novo valor do ambiente volte a ser usado.',
+    "@simbolos.do.self e gravá-lo com `pnpm instagram:set-token <token>` (o script valida o",
+    "token contra a API antes de gravar). `pnpm instagram:status` mostra o estado atual.",
   ].join("\n");
 
   if (!process.env.RESEND_API_KEY || !recipient) {

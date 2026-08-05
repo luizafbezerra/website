@@ -20,6 +20,8 @@
     "cosmos:textures": "tsx scripts/cosmos-textures.ts",
     "db:branch": "tsx --env-file=.env.local scripts/db-branch.ts",
     "db:reset": "tsx --env-file=.env.local scripts/db-reset.ts",
+    "instagram:status": "tsx --require ./scripts/no-schema-push.cjs --env-file .env.local scripts/instagram-status.mts",
+    "instagram:set-token": "tsx --require ./scripts/no-schema-push.cjs --env-file .env.local scripts/instagram-set-token.mts",
     "db:migrate": "payload migrate",
     "db:migrate:create": "payload migrate:create",
     "db:migrate:status": "payload migrate:status",

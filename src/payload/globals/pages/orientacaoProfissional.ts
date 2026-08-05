@@ -11,7 +11,13 @@ import { PAGES_GROUP, pageAccess, revalidatePageHook } from "./shared";
  *
  * No zodiac imagery anywhere on this page (CONCEPT §6 note / CON-006): a wheel
  * beside psychological tests would read as predictive assessment. The art slot
- * below is a painted crossroads, nothing symbolic of fate.
+ * below is a painted crossroads, nothing symbolic of fate. It is also the reason
+ * this page carries no wow set-piece at all — PAT-002 asks for *at most* one, and
+ * the only set-piece the page's own vocabulary suggests is the forbidden one.
+ *
+ * Section 1 is the page's opening as well as its first CONCEPT §6 section, so
+ * unlike `page-primeira-conversa` this global needed no extra `abertura` tab: the
+ * `h1` and the front-loaded lead are `abertura.heading` and `abertura.body`.
  */
 export const PageOrientacaoProfissional: GlobalConfig = {
   slug: "page-orientacao-profissional",
@@ -31,10 +37,15 @@ export const PageOrientacaoProfissional: GlobalConfig = {
           name: "abertura",
           label: "1 · Abertura",
           description:
-            "O que é o percurso, a especialização na PUC-SP e a promessa nas suas palavras.",
+            "O que é o percurso, a especialização na PUC-SP e a promessa nas suas palavras. É também a abertura da página: o título aqui é o título da página inteira.",
           fields: [
             localizedText({ name: "heading", label: "Título" }),
-            localizedRichText({ name: "body", label: "Texto" }),
+            localizedRichText({
+              name: "body",
+              label: "Primeiras linhas",
+              description:
+                "Duas ou três frases que já respondem tudo: o que é, quem conduz, quantos encontros, em que formato, em que idiomas, de onde a pessoa pode estar e com o que ela sai. Quem lê só isto já foi respondido.",
+            }),
           ],
         },
         {
@@ -69,8 +80,17 @@ export const PageOrientacaoProfissional: GlobalConfig = {
               type: "array",
               label: "Etapas",
               labels: { singular: "Etapa", plural: "Etapas" },
+              admin: {
+                description:
+                  "Os movimentos por onde o trabalho passa, em ordem. Não são as doze sessões: são as etapas do percurso.",
+              },
               fields: [
-                { name: "numeral", type: "text", label: "Numeral" },
+                {
+                  name: "numeral",
+                  type: "text",
+                  label: "Numeral",
+                  admin: { description: "I, II, III… Em branco, o site numera pela ordem." },
+                },
                 localizedText({ name: "title", label: "Título" }),
                 localizedTextarea({ name: "text", label: "Texto" }),
               ],
@@ -79,7 +99,7 @@ export const PageOrientacaoProfissional: GlobalConfig = {
               name: "deliverable",
               label: "O que a pessoa leva",
               description:
-                "A clareza sobre a profissão que faz mais sentido no momento de vida dela.",
+                "A clareza sobre a profissão que faz mais sentido no momento de vida dela. Esta é a frase que a página inteira promete, e ela aparece destacada no fim da seção.",
             }),
           ],
         },
@@ -96,17 +116,40 @@ export const PageOrientacaoProfissional: GlobalConfig = {
               type: "array",
               label: "Distinções",
               labels: { singular: "Distinção", plural: "Distinções" },
+              admin: {
+                description:
+                  "Uma por distinção: o que você faz, afirmado — nada aqui precisa dizer o que os outros deixam de fazer. O título abre o parágrafo, rubricado, então escreva-o já com o ponto final.",
+              },
               fields: [
                 localizedText({ name: "title", label: "Título", required: true }),
                 localizedTextarea({ name: "text", label: "Texto" }),
               ],
             },
-            mediaSlot({
-              name: "plate",
-              label: "Prancha (encruzilhada)",
+            localizedTextarea({
+              name: "anchor",
+              label: "A frase sobre vocação",
               description:
-                "Se quiser um momento de arte aqui, uma encruzilhada ou labirinto pintado — nunca imagem de signos.",
+                "A única frase junguiana da página: a vocação como uma das portas da individuação. Uma ou duas linhas. Em branco, não aparece.",
             }),
+            {
+              name: "plate",
+              type: "group",
+              label: "A pintura desta página",
+              admin: {
+                description:
+                  "Uma encruzilhada ou um labirinto pintado, fechando esta seção — nunca imagem de signos (uma roda ao lado de testes psicológicos leria como previsão). Domínio público, com proveniência verificada.",
+              },
+              fields: [
+                mediaSlot({
+                  name: "image",
+                  label: "Imagem",
+                  description: "A tela inteira, em boa resolução.",
+                }),
+                { name: "painter", type: "text", label: "Pintor(a)" },
+                localizedText({ name: "workTitle", label: "Título da obra" }),
+                { name: "year", type: "text", label: "Ano" },
+              ],
+            },
           ],
         },
         {
@@ -124,7 +167,7 @@ export const PageOrientacaoProfissional: GlobalConfig = {
           name: "pratico",
           label: "6 · Prático",
           description:
-            "Duração, formato on-line, idiomas. O valor vem de A Clínica — em branco, o site escreve “a combinar”.",
+            "Duração, formato on-line, idiomas, de onde. O valor vem de A Clínica — em branco, o site escreve “a combinar”, e aqui aparece só o valor da orientação, nunca o da análise ao lado.",
           fields: [
             localizedText({ name: "heading", label: "Título" }),
             {

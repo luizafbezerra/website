@@ -7,6 +7,7 @@ import * as migration_20260805_013127_concept_v3_cms from "./20260805_013127_con
 import * as migration_20260805_020046_concept_v3_credential_line from "./20260805_020046_concept_v3_credential_line";
 import * as migration_20260805_031704_concept_v3_inicio_credencial_drop from "./20260805_031704_concept_v3_inicio_credencial_drop";
 import * as migration_20260805_041259_concept_v3_primeira_conversa from "./20260805_041259_concept_v3_primeira_conversa";
+import * as migration_20260805_055245_concept_v3_phase6_pages from "./20260805_055245_concept_v3_phase6_pages";
 
 export const migrations = [
   {
@@ -53,5 +54,10 @@ export const migrations = [
     up: migration_20260805_041259_concept_v3_primeira_conversa.up,
     down: migration_20260805_041259_concept_v3_primeira_conversa.down,
     name: "20260805_041259_concept_v3_primeira_conversa",
+  },
+  {
+    up: migration_20260805_055245_concept_v3_phase6_pages.up,
+    down: migration_20260805_055245_concept_v3_phase6_pages.down,
+    name: "20260805_055245_concept_v3_phase6_pages",
   },
 ];

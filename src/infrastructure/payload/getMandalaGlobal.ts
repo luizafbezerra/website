@@ -1,5 +1,6 @@
 import "server-only";
 import { cache } from "react";
+import type { Locale } from "@/domain/site/Locale";
 import type { WheelSign } from "@/domain/wheel/wheelGeometry";
 import { getPayloadSafe } from "./getPayloadSafe";
 
@@ -9,10 +10,12 @@ export type PayloadMandala = Partial<
 > | null;
 
 /** The `mandala` global's editable prose, or null when Payload is disabled. */
-export const getMandalaGlobal = cache(async function getMandalaGlobal(): Promise<PayloadMandala> {
+export const getMandalaGlobal = cache(async function getMandalaGlobal(
+  locale: Locale,
+): Promise<PayloadMandala> {
   const payload = await getPayloadSafe();
   if (!payload) return null;
 
-  const doc = await payload.findGlobal({ slug: "mandala", depth: 0, overrideAccess: true });
+  const doc = await payload.findGlobal({ slug: "mandala", locale, depth: 0, overrideAccess: true });
   return doc as unknown as PayloadMandala;
 });

@@ -4,6 +4,7 @@ import { getHomeHeroGlobal as infraGetHomeHeroGlobal } from "@/infrastructure/pa
 import { getHomePillarsGlobal as infraGetHomePillarsGlobal } from "@/infrastructure/payload/getHomePillarsGlobal";
 import { getHomeStructureGlobal as infraGetHomeStructureGlobal } from "@/infrastructure/payload/getHomeStructureGlobal";
 import { getHomeVoicesGlobal as infraGetHomeVoicesGlobal } from "@/infrastructure/payload/getHomeVoicesGlobal";
+import type { Locale } from "@/domain/site/Locale";
 import { type Home, HOME_DEFAULTS } from "./Home";
 import { homeFromPayload } from "./homeFromPayload";
 
@@ -14,15 +15,15 @@ import { homeFromPayload } from "./homeFromPayload";
  * pre-migration, when the table does not exist yet), so the page never breaks
  * on a schema that has not deployed.
  */
-export async function getHome(): Promise<Home> {
+export async function getHome(locale: Locale): Promise<Home> {
   try {
     const [structure, hero, pillars, about, voices, contact] = await Promise.all([
-      infraGetHomeStructureGlobal(),
-      infraGetHomeHeroGlobal(),
-      infraGetHomePillarsGlobal(),
-      infraGetHomeAboutGlobal(),
-      infraGetHomeVoicesGlobal(),
-      infraGetHomeContactGlobal(),
+      infraGetHomeStructureGlobal(locale),
+      infraGetHomeHeroGlobal(locale),
+      infraGetHomePillarsGlobal(locale),
+      infraGetHomeAboutGlobal(locale),
+      infraGetHomeVoicesGlobal(locale),
+      infraGetHomeContactGlobal(locale),
     ]);
 
     return homeFromPayload({ structure, hero, pillars, about, voices, contact });

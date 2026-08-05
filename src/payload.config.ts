@@ -6,6 +6,7 @@ import { pt } from "@payloadcms/translations/languages/pt";
 import path from "path";
 import { fileURLToPath } from "url";
 
+import { DEFAULT_LOCALE, SITE_LOCALES } from "@/domain/site/Locale";
 import { Users } from "./payload/collections/Users";
 import { Media } from "./payload/collections/Media";
 import { Testimonials } from "./payload/collections/Testimonials";
@@ -31,6 +32,16 @@ export default buildConfig({
   i18n: {
     supportedLanguages: { pt },
     fallbackLanguage: "pt",
+  },
+  // Content localization (REQ-002), distinct from `i18n` above: that one is the
+  // admin chrome's language, this one is the language of what she writes.
+  // Visitor-facing text fields are marked `localized: true` field by field
+  // (Phase 4); `fallback` means an English field she has not translated yet
+  // renders her Portuguese, so /en is never blank.
+  localization: {
+    locales: [...SITE_LOCALES],
+    defaultLocale: DEFAULT_LOCALE,
+    fallback: true,
   },
   collections: [Users, Media, Testimonials, Faq],
   globals: [

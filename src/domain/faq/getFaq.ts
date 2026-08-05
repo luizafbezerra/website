@@ -1,4 +1,5 @@
 import { findFaqEntries as infraFindFaqEntries } from "@/infrastructure/payload/findFaqEntries";
+import type { Locale } from "@/domain/site/Locale";
 import { FAQ_DEFAULTS, type FaqEntry } from "./FaqEntry";
 import { faqFromPayload } from "./faqFromPayload";
 
@@ -8,9 +9,9 @@ import { faqFromPayload } from "./faqFromPayload";
  * blank. Pre-migration the `faq` table does not exist, so a failed read degrades
  * to the code defaults rather than breaking the page.
  */
-export async function getFaq(): Promise<FaqEntry[]> {
+export async function getFaq(locale: Locale): Promise<FaqEntry[]> {
   try {
-    const docs = await infraFindFaqEntries();
+    const docs = await infraFindFaqEntries(locale);
     if (!docs) return FAQ_DEFAULTS;
 
     const entries = faqFromPayload(docs);

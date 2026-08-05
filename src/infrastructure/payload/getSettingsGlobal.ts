@@ -1,5 +1,6 @@
 import "server-only";
 import { cache } from "react";
+import type { Locale } from "@/domain/site/Locale";
 import { getPayloadSafe } from "./getPayloadSafe";
 
 // ---------------------------------------------------------------------------
@@ -9,9 +10,13 @@ import { getPayloadSafe } from "./getPayloadSafe";
 // rather than an id.
 //
 // `cache` is React's request-scoped memoizer, not a UI concern: it keeps one
-// database read per request, which is the accessor's own responsibility. Every
-// accessor in this folder wraps itself the same way so the domain layer above
-// can stay free of framework imports.
+// database read per request and locale, which is the accessor's own
+// responsibility. Every accessor in this folder wraps itself the same way so the
+// domain layer above can stay free of framework imports.
+//
+// The `locale` argument is the Payload content locale (REQ-002). With
+// `fallback: true` in the config, an untranslated en field arrives filled with
+// its pt value, so the domain mappers never have to know a locale exists.
 // ---------------------------------------------------------------------------
 
 type PayloadMediaObject = { url?: string | null };
@@ -53,12 +58,17 @@ export type PayloadSettings = {
 };
 
 /** The `settings` global, or null when Payload is disabled. */
-export const getSettingsGlobal = cache(
-  async function getSettingsGlobal(): Promise<PayloadSettings | null> {
-    const payload = await getPayloadSafe();
-    if (!payload) return null;
+export const getSettingsGlobal = cache(async function getSettingsGlobal(
+  locale: Locale,
+): Promise<PayloadSettings | null> {
+  const payload = await getPayloadSafe();
+  if (!payload) return null;
 
-    const doc = await payload.findGlobal({ slug: "settings", depth: 1, overrideAccess: true });
-    return doc as PayloadSettings;
-  },
-);
+  const doc = await payload.findGlobal({
+    slug: "settings",
+    locale,
+    depth: 1,
+    overrideAccess: true,
+  });
+  return doc as PayloadSettings;
+});

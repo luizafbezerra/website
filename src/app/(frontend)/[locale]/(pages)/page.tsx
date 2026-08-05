@@ -1,11 +1,15 @@
 import type { Metadata } from "next";
 import { Fragment, type ReactNode } from "react";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { getHome } from "@/domain/home/getHome";
 import type { SectionType } from "@/domain/sections/sectionRegistry";
 import { getIdentity } from "@/domain/site/getIdentity";
 import { getNavigation } from "@/domain/site/getNavigation";
+import { type Locale, LOCALE_TAGS } from "@/domain/site/Locale";
+import { pagePath } from "@/domain/site/pagePath";
 import { getTestimonials } from "@/domain/testimonials/getTestimonials";
 import { getMandala } from "@/domain/zodiac/getMandala";
+import { absoluteUrl } from "@/infrastructure/env/baseUrl";
 import { Footer } from "@/view/chrome/Footer";
 import { Header } from "@/view/chrome/Header";
 import { StickyHeaderShell } from "@/view/chrome/StickyHeaderShell";
@@ -23,37 +27,31 @@ import {
   ReviewsJsonLd,
   WebSiteJsonLd,
 } from "@/view/seo/jsonLd";
+import { pageMetadata } from "@/view/seo/pageMetadata";
 
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? "https://example.com";
+type HomeProps = { params: Promise<{ locale: Locale }> };
 
-export async function generateMetadata(): Promise<Metadata> {
-  const identity = await getIdentity();
-  const title = `${identity.fullName} — psicóloga junguiana em ${identity.city}`;
-  return {
-    title,
-    description:
-      "Psicoterapia junguiana para adultos. Ansiedade, lutos, relações e propósito — atendimento presencial e online em todo o Brasil.",
-    alternates: { canonical: BASE_URL },
-    openGraph: {
-      title,
-      description: identity.tagline,
-      url: BASE_URL,
-      locale: "pt_BR",
-      type: "website",
-    },
-  };
+export async function generateMetadata({ params }: HomeProps): Promise<Metadata> {
+  const { locale } = await params;
+  return pageMetadata("inicio", locale);
 }
 
 export const revalidate = 3600;
 
-export default async function Home() {
-  const [identity, home, navLinks, testimonials, mandala] = await Promise.all([
-    getIdentity(),
-    getHome(),
-    getNavigation(),
-    getTestimonials(),
-    getMandala(),
+export default async function Home({ params }: HomeProps) {
+  const { locale } = await params;
+  setRequestLocale(locale);
+
+  const [identity, home, navLinks, testimonials, mandala, t] = await Promise.all([
+    getIdentity(locale),
+    getHome(locale),
+    getNavigation(locale),
+    getTestimonials(locale),
+    getMandala(locale),
+    getTranslations({ locale, namespace: "nav" }),
   ]);
+
+  const url = absoluteUrl(pagePath("inicio", locale));
 
   // Hero is pinned first and Footer last; these body sections render in the
   // order configured on the Home global, skipping any that are disabled.
@@ -76,7 +74,7 @@ export default async function Home() {
     <>
       <PersonJsonLd
         name={identity.fullName}
-        url={BASE_URL}
+        url={url}
         jobTitle={`${identity.role} — ${identity.tradition}`}
         email={identity.email}
         telephone={identity.phoneE164}
@@ -90,7 +88,9 @@ export default async function Home() {
           "Ansiedade",
           "Luto",
         ]}
-        knowsLanguage={["pt-BR"]}
+        // She works in both languages (CONCEPT §6) — for an anglophone searcher
+        // this is the signal that matters most.
+        knowsLanguage={[LOCALE_TAGS.pt, LOCALE_TAGS.en]}
         workLocation={{
           city: identity.city,
           region: identity.region,
@@ -101,7 +101,7 @@ export default async function Home() {
       <LocalBusinessJsonLd
         type="MedicalBusiness"
         name={`Consultório de ${identity.fullName}`}
-        url={BASE_URL}
+        url={url}
         description={`Consultório de psicologia clínica em ${identity.city}–${identity.region}. Análise junguiana para adultos. Atendimento presencial e online.`}
         telephone={identity.phoneE164}
         email={identity.email}
@@ -110,25 +110,25 @@ export default async function Home() {
         country={identity.country}
         priceRange="$$"
         areaServed={[identity.city, identity.region, identity.country]}
-        founder={{ name: identity.fullName, url: BASE_URL }}
+        founder={{ name: identity.fullName, url }}
       />
 
       <WebSiteJsonLd
         name={identity.fullName}
-        url={BASE_URL}
+        url={url}
         description={identity.tagline}
-        inLanguage="pt-BR"
+        inLanguage={LOCALE_TAGS[locale]}
       />
 
-      <BreadcrumbJsonLd items={[{ name: "Início", url: BASE_URL }]} />
+      <BreadcrumbJsonLd items={[{ name: t("inicio"), url }]} />
 
       {testimonials.length > 0 && (
         <ReviewsJsonLd
           itemName={identity.fullName}
-          itemUrl={BASE_URL}
-          reviews={testimonials.map((t) => ({
-            body: t.body,
-            author: t.attribution,
+          itemUrl={url}
+          reviews={testimonials.map((testimonial) => ({
+            body: testimonial.body,
+            author: testimonial.attribution,
           }))}
         />
       )}
@@ -139,9 +139,9 @@ export default async function Home() {
       <main id="main">
         <Hero identity={identity} content={home.hero} />
         {home.sections
-          .filter((s) => s.enabled)
-          .map((s) => (
-            <Fragment key={s.type}>{sectionNodes[s.type]}</Fragment>
+          .filter((section) => section.enabled)
+          .map((section) => (
+            <Fragment key={section.type}>{sectionNodes[section.type]}</Fragment>
           ))}
       </main>
       <Footer identity={identity} navLinks={navLinks} />

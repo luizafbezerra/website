@@ -1,5 +1,6 @@
 import { getFaq } from "@/domain/faq/getFaq";
 import { getIdentity } from "@/domain/site/getIdentity";
+import { DEFAULT_LOCALE } from "@/domain/site/Locale";
 import { estimateTokens } from "@/domain/tokens/estimateTokens";
 import { formatTokens } from "@/domain/tokens/formatTokens";
 import { NextResponse } from "next/server";
@@ -22,7 +23,12 @@ const HOME_TOKENS_HINT = 900;
 // counts. Served as text/plain regardless of the launch gate; harmless while
 // robots.txt is locked.
 export async function GET(): Promise<NextResponse> {
-  const [identity, faqEntries] = await Promise.all([getIdentity(), getFaq()]);
+  // Still a single pt-BR index: TASK-043 rebuilds this from the page registry
+  // with one file per locale, alongside the Markdown twins.
+  const [identity, faqEntries] = await Promise.all([
+    getIdentity(DEFAULT_LOCALE),
+    getFaq(DEFAULT_LOCALE),
+  ]);
 
   // Computed from the live FAQ copy — cheap and accurate.
   const faqTokens = estimateTokens(

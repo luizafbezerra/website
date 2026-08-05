@@ -1,42 +1,46 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { getNavigation } from "@/domain/site/getNavigation";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { getIdentity } from "@/domain/site/getIdentity";
+import { getNavigation } from "@/domain/site/getNavigation";
+import type { Locale } from "@/domain/site/Locale";
+import { pagePath } from "@/domain/site/pagePath";
+import { absoluteUrl } from "@/infrastructure/env/baseUrl";
+import { Link } from "@/i18n/navigation";
 import { Footer } from "@/view/chrome/Footer";
 import { Header } from "@/view/chrome/Header";
 import { StickyHeaderShell } from "@/view/chrome/StickyHeaderShell";
 import { BreadcrumbJsonLd } from "@/view/seo/jsonLd";
+import { pageMetadata } from "@/view/seo/pageMetadata";
 
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? "https://example.com";
+type PrivacidadeProps = { params: Promise<{ locale: Locale }> };
 
-export async function generateMetadata(): Promise<Metadata> {
-  const identity = await getIdentity();
-  return {
-    title: "Privacidade",
-    description:
-      "Como os dados de quem visita e entra em contato são tratados, na forma da Lei Geral de Proteção de Dados (LGPD).",
-    alternates: { canonical: `${BASE_URL}/privacidade` },
-    openGraph: {
-      title: `Privacidade — ${identity.fullName}`,
-      description: "Tratamento de dados pessoais na forma da LGPD.",
-      url: `${BASE_URL}/privacidade`,
-      locale: "pt_BR",
-      type: "article",
-    },
-  };
+export async function generateMetadata({ params }: PrivacidadeProps): Promise<Metadata> {
+  const { locale } = await params;
+  return pageMetadata("privacidade", locale);
 }
 
 export const revalidate = 86400;
 
-export default async function PrivacidadePage() {
-  const [identity, navLinks] = await Promise.all([getIdentity(), getNavigation()]);
+// NOTE: the body below is still the pre-CONCEPT pt-BR LGPD draft, so /en/privacy
+// falls back to Portuguese prose — the same accepted state as any untranslated
+// CMS field (RISK-001). TASK-042 replaces the whole page with the short, honest
+// SEC-001 text in both locales.
+export default async function PrivacidadePage({ params }: PrivacidadeProps) {
+  const { locale } = await params;
+  setRequestLocale(locale);
+
+  const [identity, navLinks, nav] = await Promise.all([
+    getIdentity(locale),
+    getNavigation(locale),
+    getTranslations({ locale, namespace: "nav" }),
+  ]);
 
   return (
     <>
       <BreadcrumbJsonLd
         items={[
-          { name: "Início", url: BASE_URL },
-          { name: "Privacidade", url: `${BASE_URL}/privacidade` },
+          { name: nav("inicio"), url: absoluteUrl(pagePath("inicio", locale)) },
+          { name: nav("privacidade"), url: absoluteUrl(pagePath("privacidade", locale)) },
         ]}
       />
 
@@ -50,12 +54,12 @@ export default async function PrivacidadePage() {
               href="/"
               className="text-quill hover:text-terracotta decoration-terracotta/30 hover:decoration-terracotta underline decoration-1 underline-offset-[0.28em] transition-colors"
             >
-              Início
+              {nav("inicio")}
             </Link>{" "}
             <span aria-hidden="true" className="text-terracotta/60">
               ·
             </span>{" "}
-            <span className="text-foreground">Privacidade</span>
+            <span className="text-foreground">{nav("privacidade")}</span>
           </p>
         </nav>
 
@@ -64,7 +68,7 @@ export default async function PrivacidadePage() {
           className="px-6 py-16 sm:px-10 sm:py-20 lg:py-24"
         >
           <div className="mx-auto max-w-3xl">
-            <p className="tracked mb-5">Privacidade</p>
+            <p className="tracked mb-5">{nav("privacidade")}</p>
             <h1
               id="privacidade-heading"
               className="display text-foreground text-balance text-[clamp(2rem,4.2vw,2.9rem)] leading-[1.12] tracking-[-0.01em]"

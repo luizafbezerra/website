@@ -1,6 +1,6 @@
 ---
 goal: Restructure the site to the CONCEPT.md v3 eight-page bilingual experience — teardown, layered architecture, i18n, CMS reorganization, chrome, and the per-page build sequence
-version: 1.3
+version: 1.4
 date_created: 2026-08-04
 last_updated: 2026-08-04
 owner: João Vogler (dev); content sign-off — Luiza Fernandes Bezerra
@@ -12,7 +12,7 @@ tags: [architecture, refactor, feature, i18n, cms, design]
 
 ![Status: In progress](https://img.shields.io/badge/status-In%20progress-yellow)
 
-> **Progress:** Phases 1–2 complete (teardown + the four-layer reorganization, with vitest and CI). Phase 3 (i18n foundation) is next.
+> **Progress:** Phases 1–3 complete (teardown · the four-layer reorganization with vitest and CI · the i18n foundation: page registry, next-intl locale routing, Payload localization, metadata/hreflang). Phase 4 (CMS restructure) is next.
 
 This is the **master plan** for rebuilding the Símbolos do Self website as the experience defined in `CONCEPT.md` v3. The currently built site (home sections, `/blog`, `/simbolos`) predates the concept and is replaced, not migrated. The site is unreleased: all changes are big-bang on a branch with Vercel previews; destructive CMS migrations are authorized (content exported to a reference document first).
 
@@ -113,14 +113,58 @@ Decisions locked with the owner on 2026-08-04 (recorded in CONCEPT.md §6/§9/§
 
 - GOAL-003: i18n foundation — locale routing (pt at root, `/en/*` mirror), the canonical page registry, Payload localization, and metadata/hreflang plumbing.
 
-| Task     | Description                                                                                                                                                                                                                                                                                                                                                | Completed | Date |
-| -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- | ---- |
-| TASK-016 | Create `src/domain/site/pages.ts` — the canonical page registry: for each of the 8 pages, a key, pt slug, en slug (per REQ-002), header/footer placement per CONCEPT §6, and title-pattern data. Pure module + colocated test; nav, sitemap, hreflang, markdown twins, and llms.txt all derive from it.                                                    |           |      |
-| TASK-017 | Add `next-intl`: `src/i18n/` framework glue (request config, navigation helpers) with locales `['pt','en']`, `defaultLocale: 'pt'`, `localePrefix: 'as-needed'`, localized `pathnames` generated from the registry; `middleware.ts` with `Accept-Language` negotiation + `NEXT_LOCALE` cookie, matcher excluding `/admin`, `/api`, `/_next`, static files. |           |      |
-| TASK-018 | Restructure `src/app/(frontend)/` under a `[locale]` segment with `generateStaticParams` + `setRequestLocale`; keep `(payload)` routes untouched. Verify `/` serves pt with no prefix and `/en` serves en.                                                                                                                                                 |           |      |
-| TASK-019 | Create `messages/pt.json` and `messages/en.json` for chrome strings (nav labels, toggle, skip links, footer column titles, placeholder-frame captions).                                                                                                                                                                                                    |           |      |
-| TASK-020 | Enable Payload localization in `src/payload.config.ts`: `localization: { locales: ['pt','en'], defaultLocale: 'pt', fallback: true }`. Infrastructure accessors in `src/infrastructure/payload/` accept a locale and pass it through.                                                                                                                      |           |      |
-| TASK-021 | Metadata plumbing: shared helper producing per-page `alternates` (canonical + hreflang pt/en/x-default) and titles from the registry; `src/app/sitemap.ts` from the registry × locales.                                                                                                                                                                    |           |      |
+| Task     | Description                                                                                                                                                                                                                                                                                                                                                | Completed | Date       |
+| -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- | ---------- |
+| TASK-016 | Create `src/domain/site/pages.ts` — the canonical page registry: for each of the 8 pages, a key, pt slug, en slug (per REQ-002), header/footer placement per CONCEPT §6, and title-pattern data. Pure module + colocated test; nav, sitemap, hreflang, markdown twins, and llms.txt all derive from it.                                                    | ✅        | 2026-08-04 |
+| TASK-017 | Add `next-intl`: `src/i18n/` framework glue (request config, navigation helpers) with locales `['pt','en']`, `defaultLocale: 'pt'`, `localePrefix: 'as-needed'`, localized `pathnames` generated from the registry; `middleware.ts` with `Accept-Language` negotiation + `NEXT_LOCALE` cookie, matcher excluding `/admin`, `/api`, `/_next`, static files. | ✅        | 2026-08-04 |
+| TASK-018 | Restructure `src/app/(frontend)/` under a `[locale]` segment with `generateStaticParams` + `setRequestLocale`; keep `(payload)` routes untouched. Verify `/` serves pt with no prefix and `/en` serves en.                                                                                                                                                 | ✅        | 2026-08-04 |
+| TASK-019 | Create `messages/pt.json` and `messages/en.json` for chrome strings (nav labels, toggle, skip links, footer column titles, placeholder-frame captions).                                                                                                                                                                                                    | ✅        | 2026-08-04 |
+| TASK-020 | Enable Payload localization in `src/payload.config.ts`: `localization: { locales: ['pt','en'], defaultLocale: 'pt', fallback: true }`. Infrastructure accessors in `src/infrastructure/payload/` accept a locale and pass it through.                                                                                                                      | ✅        | 2026-08-04 |
+| TASK-021 | Metadata plumbing: shared helper producing per-page `alternates` (canonical + hreflang pt/en/x-default) and titles from the registry; `src/app/sitemap.ts` from the registry × locales.                                                                                                                                                                    | ✅        | 2026-08-04 |
+
+**Phase 3 execution notes (2026-08-04)**
+
+- **As built.** `src/domain/site/{Locale,pages,pagePath}.ts` + `pages.test.ts` · `src/i18n/{routing,request,navigation}.ts` · `src/middleware.ts` · `messages/{pt,en}.json` · `src/infrastructure/env/baseUrl.ts` · `src/view/seo/pageMetadata.ts` · `src/app/sitemap.ts` (moved out of `(frontend)`) · `src/app/(frontend)/[locale]/…`. `next-intl` 4.13.5.
+- **Three decisions the task text left open.**
+  1. **The registry holds no copy.** It carries keys, paths, placement, title pattern, sitemap weight — nav labels and metadata titles live in `messages/{pt,en}.json` keyed by page key, because the domain layer must not hold human-facing text. It is declared `as const satisfies readonly SitePage[]` so the pt paths stay string literals: that is what gives next-intl's `Link` a typed href set in Phase 5.
+  2. **A `status: "built" | "planned"` field was added.** The registry has to carry all eight addresses from day one (CONCEPT §6: no URL ever migrates), but a sitemap listing the five unbuilt pages would advertise 404s. `builtPages()` filters it; each Phase 6 task flips its own page. The test asserts the split — hreflang/`pathnames` enumerate all eight, the sitemap only the three that exist.
+  3. **`alternateLinks: false`.** next-intl's middleware would emit hreflang as `Link` headers using its own locale codes (`pt`), while REQ-011 wants `pt-BR`. Turning it off leaves `pageMetadata` as the single source of alternates. Verified: no `Link` header on any page.
+- **`pagePath` vs next-intl's `Link` — two mechanisms, one registry.** `src/domain/site/pagePath.ts` builds machine-facing absolute URLs (canonical, hreflang, sitemap, JSON-LD, llms.txt) and is unit-tested; `createNavigation` handles in-app navigation. Both read `SITE_PAGES`, and `localePrefix: 'as-needed'` is exactly what `pagePath` implements, so they cannot disagree about an address.
+- **Two route-structure findings that only appear at runtime.**
+  1. **A catch-all was required for the localized 404.** `pathnames` describes only the addresses that exist, so an unknown path never matched anything under `[locale]/` and Next served its built-in English 404. `[locale]/[...rest]/page.tsx` calling `notFound()` fixes it.
+  2. **That catch-all returned HTTP 200 until the pages moved into a `(pages)` route group.** `loading.tsx` at the locale root opened a Suspense boundary, so the shell flushed with 200 before `notFound()` threw. The real pages now sit in `[locale]/(pages)/` with `loading.tsx` beside them (a route group changes no URL), leaving `[...rest]` outside the boundary. Both locales now answer 404 with a 404.
+- **`loading.tsx` became a client component.** `loading.tsx` receives no route params, so its server-side `getTranslations()` read the locale off the request headers and opted every page out of static rendering — the build listed `/[locale]` as `ƒ (Dynamic)`. Reading messages from `NextIntlClientProvider` instead restored `● (SSG)` with per-locale prerendering, which is the whole point of TASK-018's `generateStaticParams`.
+- **The local dev DB needed an unrelated cleanup first.** Enabling `localization` creates a `_locales` enum, and drizzle offered to rename `enum_posts_status` / `enum__posts_v_version_status` into it instead — orphans Phase 1 left behind when it deleted Posts without a migration. The dev server hung on that interactive prompt (it reads stdin, so a request just never returns). Dropped both types from the dev branch; the push is now non-interactive. Prod, on Luiza's Neon account, is untouched — TASK-026 still owns the real migration.
+- **`setRequestLocale` is deprecated in next-intl 4.13** in favour of Next's `next/root-params`. Kept anyway: `next/root-params` is behind `experimental.rootParams` in 16.1.6 and ships as a placeholder module that throws unless the compiler replaces it, and next-intl's own docs and examples still prescribe `setRequestLocale`. Revisit when root params are stable.
+- **Next 16 deprecates the `middleware` file convention** in favour of `proxy` (a warning on every dev start; Next already labels the timing `proxy.ts`). Left as `src/middleware.ts` — the name the plan and next-intl's docs both use. Renaming a framework convention is its own change, not a rider on this one.
+- **Deliberately not done.**
+  - **`/privacidade`'s body is still the pre-CONCEPT pt-BR LGPD draft**, so `/en/privacy` renders Portuguese prose. That is the same accepted state as any untranslated CMS field (RISK-001), and TASK-042 replaces the whole page in both locales. Its metadata, breadcrumb, and eyebrow _are_ localized. `/perguntas` behaves the same way through Payload's `fallback: true`.
+  - **`global-error.tsx` stays hardcoded pt-BR** at `(frontend)/global-error.tsx`: it catches failures in the root layout itself, so no locale or message catalogue is loadable by definition.
+  - **No fields are `localized: true` yet** — TASK-020 enables the mechanism, TASK-023/024 mark the fields.
+  - **The home page's `LocalBusinessJsonLd` still claims a city and in-person work**, and `identity.siteName` still reads "Luiza Fernandes Bezerra — Psicóloga" so the title template is not yet `· Símbolos do Self`. Both are pre-existing pre-CONCEPT values owned by TASK-022 (A Clínica global) and TASK-032 (the JSON-LD graph); rewriting them inside the i18n diff is what RISK-007 warns against. Metadata copy that this phase _did_ author is online-only per CON-001.
+- **`BASE_URL` was consolidated.** It was duplicated as `process.env.NEXT_PUBLIC_BASE_URL ?? "https://example.com"` in five route files; canonical + hreflang need one shape, so it moved to `src/infrastructure/env/baseUrl.ts` beside `siteIndexable.ts` (it reads the world, not a rule — the same reasoning as Phase 2's third decision).
+
+**Verified 2026-08-04:** `tsgo --noEmit` clean · `oxlint src/` 0 errors, 20 pre-existing warnings all in `src/migrations/` (`--threads=2` OOMs while a dev server holds RAM — CON-004; `--threads=1` is clean) · `oxfmt --check` clean · `pnpm test` 77 tests in 8 files green, up from 62 — the 15 new registry tests are mutation-checked (changing one en slug fails the suite) · `pnpm build` exit 0, 18 s, peak RSS 3.32 GB, with `/[locale]`, `/[locale]/perguntas`, `/[locale]/privacidade` all `● (SSG)` prerendered for pt and en. Boundary audit: nothing in `src/domain/` imports React, Next, next-intl, `@/view`, `@/app`, or `@/i18n`; every `src/infrastructure/` → domain import is `import type`; no route or view imports a Payload accessor directly. TEST-011 grep clean (`@/core`, `@/lib`, `@/ui` all absent).
+
+Route behaviour, checked on `next dev` **and** on `next start` against the production build:
+
+| Check                                       | Result                                                              |
+| ------------------------------------------- | ------------------------------------------------------------------- |
+| `/` · `/perguntas` · `/privacidade`         | 200, `lang="pt-BR"`, pt chrome                                      |
+| `/en` · `/en/questions` · `/en/privacy`     | 200, `lang="en"`, en chrome                                         |
+| `Accept-Language: en` on `/`                | 307 → `/en` (TEST-003)                                              |
+| `Accept-Language: pt-BR` on `/`             | 200, stays                                                          |
+| `NEXT_LOCALE=pt` + `Accept-Language: en`    | 200, stays — cookie beats header                                    |
+| `NEXT_LOCALE=en` + `Accept-Language: pt-BR` | 307 → `/en` — cookie beats header                                   |
+| `/en/analise` (internal slug under en)      | 307 → `/en/analysis`                                                |
+| `/analise`, `/en/analysis` (unbuilt)        | 404                                                                 |
+| `/nao-existe`, `/en/nope`                   | 404 **status**, localized 404 page                                  |
+| `/admin`                                    | 200 · `/api/graphql` 405 — middleware untouched                     |
+| `/robots.txt` `/sitemap.xml` `/llms.txt`    | 200, unrewritten                                                    |
+| `/blog/foo/bar` → `/`, `/simbolos`          | 308 — Phase 1 redirects still hold                                  |
+| `sitemap.xml`                               | exactly 6 `<loc>`, each with both `xhtml:link` alternates           |
+| hreflang per page                           | `pt-BR` + `en` + `x-default`, pt and en pointing at each other      |
+| Cookies set on a page load                  | only `NEXT_LOCALE`, 1 year, `SameSite=lax`, no identifier (SEC-001) |
 
 ### Implementation Phase 4
 
@@ -217,7 +261,7 @@ Decisions locked with the owner on 2026-08-04 (recorded in CONCEPT.md §6/§9/§
 - **FILE-002**: `src/infrastructure/` — new layer: `payload/` accessors (one per global/collection, locale-aware), `browser/` (storage, cosmos preference).
 - **FILE-003**: `src/view/` — new layer: `chrome/` (Header, Footer), `general/` (MediaPlaceholder, Plate, JungPassage, CredentialLine, WhatsAppCta, AvailabilityLine), `seo/jsonLd.tsx`, `home/`, `mandala/`, `styling/`. Old `src/core/`, `src/lib/`, `src/ui/` deleted (barrels included).
 - **FILE-004**: `src/payload/` — CMS schema grouped: `globals/clinica.ts`, `globals/pages/*.ts`, `collections/{Testimonials,Faq,Media,Users}.ts`, `seed/`; `src/collections/Posts.ts` and old `home/*`/`Mandala`/`Settings` globals deleted; `src/payload.config.ts` updated (localization block, new lists).
-- **FILE-005**: `middleware.ts`, `src/i18n/*`, `messages/{pt,en}.json` — new i18n layer.
+- **FILE-005**: `src/middleware.ts` (Next resolves it there in a `src/` project; Next 16 deprecates the convention in favour of `proxy` — noted in the Phase 3 notes), `src/i18n/{routing,request,navigation}.ts`, `messages/{pt,en}.json` — new i18n layer.
 - **FILE-006**: `src/app/(frontend)/[locale]/…` — restructured thin routes for the 8 pages + markdown twins; blog/feed.xml/simbolos deleted; `src/app/sitemap.ts` new.
 - **FILE-007**: `next.config.ts` — permanent redirects.
 - **FILE-008**: `.github/workflows/ci.yml` (new), `package.json` (lint script simplified, `test` script added, `arch:check` removed — done), lint-staged config (new), `vitest.config.ts` (new); `scripts/arch-check.sh` deleted (done).

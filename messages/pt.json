@@ -1,0 +1,64 @@
+{
+  "nav": {
+    "inicio": "Início",
+    "analise": "Análise",
+    "orientacaoProfissional": "Orientação profissional",
+    "sobre": "Sobre",
+    "primeiraConversa": "Primeira conversa",
+    "perguntas": "Perguntas",
+    "internacional": "Brasil e exterior",
+    "privacidade": "Privacidade"
+  },
+  "meta": {
+    "inicio": {
+      "title": "Clínica de psicologia analítica (Jung) on-line · Símbolos do Self",
+      "description": "Clínica de psicologia analítica (Jung) on-line para todo o Brasil e exterior. Análise e orientação profissional de carreira com Luiza Fernandes Bezerra, psicóloga."
+    },
+    "perguntas": {
+      "title": "Perguntas frequentes",
+      "description": "Como funciona a primeira conversa, duração da análise, frequência das sessões, atendimento on-line no Brasil e no exterior, sigilo."
+    },
+    "privacidade": {
+      "title": "Privacidade",
+      "description": "Como os dados de quem visita e entra em contato são tratados, na forma da Lei Geral de Proteção de Dados (LGPD)."
+    }
+  },
+  "chrome": {
+    "skipToContent": "Pular para o conteúdo",
+    "language": {
+      "label": "Idioma",
+      "pt": "PT",
+      "en": "EN",
+      "switchToPt": "Ler em português",
+      "switchToEn": "Read in English"
+    },
+    "footer": {
+      "clinica": "A clínica",
+      "comecar": "Começar",
+      "mundo": "O mundo"
+    }
+  },
+  "placeholder": {
+    "pending": "Em preparação",
+    "aria": "Espaço reservado: {description}"
+  },
+  "notFound": {
+    "metaTitle": "Página não encontrada",
+    "eyebrow": "Erro 404",
+    "title": "Esta página <em>se perdeu</em> pelo caminho.",
+    "body": "O endereço que você procura não existe ou foi movido — acontece. Volte ao início ou, se preferir falar comigo, o WhatsApp está sempre por perto.",
+    "backHome": "Voltar ao início",
+    "whatsapp": "Conversar pelo WhatsApp"
+  },
+  "error": {
+    "eyebrow": "Algo saiu do lugar",
+    "title": "Um <em>imprevisto</em> aconteceu.",
+    "body": "Não foi possível carregar esta página agora. Tente novamente em instantes; se o problema continuar, me escreva pelo WhatsApp e eu dou um jeito.",
+    "retry": "Tentar novamente",
+    "backHome": "Voltar ao início",
+    "whatsapp": "Conversar pelo WhatsApp"
+  },
+  "loading": {
+    "label": "Carregando…"
+  }
+}

@@ -1,17 +1,27 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { getNavigation } from "@/domain/site/getNavigation";
+import { getLocale, getTranslations } from "next-intl/server";
 import { getIdentity } from "@/domain/site/getIdentity";
+import { getNavigation } from "@/domain/site/getNavigation";
+import type { Locale } from "@/domain/site/Locale";
+import { Link } from "@/i18n/navigation";
 import { Footer } from "@/view/chrome/Footer";
 import { Header } from "@/view/chrome/Header";
 import { StickyHeaderShell } from "@/view/chrome/StickyHeaderShell";
 
-export const metadata: Metadata = {
-  title: "Página não encontrada",
-};
+// Rendered inside the `[locale]` layout, so it inherits the visitor's language:
+// an English browser that lands on a missing address is answered in English.
+// `getLocale` rather than route params — Next renders not-found without them.
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("notFound");
+  return { title: t("metaTitle") };
+}
 
 export default async function NotFound() {
-  const [identity, navLinks] = await Promise.all([getIdentity(), getNavigation()]);
+  const [t, locale] = await Promise.all([getTranslations("notFound"), getLocale()]);
+  const [identity, navLinks] = await Promise.all([
+    getIdentity(locale as Locale),
+    getNavigation(locale as Locale),
+  ]);
 
   const linkClass =
     "display-italic text-foreground decoration-terracotta hover:text-terracotta inline-flex text-[1.08rem] underline decoration-1 underline-offset-[0.22em] transition-colors";
@@ -26,19 +36,19 @@ export default async function NotFound() {
         className="flex min-h-[60vh] items-center px-6 py-32 sm:px-10 sm:py-44 lg:py-52"
       >
         <div className="mx-auto max-w-2xl text-center sm:text-left">
-          <p className="tracked mb-6">Erro 404</p>
+          <p className="tracked mb-6">{t("eyebrow")}</p>
           <h1 className="display text-foreground text-balance text-[clamp(2rem,4.4vw,3rem)] leading-[1.12] tracking-[-0.01em]">
-            Esta página <span className="display-italic text-terracotta-deep">se perdeu</span> pelo
-            caminho.
+            {t.rich("title", {
+              em: (chunks) => <span className="display-italic text-terracotta-deep">{chunks}</span>,
+            })}
           </h1>
           <p className="body-prose text-ink mt-8 max-w-[52ch] text-[1.085rem] leading-[1.74]">
-            O endereço que você procura não existe ou foi movido — acontece. Volte ao início ou, se
-            preferir falar comigo, o WhatsApp está sempre por perto.
+            {t("body")}
           </p>
 
           <div className="mt-12 flex flex-col gap-5 sm:flex-row sm:flex-wrap sm:items-center sm:gap-10">
             <Link href="/" className={linkClass}>
-              Voltar ao início
+              {t("backHome")}
             </Link>
             <a
               href={identity.whatsappUrl}
@@ -46,7 +56,7 @@ export default async function NotFound() {
               rel="noopener noreferrer"
               className={linkClass}
             >
-              Conversar pelo WhatsApp
+              {t("whatsapp")}
             </a>
           </div>
         </div>

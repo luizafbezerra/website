@@ -1,4 +1,5 @@
 import { getMandalaGlobal as infraGetMandalaGlobal } from "@/infrastructure/payload/getMandalaGlobal";
+import type { Locale } from "@/domain/site/Locale";
 import { type MandalaContent, MANDALA_DEFAULTS } from "./MandalaContent";
 import { mandalaFromPayload } from "./mandalaFromPayload";
 
@@ -10,9 +11,9 @@ import { mandalaFromPayload } from "./mandalaFromPayload";
  * migration that only lands on deploy, so a pre-migration read (or any global
  * outage) degrades to the code prose rather than breaking the wheel.
  */
-export async function getMandala(): Promise<MandalaContent> {
+export async function getMandala(locale: Locale): Promise<MandalaContent> {
   try {
-    const doc = await infraGetMandalaGlobal();
+    const doc = await infraGetMandalaGlobal(locale);
     if (!doc) return MANDALA_DEFAULTS;
 
     return mandalaFromPayload(doc);

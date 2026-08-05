@@ -1,0 +1,64 @@
+{
+  "nav": {
+    "inicio": "Home",
+    "analise": "Analysis",
+    "orientacaoProfissional": "Career guidance",
+    "sobre": "About",
+    "primeiraConversa": "First conversation",
+    "perguntas": "Questions",
+    "internacional": "Brazil and abroad",
+    "privacidade": "Privacy"
+  },
+  "meta": {
+    "inicio": {
+      "title": "Online analytical psychology (Jung) · Símbolos do Self",
+      "description": "An online analytical-psychology (Jung) practice for Brazil and abroad. Jungian-oriented psychotherapy and career guidance with psychologist Luiza Fernandes Bezerra."
+    },
+    "perguntas": {
+      "title": "Questions",
+      "description": "How a first conversation works, how long analysis lasts, session frequency, online sessions in Brazil and abroad, and confidentiality."
+    },
+    "privacidade": {
+      "title": "Privacy",
+      "description": "How the data of visitors and of people who get in touch is handled, under Brazil's General Data Protection Law (LGPD)."
+    }
+  },
+  "chrome": {
+    "skipToContent": "Skip to content",
+    "language": {
+      "label": "Language",
+      "pt": "PT",
+      "en": "EN",
+      "switchToPt": "Ler em português",
+      "switchToEn": "Read in English"
+    },
+    "footer": {
+      "clinica": "The clinic",
+      "comecar": "Getting started",
+      "mundo": "The world"
+    }
+  },
+  "placeholder": {
+    "pending": "In preparation",
+    "aria": "Placeholder: {description}"
+  },
+  "notFound": {
+    "metaTitle": "Page not found",
+    "eyebrow": "Error 404",
+    "title": "This page <em>lost its way</em>.",
+    "body": "The address you are looking for does not exist, or it has moved — it happens. Go back to the beginning, or write to me on WhatsApp if you would rather talk.",
+    "backHome": "Back to the beginning",
+    "whatsapp": "Talk on WhatsApp"
+  },
+  "error": {
+    "eyebrow": "Something slipped out of place",
+    "title": "Something <em>unexpected</em> happened.",
+    "body": "This page could not be loaded right now. Try again in a moment; if it keeps happening, write to me on WhatsApp and I will sort it out.",
+    "retry": "Try again",
+    "backHome": "Back to the beginning",
+    "whatsapp": "Talk on WhatsApp"
+  },
+  "loading": {
+    "label": "Loading…"
+  }
+}

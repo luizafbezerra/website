@@ -1,5 +1,8 @@
 import { withPayload } from "@payloadcms/next/withPayload";
+import createNextIntlPlugin from "next-intl/plugin";
 import type { NextConfig } from "next";
+
+const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
 
 /**
  * The blog and the standalone `/simbolos` page were removed with the CONCEPT v3
@@ -23,5 +26,8 @@ const nextConfig: NextConfig = {
   },
 };
 
+// Nested inner-to-outer: next-intl registers its Turbopack `resolveAlias` first,
+// and withPayload spreads the incoming `turbopack` block through rather than
+// replacing it, so both plugins' aliases survive.
 // @ts-ignore
-export default withPayload(nextConfig);
+export default withPayload(withNextIntl(nextConfig));

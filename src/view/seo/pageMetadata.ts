@@ -4,6 +4,7 @@ import { DEFAULT_LOCALE, type Locale, LOCALE_TAGS, SITE_LOCALES } from "@/domain
 import { pagePathsByLocale } from "@/domain/site/pagePath";
 import { type PageKey, sitePage } from "@/domain/site/pages";
 import { absoluteUrl } from "@/infrastructure/env/baseUrl";
+import { SHARE_CARD_SIZE, shareCardPath } from "./shareCardUrl";
 
 /**
  * The one place a page's title, canonical URL, and hreflang set are assembled
@@ -27,6 +28,11 @@ export async function pageMetadata(key: PageKey, locale: Locale): Promise<Metada
   const title = t("title");
   const description = t("description");
   const url = absoluteUrl(paths[locale]);
+  const shareCard = {
+    url: absoluteUrl(shareCardPath(key, locale)),
+    ...SHARE_CARD_SIZE,
+    alt: title,
+  };
 
   return {
     // The home page carries the positioning sentence and her name, so it owns its
@@ -54,6 +60,13 @@ export async function pageMetadata(key: PageKey, locale: Locale): Promise<Metada
       alternateLocale: SITE_LOCALES.filter((alternate) => alternate !== locale).map(
         (alternate) => OPEN_GRAPH_LOCALES[alternate],
       ),
+      images: [shareCard],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [shareCard],
     },
   };
 }

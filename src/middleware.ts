@@ -11,8 +11,10 @@ export default createMiddleware(routing);
 
 export const config = {
   // Everything except Payload's own routes (`/admin`, `/api`, including
-  // `/api/graphql`), Next and Vercel internals, and any path with a file
-  // extension — which is how `robots.txt`, `sitemap.xml`, `llms.txt`, the fonts
-  // and the plates stay untouched (RISK-002).
-  matcher: ["/((?!admin|api|_next|_vercel|.*\\..*).*)"],
+  // `/api/graphql`), the share-card images — which carry their locale in the
+  // path and must resolve without a redirect, since a scraper is the one asking
+  // — Next and Vercel internals, and any path with a file extension, which is
+  // how `robots.txt`, `sitemap.xml`, `llms.txt`, the fonts and the plates stay
+  // untouched (RISK-002).
+  matcher: ["/((?!admin|api|share-card|_next|_vercel|.*\\..*).*)"],
 };

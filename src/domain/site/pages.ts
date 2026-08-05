@@ -33,6 +33,10 @@ export const PAGE_KEYS = [
 
 export type PageKey = (typeof PAGE_KEYS)[number];
 
+export function isPageKey(value: string): value is PageKey {
+  return (PAGE_KEYS as readonly string[]).includes(value);
+}
+
 /** The footer's three columns, in render order (CONCEPT §6 FOOTER). */
 export const FOOTER_COLUMNS = ["clinica", "comecar", "mundo"] as const;
 

@@ -2,8 +2,9 @@
 
 import { Canvas, type RootState } from "@react-three/fiber";
 import type { MutableRefObject } from "react";
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 import { Cosmos } from "@/domain/cosmos/Cosmos";
+import { type CosmosSky, proceduralSky } from "@/domain/cosmos/proceduralSky";
 import { CosmosArmillary } from "./scene/CosmosArmillary";
 import { CosmosCameraRig } from "./scene/CosmosCameraRig";
 import { CosmosComets } from "./scene/CosmosComets";
@@ -34,6 +35,10 @@ type Props = {
   // camera rig, sigil projection) pauses again. The nebula + matcap bakes run
   // imperatively on mount regardless; only the per-frame tick is gated.
   active?: boolean;
+  // The star fields to draw. Omitted, the scene builds the procedural sky it
+  // has always drawn; supplied, it draws that one instead — the seam "O céu
+  // desta noite" plugs into without a rewrite (REQ-009).
+  sky?: CosmosSky;
   // Fired once, after the off-screen warm-up has pre-linked the shader
   // programs (`compileAsync`) and rendered a real warm frame. The parent
   // flips `isPrimed`; combined with the 30% visibility observer that drives
@@ -80,8 +85,13 @@ export function CosmosCanvas({
   activeSigilId,
   mobile = false,
   active = true,
+  sky,
   onPrimed,
 }: Props) {
+  // Built here rather than in the leaf components so it only runs when the
+  // canvas itself mounts, and so both fields come from one supplier.
+  const drawnSky = useMemo(() => sky ?? proceduralSky({ mobile }), [sky, mobile]);
+
   // `onCreated` is captured once when the renderer is created, so it can't
   // close over a changing prop directly — read the latest `onPrimed` via ref.
   const onPrimedRef = useRef(onPrimed);
@@ -177,8 +187,8 @@ export function CosmosCanvas({
         {/* Background — layer 1 enabled so the armillary's one-shot matcap
             bake captures it. */}
         <CosmosNebulae />
-        <CosmosDeepField mobile={mobile} />
-        <CosmosGalaxyBand mobile={mobile} />
+        <CosmosDeepField field={drawnSky.deepField} />
+        <CosmosGalaxyBand field={drawnSky.galaxyBand} />
 
         {/* Foreground — layer 0 only; excluded from the matcap bake. */}
         <CosmosStarField mobile={mobile} />

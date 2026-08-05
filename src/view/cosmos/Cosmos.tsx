@@ -4,6 +4,7 @@ import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Cosmos as Data } from "@/domain/cosmos/Cosmos";
+import type { CosmosSky } from "@/domain/cosmos/proceduralSky";
 import { useCosmosShow } from "@/view/cosmos/hooks/useCosmosShow";
 import { cn } from "@/view/styling/cn";
 import type { SigilScreenPosition } from "./CosmosCanvas";
@@ -33,7 +34,15 @@ const initialSigilPositions = (): SigilScreenPosition[] =>
 // CMS-driven) instead of being left at the top of the page or sent past
 // content. Capturing a position rather than a hardcoded anchor keeps this
 // correct no matter how sections are ordered or which optional ones are present.
-export function Cosmos() {
+export type CosmosProps = {
+  /**
+   * The sky to draw. Omitted, the scene builds its own procedural universe; a
+   * supplied field is what "O céu desta noite" will hand it (REQ-009).
+   */
+  sky?: CosmosSky;
+};
+
+export function Cosmos({ sky }: CosmosProps = {}) {
   const [show, setShow] = useCosmosShow();
   const prevShowRef = useRef<boolean>(show);
   const dismissYRef = useRef<number | null>(null);
@@ -60,10 +69,10 @@ export function Cosmos() {
   }, [show]);
 
   if (!show) return null;
-  return <CosmosBody onDismissForever={dismiss} />;
+  return <CosmosBody onDismissForever={dismiss} sky={sky} />;
 }
 
-function CosmosBody({ onDismissForever }: { onDismissForever: () => void }) {
+function CosmosBody({ onDismissForever, sky }: CosmosProps & { onDismissForever: () => void }) {
   const sectionRef = useRef<HTMLElement>(null);
   const pinnedRef = useRef<HTMLDivElement>(null);
   const progressRef = useRef<number>(0);
@@ -288,6 +297,7 @@ function CosmosBody({ onDismissForever }: { onDismissForever: () => void }) {
                   activeSigilId={activeSigil}
                   mobile={isMobile}
                   active={revealed}
+                  sky={sky}
                   onPrimed={handlePrimed}
                 />
               </div>

@@ -1,69 +1,130 @@
-import Image from "next/image";
+import type { CSSProperties, Ref } from "react";
 import { useTranslations } from "next-intl";
-import type { InstagramTile as Tile } from "@/domain/inicio/Inicio";
-import { MediaPlaceholder } from "@/view/general/MediaPlaceholder";
+import type { InstagramPost } from "@/domain/instagram/InstagramPost";
 import { cn } from "@/view/styling/cn";
 
 /**
- * One square in the Instagram row — the crop a follower already knows from the
- * feed, and the control that opens it.
+ * One print in the constellation — a post in a small vellum mount, hung at a
+ * slot around the one on the desk.
  *
- * A real `<button>`, not a div with a click handler: the un-crop is the page's
- * second interactive moment and it has to be reachable by keyboard with a
- * visible focus ring like any other control. `aria-expanded` and `aria-controls`
- * tell a screen reader that activating it reveals the panel below the row rather
- * than navigating away.
+ * Every movement lives on its own element so they compose instead of fighting:
+ * the `<li>` owns the slot position and transitions it when the arrangement
+ * changes; the gravity wrapper receives the cursor-pull translate the bridge
+ * writes at frame rate; two nested wrappers each carry one axis of the idle
+ * float. The focused print holds still — no float, no gravity (the bridge
+ * reads `data-focused` to leave it alone) — drops the crop, and gains the gilt
+ * fillet, the thin gold inner line a framer puts inside a mat.
  *
- * The square is the point. The feed's own rhythm is what a follower recognises,
- * so the tile is not restyled into a card — no rounding, no shadow, just the
- * painting and a hairline when it is the open one.
+ * **A plain `<img>`, deliberately, and never `next/image`.** Instagram's terms
+ * forbid copying her media onto another host, which is exactly what the image
+ * optimizer does when it proxies and caches a URL. The browser loads the signed
+ * URL straight from Meta and pays with `loading="lazy"` instead of an optimizer.
+ *
+ * Satellite images are `alt=""` because the button carries the accessible name;
+ * the focused image is page content and speaks its own alt text.
  */
+
+/** Where a print hangs: percentages of the canvas, plus its mount width. */
+export type PrintSlot = { x: number; y: number; w: string };
+
+/** A slot's two geometries — the phone cluster and the desktop spread. */
+export type ResponsiveSlot = { sm: PrintSlot; lg: PrintSlot };
+
 export function InstagramTile({
-  tile,
-  index,
-  isOpen,
-  panelId,
-  onOpen,
+  post,
+  slot,
+  slotNumber,
+  isFocused,
+  label,
+  onFocus,
+  printRef,
 }: {
-  tile: Tile;
-  index: number;
-  isOpen: boolean;
-  panelId: string;
-  onOpen: () => void;
+  post: InstagramPost;
+  slot: ResponsiveSlot;
+  /** Which slot the print occupies — desyncs the float so no two sway together. */
+  slotNumber: number;
+  isFocused: boolean;
+  label: string;
+  onFocus: () => void;
+  /** Registers the print with the bridge's cursor-gravity loop. */
+  printRef: Ref<HTMLLIElement>;
 }) {
   const t = useTranslations("inicio.instagram");
-  const label = tile.workTitle ?? t("tileFallbackLabel", { number: index + 1 });
+
+  // Periods stay mutually unrelated per print, so no two prints — and neither
+  // axis of one print — ever fall into step. Negative delays start each one
+  // mid-travel, so nothing lines up at the origin on load.
+  const float = {
+    "--instagram-float-x-duration": `${9 + slotNumber * 1.3}s`,
+    "--instagram-float-y-duration": `${13 + slotNumber * 1.7}s`,
+    "--instagram-float-x-delay": `${slotNumber * -3.1}s`,
+    "--instagram-float-y-delay": `${slotNumber * -5.3}s`,
+  } as CSSProperties;
 
   return (
-    <li className="w-40 shrink-0 snap-start sm:w-48">
-      <button
-        type="button"
-        onClick={onOpen}
-        aria-expanded={isOpen}
-        aria-controls={panelId}
-        className={cn(
-          "focus-visible:outline-terracotta block w-full cursor-pointer border transition-colors focus-visible:outline-2 focus-visible:outline-offset-[3px]",
-          isOpen ? "border-terracotta" : "border-transparent hover:border-rule",
-        )}
-      >
-        <span className="sr-only">{t("tileAction", { work: label })}</span>
-        {tile.crop ? (
-          <Image
-            src={tile.crop.src}
-            alt=""
-            width={tile.crop.width}
-            height={tile.crop.height}
-            sizes="12rem"
-            className="aspect-square h-auto w-full select-none object-cover"
-          />
-        ) : (
-          // Compact: the frame keeps its accessible name but drops the visible
-          // caption. Five squares in a row would otherwise print the same notice
-          // five times, which reads as an error state rather than as reserved
-          // space — so the row is labeled once, beneath it, instead.
-          <MediaPlaceholder description={t("tilePlaceholder")} aspectRatio="1 / 1" size="compact" />
-        )}
-      </button>
+    <li
+      ref={printRef}
+      data-focused={isFocused || undefined}
+      className="instagram-print absolute -translate-x-1/2 -translate-y-1/2"
+      style={
+        {
+          "--print-x-sm": `${slot.sm.x}%`,
+          "--print-y-sm": `${slot.sm.y}%`,
+          "--print-w-sm": slot.sm.w,
+          "--print-x-lg": `${slot.lg.x}%`,
+          "--print-y-lg": `${slot.lg.y}%`,
+          "--print-w-lg": slot.lg.w,
+          zIndex: isFocused ? 10 : 1,
+        } as CSSProperties
+      }
+    >
+      <span className="instagram-gravity block">
+        <span className={cn("block", !isFocused && "instagram-float-x")} style={float}>
+          <span className={cn("block", !isFocused && "instagram-float-y")} style={float}>
+            <button
+              type="button"
+              onClick={onFocus}
+              aria-current={isFocused || undefined}
+              className={cn(
+                "focus-visible:outline-terracotta block w-full focus-visible:outline-2 focus-visible:outline-offset-[3px]",
+                isFocused ? "cursor-default" : "cursor-pointer",
+              )}
+            >
+              <span className="sr-only">
+                {isFocused ? t("tileCurrent", { work: label }) : t("tileAction", { work: label })}
+              </span>
+              <span
+                className={cn(
+                  "bg-vellum border-rule block border transition-[filter,opacity] duration-300",
+                  isFocused
+                    ? "p-2"
+                    : "p-1 opacity-90 [filter:saturate(0.75)_sepia(0.08)] hover:opacity-100 hover:[filter:none]",
+                )}
+              >
+                <span
+                  className={cn(
+                    "block border",
+                    isFocused ? "border-gilt p-1.5" : "border-transparent",
+                  )}
+                >
+                  <img
+                    src={post.imageUrl}
+                    alt={isFocused ? post.altText : ""}
+                    loading="lazy"
+                    decoding="async"
+                    className={cn(
+                      "w-full select-none",
+                      isFocused
+                        ? "max-h-[13rem] object-contain lg:max-h-[18rem]"
+                        : "aspect-square object-cover",
+                    )}
+                  />
+                </span>
+              </span>
+            </button>
+          </span>
+        </span>
+      </span>
     </li>
   );
 }

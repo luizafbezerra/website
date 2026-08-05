@@ -1,6 +1,7 @@
 import { buildConfig } from "payload";
 import { vercelPostgresAdapter } from "@payloadcms/db-vercel-postgres";
 import { vercelBlobStorage } from "@payloadcms/storage-vercel-blob";
+import { resendAdapter } from "@payloadcms/email-resend";
 import { lexicalEditor } from "@payloadcms/richtext-lexical";
 import { pt } from "@payloadcms/translations/languages/pt";
 import path from "path";
@@ -20,8 +21,26 @@ import { PagePrimeiraConversa } from "./payload/globals/pages/primeiraConversa";
 import { PagePerguntas } from "./payload/globals/pages/perguntas";
 import { PageInternacional } from "./payload/globals/pages/internacional";
 import { PagePrivacidade } from "./payload/globals/pages/privacidade";
+import { InstagramAuth } from "./payload/globals/instagramAuth";
+import { refreshInstagramTokenTask } from "./payload/jobs/refreshInstagramToken";
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
+
+/**
+ * Outbound email exists only to reach the developer when the Instagram token
+ * refresh keeps failing — there are no forms on this site and nothing is ever
+ * sent to a visitor. Configured only when both halves are present, so a local
+ * checkout with no Resend key still boots and the alert falls back to
+ * `console.error` (see `alertInstagramTokenFailure`).
+ */
+const email =
+  process.env.RESEND_API_KEY && process.env.CONTACT_EMAIL_FROM
+    ? resendAdapter({
+        apiKey: process.env.RESEND_API_KEY,
+        defaultFromAddress: process.env.CONTACT_EMAIL_FROM,
+        defaultFromName: "Símbolos do Self",
+      })
+    : undefined;
 
 export default buildConfig({
   admin: {
@@ -59,7 +78,36 @@ export default buildConfig({
     PageInternacional,
     PagePrivacidade,
     Clinica,
+    // "Sistema": machine state, hidden from her sidebar (see instagramAuth.ts).
+    InstagramAuth,
   ],
+  email,
+  /**
+   * One scheduled task: renewing the Instagram token (see
+   * `payload/jobs/refreshInstagramToken.ts`). No `autoRun` — this deploys to
+   * serverless functions, where there is no long-lived process to hold a timer;
+   * a Vercel cron pokes `/api/payload-jobs/run` daily and that endpoint
+   * evaluates the schedules itself.
+   */
+  jobs: {
+    tasks: [refreshInstagramTokenTask],
+    access: {
+      /**
+       * `jobs.access.run` defaults to **public**, which would leave the job
+       * runner open to anyone who guessed the path. Vercel's cron sends
+       * `Authorization: Bearer $CRON_SECRET`; an admin session is also allowed so
+       * the endpoint stays usable by hand.
+       *
+       * With `CRON_SECRET` unset the header can never match, so this falls back
+       * to requiring a logged-in user — closed, not open.
+       */
+      run: ({ req }) => {
+        const header = req.headers.get("authorization");
+        if (process.env.CRON_SECRET && header === `Bearer ${process.env.CRON_SECRET}`) return true;
+        return Boolean(req.user);
+      },
+    },
+  },
   // The code-block feature existed for the blog only; editorial rich text needs
   // nothing beyond the defaults.
   editor: lexicalEditor(),

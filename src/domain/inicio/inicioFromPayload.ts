@@ -1,7 +1,7 @@
 import { pageImageFrom } from "@/domain/media/pageImageFrom";
 import type { RichTextContent } from "@/domain/richText/RichTextContent";
 import type { PayloadPageInicio } from "@/infrastructure/payload/getPageInicioGlobal";
-import { type Beat, type Door, type Inicio, INICIO_DEFAULTS, type InstagramTile } from "./Inicio";
+import { type Beat, type Door, type Inicio, INICIO_DEFAULTS } from "./Inicio";
 
 /** Blank strings are absences, not values — a cleared field must fall back. */
 function filled(value: string | null | undefined): string | null {
@@ -28,38 +28,13 @@ function doorFrom(raw: NonNullable<PayloadPageInicio["doisCaminhos"]>["analysis"
 }
 
 /**
- * The tiles, in stored order. A row with neither image nor passage carries
- * nothing a visitor could read, so it is dropped rather than rendered as an
- * empty square — a half-filled row (a crop but no canvas yet) is kept, because
- * that is a real state of her curation and the un-crop degrades to a labeled
- * frame for it.
- */
-function tilesFrom(raw: NonNullable<PayloadPageInicio["instagram"]>["tiles"]): InstagramTile[] {
-  if (!Array.isArray(raw)) return INICIO_DEFAULTS.instagram.tiles;
-
-  return raw
-    .map((tile) => ({
-      crop: pageImageFrom(tile?.crop),
-      full: pageImageFrom(tile?.full),
-      painter: filled(tile?.painter),
-      workTitle: filled(tile?.workTitle),
-      year: filled(tile?.year),
-      passage: filled(tile?.passage),
-      postUrl: filled(tile?.postUrl),
-    }))
-    .filter((tile) => tile.crop !== null || tile.full !== null || tile.passage !== null);
-}
-
-/**
  * The three beats, in stored order; a beat with no text has nothing to say.
  *
- * An empty array falls back to the defaults, unlike the tiles. Payload
- * materializes an untouched array field as `[]` rather than as absent, so the
- * two states "she cleared this" and "she never opened this tab" are the same
- * value — and of the two readings, only one is safe here: "como é começar" is a
- * section CONCEPT §6 requires, and treating `[]` as a decision made it vanish
- * from the page silently. The tiles can be genuinely empty because their section
- * has a designed empty state; this one does not.
+ * An empty array falls back to the defaults. Payload materializes an untouched
+ * array field as `[]` rather than as absent, so the two states "she cleared this"
+ * and "she never opened this tab" are the same value — and of the two readings,
+ * only one is safe: "como é começar" is a section CONCEPT §6 requires, and
+ * treating `[]` as a decision made it vanish from the page silently.
  */
 function beatsFrom(raw: NonNullable<PayloadPageInicio["comoComecar"]>["beats"]): Beat[] {
   if (!Array.isArray(raw) || raw.length === 0) return INICIO_DEFAULTS.comoComecar.beats;
@@ -97,7 +72,6 @@ export function inicioFromPayload(doc: PayloadPageInicio): Inicio {
     instagram: {
       heading: filled(doc.instagram?.heading) ?? defaults.instagram.heading,
       intro: filled(doc.instagram?.intro) ?? defaults.instagram.intro,
-      tiles: tilesFrom(doc.instagram?.tiles),
     },
     doisCaminhos: {
       heading: filled(doc.doisCaminhos?.heading) ?? defaults.doisCaminhos.heading,

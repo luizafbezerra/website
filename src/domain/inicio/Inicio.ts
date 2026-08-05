@@ -34,18 +34,6 @@ export type Door = {
   linkLabel: string;
 };
 
-/** One post in the Instagram bridge — the square she posted, and the canvas it came from. */
-export type InstagramTile = {
-  crop: PageImage | null;
-  full: PageImage | null;
-  painter: string | null;
-  workTitle: string | null;
-  year: string | null;
-  /** The Jung passage she paired with the post, in the canonical treatment. */
-  passage: string | null;
-  postUrl: string | null;
-};
-
 /** A Lâmina — the mobile Cosmos substitute (CONCEPT §9.1). */
 export type Lamina = {
   plate: PageImage | null;
@@ -68,10 +56,14 @@ export type Inicio = {
     ctaSecondaryLabel: string;
     portrait: PageImage | null;
   };
+  /**
+   * Only her words about the section. The posts themselves are her live feed
+   * (`src/domain/instagram/`), fetched hourly and never stored, so there is
+   * nothing here for her to curate.
+   */
   instagram: {
     heading: string;
     intro: string | null;
-    tiles: InstagramTile[];
   };
   doisCaminhos: {
     heading: string;
@@ -139,8 +131,7 @@ export const INICIO_DEFAULTS: Inicio = {
     // not the website's idea of it.
     heading: "O que eu publico",
     intro:
-      "No Instagram, cada publicação começa por um recorte. Aqui, o recorte abre — e a pintura inteira aparece com a passagem que a acompanhou.",
-    tiles: [],
+      "No Instagram, tudo passa depressa. Aqui, cada publicação tem a sua vez no centro — e as palavras que a acompanham ganham a página.",
   },
   doisCaminhos: {
     heading: "Dois caminhos",

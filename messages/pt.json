@@ -161,15 +161,11 @@
       "portraitCaption": "Quem recebe você."
     },
     "instagram": {
-      "tileAction": "Ver a pintura inteira: {work}",
+      "tileAction": "Trazer a publicação para o centro: {work}",
+      "tileCurrent": "Publicação em destaque: {work}",
       "tileFallbackLabel": "publicação {number}",
-      "tilePlaceholder": "Um recorte quadrado, como ele aparece no feed.",
-      "revealPlaceholder": "A pintura inteira, de onde o recorte saiu.",
-      "revealPlaceholderNote": "As obras escolhidas entram aqui pelo painel, sem publicar o site de novo.",
-      "close": "fechar",
-      "seePost": "ver a publicação",
-      "follow": "acompanhar em {handle}",
-      "tilesPending": "Cinco publicações suas entram aqui: o recorte que os seguidores já conhecem, e a pintura inteira ao toque."
+      "seePost": "ver no Instagram",
+      "follow": "acompanhar em {handle}"
     },
     "lamina": {
       "fallbackHeading": "Uma pintura, de perto",

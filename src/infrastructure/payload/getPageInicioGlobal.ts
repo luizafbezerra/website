@@ -11,8 +11,8 @@ import type { PayloadMediaField } from "./PayloadMedia";
 // back section by section.
 //
 // Read at `depth: 1`, unlike `getClinicaGlobal`: this page has upload slots (the
-// portrait, the Instagram crops and canvases, A Lâmina's plate) and depth 0
-// would return bare row ids with no URL or intrinsic size to render.
+// portrait, A Lâmina's plate) and depth 0 would return bare row ids with no URL
+// or intrinsic size to render.
 //
 // `cache` is React's request-scoped memoizer, kept here — on the I/O — so the
 // domain layer above stays free of framework imports.
@@ -30,15 +30,6 @@ export type PayloadPageInicio = {
   instagram?: {
     heading?: string | null;
     intro?: string | null;
-    tiles?: PayloadArrayRow<{
-      crop?: PayloadMediaField;
-      full?: PayloadMediaField;
-      painter?: string | null;
-      workTitle?: string | null;
-      year?: string | null;
-      passage?: string | null;
-      postUrl?: string | null;
-    }>;
   } | null;
   doisCaminhos?: {
     heading?: string | null;

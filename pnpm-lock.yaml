@@ -16,6 +16,9 @@ importers:
       '@payloadcms/db-vercel-postgres':
         specifier: 3.78.0
         version: 3.78.0(@types/pg@8.11.6)(payload@3.78.0(patch_hash=954d053bad7446fb18acdb11b8b21d4be2cdca4a0f18a485fbef6a5bcf560196)(bufferutil@4.1.0)(graphql@16.13.2)(typescript@5.9.3)(utf-8-validate@6.0.6))
+      '@payloadcms/email-resend':
+        specifier: 3.78.0
+        version: 3.78.0(payload@3.78.0(patch_hash=954d053bad7446fb18acdb11b8b21d4be2cdca4a0f18a485fbef6a5bcf560196)(bufferutil@4.1.0)(graphql@16.13.2)(typescript@5.9.3)(utf-8-validate@6.0.6))
       '@payloadcms/next':
         specifier: 3.78.0
         version: 3.78.0(@types/react@19.2.14)(graphql@16.13.2)(monaco-editor@0.55.1)(next@16.1.6(@babel/core@7.29.0)(babel-plugin-macros@3.1.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(sass@1.77.4))(payload@3.78.0(patch_hash=954d053bad7446fb18acdb11b8b21d4be2cdca4a0f18a485fbef6a5bcf560196)(bufferutil@4.1.0)(graphql@16.13.2)(typescript@5.9.3)(utf-8-validate@6.0.6))(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(typescript@5.9.3)
@@ -1650,6 +1653,12 @@ packages:
 
   '@payloadcms/drizzle@3.78.0':
     resolution: {integrity: sha512-0lpEc4nR5ExVAPVZ1IH84pdYbJofBZWA7g307pEw0IQxNwYJ/ZggQRZcP9Bk9I+QA9tYFAa/Q3nPIPGu/Qiqvw==}
+    peerDependencies:
+      payload: 3.78.0
+
+  '@payloadcms/email-resend@3.78.0':
+    resolution: {integrity: sha512-kJX6091FLA0oRceM0gM/Foo3LuyeC1Jtc3TqLiRPIuQom1cVd6nnX1J42t1cncPHNDMr72UyysD0ny2KWW8v3w==}
+    engines: {node: ^18.20.2 || >=20.9.0}
     peerDependencies:
       payload: 3.78.0
 
@@ -6357,6 +6366,10 @@ snapshots:
       - prisma
       - sql.js
       - sqlite3
+
+  '@payloadcms/email-resend@3.78.0(payload@3.78.0(patch_hash=954d053bad7446fb18acdb11b8b21d4be2cdca4a0f18a485fbef6a5bcf560196)(bufferutil@4.1.0)(graphql@16.13.2)(typescript@5.9.3)(utf-8-validate@6.0.6))':
+    dependencies:
+      payload: 3.78.0(patch_hash=954d053bad7446fb18acdb11b8b21d4be2cdca4a0f18a485fbef6a5bcf560196)(bufferutil@4.1.0)(graphql@16.13.2)(typescript@5.9.3)(utf-8-validate@6.0.6)
 
   '@payloadcms/graphql@3.78.0(graphql@16.13.2)(payload@3.78.0(patch_hash=954d053bad7446fb18acdb11b8b21d4be2cdca4a0f18a485fbef6a5bcf560196)(bufferutil@4.1.0)(graphql@16.13.2)(typescript@5.9.3)(utf-8-validate@6.0.6))(typescript@5.9.3)':
     dependencies:

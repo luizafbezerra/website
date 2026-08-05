@@ -161,15 +161,11 @@
       "portraitCaption": "The person who receives you."
     },
     "instagram": {
-      "tileAction": "See the whole painting: {work}",
+      "tileAction": "Bring the post to the center: {work}",
+      "tileCurrent": "Featured post: {work}",
       "tileFallbackLabel": "post {number}",
-      "tilePlaceholder": "A square crop, as it appears in the feed.",
-      "revealPlaceholder": "The whole painting the crop came from.",
-      "revealPlaceholderNote": "The chosen works arrive through the admin panel, with no redeploy.",
-      "close": "close",
-      "seePost": "see the post",
-      "follow": "follow at {handle}",
-      "tilesPending": "Five of her posts belong here: the crop her followers already know, and the whole painting on tap."
+      "seePost": "see it on Instagram",
+      "follow": "follow at {handle}"
     },
     "lamina": {
       "fallbackHeading": "One painting, up close",

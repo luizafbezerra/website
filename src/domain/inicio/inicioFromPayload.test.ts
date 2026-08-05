@@ -76,29 +76,14 @@ describe("inicioFromPayload", () => {
     });
   });
 
-  describe("instagram tiles", () => {
-    it("keeps stored order and a half-curated row, and drops an empty one", () => {
-      const doc: PayloadPageInicio = {
-        instagram: {
-          tiles: [
-            { crop: upload("/media/um.jpg"), painter: "Waterhouse" },
-            // Nothing a visitor could read — she added a row and left it.
-            { painter: "   " },
-            { passage: "Quem olha para dentro, desperta." },
-          ],
-        },
-      };
+  // The Instagram section carries only her heading and intro: the posts are the
+  // live feed (`src/domain/instagram/`), which this global knows nothing about.
+  it("carries her wording for the Instagram section and nothing else", () => {
+    const { instagram } = inicioFromPayload({ instagram: { heading: "O que eu publico agora" } });
 
-      const { tiles } = inicioFromPayload(doc).instagram;
-
-      expect(tiles).toHaveLength(2);
-      expect(tiles[0]?.painter).toBe("Waterhouse");
-      expect(tiles[0]?.full).toBeNull();
-      expect(tiles[1]?.passage).toBe("Quem olha para dentro, desperta.");
-    });
-
-    it("returns an emptied array as empty rather than restoring the defaults", () => {
-      expect(inicioFromPayload({ instagram: { tiles: [] } }).instagram.tiles).toEqual([]);
+    expect(instagram).toEqual({
+      heading: "O que eu publico agora",
+      intro: INICIO_DEFAULTS.instagram.intro,
     });
   });
 

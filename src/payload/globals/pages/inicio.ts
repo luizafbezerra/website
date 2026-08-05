@@ -63,41 +63,10 @@ export const PageInicio: GlobalConfig = {
           name: "instagram",
           label: "3 · Instagram",
           description:
-            "A ponte com o seu mundo. Cada peça mostra o quadrado que os seguidores conhecem e abre para a pintura inteira. Enquanto as imagens não existirem, o site mostra quadros reservados com legenda.",
+            "A ponte com o seu mundo. As publicações são as suas seis mais recentes, buscadas direto do Instagram uma vez por hora — você publica lá e elas aparecem aqui, sem nada a fazer neste painel. Aqui você escreve só o título e a introdução da seção.",
           fields: [
             localizedText({ name: "heading", label: "Título da seção" }),
             localizedTextarea({ name: "intro", label: "Introdução" }),
-            {
-              name: "tiles",
-              type: "array",
-              label: "Peças",
-              labels: { singular: "Peça", plural: "Peças" },
-              admin: {
-                description:
-                  "De quatro a seis das suas publicações favoritas. O recorte é o que a pessoa já viu no feed; a pintura inteira é a revelação.",
-              },
-              fields: [
-                mediaSlot({
-                  name: "crop",
-                  label: "Recorte (quadrado)",
-                  description: "O quadrado como ele aparece no Instagram.",
-                }),
-                mediaSlot({
-                  name: "full",
-                  label: "Pintura inteira",
-                  description: "A tela completa, de onde o recorte saiu.",
-                }),
-                { name: "painter", type: "text", label: "Pintor" },
-                localizedText({ name: "workTitle", label: "Título da obra" }),
-                { name: "year", type: "text", label: "Ano" },
-                localizedTextarea({
-                  name: "passage",
-                  label: "Passagem que você pareou",
-                  description: "A citação de Jung que acompanhou a publicação.",
-                }),
-                { name: "postUrl", type: "text", label: "Link da publicação" },
-              ],
-            },
           ],
         },
         // ── 4 Dois caminhos ──────────────────────────────────────────────────

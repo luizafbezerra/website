@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { getClinica } from "@/domain/clinica/getClinica";
 import { getInicio } from "@/domain/inicio/getInicio";
+import { getInstagramFeed } from "@/domain/instagram/getInstagramFeed";
 import type { Locale } from "@/domain/site/Locale";
 import { pagePath } from "@/domain/site/pagePath";
 import { getTestimonials } from "@/domain/testimonials/getTestimonials";
@@ -46,10 +47,13 @@ export default async function Home({ params }: HomeProps) {
   const { locale } = await params;
   setRequestLocale(locale);
 
-  const [clinica, inicio, testimonials, t] = await Promise.all([
+  const [clinica, inicio, testimonials, instagramPosts, t] = await Promise.all([
     getClinica(locale),
     getInicio(locale),
     getTestimonials(locale),
+    // Her live feed, revalidated hourly like the page itself. Returns [] on any
+    // failure, and the section hides itself.
+    getInstagramFeed(),
     getTranslations({ locale, namespace: "nav" }),
   ]);
 
@@ -74,7 +78,7 @@ export default async function Home({ params }: HomeProps) {
 
       <Hero clinica={clinica} content={inicio.hero} />
       <Credencial clinica={clinica} />
-      <InstagramBridge clinica={clinica} content={inicio.instagram} />
+      <InstagramBridge clinica={clinica} content={inicio.instagram} posts={instagramPosts} />
       <DoisCaminhos content={inicio.doisCaminhos} />
       <OSintoma clinica={clinica} content={inicio.oSintoma} at={renderedAt} />
       <WowSlot content={inicio.cosmos} />

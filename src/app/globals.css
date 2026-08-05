@@ -315,6 +315,112 @@
   }
 
   /* ---------------------------------------------------------------------- */
+  /* Instagram bridge — the floating prints (home §3).                       */
+  /*                                                                         */
+  /* The latest posts hang like small framed prints around the one on the    */
+  /* desk; choosing another sends it to the center. Movement is plain CSS    */
+  /* transitions on the slot coordinates — View Transitions would freeze     */
+  /* the idle drift mid-swap, because they animate between snapshots.        */
+  /* ---------------------------------------------------------------------- */
+
+  /* One constellation, two geometries: each print carries its slot for both
+     breakpoints as custom properties, and the media query decides which set
+     positions it. Phones get the tight cluster, desktops the wide one. */
+  .instagram-print {
+    left: var(--print-x-sm);
+    top: var(--print-y-sm);
+    width: var(--print-w-sm);
+    transition:
+      left 640ms cubic-bezier(0.3, 0, 0.18, 1),
+      top 640ms cubic-bezier(0.3, 0, 0.18, 1),
+      width 640ms cubic-bezier(0.3, 0, 0.18, 1);
+  }
+
+  @media (min-width: 64rem) {
+    .instagram-print {
+      left: var(--print-x-lg);
+      top: var(--print-y-lg);
+      width: var(--print-w-lg);
+    }
+  }
+
+  /* Idle float: one axis per element, each a simple back-and-forth on its own
+     period. Two coprime periods trace a slow open path (a Lissajous figure)
+     that never visibly repeats, and because the axes reach their extremes at
+     different moments the print is always travelling on one of them — a single
+     multi-waypoint animation would stop dead at every waypoint, which reads as
+     a jiggle rather than a float. A few pixels, deliberately below what anyone
+     would call motion: the section must never feel restless. */
+  .instagram-float-x {
+    animation: instagram-float-x var(--instagram-float-x-duration, 9s) ease-in-out
+      var(--instagram-float-x-delay, 0s) infinite alternate;
+  }
+
+  .instagram-float-y {
+    animation: instagram-float-y var(--instagram-float-y-duration, 13s) ease-in-out
+      var(--instagram-float-y-delay, 0s) infinite alternate;
+  }
+
+  /* Cursor gravity writes `translate` on this wrapper from the bridge's
+     pointer loop — a separate element so the pull, each float axis, and the
+     slot transition own one transform apiece and never fight. */
+  .instagram-gravity {
+    will-change: translate;
+  }
+
+  /* The amplitude scales with `--instagram-float-scale`, which the canvas sets
+     per breakpoint — the phone cluster is tighter, so its prints sway less. */
+  @keyframes instagram-float-x {
+    from {
+      transform: translateX(calc(var(--instagram-float-scale, 1) * -0.85rem));
+    }
+    to {
+      transform: translateX(calc(var(--instagram-float-scale, 1) * 0.85rem));
+    }
+  }
+
+  @keyframes instagram-float-y {
+    from {
+      transform: translateY(calc(var(--instagram-float-scale, 1) * -0.7rem));
+    }
+    to {
+      transform: translateY(calc(var(--instagram-float-scale, 1) * 0.7rem));
+    }
+  }
+
+  /* The reading column re-sets itself when another print reaches the desk.
+     Its parts arrive in reading order rather than as one block: the date, then
+     the line she opened with, then the rest, then the link. Each carries its
+     own `--stagger` index, and `backwards` holds it hidden through the delay
+     so nothing flashes at its final position first. */
+  .instagram-caption-swap > * {
+    animation: instagram-fade-rise 560ms cubic-bezier(0.16, 1, 0.3, 1) backwards;
+    animation-delay: calc(var(--stagger, 0) * 80ms);
+  }
+
+  @keyframes instagram-fade-rise {
+    from {
+      opacity: 0;
+      transform: translateY(0.5rem);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .instagram-print {
+      transition: none;
+    }
+
+    .instagram-float-x,
+    .instagram-float-y {
+      animation: none;
+    }
+
+    .instagram-caption-swap > * {
+      animation: none;
+    }
+  }
+
+  /* ---------------------------------------------------------------------- */
   /* Cosmos — celestial atlas section.                                       */
   /* Carve-out: parametric ornament permitted within `.cosmos-*` scope only. */
   /* See .impeccable.md → Carve-outs.                                        */

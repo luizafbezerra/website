@@ -6,13 +6,9 @@ import { HOME_DEFAULTS } from "@/domain/home/Home";
 import type { SectionType } from "@/domain/sections/sectionRegistry";
 import { type Locale, LOCALE_TAGS } from "@/domain/site/Locale";
 import { pagePath } from "@/domain/site/pagePath";
-import { siteNavigation } from "@/domain/site/siteNavigation";
 import { getTestimonials } from "@/domain/testimonials/getTestimonials";
 import { MANDALA_DEFAULTS } from "@/domain/zodiac/MandalaContent";
 import { absoluteUrl } from "@/infrastructure/env/baseUrl";
-import { Footer } from "@/view/chrome/Footer";
-import { Header } from "@/view/chrome/Header";
-import { StickyHeaderShell } from "@/view/chrome/StickyHeaderShell";
 import { Cosmos } from "@/view/cosmos/Cosmos";
 import { About } from "@/view/home/About";
 import { Contact } from "@/view/home/Contact";
@@ -54,7 +50,6 @@ export default async function Home({ params }: HomeProps) {
   // by section in TASK-035. Same for the wheel's prose and the section order.
   const home = HOME_DEFAULTS;
   const mandala = MANDALA_DEFAULTS;
-  const navLinks = siteNavigation();
 
   const url = absoluteUrl(pagePath("inicio", locale));
 
@@ -130,18 +125,12 @@ export default async function Home({ params }: HomeProps) {
         />
       )}
 
-      <StickyHeaderShell>
-        <Header clinica={clinica} navLinks={navLinks} />
-      </StickyHeaderShell>
-      <main id="main">
-        <Hero clinica={clinica} content={home.hero} />
-        {home.sections
-          .filter((section) => section.enabled)
-          .map((section) => (
-            <Fragment key={section.type}>{sectionNodes[section.type]}</Fragment>
-          ))}
-      </main>
-      <Footer clinica={clinica} navLinks={navLinks} />
+      <Hero clinica={clinica} content={home.hero} />
+      {home.sections
+        .filter((section) => section.enabled)
+        .map((section) => (
+          <Fragment key={section.type}>{sectionNodes[section.type]}</Fragment>
+        ))}
     </>
   );
 }

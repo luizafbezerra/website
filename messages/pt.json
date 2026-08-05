@@ -27,6 +27,15 @@
     "skipToContent": "Pular para o conteúdo",
     "headerByline": "psicóloga · análise junguiana",
     "footerByline": "psicóloga clínica",
+    "lockupBy": "por",
+    "homeAria": "{name} — início",
+    "nav": {
+      "primary": "Principal",
+      "footer": "Rodapé",
+      "title": "Navegação",
+      "open": "Abrir navegação",
+      "close": "Fechar navegação"
+    },
     "language": {
       "label": "Idioma",
       "pt": "PT",

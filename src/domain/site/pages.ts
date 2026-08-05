@@ -175,17 +175,25 @@ export function sitePage(key: PageKey): SitePage {
   return page;
 }
 
+/**
+ * The three selectors below deliberately carry no return annotation: inferring
+ * from the `as const` tuple keeps each entry's `paths.pt` a string literal, and
+ * that literal union is what lets next-intl's `Link` type-check an href built
+ * from the registry. Annotating them `SitePage[]` would widen `paths.pt` to
+ * `string` and the chrome would need a cast at every call site.
+ */
+
 /** Header nav items, in map order. */
-export function headerNavPages(): SitePage[] {
+export function headerNavPages() {
   return SITE_PAGES.filter((page) => page.inHeaderNav);
 }
 
 /** The pages a footer column lists, in map order. */
-export function footerColumnPages(column: FooterColumn): SitePage[] {
+export function footerColumnPages(column: FooterColumn) {
   return SITE_PAGES.filter((page) => page.footerColumn === column);
 }
 
 /** Pages with a live route — what the sitemap and llms.txt may advertise. */
-export function builtPages(): SitePage[] {
+export function builtPages() {
   return SITE_PAGES.filter((page) => page.status === "built");
 }

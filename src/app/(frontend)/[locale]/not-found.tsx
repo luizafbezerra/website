@@ -2,11 +2,9 @@ import type { Metadata } from "next";
 import { getLocale, getTranslations } from "next-intl/server";
 import { getClinica } from "@/domain/clinica/getClinica";
 import type { Locale } from "@/domain/site/Locale";
-import { siteNavigation } from "@/domain/site/siteNavigation";
 import { Link } from "@/i18n/navigation";
 import { Footer } from "@/view/chrome/Footer";
 import { Header } from "@/view/chrome/Header";
-import { StickyHeaderShell } from "@/view/chrome/StickyHeaderShell";
 
 // Rendered inside the `[locale]` layout, so it inherits the visitor's language:
 // an English browser that lands on a missing address is answered in English.
@@ -17,18 +15,16 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function NotFound() {
-  const [t, locale] = await Promise.all([getTranslations("notFound"), getLocale()]);
-  const clinica = await getClinica(locale as Locale);
-  const navLinks = siteNavigation();
+  const [t, rawLocale] = await Promise.all([getTranslations("notFound"), getLocale()]);
+  const locale = rawLocale as Locale;
+  const clinica = await getClinica(locale);
 
   const linkClass =
     "display-italic text-foreground decoration-terracotta hover:text-terracotta inline-flex text-[1.08rem] underline decoration-1 underline-offset-[0.22em] transition-colors";
 
   return (
     <>
-      <StickyHeaderShell>
-        <Header clinica={clinica} navLinks={navLinks} />
-      </StickyHeaderShell>
+      <Header clinica={clinica} locale={locale} />
       <main
         id="main"
         className="flex min-h-[60vh] items-center px-6 py-32 sm:px-10 sm:py-44 lg:py-52"
@@ -59,7 +55,7 @@ export default async function NotFound() {
           </div>
         </div>
       </main>
-      <Footer clinica={clinica} navLinks={navLinks} />
+      <Footer clinica={clinica} locale={locale} />
     </>
   );
 }

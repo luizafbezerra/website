@@ -1,7 +1,6 @@
 import type { RichTextContent } from "@/domain/richText/RichTextContent";
 import { richText } from "@/domain/richText/richText";
 import { type SectionConfig, SECTIONS_DEFAULT } from "@/domain/sections/sectionRegistry";
-import { type NavLink, NAV_EXTRA_LINKS_DEFAULT } from "@/domain/site/NavLink";
 
 // ---------------------------------------------------------------------------
 // The homepage's structure (section order + toggles), navigation links, and
@@ -19,7 +18,6 @@ export type PillarItem = { numeral: string; title: string; paragraph: string };
 
 export type Home = {
   sections: SectionConfig[];
-  navExtraLinks: NavLink[];
   hero: {
     subtitle: string;
     lead: RichTextContent;
@@ -52,7 +50,6 @@ export type Home = {
 
 export const HOME_DEFAULTS: Home = {
   sections: SECTIONS_DEFAULT,
-  navExtraLinks: NAV_EXTRA_LINKS_DEFAULT,
   hero: {
     subtitle: "Para a vida adulta",
     lead: richText([

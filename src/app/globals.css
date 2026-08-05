@@ -230,22 +230,14 @@
     font-feature-settings: "smcp" 1;
   }
 
+  /* Sticky and never hiding (CONCEPT §6, DESIGN §6): no hide-on-scroll
+     transform, which also means the header is not a containing block for the
+     mobile drawer's `position: fixed` overlay. */
   .sticky-header {
     position: fixed;
     inset-inline: 0;
     top: 0;
     z-index: 30;
-    transform: translateY(0);
-    transition: transform 380ms cubic-bezier(0.4, 0, 0.2, 1);
-    will-change: transform;
-  }
-  .sticky-header[data-hidden="true"] {
-    transform: translateY(-105%);
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .sticky-header {
-      transition: none;
-    }
   }
 
   .body-prose p {

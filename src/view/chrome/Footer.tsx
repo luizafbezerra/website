@@ -1,13 +1,24 @@
-import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import type { Clinica } from "@/domain/clinica/Clinica";
-import type { NavLink } from "@/domain/site/NavLink";
+import type { Locale } from "@/domain/site/Locale";
+import { headerNavPages } from "@/domain/site/pages";
+import { Link } from "@/i18n/navigation";
 import { FooterCosmosRestore } from "./FooterCosmosRestore";
+import type { ChromeNavItem } from "./ChromeNavItem";
 
-export async function Footer({ clinica, navLinks }: { clinica: Clinica; navLinks: NavLink[] }) {
-  const t = await getTranslations("chrome");
+export async function Footer({ clinica, locale }: { clinica: Clinica; locale: Locale }) {
+  const [t, nav] = await Promise.all([
+    getTranslations({ locale, namespace: "chrome" }),
+    getTranslations({ locale, namespace: "nav" }),
+  ]);
   const footerByline = t("footerByline");
   const year = new Date().getFullYear();
+
+  const navLinks: ChromeNavItem[] = headerNavPages().map((page) => ({
+    key: page.key,
+    href: page.paths.pt,
+    label: nav(page.key),
+  }));
 
   return (
     <footer className="border-rule border-t px-6 py-16 sm:px-10 sm:py-20">
@@ -26,7 +37,7 @@ export async function Footer({ clinica, navLinks }: { clinica: Clinica; navLinks
           <nav aria-label="Rodapé">
             <ul className="display flex flex-col gap-2 text-[0.98rem] sm:items-end">
               {navLinks.map((link) => (
-                <li key={link.href}>
+                <li key={link.key}>
                   <Link
                     href={link.href}
                     className="text-foreground hover:text-terracotta no-underline transition-colors"

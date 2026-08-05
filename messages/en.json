@@ -27,6 +27,15 @@
     "skipToContent": "Skip to content",
     "headerByline": "psychologist · Jungian tradition",
     "footerByline": "clinical psychologist",
+    "lockupBy": "by",
+    "homeAria": "{name} — home",
+    "nav": {
+      "primary": "Main",
+      "footer": "Footer",
+      "title": "Navigation",
+      "open": "Open navigation",
+      "close": "Close navigation"
+    },
     "language": {
       "label": "Language",
       "pt": "PT",

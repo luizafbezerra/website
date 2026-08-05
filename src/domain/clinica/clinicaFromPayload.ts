@@ -64,11 +64,15 @@ export function clinicaFromPayload(doc: PayloadClinica): Clinica {
       careerGuidance: feeFrom(doc.fees?.careerGuidance),
       internationalNote: filled(doc.fees?.internationalNote),
     },
+    // The openers fall back like every other field, which is what makes the
+    // drafts reach production: Phase 4 seeded these four blank, and a blank
+    // stored value would otherwise leave /primeira-conversa's set-piece empty on
+    // a database nobody has edited.
     notes: {
-      analysis: filled(doc.notes?.analysis),
-      careerGuidance: filled(doc.notes?.careerGuidance),
-      unsure: filled(doc.notes?.unsure),
-      english: filled(doc.notes?.english),
+      analysis: filled(doc.notes?.analysis) ?? defaults.notes.analysis,
+      careerGuidance: filled(doc.notes?.careerGuidance) ?? defaults.notes.careerGuidance,
+      unsure: filled(doc.notes?.unsure) ?? defaults.notes.unsure,
+      english: filled(doc.notes?.english) ?? defaults.notes.english,
     },
     jungPassages: passagesFrom(doc.jung),
     privacyLine: filled(doc.privacy?.line),

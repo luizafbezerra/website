@@ -32,15 +32,30 @@ const ENGLISH = {
     "Portuguese and English",
     "Brazil and abroad",
   ],
+  // The bilhete openers an anglophone visitor sends. `english` is not localized —
+  // it is the same note in both locales — so it is written once, from the defaults.
+  notes: {
+    analysis: "Hi Luiza. I found your website and I'd like to know about analysis.",
+    careerGuidance: "Hi Luiza. I found your website and I'd like to know about career guidance.",
+    unsure:
+      "Hi Luiza. I found your website and I'd like to talk, but I'm not sure which path is mine.",
+  },
 };
 
 export async function seedClinica(payload: Payload): Promise<void> {
   const d = CLINICA_DEFAULTS;
+  // The three localized openers; `english` is shared and added inside `data`.
+  const PT_NOTES = {
+    analysis: d.notes.analysis ?? "",
+    careerGuidance: d.notes.careerGuidance ?? "",
+    unsure: d.notes.unsure ?? "",
+  };
 
   const data = (
     role: string,
     positioning: string,
     credentials: Array<{ id?: string | null; item: string }>,
+    notes: { analysis: string; careerGuidance: string; unsure: string },
   ) => ({
     identity: {
       clinicName: d.clinicName,
@@ -59,6 +74,9 @@ export async function seedClinica(payload: Payload): Promise<void> {
       instagramHandle: d.instagramHandle,
     },
     availability: { state: d.availability.state },
+    // Drafts awaiting her sign-off, seeded so a fresh database renders the
+    // bilhete rather than the plain fallback button.
+    notes: { ...notes, english: d.notes.english },
   });
 
   const written = await payload.updateGlobal({
@@ -70,6 +88,7 @@ export async function seedClinica(payload: Payload): Promise<void> {
       d.role,
       d.positioning,
       d.credentials.map((item) => ({ item })),
+      PT_NOTES,
     ),
   });
 
@@ -88,6 +107,7 @@ export async function seedClinica(payload: Payload): Promise<void> {
       ENGLISH.role,
       ENGLISH.positioning,
       rows.map((row, index) => ({ id: row.id, item: ENGLISH.credentials[index] })),
+      ENGLISH.notes,
     ),
   });
 

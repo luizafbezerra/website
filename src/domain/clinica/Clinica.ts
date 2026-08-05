@@ -19,6 +19,10 @@ export type JungPassage = { text: string; attribution: string | null };
  * The four pre-written openers (CONCEPT §8.1). Three are localized translations
  * of the same invitation; `english` is written in English on purpose, because it
  * is the opener offered to anglophones on the Portuguese pages too.
+ *
+ * A null opener means she has not written that one, and the note for it does not
+ * render — with all four null, /primeira-conversa falls back to the plain button
+ * CONCEPT §13.5 describes.
  */
 export type NoteOpeners = {
   analysis: string | null;
@@ -91,7 +95,22 @@ export const CLINICA_DEFAULTS: Clinica = {
   // admin (DEP-005).
   availability: { state: "open", responseWindow: null },
   fees: { analysis: feeFrom(null), careerGuidance: feeFrom(null), internationalNote: null },
-  notes: { analysis: null, careerGuidance: null, unsure: null, english: null },
+  // Drafts, awaiting her sign-off (owner decision 2026-08-05, recorded in
+  // plan/feature-page-primeira-conversa-1.md). Unlike everything else on the site
+  // these are the *visitor's* words, not hers: the note is the message the visitor
+  // sends, shown verbatim before the tap and still editable in WhatsApp — which is
+  // why drafting them does not put prose in her name (CONCEPT §11). Each one names
+  // the door it came through, so the arriving message carries its own attribution
+  // with nothing tracked (CONCEPT §8.1). She rewrites them in the admin; deleting
+  // all four restores CONCEPT §13.5's plain button.
+  notes: {
+    analysis: "Oi, Luiza. Encontrei o seu site e queria saber sobre a análise.",
+    careerGuidance:
+      "Oi, Luiza. Encontrei o seu site e queria saber sobre a orientação profissional e de carreira.",
+    unsure:
+      "Oi, Luiza. Encontrei o seu site e queria conversar, mas ainda não sei qual caminho é o meu.",
+    english: "Hi Luiza. I found your website and I'd like to know about sessions in English.",
+  },
   jungPassages: [],
   privacyLine: null,
 };

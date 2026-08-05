@@ -1,5 +1,6 @@
 import type { Payload } from "payload";
 import { INICIO_DEFAULTS } from "@/domain/inicio/Inicio";
+import { PRIMEIRA_CONVERSA_DEFAULTS } from "@/domain/primeiraConversa/PrimeiraConversa";
 import type { RichTextContent } from "@/domain/richText/RichTextContent";
 import { richText } from "@/domain/richText/richText";
 import type { PageInicio } from "@/payload-types";
@@ -7,18 +8,19 @@ import type { PageInicio } from "@/payload-types";
 /**
  * Seed the page globals with the copy that already exists (TASK-026).
  *
- * Only three pages get anything: her words are carried from where they lived on
- * the old single-page site to the section that owns them in the eight-page map.
- * The other five globals stay empty on purpose — inventing prose in her name
- * would break the authorship policy (CONCEPT §11), and each field's admin
- * description already says what belongs there. The wheel's twelve readings stay
- * empty for the same reason (REQ-007): the wheel ships visual-only.
+ * A page is seeded once it has been built: her words are carried from where they
+ * lived on the old single-page site to the section that owns them in the
+ * eight-page map, and a built page's drafted copy comes from its own defaults.
+ * The unbuilt globals stay empty on purpose — inventing prose in her name would
+ * break the authorship policy (CONCEPT §11), and each field's admin description
+ * already says what belongs there. The wheel's twelve readings stay empty for the
+ * same reason (REQ-007): the wheel ships visual-only.
  *
- * Início seeds from `INICIO_DEFAULTS`, the same values the page falls back to,
- * so a seeded row and the code fallback start from one source of truth. Análise
- * and Sobre carry their copy as literals here, because this file is the source
- * of their pt defaults and nothing else holds them any more: their own page
- * defaults land with their pages in TASK-037 and TASK-039.
+ * Início and A primeira conversa seed from their own `*_DEFAULTS`, the same values
+ * the pages fall back to, so a seeded row and the code fallback start from one
+ * source of truth. Análise and Sobre carry their copy as literals here, because
+ * this file is the source of their pt defaults and nothing else holds them any
+ * more: their own page defaults land with their pages in TASK-037 and TASK-039.
  *
  * Portuguese only. English falls back to Portuguese through Payload's
  * `fallback: true` until her polish pass (RISK-001).
@@ -143,5 +145,41 @@ export async function seedPages(payload: Payload): Promise<void> {
     },
   });
 
-  payload.logger.info("  ✓ page globals (início, análise, sobre)");
+  // A primeira conversa — from the page's own defaults, all of it drafted from
+  // CONCEPT §6 and awaiting her sign-off (TASK-052).
+  const primeiraConversa = PRIMEIRA_CONVERSA_DEFAULTS;
+  await payload.updateGlobal({
+    ...shared,
+    slug: "page-primeira-conversa",
+    data: {
+      abertura: {
+        heading: primeiraConversa.abertura.heading,
+        lead: rt(primeiraConversa.abertura.lead),
+      },
+      passoAPasso: {
+        heading: primeiraConversa.passoAPasso.heading,
+        steps: primeiraConversa.passoAPasso.steps,
+      },
+      permissoes: {
+        heading: primeiraConversa.permissoes.heading,
+        items: primeiraConversa.permissoes.items.map((text) => ({ text })),
+      },
+      logistica: {
+        heading: primeiraConversa.logistica.heading,
+        items: primeiraConversa.logistica.items,
+      },
+      miniFaq: {
+        heading: primeiraConversa.miniFaq.heading,
+        items: primeiraConversa.miniFaq.items,
+        linkLabel: primeiraConversa.miniFaq.linkLabel,
+      },
+      bilhete: {
+        heading: primeiraConversa.bilhete.heading,
+        intro: rt(primeiraConversa.bilhete.intro),
+        chooseLabel: primeiraConversa.bilhete.chooseLabel,
+      },
+    },
+  });
+
+  payload.logger.info("  ✓ page globals (início, análise, sobre, primeira conversa)");
 }

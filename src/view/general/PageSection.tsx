@@ -2,18 +2,17 @@ import type { ReactNode } from "react";
 import { cn } from "@/view/styling/cn";
 
 /**
- * The scroll rhythm of Início, held in one place.
+ * The scroll rhythm of a content page, held in one place.
  *
- * Eleven sections in a row only read as one page if their vertical measure and
- * their column width agree, and repeating the same padding scale eleven times is
+ * A column of sections only reads as one page if their vertical measure and their
+ * column width agree, and repeating the same padding scale at every call site is
  * how that quietly stops being true. The generosity is deliberate: DESIGN calls
  * the density "editorial and generous", and the first impression is meant to be
  * slow.
  *
  * `tone` is the only variation, and it exists because depth in this system is
- * tonal rather than shadowed (DESIGN §4). It is used exactly twice on this page
- * — the Brasil e exterior band and the closing contato — so a deeper parchment
- * still reads as an event rather than as striping.
+ * tonal rather than shadowed (DESIGN §4). Spend it once or twice per page — a
+ * deeper parchment reads as an event, and striping is what it stops being.
  */
 
 type PageSectionProps = {
@@ -21,7 +20,7 @@ type PageSectionProps = {
   /** Id of the heading that names this section, for `aria-labelledby`. */
   labelledBy: string;
   tone?: "parchment" | "deep";
-  /** Wider than the reading column, for the tile row and the two-door spread. */
+  /** Wider than the reading column, for tile rows and two-column spreads. */
   width?: "column" | "wide";
   className?: string;
   children: ReactNode;

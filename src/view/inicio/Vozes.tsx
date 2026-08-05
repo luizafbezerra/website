@@ -1,7 +1,7 @@
 import type { Inicio } from "@/domain/inicio/Inicio";
 import type { Testimonial } from "@/domain/testimonials/Testimonial";
-import { PageSection } from "./PageSection";
-import { SectionHeading } from "./SectionHeading";
+import { PageSection } from "@/view/general/PageSection";
+import { SectionHeading } from "@/view/general/SectionHeading";
 
 /**
  * Section 10 of CONCEPT §6 — testimonials, and nothing at all when there are

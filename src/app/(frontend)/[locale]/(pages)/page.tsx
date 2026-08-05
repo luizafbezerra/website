@@ -9,7 +9,7 @@ import { absoluteUrl } from "@/infrastructure/env/baseUrl";
 import { BrasilExterior } from "@/view/inicio/BrasilExterior";
 import { ComoComecar } from "@/view/inicio/ComoComecar";
 import { Contato } from "@/view/inicio/Contato";
-import { Credencial } from "@/view/inicio/Credencial";
+import { Credencial } from "@/view/general/Credencial";
 import { DoisCaminhos } from "@/view/inicio/DoisCaminhos";
 import { Hero } from "@/view/inicio/Hero";
 import { InstagramBridge } from "@/view/inicio/InstagramBridge";

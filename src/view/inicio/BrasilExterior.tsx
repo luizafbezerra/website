@@ -1,7 +1,7 @@
 import type { Inicio } from "@/domain/inicio/Inicio";
-import { PageSection } from "./PageSection";
-import { SectionHeading } from "./SectionHeading";
-import { SectionLink } from "./SectionLink";
+import { PageSection } from "@/view/general/PageSection";
+import { SectionHeading } from "@/view/general/SectionHeading";
+import { SectionLink } from "@/view/general/SectionLink";
 
 /**
  * Section 8 of CONCEPT §6 — the short band that tells a Brazilian in Lisbon or

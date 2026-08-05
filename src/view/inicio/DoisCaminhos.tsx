@@ -1,7 +1,7 @@
 import type { Door, Inicio } from "@/domain/inicio/Inicio";
-import { PageSection } from "./PageSection";
-import { SectionHeading } from "./SectionHeading";
-import { SectionLink } from "./SectionLink";
+import { PageSection } from "@/view/general/PageSection";
+import { SectionHeading } from "@/view/general/SectionHeading";
+import { SectionLink } from "@/view/general/SectionLink";
 import type { ComponentProps } from "react";
 import { Link } from "@/i18n/navigation";
 

@@ -5,7 +5,7 @@ import type { Inicio } from "@/domain/inicio/Inicio";
 import { MediaPlaceholder } from "@/view/general/MediaPlaceholder";
 import { RichTextProse } from "@/view/general/RichTextProse";
 import { WhatsAppCta } from "@/view/general/WhatsAppCta";
-import { SectionLink } from "./SectionLink";
+import { SectionLink } from "@/view/general/SectionLink";
 
 const PORTRAIT_ASPECT = "4 / 5";
 

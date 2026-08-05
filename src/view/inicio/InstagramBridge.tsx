@@ -4,8 +4,8 @@ import { useTranslations } from "next-intl";
 import { useCallback, useEffect, useId, useState } from "react";
 import type { Clinica } from "@/domain/clinica/Clinica";
 import type { Inicio, InstagramTile as Tile } from "@/domain/inicio/Inicio";
-import { PageSection } from "./PageSection";
-import { SectionHeading } from "./SectionHeading";
+import { PageSection } from "@/view/general/PageSection";
+import { SectionHeading } from "@/view/general/SectionHeading";
 import { InstagramReveal } from "./InstagramReveal";
 import { InstagramTile } from "./InstagramTile";
 

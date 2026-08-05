@@ -1,8 +1,8 @@
 import type { Inicio } from "@/domain/inicio/Inicio";
 import { RichTextProse } from "@/view/general/RichTextProse";
-import { PageSection } from "./PageSection";
-import { SectionHeading } from "./SectionHeading";
-import { SectionLink } from "./SectionLink";
+import { PageSection } from "@/view/general/PageSection";
+import { SectionHeading } from "@/view/general/SectionHeading";
+import { SectionLink } from "@/view/general/SectionLink";
 
 /**
  * Section 7 of CONCEPT §6 — four lines and the hook, enough to want to click

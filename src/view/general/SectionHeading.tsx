@@ -1,13 +1,13 @@
 import { cn } from "@/view/styling/cn";
 
 /**
- * The `h2` of a home section — DESIGN's Headline scale, balanced, in Cardo.
+ * The `h2` of a page section — DESIGN's Headline scale, balanced, in Cardo.
  *
  * There is no tracked-caps eyebrow above it. DESIGN §6 names a kicker over every
  * section as scaffolding rather than voice: the `.tracked` label is a brand voice
  * reserved for where the world genuinely speaks (plate captions, the credential
- * strip, the gallery label on an un-cropped canvas), and printing one eleven
- * times in a row would spend it down to nothing.
+ * strip, the gallery label on an un-cropped canvas), and printing one above every
+ * heading on a page would spend it down to nothing.
  */
 export function SectionHeading({
   id,

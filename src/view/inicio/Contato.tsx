@@ -4,9 +4,9 @@ import type { Inicio } from "@/domain/inicio/Inicio";
 import { AvailabilityLine } from "@/view/general/AvailabilityLine";
 import { RichTextProse } from "@/view/general/RichTextProse";
 import { WhatsAppCta } from "@/view/general/WhatsAppCta";
-import { PageSection } from "./PageSection";
-import { SectionHeading } from "./SectionHeading";
-import { SectionLink } from "./SectionLink";
+import { PageSection } from "@/view/general/PageSection";
+import { SectionHeading } from "@/view/general/SectionHeading";
+import { SectionLink } from "@/view/general/SectionLink";
 
 /**
  * Section 11 of CONCEPT §6 — the close. The one place on this page where the

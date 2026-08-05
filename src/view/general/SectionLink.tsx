@@ -4,12 +4,12 @@ import type { ComponentProps } from "react";
 
 /**
  * The secondary action of DESIGN §5 — a text link in the marginalia voice, quill
- * with a hairline terracotta underline at a generous offset. Every home section
- * that hands off to a deeper page ends on one.
+ * with a hairline terracotta underline at a generous offset. Every section that
+ * hands off to a deeper page ends on one.
  *
- * It is deliberately not a button. Only one action on this page is a filled
+ * It is deliberately not a button. Only one action per page is a filled
  * terracotta block, and it is the WhatsApp conversation; a page of equally
- * weighted buttons would make the north star compete with seven links to itself.
+ * weighted buttons would make the north star compete with links to itself.
  *
  * `href` is the internal Portuguese pathname — next-intl renders the visitor's
  * own locale variant from the registry, so `/analise` becomes `/en/analysis`

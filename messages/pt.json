@@ -11,7 +11,7 @@
   },
   "meta": {
     "inicio": {
-      "title": "Clínica de psicologia analítica (Jung) on-line · Símbolos do Self",
+      "title": "Símbolos do Self · psicologia analítica (Jung) on-line, por Luiza Fernandes Bezerra",
       "description": "Clínica de psicologia analítica (Jung) on-line para todo o Brasil e exterior. Análise e orientação profissional de carreira com Luiza Fernandes Bezerra, psicóloga."
     },
     "perguntas": {
@@ -63,6 +63,12 @@
       "Ansiedade",
       "Orientação profissional"
     ]
+  },
+  "twin": {
+    "pages": "Páginas",
+    "page": "Página",
+    "alternate": "In English",
+    "index": "Índice de todas as páginas"
   },
   "chrome": {
     "skipToContent": "Pular para o conteúdo",

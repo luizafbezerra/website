@@ -1,5 +1,7 @@
 import type { CollectionConfig } from "payload";
 import { revalidatePath } from "next/cache";
+import { twinPath } from "@/domain/markdown/twinPath";
+import { SITE_LOCALES } from "@/domain/site/Locale";
 import { localizedText, localizedTextarea } from "../fields/copyFields";
 
 /**
@@ -41,13 +43,13 @@ export const Testimonials: CollectionConfig = {
     afterChange: [
       ({ context }) => {
         if (context?.skipRevalidate) return;
-        revalidatePath("/", "layout");
+        revalidateVozes();
       },
     ],
     afterDelete: [
       ({ context }) => {
         if (context?.skipRevalidate) return;
-        revalidatePath("/", "layout");
+        revalidateVozes();
       },
     ],
   },
@@ -112,3 +114,14 @@ export const Testimonials: CollectionConfig = {
     },
   ],
 };
+
+/**
+ * The quotes render in Início's Vozes section and in that page's Markdown twin.
+ * `("/", "layout")` covers the page but not the route handler, so the twin is
+ * named explicitly (TASK-043) — and it matters most on **delete**, where a
+ * withdrawn consent has to disappear from the machine copy too (SEC-002).
+ */
+function revalidateVozes(): void {
+  revalidatePath("/", "layout");
+  for (const locale of SITE_LOCALES) revalidatePath(twinPath("inicio", locale));
+}

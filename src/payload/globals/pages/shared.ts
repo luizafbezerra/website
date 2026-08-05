@@ -1,5 +1,6 @@
 import type { GlobalConfig } from "payload";
 import { revalidatePath } from "next/cache";
+import { MACHINE_INDEX_PATH, twinPath } from "@/domain/markdown/twinPath";
 import { SITE_LOCALES } from "@/domain/site/Locale";
 import { pagePath } from "@/domain/site/pagePath";
 import type { PageKey } from "@/domain/site/pages";
@@ -26,6 +27,12 @@ export const pageAccess: GlobalConfig["access"] = {
  * Portuguese page and (through Payload's locale fallback) the English mirror.
  * Skipped during seed, which writes outside a Next request where
  * `revalidatePath` throws.
+ *
+ * The Markdown twin is revalidated with the page (TASK-043). It renders from the
+ * same domain action, so an edit that changes the page changes the twin; without
+ * this the human page updated on save and the machine one lagged by up to an
+ * hour, which is the kind of drift nobody notices until an assistant quotes the
+ * old wording back.
  */
 export function revalidatePageHook(
   key: PageKey,
@@ -33,7 +40,12 @@ export function revalidatePageHook(
   return [
     ({ context }) => {
       if (context?.skipRevalidate) return;
-      for (const locale of SITE_LOCALES) revalidatePath(pagePath(key, locale));
+      for (const locale of SITE_LOCALES) {
+        revalidatePath(pagePath(key, locale));
+        revalidatePath(twinPath(key, locale));
+      }
+      // The index quotes each page's title and description.
+      revalidatePath(MACHINE_INDEX_PATH);
     },
   ];
 }

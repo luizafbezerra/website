@@ -1,5 +1,6 @@
 import type { GlobalConfig } from "payload";
 import { revalidatePath } from "next/cache";
+import { MACHINE_INDEX_PATH, twinEntries } from "@/domain/markdown/twinPath";
 import { localizedText, localizedTextarea } from "../fields/copyFields";
 
 /**
@@ -38,6 +39,13 @@ export const Clinica: GlobalConfig = {
         // chrome of every page, not on one route.
         if (context?.skipRevalidate) return;
         revalidatePath("/", "layout");
+
+        // `("/", "layout")` covers the pages but not the route handlers, and
+        // these facts are in every Markdown twin's frame (the lockup, her
+        // positioning sentence, the credential strip, availability, WhatsApp,
+        // email) as well as in the machine index (TASK-043). Each has to be named.
+        for (const twin of twinEntries()) revalidatePath(twin.path);
+        revalidatePath(MACHINE_INDEX_PATH);
       },
     ],
   },

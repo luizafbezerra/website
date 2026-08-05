@@ -1,5 +1,6 @@
 import type { CollectionConfig } from "payload";
 import { revalidatePath } from "next/cache";
+import { MACHINE_INDEX_PATH, twinPath } from "@/domain/markdown/twinPath";
 import { SITE_LOCALES } from "@/domain/site/Locale";
 import { pagePath } from "@/domain/site/pagePath";
 import { FAQ_CATEGORY_OPTIONS } from "../faqCategories";
@@ -68,8 +69,15 @@ export const Faq: CollectionConfig = {
   ],
 };
 
-/** The FAQ renders on `/perguntas` in both locales and is indexed by llms.txt. */
+/**
+ * The FAQ renders on `/perguntas` in both locales, in that page's Markdown twin
+ * (where the sixteen questions are the bulk of the file), and is indexed by
+ * llms.txt.
+ */
 function revalidateFaqPaths(): void {
-  for (const locale of SITE_LOCALES) revalidatePath(pagePath("perguntas", locale));
-  revalidatePath("/llms.txt");
+  for (const locale of SITE_LOCALES) {
+    revalidatePath(pagePath("perguntas", locale));
+    revalidatePath(twinPath("perguntas", locale));
+  }
+  revalidatePath(MACHINE_INDEX_PATH);
 }

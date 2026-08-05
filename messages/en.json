@@ -11,7 +11,7 @@
   },
   "meta": {
     "inicio": {
-      "title": "Online analytical psychology (Jung) · Símbolos do Self",
+      "title": "Símbolos do Self · online analytical psychology (Jung), by Luiza Fernandes Bezerra",
       "description": "An online analytical-psychology (Jung) practice for Brazil and abroad. Jungian-oriented psychotherapy and career guidance with psychologist Luiza Fernandes Bezerra."
     },
     "perguntas": {
@@ -63,6 +63,12 @@
       "Anxiety",
       "Career guidance"
     ]
+  },
+  "twin": {
+    "pages": "Pages",
+    "page": "Page",
+    "alternate": "Em português",
+    "index": "Index of every page"
   },
   "chrome": {
     "skipToContent": "Skip to content",

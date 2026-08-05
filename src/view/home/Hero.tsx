@@ -1,12 +1,16 @@
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 import type { Home } from "@/domain/home/Home";
 import type { Clinica } from "@/domain/clinica/Clinica";
+import { MediaPlaceholder } from "@/view/general/MediaPlaceholder";
 import { RichTextProse } from "@/view/general/RichTextProse";
 import { WhatsAppGlyph } from "@/view/general/WhatsAppGlyph";
 
-const PORTRAIT_FALLBACK = "/portrait/luiza.jpg";
+const PORTRAIT_ASPECT = "4 / 5";
 
 export function Hero({ clinica, content }: { clinica: Clinica; content: Home["hero"] }) {
+  const t = useTranslations("placeholder.slots");
+
   return (
     <section
       aria-labelledby="hero-heading"
@@ -32,21 +36,32 @@ export function Hero({ clinica, content }: { clinica: Clinica; content: Home["he
           </h1>
         </div>
 
-        {/* TODO: replace with portrait served from PayloadCMS once content extraction lands */}
         {/* Portrait in a supporting role: capped on mobile so it follows the
             name rather than filling the first screen; on desktop it fills the
-            right column across both text rows. */}
+            right column across both text rows.
+
+            Until the real session happens the slot holds a labeled frame
+            (REQ-005): the casual selfie re-created the amateur register the
+            site exists to leave, so it comes down rather than standing in. */}
         <figure className="mx-auto w-[min(17rem,72%)] lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:mx-0 lg:w-full lg:max-w-[26rem] lg:self-start lg:pt-2">
-          <div className="relative aspect-[4/5] overflow-hidden">
-            <Image
-              src={content.portraitUrl ?? PORTRAIT_FALLBACK}
-              alt={`Retrato de ${clinica.fullName}, ${clinica.role.toLowerCase()}`}
-              fill
-              priority
-              sizes="(min-width: 1024px) 26rem, 17rem"
-              className="vignette object-cover"
+          {content.portraitUrl ? (
+            <div className="relative aspect-[4/5] overflow-hidden">
+              <Image
+                src={content.portraitUrl}
+                alt={`Retrato de ${clinica.fullName}, ${clinica.role.toLowerCase()}`}
+                fill
+                priority
+                sizes="(min-width: 1024px) 26rem, 17rem"
+                className="vignette object-cover"
+              />
+            </div>
+          ) : (
+            <MediaPlaceholder
+              description={t("portrait")}
+              note={t("portraitNote")}
+              aspectRatio={PORTRAIT_ASPECT}
             />
-          </div>
+          )}
           <figcaption className="marginalia mt-5 text-center lg:text-left">
             <span className="display-italic text-ink-soft">{clinica.shortName}</span> — atendimento
             on-line, Brasil e exterior.

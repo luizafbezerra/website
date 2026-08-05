@@ -42,7 +42,11 @@
   },
   "placeholder": {
     "pending": "In preparation",
-    "aria": "Placeholder: {description}"
+    "aria": "Placeholder: {description}",
+    "slots": {
+      "portrait": "Luiza's portrait — natural light, a calm background.",
+      "portraitNote": "The real photograph goes here as soon as the session happens."
+    }
   },
   "notFound": {
     "metaTitle": "Page not found",

@@ -42,7 +42,11 @@
   },
   "placeholder": {
     "pending": "Em preparação",
-    "aria": "Espaço reservado: {description}"
+    "aria": "Espaço reservado: {description}",
+    "slots": {
+      "portrait": "O retrato de Luiza — luz natural, fundo calmo.",
+      "portraitNote": "A foto definitiva entra aqui assim que a sessão acontecer."
+    }
   },
   "notFound": {
     "metaTitle": "Página não encontrada",

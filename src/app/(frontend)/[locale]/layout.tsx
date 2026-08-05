@@ -40,6 +40,21 @@ export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
 }
 
+/**
+ * Exactly two locales exist, so a segment that is not one of them is a 404 and
+ * never something to render on demand (TASK-046).
+ *
+ * This closes a whole class of 500. The middleware matcher deliberately excludes
+ * paths containing a dot — machine-facing addresses want to reach the router
+ * unrewritten — so a request for `/favicon.ico`, `/analise.md` or any probe for
+ * `/wp-login.php` arrives here with `locale` set to that string. Without this the
+ * segment tried to render dynamically and threw ("Page changed from static to
+ * dynamic at runtime"), so the site answered **500** to requests that are simply
+ * not found. Crawlers and scanners make those requests constantly, and a 500 is a
+ * far worse signal than a 404.
+ */
+export const dynamicParams = false;
+
 export const generateMetadata = async ({ params }: LocaleRouteProps): Promise<Metadata> => {
   const { locale } = await params;
   // An unknown segment is a 404, which the layout below raises; its metadata

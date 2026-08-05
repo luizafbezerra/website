@@ -54,21 +54,10 @@ export const PageInicio: GlobalConfig = {
           ],
         },
         // ── 2 Credencial ─────────────────────────────────────────────────────
-        {
-          name: "credencial",
-          label: "2 · Credencial",
-          description:
-            "Uma tira de fatos curtos, separados por ponto. Só entra aqui o que está confirmado: CRP, formação, desde quando, on-line, idiomas, alcance.",
-          fields: [
-            {
-              name: "items",
-              type: "array",
-              label: "Fatos",
-              labels: { singular: "Fato", plural: "Fatos" },
-              fields: [localizedText({ name: "text", label: "Fato", required: true })],
-            },
-          ],
-        },
+        // No tab: the credential strip appears on every core page (CONCEPT §8.8),
+        // so it is stored once in A Clínica → Identidade → Credenciais. A copy
+        // here would drift the moment she edited one of the two.
+        //
         // ── 3 Instagram ──────────────────────────────────────────────────────
         {
           name: "instagram",

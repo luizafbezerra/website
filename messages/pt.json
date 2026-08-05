@@ -38,7 +38,18 @@
       "clinica": "A clínica",
       "comecar": "Começar",
       "mundo": "O mundo"
-    }
+    },
+    "whatsapp": {
+      "label": "Conversar pelo WhatsApp",
+      "aria": "Iniciar conversa pelo WhatsApp {phone}"
+    },
+    "availability": {
+      "label": "Agenda",
+      "open": "Com horários disponíveis.",
+      "waitlist": "Lista de espera curta.",
+      "closed": "Sem novos atendimentos no momento — escreva e eu aviso."
+    },
+    "credentialLabel": "Credenciais"
   },
   "placeholder": {
     "pending": "Em preparação",

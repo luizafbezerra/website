@@ -38,7 +38,18 @@
       "clinica": "The clinic",
       "comecar": "Getting started",
       "mundo": "The world"
-    }
+    },
+    "whatsapp": {
+      "label": "Talk on WhatsApp",
+      "aria": "Start a WhatsApp conversation on {phone}"
+    },
+    "availability": {
+      "label": "Openings",
+      "open": "Currently taking new clients.",
+      "waitlist": "A short waiting list.",
+      "closed": "No new clients at the moment — write and I will let you know."
+    },
+    "credentialLabel": "Credentials"
   },
   "placeholder": {
     "pending": "In preparation",

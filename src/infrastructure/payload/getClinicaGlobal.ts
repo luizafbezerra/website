@@ -25,6 +25,7 @@ export type PayloadClinica = {
     shortName?: string | null;
     role?: string | null;
     credential?: string | null;
+    credentials?: Array<{ item?: string | null }> | null;
     positioning?: string | null;
   } | null;
   contact?: {

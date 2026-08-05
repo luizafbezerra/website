@@ -35,6 +35,12 @@ export type Clinica = {
   role: string;
   /** Empty hides the credential row rather than advertising a fake registration. */
   credential: string;
+  /**
+   * The credential strip of CONCEPT §6/§8.8, in render order and without the
+   * CRP — `CredentialLine` prepends `credential` when it is set. Only facts she
+   * has confirmed belong here; deleting an item in the CMS removes it.
+   */
+  credentials: string[];
   /** Her canonical positioning sentence, verbatim. */
   positioning: string;
   // contact
@@ -63,6 +69,15 @@ export const CLINICA_DEFAULTS: Clinica = {
   role: "Psicóloga clínica",
   // Blank until she confirms her CRP in writing (DEP-005). The row hides.
   credential: "",
+  // CONCEPT §6's credencial line, minus the CRP. Every item is a fact already
+  // public in her own bio; anything she has not confirmed she deletes in the CMS.
+  credentials: [
+    "PUC-SP",
+    "clínica desde 2014",
+    "on-line",
+    "português e inglês",
+    "Brasil e exterior",
+  ],
   positioning: "Clínica de psicologia analítica (Jung) on-line para todo o Brasil e exterior.",
   whatsappE164: WHATSAPP_E164,
   whatsappDisplay: "+55 11 96415-8128",

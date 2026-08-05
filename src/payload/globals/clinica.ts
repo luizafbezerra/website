@@ -82,6 +82,24 @@ export const Clinica: GlobalConfig = {
                   "Registro no Conselho, ex.: CRP 06/123456. Em branco, o site omite a linha em vez de inventar um número.",
               },
             },
+            {
+              name: "credentials",
+              type: "array",
+              label: "Linha de credencial",
+              labels: { singular: "Item", plural: "Itens" },
+              admin: {
+                description:
+                  "A tira de fatos que aparece nas páginas principais, na ordem em que você colocar aqui. O CRP acima entra sozinho na frente. Só entram fatos confirmados por você — apague qualquer item de que não tenha certeza.",
+              },
+              fields: [
+                localizedText({
+                  name: "item",
+                  label: "Item",
+                  required: true,
+                  description: "Ex.: PUC-SP · clínica desde 2014 · Brasil e exterior.",
+                }),
+              ],
+            },
             localizedTextarea({
               name: "positioning",
               label: "Frase de posicionamento",

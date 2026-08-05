@@ -20,4 +20,18 @@ describe("whatsappUrlFromPhone", () => {
   it("keeps the clinic defaults' derived link in sync with its phone number", () => {
     expect(CLINICA_DEFAULTS.whatsappUrl).toBe(whatsappUrlFromPhone(CLINICA_DEFAULTS.whatsappE164));
   });
+
+  it("carries a bilhete opener as the prefilled message", () => {
+    expect(whatsappUrlFromPhone("+5511964158128", "Oi, Luiza! Vim pela página da análise.")).toBe(
+      "https://wa.me/5511964158128?text=Oi%2C%20Luiza!%20Vim%20pela%20p%C3%A1gina%20da%20an%C3%A1lise.",
+    );
+  });
+
+  it("leaves the link bare when no opener was chosen", () => {
+    const bare = "https://wa.me/5511964158128";
+    expect(whatsappUrlFromPhone("+5511964158128")).toBe(bare);
+    expect(whatsappUrlFromPhone("+5511964158128", null)).toBe(bare);
+    // A blank field is an absence, not an empty message.
+    expect(whatsappUrlFromPhone("+5511964158128", "   ")).toBe(bare);
+  });
 });

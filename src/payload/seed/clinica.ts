@@ -25,17 +25,25 @@ const ENGLISH = {
   role: "Clinical psychologist working in the Jungian tradition",
   positioning:
     "An online analytical psychology (Jung) practice, for Brazil and anywhere in the world.",
+  credentials: [
+    "PUC-SP",
+    "in practice since 2014",
+    "online",
+    "Portuguese and English",
+    "Brazil and abroad",
+  ],
 };
 
 export async function seedClinica(payload: Payload): Promise<void> {
   const d = CLINICA_DEFAULTS;
 
-  const data = (role: string, positioning: string) => ({
+  const data = (role: string, positioning: string, credentials: readonly string[]) => ({
     identity: {
       clinicName: d.clinicName,
       fullName: d.fullName,
       shortName: d.shortName,
       credential: d.credential,
+      credentials: credentials.map((item) => ({ item })),
       role,
       positioning,
     },
@@ -49,16 +57,16 @@ export async function seedClinica(payload: Payload): Promise<void> {
     availability: { state: d.availability.state },
   });
 
-  for (const [locale, role, positioning] of [
-    ["pt", d.role, d.positioning],
-    ["en", ENGLISH.role, ENGLISH.positioning],
+  for (const [locale, role, positioning, credentials] of [
+    ["pt", d.role, d.positioning, d.credentials],
+    ["en", ENGLISH.role, ENGLISH.positioning, ENGLISH.credentials],
   ] as const) {
     await payload.updateGlobal({
       slug: "clinica",
       locale,
       overrideAccess: true,
       context: { skipRevalidate: true },
-      data: data(role, positioning),
+      data: data(role, positioning, credentials),
     });
   }
 

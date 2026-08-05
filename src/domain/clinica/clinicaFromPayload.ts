@@ -21,6 +21,19 @@ function passagesFrom(raw: PayloadClinica["jung"]): JungPassage[] {
     .filter((passage): passage is JungPassage => passage.text !== null);
 }
 
+/**
+ * The credential strip, in stored order. An emptied array is a decision — she
+ * removed the last unconfirmed fact — so it stays empty instead of falling back
+ * to the defaults; only a missing array means "never edited".
+ */
+function credentialsFrom(raw: PayloadClinica["identity"]): string[] {
+  if (!Array.isArray(raw?.credentials)) return CLINICA_DEFAULTS.credentials;
+
+  return raw.credentials
+    .map((entry) => filled(entry?.item))
+    .filter((item): item is string => item !== null);
+}
+
 /** Normalize the raw `clinica` global, falling back field by field. */
 export function clinicaFromPayload(doc: PayloadClinica): Clinica {
   const defaults = CLINICA_DEFAULTS;
@@ -34,6 +47,7 @@ export function clinicaFromPayload(doc: PayloadClinica): Clinica {
     role: filled(doc.identity?.role) ?? defaults.role,
     // The one field whose empty value is meaningful: no CRP means no row.
     credential: filled(doc.identity?.credential) ?? defaults.credential,
+    credentials: credentialsFrom(doc.identity),
     positioning: filled(doc.identity?.positioning) ?? defaults.positioning,
     whatsappE164,
     whatsappDisplay: filled(doc.contact?.whatsappDisplay) ?? defaults.whatsappDisplay,

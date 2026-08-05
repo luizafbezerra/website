@@ -25,6 +25,8 @@ const ENGLISH = {
   role: "Clinical psychologist working in the Jungian tradition",
   positioning:
     "An online analytical psychology (Jung) practice, for Brazil and anywhere in the world.",
+  internationalNote:
+    "For people living outside Brazil, fees are in dollars or euros — we agree on the amount in the first conversation. The site never converts currency.",
   credentials: [
     "PUC-SP",
     "in practice since 2014",
@@ -57,6 +59,7 @@ export async function seedClinica(payload: Payload): Promise<void> {
   const data = (
     role: string,
     positioning: string,
+    internationalNote: string,
     credentials: Array<{ id?: string | null; item: string }>,
     notes: {
       analysis: string;
@@ -82,6 +85,10 @@ export async function seedClinica(payload: Payload): Promise<void> {
       instagramHandle: d.instagramHandle,
     },
     availability: { state: d.availability.state },
+    // The two prices stay unset — hers to decide (DEP-005) — so both services
+    // render "a combinar". The abroad framing is CONCEPT §8.9's own policy
+    // sentence rather than a price, so it is seeded.
+    fees: { internationalNote },
     // Drafts awaiting her sign-off, seeded so a fresh database renders the
     // bilhete rather than the plain fallback button.
     notes: { ...notes, english: d.notes.english },
@@ -95,6 +102,7 @@ export async function seedClinica(payload: Payload): Promise<void> {
     data: data(
       d.role,
       d.positioning,
+      d.fees.internationalNote ?? "",
       d.credentials.map((item) => ({ item })),
       PT_NOTES,
     ),
@@ -114,6 +122,7 @@ export async function seedClinica(payload: Payload): Promise<void> {
     data: data(
       ENGLISH.role,
       ENGLISH.positioning,
+      ENGLISH.internationalNote,
       rows.map((row, index) => ({ id: row.id, item: ENGLISH.credentials[index] })),
       ENGLISH.notes,
     ),

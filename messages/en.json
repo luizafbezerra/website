@@ -15,16 +15,32 @@
       "description": "An online analytical-psychology (Jung) practice for Brazil and abroad. Jungian-oriented psychotherapy and career guidance with psychologist Luiza Fernandes Bezerra."
     },
     "perguntas": {
-      "title": "Questions",
-      "description": "How a first conversation works, how long analysis lasts, session frequency, online sessions in Brazil and abroad, and confidentiality."
+      "title": "Frequently asked questions",
+      "description": "Questions about Jungian analysis and career guidance online: the first conversation, duration, frequency, fees, confidentiality, time zones, Brazil and abroad."
     },
     "privacidade": {
       "title": "Privacy",
-      "description": "How the data of visitors and of people who get in touch is handled, under Brazil's General Data Protection Law (LGPD)."
+      "description": "What this site keeps — your choice of language, in your own browser, and anonymous aggregate visit statistics — and what it never does: identify, follow or personalise for the visitor."
     },
     "primeiraConversa": {
       "title": "The first conversation",
       "description": "What happens when you write: a conversation of about fifty minutes, by video, in English or Portuguese, in your own time zone — from Brazil or anywhere abroad. The steps, the fees, and a note already written for you to send."
+    },
+    "sobre": {
+      "title": "About Luiza Fernandes Bezerra",
+      "description": "Luiza Fernandes Bezerra, a clinical psychologist working in the Jungian tradition: degree and advanced training at PUC-SP, postgraduate study at Instituto Numen, in clinical practice since 2014. Jungian-oriented psychotherapy and career guidance, online, in Portuguese and English, for Brazil and anywhere abroad."
+    },
+    "internacional": {
+      "title": "Brazil and abroad",
+      "description": "A Brazilian clinical psychologist working in the Jungian tradition, entirely online: Jungian-oriented psychotherapy and career guidance in English or Portuguese, in your own time zone, wherever in the world you live. Fees in dollars or euros."
+    },
+    "orientacaoProfissional": {
+      "title": "Career guidance",
+      "description": "Online career and vocational guidance with a clinical psychologist working in the Jungian tradition, trained in career guidance at PUC-SP: up to twelve weekly meetings with psychological tests, conversations and proposed activities, to reach the profession that makes the most sense in your life right now. A first choice, a career change or a fresh start — in English or Portuguese, from Brazil and abroad."
+    },
+    "analise": {
+      "title": "Jungian analysis online",
+      "description": "Online Jungian-oriented psychotherapy with Luiza Fernandes Bezerra, a clinical psychologist working in the Jungian tradition: weekly sessions in Portuguese or English, for anywhere in Brazil or abroad. Anxiety, grief, dreams, relationships, career and purpose."
     }
   },
   "seo": {
@@ -180,6 +196,64 @@
         "unsure": "not sure yet",
         "english": "in English"
       }
+    }
+  },
+  "sobre": {
+    "quemE": {
+      "portraitAlt": "Portrait of {name}"
+    },
+    "assinatura": {
+      "placeholder": "Luiza's signature, scanned.",
+      "placeholderNote": "The file arrives here through the admin panel, with no redeploy.",
+      "alt": "Signature of {name}"
+    }
+  },
+  "perguntas": {
+    "plate": {
+      "placeholder": "A painting for the middle of the read.",
+      "placeholderNote": "The chosen work arrives here through the admin, with painter, title and year."
+    }
+  },
+  "internacional": {
+    "plate": {
+      "placeholder": "A painting of the sea, a voyage or a harbour — distance as a landscape.",
+      "placeholderNote": "The chosen work arrives here through the admin, with painter, title and year."
+    }
+  },
+  "orientacaoProfissional": {
+    "plate": {
+      "placeholder": "A painted crossroads or labyrinth — this page's only image.",
+      "placeholderNote": "The chosen work arrives here through the admin, with painter, title and year."
+    }
+  },
+  "privacidade": {
+    "responsible": "Data controller",
+    "contact": "Contact"
+  },
+  "analise": {
+    "plate": {
+      "placeholder": "A painting set beside the idea of individuation.",
+      "placeholderNote": "The chosen work arrives here through the admin, with painter, title and year."
+    },
+    "mandala": {
+      "wheelAlt": "A painted mandala with twelve zodiacal figures, twenty-seven Vedic lunar mansions and the Earth at its centre",
+      "tablistLabel": "The wheel's twelve figures",
+      "panelLabel": "Details of the chosen figure",
+      "signAria": "{sign}, {dates}",
+      "hint": "Hover — or use the arrow keys — over one of the twelve figures. Tap to bring it to the top.",
+      "hintVedic": "Beside each figure's portrait a second, Vedic chapter opens: the three lunar mansions its arc crosses.",
+      "fields": {
+        "element": "Element",
+        "modality": "Modality",
+        "ruler": "Ruler",
+        "body": "Body",
+        "archetype": "Archetype"
+      },
+      "vedic": "Vedic tradition",
+      "vedicSub": "Three lunar mansions"
+    },
+    "sonho": {
+      "parallelPlaceholder": "The painting detail for this parallel."
     }
   }
 }

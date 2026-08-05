@@ -122,25 +122,33 @@ describe("sitemap derivation", () => {
     expect(entries.map((entry) => entry.path)).toEqual([
       "/",
       "/en",
+      "/analise",
+      "/en/analysis",
+      "/orientacao-profissional",
+      "/en/career-guidance",
+      "/sobre",
+      "/en/about",
       "/primeira-conversa",
       "/en/first-conversation",
       "/perguntas",
       "/en/questions",
+      "/internacional",
+      "/en/international",
       "/privacidade",
       "/en/privacy",
     ]);
   });
 
-  // The registry carries all eight addresses from day one (CONCEPT §6: no URL
-  // ever migrates), and each Phase 6 task flips its own page. Pinning the split
-  // means a page cannot be advertised in the sitemap before its route exists.
-  it("still holds the unbuilt pages, unadvertised", () => {
-    expect(SITE_PAGES.filter((page) => page.status === "planned").map((page) => page.key)).toEqual([
-      "analise",
-      "orientacaoProfissional",
-      "sobre",
-      "internacional",
-    ]);
+  // The registry carried all eight addresses from day one (CONCEPT §6: no URL
+  // ever migrates) while `status` kept the unbuilt ones out of the sitemap, so it
+  // could never advertise a 404. Phase 6 built the last of them, so the two sets
+  // now coincide — and `status` stays in the type as the mechanism for the next
+  // page added to the map (`/vocabulario` is already reserved in CONCEPT §6).
+  // Asserted as an identity rather than as a filter on "planned": every entry is
+  // now the literal `"built"`, so a comparison against "planned" no longer
+  // type-checks.
+  it("advertises every page in the map, now that all eight are built", () => {
+    expect(builtPages().map((page) => page.key)).toEqual([...PAGE_KEYS]);
   });
 
   it("gives the home page the top priority and never exceeds it", () => {

@@ -16,15 +16,31 @@
     },
     "perguntas": {
       "title": "Perguntas frequentes",
-      "description": "Como funciona a primeira conversa, duração da análise, frequência das sessões, atendimento on-line no Brasil e no exterior, sigilo."
+      "description": "Dúvidas sobre a análise junguiana e a orientação profissional on-line: primeira conversa, duração, frequência, valores, sigilo, fuso horário, Brasil e exterior."
     },
     "privacidade": {
       "title": "Privacidade",
-      "description": "Como os dados de quem visita e entra em contato são tratados, na forma da Lei Geral de Proteção de Dados (LGPD)."
+      "description": "O que o site guarda — a sua escolha de idioma, no seu próprio navegador, e estatísticas de visita anônimas e agregadas — e o que ele nunca faz: identificar, seguir ou personalizar para quem visita."
     },
     "primeiraConversa": {
       "title": "A primeira conversa",
       "description": "O que acontece quando você escreve: uma conversa de cerca de cinquenta minutos, por vídeo, em português ou inglês, no seu fuso — do Brasil ou do exterior. Passo a passo, valores e o bilhete já escrito para começar."
+    },
+    "sobre": {
+      "title": "Sobre Luiza Fernandes Bezerra",
+      "description": "Luiza Fernandes Bezerra, psicóloga clínica na tradição da psicologia analítica de Jung: graduação e aprimoramentos na PUC-SP, pós no Instituto Numen, clínica desde 2014. Análise e orientação profissional on-line, em português e inglês, para todo o Brasil e o exterior."
+    },
+    "internacional": {
+      "title": "Brasil e exterior",
+      "description": "Psicóloga brasileira on-line para quem mora fora do Brasil: análise junguiana e orientação profissional em português ou em inglês, no seu fuso, com o horário de Brasília como referência. Já acompanhei pessoas em Portugal, na Inglaterra e nos Estados Unidos; valores em dólar ou em euro."
+    },
+    "orientacaoProfissional": {
+      "title": "Orientação profissional e de carreira",
+      "description": "Orientação profissional e de carreira on-line, com psicóloga e aprimoramento pela PUC-SP: até doze encontros semanais com testes psicológicos, conversas e atividades, para chegar à profissão que faz mais sentido no momento atual da sua vida. Primeira escolha, transição de carreira ou recomeço — em português ou inglês, no Brasil e no exterior."
+    },
+    "analise": {
+      "title": "Análise junguiana on-line",
+      "description": "Psicoterapia de orientação junguiana on-line com Luiza Fernandes Bezerra, psicóloga: encontros semanais, em português ou inglês, para todo o Brasil e o exterior. Ansiedade, lutos, sonhos, relações, carreira e propósito."
     }
   },
   "seo": {
@@ -180,6 +196,64 @@
         "unsure": "ainda não sei",
         "english": "in English"
       }
+    }
+  },
+  "sobre": {
+    "quemE": {
+      "portraitAlt": "Retrato de {name}"
+    },
+    "assinatura": {
+      "placeholder": "A assinatura de Luiza, digitalizada.",
+      "placeholderNote": "O arquivo entra aqui pelo painel, sem publicar o site de novo.",
+      "alt": "Assinatura de {name}"
+    }
+  },
+  "perguntas": {
+    "plate": {
+      "placeholder": "Uma pintura para o meio da leitura.",
+      "placeholderNote": "A obra escolhida entra aqui pelo painel, com pintor, título e ano."
+    }
+  },
+  "internacional": {
+    "plate": {
+      "placeholder": "Uma pintura de mar, viagem ou porto — a distância como paisagem.",
+      "placeholderNote": "A obra escolhida entra aqui pelo painel, com pintor, título e ano."
+    }
+  },
+  "orientacaoProfissional": {
+    "plate": {
+      "placeholder": "Uma encruzilhada ou um labirinto pintado — a única imagem desta página.",
+      "placeholderNote": "A obra escolhida entra aqui pelo painel, com pintor, título e ano."
+    }
+  },
+  "privacidade": {
+    "responsible": "Responsável",
+    "contact": "Contato"
+  },
+  "analise": {
+    "plate": {
+      "placeholder": "Uma pintura ao lado da ideia de individuação.",
+      "placeholderNote": "A obra escolhida entra aqui pelo painel, com pintor, título e ano."
+    },
+    "mandala": {
+      "wheelAlt": "Mandala pintada com doze figuras zodiacais, vinte e sete mansões lunares védicas e a Terra ao centro",
+      "tablistLabel": "As doze figuras da roda",
+      "panelLabel": "Detalhes da figura escolhida",
+      "signAria": "{sign}, {dates}",
+      "hint": "Passe o cursor — ou navegue com as setas do teclado — por uma das doze figuras. Toque para trazê-la ao alto.",
+      "hintVedic": "Cada figura abre, ao lado do seu retrato, um segundo capítulo védico: as três mansões lunares que a sua faixa atravessa.",
+      "fields": {
+        "element": "Elemento",
+        "modality": "Modalidade",
+        "ruler": "Regente",
+        "body": "Corpo",
+        "archetype": "Arquétipo"
+      },
+      "vedic": "Tradição védica",
+      "vedicSub": "Três mansões lunares"
+    },
+    "sonho": {
+      "parallelPlaceholder": "O detalhe de pintura deste paralelo."
     }
   }
 }

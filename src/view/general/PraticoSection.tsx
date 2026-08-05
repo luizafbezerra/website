@@ -16,12 +16,15 @@ import { type FeeScope, useFeeRows } from "@/view/general/useFeeRows";
  * twelve-meeting programme on /orientacao-profissional.
  *
  * CONCEPT §8.9: prices are quoted in the page's own currency and never
- * converted automatically, so the international note renders wherever a price
- * does — a Brazilian in Lisbon reading the Portuguese page gets the answer in
- * the same place the price appeared. It also renders when `fees="none"`, which
- * is /internacional's case: there the note *is* the price statement, because
- * quoting BRL to a reader who pays in euros is the automatic conversion §8.9
- * forbids, one step removed.
+ * converted automatically, so the international note renders wherever a BRL
+ * price does — a Brazilian in Lisbon reading the Portuguese page gets the answer
+ * in the same place the price appeared.
+ *
+ * `fees="none"` suppresses the note along with the rows, because a page that
+ * quotes no BRL price states money its own way: /internacional carries a labeled
+ * "Valores" row in its own list, in the USD/EUR terms §8.9 gives it. Printing the
+ * shared note there as well would say the same thing twice on the one page whose
+ * subject it is.
  */
 export function PraticoSection({
   id,
@@ -48,7 +51,7 @@ export function PraticoSection({
 
       <FactList rows={[...feeRows, ...rows]} className="mt-12" />
 
-      {clinica.fees.internationalNote && (
+      {fees !== "none" && clinica.fees.internationalNote && (
         <p className="text-ink-soft mt-6 max-w-[54ch] text-sm">{clinica.fees.internationalNote}</p>
       )}
     </PageSection>

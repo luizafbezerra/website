@@ -1,29 +1,48 @@
 import type { Payload } from "payload";
+import { ANALISE_DEFAULTS } from "@/domain/analise/Analise";
 import { INICIO_DEFAULTS } from "@/domain/inicio/Inicio";
+import { INTERNACIONAL_DEFAULTS } from "@/domain/internacional/Internacional";
+import { ORIENTACAO_PROFISSIONAL_DEFAULTS } from "@/domain/orientacaoProfissional/OrientacaoProfissional";
+import { PERGUNTAS_DEFAULTS } from "@/domain/perguntas/Perguntas";
 import { PRIMEIRA_CONVERSA_DEFAULTS } from "@/domain/primeiraConversa/PrimeiraConversa";
+import { type Privacidade, PRIVACIDADE_DEFAULTS } from "@/domain/privacidade/Privacidade";
 import type { RichTextContent } from "@/domain/richText/RichTextContent";
 import { richText } from "@/domain/richText/richText";
+import { SOBRE_DEFAULTS } from "@/domain/sobre/Sobre";
 import type { PageInicio } from "@/payload-types";
 
 /**
  * Seed the page globals with the copy that already exists (TASK-026).
  *
- * A page is seeded once it has been built: her words are carried from where they
- * lived on the old single-page site to the section that owns them in the
- * eight-page map, and a built page's drafted copy comes from its own defaults.
- * The unbuilt globals stay empty on purpose — inventing prose in her name would
- * break the authorship policy (CONCEPT §11), and each field's admin description
- * already says what belongs there. The wheel's twelve readings stay empty for the
- * same reason (REQ-007): the wheel ships visual-only.
+ * Every page seeds from its own `<PAGE>_DEFAULTS` — the same values the page falls
+ * back to when Payload is off or a field is blank — so a seeded row and the code
+ * fallback start from one source of truth. Her supplied text lives in those
+ * defaults verbatim; everything CONCEPT v3 asked for and she has not written yet
+ * is a draft, marked as such in each defaults file and enumerated in that page's
+ * plan under "copy needing her sign-off" (TASK-052).
  *
- * Início and A primeira conversa seed from their own `*_DEFAULTS`, the same values
- * the pages fall back to, so a seeded row and the code fallback start from one
- * source of truth. Análise and Sobre carry their copy as literals here, because
- * this file is the source of their pt defaults and nothing else holds them any
- * more: their own page defaults land with their pages in TASK-037 and TASK-039.
+ * What is deliberately NOT seeded, and why:
  *
- * Portuguese only. English falls back to Portuguese through Payload's
- * `fallback: true` until her polish pass (RISK-001).
+ *   · **Media.** No portrait, no signature, no plate. Provenance is never
+ *     invented (CONCEPT §11), the portrait shoot has not happened, and an empty
+ *     slot renders a labeled frame that says what belongs there (REQ-005).
+ *   · **The wheel's twelve readings** on `/analise`. REQ-007 ships the wheel
+ *     visual-only: a reading renders in her words or not at all.
+ *   · **The Sonho ampliado parallels' content.** Only their three labels are
+ *     written, so the rows exist for her to fill; a parallel with nothing but a
+ *     label does not render.
+ *   · **The four `/perguntas` section intros.** An intro she has not written means
+ *     the section starts on its first question, which reads better than a
+ *     placeholder sentence.
+ *
+ * Portuguese only, with two exceptions. English falls back to Portuguese through
+ * Payload's `fallback: true` until her polish pass (RISK-001) — except on
+ * `/internacional` and `/privacidade`, which are seeded in both locales.
+ * `/internacional` because its CONCEPT §6 job includes serving anglophones and its
+ * In-English section is dropped on `/en` as redundant, which would otherwise leave
+ * `/en/international` the one English page with no English on it; `/privacidade`
+ * because an anglophone reading a privacy statement they cannot read is a defect
+ * rather than a rough edge.
  */
 
 // Every richText field across the page globals shares the same Lexical editor
@@ -32,50 +51,29 @@ type Lexical = NonNullable<NonNullable<PageInicio["hero"]>["lead"]>;
 const rt = (content: RichTextContent): Lexical => content as unknown as Lexical;
 
 /**
- * Her own rewrite of the pillars intro, restored verbatim from
- * `docs/content-export-2026-08.md`. It existed only in the database, and the
- * destructive migration of TASK-026 would have dropped it — this is now the only
- * copy in the repository, so treat it as content, not as code.
+ * Row ids read back from a written localized array, so a second locale pass
+ * updates the rows in place instead of replacing them.
+ *
+ * Only the text fields inside a row are localized — the rows themselves are
+ * shared — so a row sent without an id reads as a new one and would replace the
+ * Portuguese pass's rows, leaving pt (the fallback locale, which has nothing to
+ * fall back to) empty. This is the exact trap `seed/clinica.ts` hit on
+ * `identity.credentials`.
  */
-const PILLARS_INTRO = richText([
-  "Tomo a sério o que se manifesta em sonhos, fantasias, imagens e sintomas. Não são ruído: são as maneiras pelas quais a psique fala sobre o que ainda não cabe em palavras.",
-  "Não removo sintomas, trabalho o fortalecimento do seu ego para que esses sintomas não sejam necessários um dia. A clínica analítica não trabalha para eliminar sintomas, lidamos com a psicologia profunda.",
-  "Como fazemos isso? Através da conscientização das próprias emoções, da personalidade, do momento de vida, como se reage às tristezas e felicidades da própria existência. Aliado a isso, o trabalho de forma consistente, através de encontros semanais.",
-  "Gosto de dizer que a psicologia clínica é o trabalho mais “anti capitalista” que existe, pois o que é oferecido não traz uma solução rápida tampouco indolor. Por uma questão ética, o conteúdo dos encontros são ditados pelo paciente, de acordo com aquilo que ele está preparado para trazer.",
-  "Eu só farei pontuações daquilo que acredito que você esteja preparado para receber, respeitando o tempo do seu processo e a sua subjetividade. Não existe pressa no processo de individuação.",
-]);
+function rowIds(rows: unknown): Array<string | null | undefined> {
+  return Array.isArray(rows) ? rows.map((row) => (row as { id?: string | null }).id) : [];
+}
 
-/** The three themes of CONCEPT §4's first door, as she wrote them. */
-const PILLARS = [
-  {
-    numeral: "I",
-    title: "Ansiedade & humor",
-    text: "Ansiedade que aperta o peito, episódios de tristeza, medos que paralisam, uma melancolia que se instala sem nome. O trabalho começa por ouvir o que esses estados querem dizer.",
-  },
-  {
-    numeral: "II",
-    title: "Relações & vida",
-    text: "Lutos, separações, conflitos com a família, solidão, carências antigas. Os vínculos formam quem somos; quando ruem ou pesam, vale voltar para dentro e distinguir o que é nosso do que é do outro.",
-  },
-  {
-    numeral: "III",
-    title: "Carreira & propósito",
-    text: "Insatisfação profissional, estresse no trabalho, a sensação de estar no caminho errado, a busca por uma vocação que faça sentido. A análise abre espaço para escutar o que a psique já sabe.",
-  },
-];
-
-/** Her bio, from the old home's "sobre" digest. */
-const BIO = richText([
-  "Sou psicóloga clínica. Atendo adultos que atravessam ansiedade, lutos, transições de carreira ou sofrimento nos vínculos.",
-  "O ritmo importa tanto quanto o conteúdo. Nada do que costuma trazer alguém à análise se entende com pressa: sintomas persistentes, sonhos que voltam, símbolos que tocam algo antes de termos palavras.",
-  "As primeiras sessões servem para vermos juntos se podemos seguir.",
-]);
+/** Attach a row id when the first pass produced one, so the update lands in place. */
+function withId<T extends object>(row: T, id: string | null | undefined): T {
+  return id ? ({ id, ...row } as T) : row;
+}
 
 export async function seedPages(payload: Payload): Promise<void> {
   const shared = { locale: "pt", overrideAccess: true, context: { skipRevalidate: true } } as const;
-  const inicio = INICIO_DEFAULTS;
 
-  // Início — every section that carries copy, from the page's own defaults.
+  // ── Início ────────────────────────────────────────────────────────────────
+  const inicio = INICIO_DEFAULTS;
   await payload.updateGlobal({
     ...shared,
     slug: "page-inicio",
@@ -122,31 +120,104 @@ export async function seedPages(payload: Payload): Promise<void> {
     },
   });
 
-  // A Análise — the three pillars and the intro she rewrote herself.
+  // ── A Análise ─────────────────────────────────────────────────────────────
+  // Her five-paragraph pillars intro and the three pillars are hers, verbatim;
+  // the rest is drafted from CONCEPT §6.
+  const analise = ANALISE_DEFAULTS;
   await payload.updateGlobal({
     ...shared,
     slug: "page-analise",
     data: {
+      abertura: { heading: analise.abertura.heading, body: rt(analise.abertura.body) },
+      aVisao: { heading: analise.aVisao.heading, body: rt(analise.aVisao.body) },
+      oMetodo: {
+        heading: analise.oMetodo.heading,
+        body: rt(analise.oMetodo.body),
+        tools: analise.oMetodo.tools,
+        closingLine: analise.oMetodo.closingLine,
+      },
+      mandala: { heading: analise.mandala.heading, intro: analise.mandala.intro },
       oQueTrazem: {
-        heading: "O que se repete costuma ter algo a dizer.",
-        intro: rt(PILLARS_INTRO),
-        note: "Três frentes que costumam trazer alguém para a análise. Quase sempre se cruzam, e o trabalho começa por onde dói mais agora.",
-        pillars: PILLARS,
+        heading: analise.oQueTrazem.heading,
+        intro: rt(analise.oQueTrazem.intro),
+        note: analise.oQueTrazem.note,
+        pillars: analise.oQueTrazem.pillars,
+        boundary: analise.oQueTrazem.boundary,
+        linkLabel: analise.oQueTrazem.linkLabel,
+      },
+      sonhoAmpliado: {
+        heading: analise.sonhoAmpliado.heading,
+        intro: analise.sonhoAmpliado.intro,
+        motif: analise.sonhoAmpliado.motif,
+        // Labels only: the three kinds of parallel exist as rows for her to fill.
+        parallels: analise.sonhoAmpliado.parallels.map(({ label }) => ({ label })),
+      },
+      pratico: { heading: analise.pratico.heading, items: analise.pratico.items },
+      paraComecar: {
+        heading: analise.paraComecar.heading,
+        body: analise.paraComecar.body,
+        linkLabel: analise.paraComecar.linkLabel,
       },
     },
   });
 
-  // Sobre — her bio moves from the home digest to the page that owns it.
+  // ── Orientação profissional e de carreira ─────────────────────────────────
+  const orientacao = ORIENTACAO_PROFISSIONAL_DEFAULTS;
+  await payload.updateGlobal({
+    ...shared,
+    slug: "page-orientacao-profissional",
+    data: {
+      abertura: { heading: orientacao.abertura.heading, body: rt(orientacao.abertura.body) },
+      paraQuem: { heading: orientacao.paraQuem.heading, cases: orientacao.paraQuem.cases },
+      oPercurso: {
+        heading: orientacao.oPercurso.heading,
+        body: rt(orientacao.oPercurso.body),
+        steps: orientacao.oPercurso.steps,
+        deliverable: orientacao.oPercurso.deliverable,
+      },
+      nemCoaching: {
+        heading: orientacao.nemCoaching.heading,
+        body: rt(orientacao.nemCoaching.body),
+        distinctions: orientacao.nemCoaching.distinctions,
+        anchor: orientacao.nemCoaching.anchor,
+      },
+      perguntaMaisFunda: {
+        heading: orientacao.perguntaMaisFunda.heading,
+        body: orientacao.perguntaMaisFunda.body,
+        linkLabel: orientacao.perguntaMaisFunda.linkLabel,
+      },
+      pratico: { heading: orientacao.pratico.heading, items: orientacao.pratico.items },
+      comecar: {
+        heading: orientacao.comecar.heading,
+        body: orientacao.comecar.body,
+        linkLabel: orientacao.comecar.linkLabel,
+      },
+    },
+  });
+
+  // ── Sobre ─────────────────────────────────────────────────────────────────
+  // Her bio moved here from the old home digest; the page that owns it now owns
+  // its only copy in the repository.
+  const sobre = SOBRE_DEFAULTS;
   await payload.updateGlobal({
     ...shared,
     slug: "page-sobre",
     data: {
-      quemE: { heading: "Uma escuta cuidadosa, na tradição junguiana.", body: rt(BIO) },
+      abertura: { heading: sobre.abertura.heading, lead: rt(sobre.abertura.lead) },
+      quemE: { heading: sobre.quemE.heading, body: rt(sobre.quemE.body) },
+      // `period` is null on every row: no source document states a year, and a
+      // guessed one on the page whose job is verification is unrecoverable.
+      formacao: { heading: sobre.formacao.heading, items: sobre.formacao.items },
+      aClinica: {
+        heading: sobre.aClinica.heading,
+        body: rt(sobre.aClinica.body),
+        linkLabel: sobre.aClinica.linkLabel,
+      },
+      assinatura: { closingLine: sobre.assinatura.closingLine },
     },
   });
 
-  // A primeira conversa — from the page's own defaults, all of it drafted from
-  // CONCEPT §6 and awaiting her sign-off (TASK-052).
+  // ── A primeira conversa ───────────────────────────────────────────────────
   const primeiraConversa = PRIMEIRA_CONVERSA_DEFAULTS;
   await payload.updateGlobal({
     ...shared,
@@ -181,5 +252,220 @@ export async function seedPages(payload: Payload): Promise<void> {
     },
   });
 
-  payload.logger.info("  ✓ page globals (início, análise, sobre, primeira conversa)");
+  // ── Perguntas ─────────────────────────────────────────────────────────────
+  // The frame around the questions; the questions themselves are rows in the
+  // `faq` collection, written by `seedFaq` from FAQ_DEFAULTS.
+  const perguntas = PERGUNTAS_DEFAULTS;
+  await payload.updateGlobal({
+    ...shared,
+    slug: "page-perguntas",
+    data: {
+      abertura: { heading: perguntas.abertura.heading, intro: perguntas.abertura.intro },
+      sections: {
+        analise: { heading: perguntas.sections.analise.heading },
+        orientacao: { heading: perguntas.sections.orientacao.heading },
+        pratico: { heading: perguntas.sections.pratico.heading },
+        internacional: { heading: perguntas.sections.internacional.heading },
+      },
+      fecho: {
+        heading: perguntas.fecho.heading,
+        body: perguntas.fecho.body,
+        whatsappLabel: perguntas.fecho.whatsappLabel,
+        linkLabel: perguntas.fecho.linkLabel,
+      },
+    },
+  });
+
+  // ── Brasil e exterior ─────────────────────────────────────────────────────
+  // Seeded in pt and en (see the file comment). Both localized arrays need their
+  // row ids on the English pass.
+  const internacional = INTERNACIONAL_DEFAULTS;
+  const internacionalPt = await payload.updateGlobal({
+    ...shared,
+    slug: "page-internacional",
+    data: {
+      abertura: {
+        heading: internacional.abertura.heading,
+        body: rt(internacional.abertura.body),
+        trustLine: internacional.abertura.trustLine,
+      },
+      brasileirosFora: {
+        heading: internacional.brasileirosFora.heading,
+        body: rt(internacional.brasileirosFora.body),
+        cities: internacional.brasileirosFora.cities,
+      },
+      // Not localized — one English section, written once, read on the pt page.
+      inEnglish: internacional.inEnglish,
+      pratico: { heading: internacional.pratico.heading, items: internacional.pratico.items },
+      comecar: {
+        heading: internacional.comecar.heading,
+        body: internacional.comecar.body,
+        linkLabel: internacional.comecar.linkLabel,
+      },
+    },
+  });
+
+  const cityIds = rowIds(internacionalPt.brasileirosFora?.cities);
+  const internacionalPraticoIds = rowIds(internacionalPt.pratico?.items);
+  const internacionalEn = INTERNACIONAL_EN;
+
+  await payload.updateGlobal({
+    slug: "page-internacional",
+    locale: "en",
+    overrideAccess: true,
+    context: { skipRevalidate: true },
+    data: {
+      abertura: {
+        heading: internacionalEn.abertura.heading,
+        body: rt(internacionalEn.abertura.body),
+        trustLine: internacionalEn.abertura.trustLine,
+      },
+      brasileirosFora: {
+        heading: internacionalEn.brasileirosFora.heading,
+        body: rt(internacionalEn.brasileirosFora.body),
+        cities: internacionalEn.brasileirosFora.cities.map((row, index) =>
+          withId(row, cityIds[index]),
+        ),
+      },
+      inEnglish: internacional.inEnglish,
+      pratico: {
+        heading: internacionalEn.pratico.heading,
+        items: internacionalEn.pratico.items.map((row, index) =>
+          withId(row, internacionalPraticoIds[index]),
+        ),
+      },
+      comecar: {
+        heading: internacionalEn.comecar.heading,
+        body: internacionalEn.comecar.body,
+        linkLabel: internacionalEn.comecar.linkLabel,
+      },
+    },
+  });
+
+  // ── Privacidade ───────────────────────────────────────────────────────────
+  // The launch gate of TASK-042: the page has to name the aggregate statistics
+  // honestly before the site is indexable, in the language the reader is reading.
+  const privacidadeData = (
+    page: Privacidade,
+    ids: { guarda: Array<string | null | undefined>; nuncaFaz: Array<string | null | undefined> },
+  ) => ({
+    abertura: { heading: page.abertura.heading, body: rt(page.abertura.body) },
+    guarda: {
+      heading: page.guarda.heading,
+      items: page.guarda.items.map((item, index) =>
+        withId({ title: item.title, text: item.text }, ids.guarda[index]),
+      ),
+    },
+    nuncaFaz: {
+      heading: page.nuncaFaz.heading,
+      items: page.nuncaFaz.items.map((item, index) =>
+        withId({ title: item.title, text: item.text }, ids.nuncaFaz[index]),
+      ),
+    },
+    bilheteNota: {
+      heading: page.bilheteNota.heading,
+      body: page.bilheteNota.body,
+      linkLabel: page.bilheteNota.linkLabel,
+    },
+    responsavel: {
+      heading: page.responsavel.heading,
+      body: rt(page.responsavel.body),
+      rights: page.responsavel.rights,
+      confidentiality: page.responsavel.confidentiality,
+    },
+  });
+
+  const privacidadePt = await payload.updateGlobal({
+    ...shared,
+    slug: "page-privacidade",
+    data: privacidadeData(PRIVACIDADE_DEFAULTS.pt, { guarda: [], nuncaFaz: [] }),
+  });
+
+  await payload.updateGlobal({
+    slug: "page-privacidade",
+    locale: "en",
+    overrideAccess: true,
+    context: { skipRevalidate: true },
+    data: privacidadeData(PRIVACIDADE_DEFAULTS.en, {
+      guarda: rowIds(privacidadePt.guarda?.items),
+      nuncaFaz: rowIds(privacidadePt.nuncaFaz?.items),
+    }),
+  });
+
+  payload.logger.info("  ✓ page globals (all 8; internacional and privacidade in pt + en)");
 }
+
+/**
+ * `/internacional` in English — a draft in exactly the same sense as the
+ * Portuguese, awaiting her sign-off (TASK-052).
+ *
+ * It lives here rather than in `INTERNACIONAL_DEFAULTS` because the domain layer
+ * holds one shape per concept, not one per locale: the page's code fallback is
+ * Portuguese and Payload's own fallback covers a blank English field. This is the
+ * seed's copy, so it belongs to the seed. `/privacidade` takes the other route —
+ * its defaults are keyed by locale — because there an English reader falling back
+ * to Portuguese legal prose is a defect rather than a rough edge, and the page
+ * must degrade correctly even with Payload off.
+ */
+const INTERNACIONAL_EN = {
+  abertura: {
+    heading: "A Brazilian psychologist online, for people living abroad",
+    body: richText([
+      "I work online with Brazilians living abroad and with people from other countries, in Portuguese or in English, by video call. I have worked with Brazilians in Portugal, England and the United States.",
+      "Jungian-oriented psychotherapy and career guidance, in weekly meetings. We settle the time zone, the language and the payment in the first conversation.",
+    ]),
+    trustLine:
+      "Sessions follow Brazilian telepsychology regulation: that is how a Brazilian psychologist works online with people living in another country.",
+  },
+  brasileirosFora: {
+    heading: "For Brazilians living outside Brazil",
+    body: richText([
+      "You do not need to be in Brazil to begin, and you do not need to interrupt what you have already begun because you moved. The work happens in Portuguese, by video call, from wherever you live.",
+      "Three examples, to give the measure of the difference:",
+    ]),
+    // The offsets name a range on purpose: Brazil abolished daylight saving time
+    // in 2019, Europe and the United States did not, so a fixed hour difference
+    // would be wrong for part of every year.
+    cities: [
+      {
+        city: "Lisbon",
+        note: "Three or four hours ahead of Brasília, depending on European daylight saving time — late afternoon there is mid-afternoon here.",
+      },
+      {
+        city: "London",
+        note: "The same time zone as Lisbon: early evening in London is still late afternoon in Brazil.",
+      },
+      {
+        city: "New York",
+        note: "One or two hours behind Brasília, depending on US daylight saving time — late afternoon in New York is early evening here.",
+      },
+    ],
+  },
+  pratico: {
+    heading: "In practice",
+    items: [
+      {
+        label: "Time zones",
+        value:
+          "Brasília time is the reference. I do the arithmetic with you and offer times that already fit your day.",
+      },
+      {
+        label: "Fees",
+        value:
+          "For people living outside Brazil, fees are in dollars or euros. We agree on the amount and how to pay in the first conversation.",
+      },
+      { label: "How it happens", value: "By video call. I send the link before each meeting." },
+      { label: "Languages", value: "Portuguese or English, whichever you prefer." },
+      {
+        label: "From where",
+        value:
+          "From anywhere in the world. You need a stable connection and a place where you can speak without being interrupted.",
+      },
+    ],
+  },
+  comecar: {
+    heading: "Begin from where you are",
+    body: "Write and tell me where you are writing from — that already settles half of what we need to arrange. We sort out the rest in the conversation.",
+    linkLabel: "see how the first conversation works",
+  },
+};

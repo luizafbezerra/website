@@ -103,7 +103,17 @@ export const CLINICA_DEFAULTS: Clinica = {
   // client who reads "sem novos atendimentos" and leaves. She confirms it in the
   // admin (DEP-005).
   availability: { state: "open", responseWindow: null },
-  fees: { analysis: feeFrom(null), careerGuidance: feeFrom(null), internationalNote: null },
+  // The two prices stay unset until she decides them (DEP-005) and render "a
+  // combinar". The abroad framing is not a price, though — it is CONCEPT §8.9's
+  // own policy sentence, quoted there almost verbatim — so it ships as a draft on
+  // the pages that quote BRL. `/internacional` states money in its own list and
+  // suppresses this note (see `PraticoSection`).
+  fees: {
+    analysis: feeFrom(null),
+    careerGuidance: feeFrom(null),
+    internationalNote:
+      "Para quem mora fora do Brasil, os valores são em dólar ou em euro — combinamos na primeira conversa. O site não converte moeda.",
+  },
   // Drafts, awaiting her sign-off (owner decision 2026-08-05, recorded in
   // plan/feature-page-primeira-conversa-1.md). Unlike everything else on the site
   // these are the *visitor's* words, not hers: the note is the message the visitor

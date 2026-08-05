@@ -1,8 +1,11 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useCosmosShow } from "@/view/cosmos/hooks/useCosmosShow";
+import { cn } from "@/view/styling/cn";
 
-export function FooterCosmosRestore() {
+export function FooterCosmosRestore({ className }: { className?: string }) {
+  const t = useTranslations("chrome");
   const [show, setShow] = useCosmosShow();
   if (show) return null;
 
@@ -10,9 +13,12 @@ export function FooterCosmosRestore() {
     <button
       type="button"
       onClick={() => setShow(true)}
-      className="display-italic text-quill hover:text-terracotta no-underline transition-colors"
+      className={cn(
+        "display-italic text-quill hover:text-terracotta no-underline transition-colors",
+        className,
+      )}
     >
-      Reabrir a abertura cósmica ↻
+      {t("cosmosRestore")}
     </button>
   );
 }

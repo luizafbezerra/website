@@ -46,7 +46,26 @@
     "footer": {
       "clinica": "A clínica",
       "comecar": "Começar",
-      "mundo": "O mundo"
+      "mundo": "O mundo",
+      "email": "E-mail",
+      "reach": "português e inglês · Brasil e exterior"
+    },
+    "colophon": {
+      "binding": "{clinic} é a clínica de psicologia analítica on-line de {name}.",
+      "plateCredits": "Pinturas de domínio público, com proveniência verificada.",
+      "rights": "© {year} {name}",
+      "moon": "sob {phase} de {month}",
+      "moonSlot": "a lua pintada — {phase}"
+    },
+    "moonPhase": {
+      "new": "a lua nova",
+      "waxingCrescent": "a lua crescente",
+      "firstQuarter": "o quarto crescente",
+      "waxingGibbous": "a lua gibosa crescente",
+      "full": "a lua cheia",
+      "waningGibbous": "a lua gibosa minguante",
+      "lastQuarter": "o quarto minguante",
+      "waningCrescent": "a lua minguante"
     },
     "whatsapp": {
       "label": "Conversar pelo WhatsApp",
@@ -58,6 +77,7 @@
       "waitlist": "Lista de espera curta.",
       "closed": "Sem novos atendimentos no momento — escreva e eu aviso."
     },
+    "cosmosRestore": "Reabrir a abertura cósmica ↻",
     "credentialLabel": "Credenciais"
   },
   "placeholder": {

@@ -37,13 +37,17 @@ const ENGLISH = {
 export async function seedClinica(payload: Payload): Promise<void> {
   const d = CLINICA_DEFAULTS;
 
-  const data = (role: string, positioning: string, credentials: readonly string[]) => ({
+  const data = (
+    role: string,
+    positioning: string,
+    credentials: Array<{ id?: string | null; item: string }>,
+  ) => ({
     identity: {
       clinicName: d.clinicName,
       fullName: d.fullName,
       shortName: d.shortName,
       credential: d.credential,
-      credentials: credentials.map((item) => ({ item })),
+      credentials,
       role,
       positioning,
     },
@@ -57,18 +61,35 @@ export async function seedClinica(payload: Payload): Promise<void> {
     availability: { state: d.availability.state },
   });
 
-  for (const [locale, role, positioning, credentials] of [
-    ["pt", d.role, d.positioning, d.credentials],
-    ["en", ENGLISH.role, ENGLISH.positioning, ENGLISH.credentials],
-  ] as const) {
-    await payload.updateGlobal({
-      slug: "clinica",
-      locale,
-      overrideAccess: true,
-      context: { skipRevalidate: true },
-      data: data(role, positioning, credentials),
-    });
-  }
+  const written = await payload.updateGlobal({
+    slug: "clinica",
+    locale: "pt",
+    overrideAccess: true,
+    context: { skipRevalidate: true },
+    data: data(
+      d.role,
+      d.positioning,
+      d.credentials.map((item) => ({ item })),
+    ),
+  });
+
+  // The English pass has to carry each credential row's id. Only the `item`
+  // field is localized — the rows themselves are shared — so rows sent without
+  // an id read as new ones and would replace the Portuguese pass's, leaving pt
+  // (the fallback locale, which has nothing to fall back to) empty.
+  const rows = Array.isArray(written.identity?.credentials) ? written.identity.credentials : [];
+
+  await payload.updateGlobal({
+    slug: "clinica",
+    locale: "en",
+    overrideAccess: true,
+    context: { skipRevalidate: true },
+    data: data(
+      ENGLISH.role,
+      ENGLISH.positioning,
+      rows.map((row, index) => ({ id: row.id, item: ENGLISH.credentials[index] })),
+    ),
+  });
 
   payload.logger.info("  ✓ clinica global (pt + en)");
 }

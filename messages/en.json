@@ -46,7 +46,26 @@
     "footer": {
       "clinica": "The clinic",
       "comecar": "Getting started",
-      "mundo": "The world"
+      "mundo": "The world",
+      "email": "Email",
+      "reach": "Portuguese and English · Brazil and abroad"
+    },
+    "colophon": {
+      "binding": "{clinic} is the online analytical-psychology practice of {name}.",
+      "plateCredits": "Paintings in the public domain, provenance verified.",
+      "rights": "© {year} {name}",
+      "moon": "under the {phase} of {month}",
+      "moonSlot": "the painted moon — {phase}"
+    },
+    "moonPhase": {
+      "new": "new moon",
+      "waxingCrescent": "waxing crescent",
+      "firstQuarter": "first quarter",
+      "waxingGibbous": "waxing gibbous",
+      "full": "full moon",
+      "waningGibbous": "waning gibbous",
+      "lastQuarter": "last quarter",
+      "waningCrescent": "waning crescent"
     },
     "whatsapp": {
       "label": "Talk on WhatsApp",
@@ -58,6 +77,7 @@
       "waitlist": "A short waiting list.",
       "closed": "No new clients at the moment — write and I will let you know."
     },
+    "cosmosRestore": "Reopen the cosmic overture ↻",
     "credentialLabel": "Credentials"
   },
   "placeholder": {

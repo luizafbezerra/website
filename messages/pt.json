@@ -127,5 +127,32 @@
   },
   "loading": {
     "label": "Carregando…"
+  },
+  "inicio": {
+    "hero": {
+      "by": "por {name}",
+      "portraitAlt": "Retrato de {name}",
+      "portraitCaption": "Quem recebe você."
+    },
+    "instagram": {
+      "tileAction": "Ver a pintura inteira: {work}",
+      "tileFallbackLabel": "publicação {number}",
+      "tilePlaceholder": "Um recorte quadrado, como ele aparece no feed.",
+      "revealPlaceholder": "A pintura inteira, de onde o recorte saiu.",
+      "revealPlaceholderNote": "As obras escolhidas entram aqui pelo painel, sem publicar o site de novo.",
+      "close": "fechar",
+      "seePost": "ver a publicação",
+      "follow": "acompanhar em {handle}",
+      "tilesPending": "Cinco publicações suas entram aqui: o recorte que os seguidores já conhecem, e a pintura inteira ao toque."
+    },
+    "lamina": {
+      "fallbackHeading": "Uma pintura, de perto",
+      "platePlaceholder": "Uma tela em alta resolução, percorrida de cima a baixo.",
+      "platePlaceholderNote": "A pintura escolhida entra aqui pelo painel."
+    },
+    "contato": {
+      "orByEmail": "ou por e-mail —",
+      "faqLink": "perguntas frequentes antes de escrever"
+    }
   }
 }

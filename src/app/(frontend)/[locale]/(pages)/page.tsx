@@ -1,21 +1,22 @@
 import type { Metadata } from "next";
-import { Fragment, type ReactNode } from "react";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { getClinica } from "@/domain/clinica/getClinica";
-import { HOME_DEFAULTS } from "@/domain/home/Home";
-import type { SectionType } from "@/domain/sections/sectionRegistry";
+import { getInicio } from "@/domain/inicio/getInicio";
 import type { Locale } from "@/domain/site/Locale";
 import { pagePath } from "@/domain/site/pagePath";
 import { getTestimonials } from "@/domain/testimonials/getTestimonials";
-import { MANDALA_DEFAULTS } from "@/domain/zodiac/MandalaContent";
 import { absoluteUrl } from "@/infrastructure/env/baseUrl";
-import { Cosmos } from "@/view/cosmos/Cosmos";
-import { About } from "@/view/home/About";
-import { Contact } from "@/view/home/Contact";
-import { Hero } from "@/view/home/Hero";
-import { Pillars } from "@/view/home/Pillars";
-import { Voices } from "@/view/home/Voices";
-import { Symbols } from "@/view/mandala/Symbols";
+import { BrasilExterior } from "@/view/inicio/BrasilExterior";
+import { ComoComecar } from "@/view/inicio/ComoComecar";
+import { Contato } from "@/view/inicio/Contato";
+import { Credencial } from "@/view/inicio/Credencial";
+import { DoisCaminhos } from "@/view/inicio/DoisCaminhos";
+import { Hero } from "@/view/inicio/Hero";
+import { InstagramBridge } from "@/view/inicio/InstagramBridge";
+import { OSintoma } from "@/view/inicio/OSintoma";
+import { SobreDigest } from "@/view/inicio/SobreDigest";
+import { Vozes } from "@/view/inicio/Vozes";
+import { WowSlot } from "@/view/inicio/WowSlot";
 import { BreadcrumbJsonLd, ReviewsJsonLd } from "@/view/seo/jsonLd";
 import { pageMetadata } from "@/view/seo/pageMetadata";
 
@@ -28,41 +29,34 @@ export async function generateMetadata({ params }: HomeProps): Promise<Metadata>
 
 export const revalidate = 3600;
 
+/**
+ * Início — the eleven sections of CONCEPT §6, in the order the map declares.
+ *
+ * The order is the page's argument, and it is fixed in code rather than
+ * configured: recognition, then credentials, then her world, then the two doors,
+ * then the approach, the wow, the person, the reach, the process, the voices,
+ * and only then the ask. A CMS that could reorder this could break the one thing
+ * the page does.
+ *
+ * The route stays thin — two domain reads plus the testimonials, then props. The
+ * entity graph is emitted once by the shared `(pages)` layout, so only the two
+ * payloads that belong to *this* page are added here.
+ */
 export default async function Home({ params }: HomeProps) {
   const { locale } = await params;
   setRequestLocale(locale);
 
-  const [clinica, testimonials, t] = await Promise.all([
+  const [clinica, inicio, testimonials, t] = await Promise.all([
     getClinica(locale),
+    getInicio(locale),
     getTestimonials(locale),
     getTranslations({ locale, namespace: "nav" }),
   ]);
 
-  // This page's editorial copy comes from code defaults, not from the CMS: the
-  // seven `home-*` globals it used to read are gone (their model predates
-  // CONCEPT v3) and the `page-inicio` global that replaces them is built section
-  // by section in TASK-035. Same for the wheel's prose and the section order.
-  const home = HOME_DEFAULTS;
-  const mandala = MANDALA_DEFAULTS;
-
   const url = absoluteUrl(pagePath("inicio", locale));
-
-  // Hero is pinned first and Footer last; these body sections render in the
-  // order configured on the Home global, skipping any that are disabled.
-  const sectionNodes: Record<SectionType, ReactNode> = {
-    pillars: <Pillars content={home.pillars} />,
-    about: <About clinica={clinica} content={home.about} />,
-    cosmos: <Cosmos />,
-    // Desktop-only: the painted wheel needs the room and pointer affordances of
-    // a wide viewport. CSS gate (lg = ≥1024px) — SSR-safe, no client JS.
-    symbols: (
-      <div className="hidden lg:block">
-        <Symbols content={mandala} />
-      </div>
-    ),
-    voices: <Voices testimonials={testimonials} content={home.voices} />,
-    contact: <Contact clinica={clinica} content={home.contact} />,
-  };
+  // Read once for the whole render, so the rotating passage cannot differ
+  // between two components on the same page.
+  const renderedAt = new Date();
 
   return (
     <>
@@ -78,12 +72,17 @@ export default async function Home({ params }: HomeProps) {
         />
       )}
 
-      <Hero clinica={clinica} content={home.hero} />
-      {home.sections
-        .filter((section) => section.enabled)
-        .map((section) => (
-          <Fragment key={section.type}>{sectionNodes[section.type]}</Fragment>
-        ))}
+      <Hero clinica={clinica} content={inicio.hero} />
+      <Credencial clinica={clinica} />
+      <InstagramBridge clinica={clinica} content={inicio.instagram} />
+      <DoisCaminhos content={inicio.doisCaminhos} />
+      <OSintoma clinica={clinica} content={inicio.oSintoma} at={renderedAt} />
+      <WowSlot content={inicio.cosmos} />
+      <SobreDigest content={inicio.sobreDigest} />
+      <BrasilExterior content={inicio.brasilExterior} />
+      <ComoComecar content={inicio.comoComecar} />
+      <Vozes testimonials={testimonials} content={inicio.vozes} />
+      <Contato clinica={clinica} content={inicio.contato} />
     </>
   );
 }

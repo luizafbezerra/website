@@ -127,5 +127,32 @@
   },
   "loading": {
     "label": "Loading…"
+  },
+  "inicio": {
+    "hero": {
+      "by": "by {name}",
+      "portraitAlt": "Portrait of {name}",
+      "portraitCaption": "The person who receives you."
+    },
+    "instagram": {
+      "tileAction": "See the whole painting: {work}",
+      "tileFallbackLabel": "post {number}",
+      "tilePlaceholder": "A square crop, as it appears in the feed.",
+      "revealPlaceholder": "The whole painting the crop came from.",
+      "revealPlaceholderNote": "The chosen works arrive through the admin panel, with no redeploy.",
+      "close": "close",
+      "seePost": "see the post",
+      "follow": "follow at {handle}",
+      "tilesPending": "Five of her posts belong here: the crop her followers already know, and the whole painting on tap."
+    },
+    "lamina": {
+      "fallbackHeading": "One painting, up close",
+      "platePlaceholder": "A high-resolution canvas, travelled from top to bottom.",
+      "platePlaceholderNote": "The chosen painting arrives through the admin panel."
+    },
+    "contato": {
+      "orByEmail": "or by email —",
+      "faqLink": "questions people ask before writing"
+    }
   }
 }

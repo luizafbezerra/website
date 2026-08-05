@@ -32,13 +32,15 @@ export function CredentialLine({ clinica, className }: { clinica: Clinica; class
       )}
     >
       {items.map((item, index) => (
+        // The separator belongs to the item before it, so a line that wraps
+        // ends on the dot instead of starting with one.
         <li key={item} className="flex items-baseline gap-x-3">
-          {index > 0 && (
+          <span>{item}</span>
+          {index < items.length - 1 && (
             <span aria-hidden="true" className="text-terracotta">
               ·
             </span>
           )}
-          <span>{item}</span>
         </li>
       ))}
     </ul>

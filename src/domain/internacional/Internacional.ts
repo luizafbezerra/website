@@ -1,0 +1,169 @@
+import { EMPTY_PAGE_PLATE, type PagePlate } from "@/domain/media/PagePlate";
+import type { FactRow } from "@/domain/pages/FactRow";
+import type { RichTextContent } from "@/domain/richText/RichTextContent";
+import { richText } from "@/domain/richText/richText";
+
+// ---------------------------------------------------------------------------
+// Brasil e exterior (`/internacional`) — the five sections of CONCEPT §6, as the
+// page and its components consume them. One member per tab in
+// `page-internacional`, so a field's admin path and its render path read the same.
+//
+// INTERNACIONAL_DEFAULTS is what renders when Payload is off or a field is blank,
+// and it is also what the seed writes on a fresh database.
+//
+// **On the copy in these defaults.** All of it is a *draft*. This page did not
+// exist before CONCEPT v3 and she has supplied no text for it, so every string
+// here states only facts CONCEPT and PRODUCT already fix: the three real client
+// countries (§3, §6), Brazilian telepsychology regulation as a trust signal (§6),
+// sessions in pt/en (§2), the horário de Brasília anchor and the USD/EUR framing
+// with no automatic conversion (§8.9), and "combinamos na primeira conversa" as
+// the mechanism for anything undecided (§14.1). Nothing here is her voice until
+// she says it is, every field is editable in the admin, and TASK-052 of the master
+// plan owns the review.
+//
+// Two things are deliberately *not* claimed anywhere in this file: any licence,
+// registration or right to practise in another country (she is a Brazilian
+// psychologist working online under Brazilian regulation — that is exactly what
+// the trust line says), and any named payment provider or banking mechanism (no
+// source document states one, so the page says the arrangement is made in the
+// first conversation and stops there).
+//
+// The international bilhete opener is NOT here: it is a cross-page fact and lives
+// in A Clínica (`clinica.notes.international`), which is what `Comecar` reads.
+// ---------------------------------------------------------------------------
+
+/**
+ * One city abroad and what its clock does relative to Brasília.
+ *
+ * Kept as its own type rather than reused as a `FactRow` because the CMS field
+ * names are `city` and `note`, and the domain mirrors the admin path. The view
+ * adapts it to the shared fact list.
+ */
+export type CityNote = { city: string; note: string };
+
+/**
+ * CONCEPT §6's third section: English prose *inside* the Portuguese page, with a
+ * link to the English site. Its fields are not localized — the section is written
+ * in English once — and `inEnglishSectionFor` decides where it renders.
+ */
+export type InEnglishSection = { heading: string; body: string; linkLabel: string };
+
+export type Internacional = {
+  abertura: {
+    heading: string;
+    body: RichTextContent;
+    /** The telepsychology signal (CONCEPT §6). Body type, never a footnote. */
+    trustLine: string;
+  };
+  brasileirosFora: {
+    heading: string;
+    body: RichTextContent;
+    cities: CityNote[];
+    plate: PagePlate;
+  };
+  inEnglish: InEnglishSection;
+  pratico: {
+    heading: string;
+    items: FactRow[];
+  };
+  comecar: {
+    heading: string;
+    body: string;
+    linkLabel: string;
+  };
+};
+
+export const INTERNACIONAL_DEFAULTS: Internacional = {
+  abertura: {
+    // The expat query words, in the words expats actually type (CONCEPT §10):
+    // "psicóloga brasileira online exterior". The nav and the page title keep
+    // CONCEPT's own name for the page; the h1 answers the visitor's question.
+    heading: "Psicóloga brasileira on-line, para quem mora fora",
+    // The page's whole answer in the first screen (REQ-012): who she attends,
+    // in which languages, how, and the real client history that makes it
+    // credible rather than a market claim.
+    body: richText([
+      "Atendo on-line pessoas que moram fora do Brasil e pessoas de outros países, em português ou em inglês, por chamada de vídeo. Já acompanhei brasileiros em Portugal, na Inglaterra e nos Estados Unidos.",
+      "Análise junguiana e orientação profissional e de carreira, em encontros semanais. Na primeira conversa acertamos o fuso, o idioma e o pagamento.",
+    ]),
+    trustLine:
+      "O atendimento segue a regulamentação brasileira de telepsicologia: é assim que uma psicóloga brasileira atende, on-line, quem vive em outro país.",
+  },
+  brasileirosFora: {
+    heading: "Para brasileiros fora do Brasil",
+    body: richText([
+      "Você não precisa estar no Brasil para começar, nem interromper o que já começou porque se mudou. O trabalho acontece em português, por chamada de vídeo, de onde você mora.",
+      "Três exemplos, para dar a medida da diferença:",
+    ]),
+    // Her three real client countries (CONCEPT §6), one city each.
+    //
+    // The notes name a *range* rather than a fixed hour on purpose. Brazil no
+    // longer observes daylight saving time, but Europe and the United States do,
+    // so the difference moves by an hour several times a year — and the two
+    // changeovers do not even fall on the same dates. A note claiming "cinco
+    // horas à frente" would be wrong for part of every year, on the one page
+    // whose whole job is to be trusted about logistics. The described moments
+    // ("o fim da tarde aí é o meio da tarde aqui") were checked to hold at both
+    // ends of each range.
+    cities: [
+      {
+        city: "Lisboa",
+        note: "Três ou quatro horas à frente de Brasília, conforme o horário de verão europeu — o fim da tarde aí é o meio da tarde aqui.",
+      },
+      {
+        city: "Londres",
+        note: "O mesmo fuso de Lisboa: o começo da noite em Londres ainda é fim de tarde no Brasil.",
+      },
+      {
+        city: "Nova York",
+        note: "Uma ou duas horas atrás de Brasília, conforme o horário de verão americano — o fim da tarde em Nova York é o começo da noite aqui.",
+      },
+    ],
+    plate: EMPTY_PAGE_PLATE,
+  },
+  // Written in English, not translated: this is the section an anglophone reads
+  // on the Portuguese page. CON-002 — "clinical psychologist working in the
+  // Jungian tradition", never "Jungian analyst", which is a protected title.
+  inEnglish: {
+    heading: "In English",
+    body: "I am a Brazilian clinical psychologist working in the Jungian tradition, entirely online. Jungian-oriented psychotherapy and career guidance are available in English, by video call, wherever you live — we settle the time zone in the first conversation. Sessions follow Brazilian telepsychology regulation.",
+    linkLabel: "the whole site in English",
+  },
+  pratico: {
+    // CONCEPT §6 names the section "Prático"; the heading a visitor reads is a
+    // sentence opener rather than a label.
+    heading: "Na prática",
+    // No BRL row is composed on this page (`fees="none"`): quoting reais to a
+    // reader who pays in euros is the automatic conversion CONCEPT §8.9 forbids,
+    // one step removed. The currency framing is the "Valores" row below, in body
+    // type inside the fact list, because on this page it *is* the price
+    // statement and DESIGN keeps operational facts out of decorative small type.
+    items: [
+      {
+        label: "Fusos",
+        value:
+          "A referência é o horário de Brasília. Eu faço a conta com você e ofereço horários que já cabem no seu dia.",
+      },
+      {
+        label: "Valores",
+        value:
+          "Para quem mora fora do Brasil, os valores são em dólar ou em euro. Combinamos o valor e a forma de pagamento na primeira conversa.",
+      },
+      {
+        label: "Como acontece",
+        value: "Por chamada de vídeo. Eu envio o link antes de cada encontro.",
+      },
+      { label: "Idiomas", value: "Português ou inglês, como você preferir." },
+      {
+        label: "De onde",
+        value:
+          "De qualquer lugar do mundo. Você precisa de uma conexão estável e de um lugar onde possa falar sem ser interrompido.",
+      },
+    ],
+  },
+  comecar: {
+    heading: "Começar de onde você está",
+    body: "Me escreva contando de onde você fala — isso já resolve metade do que a gente precisa combinar. O resto acertamos na conversa.",
+    linkLabel: "conhecer a primeira conversa",
+  },
+};

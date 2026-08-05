@@ -1,5 +1,5 @@
 import { getFaq } from "@/domain/faq/getFaq";
-import { getIdentity } from "@/domain/site/getIdentity";
+import { getClinica } from "@/domain/clinica/getClinica";
 import { DEFAULT_LOCALE } from "@/domain/site/Locale";
 import { estimateTokens } from "@/domain/tokens/estimateTokens";
 import { formatTokens } from "@/domain/tokens/formatTokens";
@@ -25,8 +25,8 @@ const HOME_TOKENS_HINT = 900;
 export async function GET(): Promise<NextResponse> {
   // Still a single pt-BR index: TASK-043 rebuilds this from the page registry
   // with one file per locale, alongside the Markdown twins.
-  const [identity, faqEntries] = await Promise.all([
-    getIdentity(DEFAULT_LOCALE),
+  const [clinica, faqEntries] = await Promise.all([
+    getClinica(DEFAULT_LOCALE),
     getFaq(DEFAULT_LOCALE),
   ]);
 
@@ -47,7 +47,7 @@ export async function GET(): Promise<NextResponse> {
       title: "Perguntas frequentes",
       url: `${BASE_URL}/perguntas`,
       description:
-        "Como funciona a primeira conversa, duração e frequência das sessões, atendimento online e presencial, sigilo.",
+        "Como funciona a primeira conversa, duração e frequência das sessões, atendimento on-line no Brasil e no exterior, sigilo.",
       tokens: faqTokens,
     },
   ];
@@ -55,19 +55,17 @@ export async function GET(): Promise<NextResponse> {
   const lines: string[] = [];
 
   // ── Front-loaded identity ────────────────────────────────────────────────
-  lines.push(`# ${identity.fullName} — ${identity.role}`);
+  lines.push(`# ${clinica.clinicName} — por ${clinica.fullName}, ${clinica.role}`);
   lines.push("");
-  lines.push(identity.tagline);
+  lines.push(clinica.positioning);
   lines.push("");
-  lines.push(`- Tradição: ${identity.tradition}`);
-  lines.push(
-    `- Atendimento: presencial em ${identity.city}–${identity.region}; online em todo o ${identity.country}; idioma pt-BR`,
-  );
-  if (identity.credential) lines.push(`- Registro: ${identity.credential}`);
-  lines.push(`- WhatsApp: ${identity.phoneDisplay} — ${identity.whatsappUrl}`);
-  if (identity.email) lines.push(`- E-mail: ${identity.email}`);
-  if (identity.instagramUrl)
-    lines.push(`- Instagram: ${identity.instagramHandle} — ${identity.instagramUrl}`);
+  lines.push("- Atendimento: on-line, para todo o Brasil e exterior");
+  lines.push("- Idiomas: português e inglês");
+  if (clinica.credential) lines.push(`- Registro: ${clinica.credential}`);
+  lines.push(`- WhatsApp: ${clinica.whatsappDisplay} — ${clinica.whatsappUrl}`);
+  if (clinica.email) lines.push(`- E-mail: ${clinica.email}`);
+  if (clinica.instagramUrl)
+    lines.push(`- Instagram: ${clinica.instagramHandle} — ${clinica.instagramUrl}`);
   lines.push(`- Site: ${BASE_URL}`);
   lines.push("");
 

@@ -3,17 +3,11 @@
 import Link from "next/link";
 import { useEffect, useId, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import type { Identity } from "@/domain/site/Identity";
+import type { Clinica } from "@/domain/clinica/Clinica";
 import type { NavLink } from "@/domain/site/NavLink";
 import { WhatsAppGlyph } from "@/view/general/WhatsAppGlyph";
 
-export function HeaderMobileNav({
-  identity,
-  navLinks,
-}: {
-  identity: Identity;
-  navLinks: NavLink[];
-}) {
+export function HeaderMobileNav({ clinica, navLinks }: { clinica: Clinica; navLinks: NavLink[] }) {
   const [open, setOpen] = useState<boolean>(false);
   const drawerRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -134,36 +128,36 @@ export function HeaderMobileNav({
                 </ul>
               </nav>
 
-              {/* Quiet reassurance line — names the practice and where she
-                  works, and gives the drawer's mid-section content so it
-                  doesn't read as a half-empty panel. */}
+              {/* Quiet reassurance line — names the practice and its reach,
+                  and gives the drawer's mid-section content so it doesn't read
+                  as a half-empty panel. */}
               <p className="marginalia px-7 pt-1 pb-2 text-[0.92rem] leading-[1.5]">
-                Análise junguiana · atende em {identity.city} e online em todo o {identity.country}.
+                {clinica.positioning}
               </p>
 
               <div className="mt-auto border-rule-soft flex flex-col gap-4 border-t px-7 py-6">
                 <a
-                  href={identity.whatsappUrl}
+                  href={clinica.whatsappUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={() => setOpen(false)}
                   className="display-italic text-foreground decoration-terracotta hover:text-terracotta inline-flex items-center gap-2 text-[1.05rem] underline decoration-1 underline-offset-[0.3em] transition-colors"
-                  aria-label={`Iniciar conversa pelo WhatsApp ${identity.phoneDisplay}`}
+                  aria-label={`Iniciar conversa pelo WhatsApp ${clinica.whatsappDisplay}`}
                 >
                   <WhatsAppGlyph className="text-terracotta h-[1.1em] w-[1.1em] -translate-y-px" />
                   <span>WhatsApp</span>
                 </a>
                 <a
-                  href={identity.instagramUrl}
+                  href={clinica.instagramUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={() => setOpen(false)}
                   className="display-italic text-foreground hover:text-terracotta inline-flex items-baseline gap-2 text-[1rem] no-underline transition-colors"
-                  aria-label={`Símbolos no Instagram, ${identity.instagramHandle}, abre em nova aba`}
+                  aria-label={`Símbolos no Instagram, ${clinica.instagramHandle}, abre em nova aba`}
                 >
                   <span>Instagram</span>
                   <span className="marginalia text-quill text-[0.82rem]">
-                    {identity.instagramHandle}
+                    {clinica.instagramHandle}
                   </span>
                 </a>
               </div>

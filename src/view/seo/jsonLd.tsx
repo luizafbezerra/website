@@ -11,7 +11,6 @@ type PersonJsonLdProps = {
   description?: string;
   knowsAbout?: string[];
   knowsLanguage?: string[];
-  workLocation?: { city: string; region: string; country: string };
 };
 
 export function PersonJsonLd({
@@ -25,7 +24,6 @@ export function PersonJsonLd({
   description,
   knowsAbout,
   knowsLanguage,
-  workLocation,
 }: PersonJsonLdProps) {
   const jsonLd: Record<string, unknown> = {
     "@context": "https://schema.org",
@@ -42,17 +40,6 @@ export function PersonJsonLd({
   if (description) jsonLd.description = description;
   if (knowsAbout) jsonLd.knowsAbout = knowsAbout;
   if (knowsLanguage) jsonLd.knowsLanguage = knowsLanguage;
-  if (workLocation) {
-    jsonLd.workLocation = {
-      "@type": "Place",
-      address: {
-        "@type": "PostalAddress",
-        addressLocality: workLocation.city,
-        addressRegion: workLocation.region,
-        addressCountry: workLocation.country,
-      },
-    };
-  }
 
   return (
     <script
@@ -92,73 +79,58 @@ export function WebSiteJsonLd({
   );
 }
 
-type LocalBusinessJsonLdProps = {
+type OnlineClinicJsonLdProps = {
   name: string;
   url?: string;
   description?: string;
   telephone?: string;
   email?: string;
   image?: string;
-  city: string;
-  region: string;
-  country: string;
-  priceRange?: string;
+  /** Profiles that bind this entity to the same practice — Instagram above all. */
+  sameAs?: string[];
   areaServed?: string[];
   founder?: { name: string; url?: string };
-  openingHours?: string[];
-  type?: "MedicalBusiness" | "ProfessionalService" | "LocalBusiness";
-  aggregateRating?: { ratingValue: number; reviewCount: number };
 };
 
-export function LocalBusinessJsonLd({
+/**
+ * The clinic as an entity — an `Organization` with **no postal address**, because
+ * the practice is online only (REQ-011 / CON-001). It deliberately is not a
+ * `LocalBusiness` or `MedicalBusiness`: those describe a place a patient walks
+ * into, and claiming one in structured data is the same false claim as printing a
+ * street on the page.
+ *
+ * TASK-032 grows this into the full entity graph (the two services, the person,
+ * the site) emitted from one place; this is the honest minimum until then.
+ */
+export function OnlineClinicJsonLd({
   name,
   url = BASE_URL,
   description,
   telephone,
   email,
   image,
-  city,
-  region,
-  country,
-  priceRange,
+  sameAs = [],
   areaServed,
   founder,
-  openingHours,
-  type = "MedicalBusiness",
-  aggregateRating,
-}: LocalBusinessJsonLdProps) {
+}: OnlineClinicJsonLdProps) {
   const jsonLd: Record<string, unknown> = {
     "@context": "https://schema.org",
-    "@type": type,
+    "@type": "Organization",
     name,
     url,
-    address: {
-      "@type": "PostalAddress",
-      addressLocality: city,
-      addressRegion: region,
-      addressCountry: country,
-    },
   };
 
   if (description) jsonLd.description = description;
   if (telephone) jsonLd.telephone = telephone;
   if (email) jsonLd.email = email;
   if (image) jsonLd.image = image;
-  if (priceRange) jsonLd.priceRange = priceRange;
+  if (sameAs.length > 0) jsonLd.sameAs = sameAs;
   if (areaServed) jsonLd.areaServed = areaServed;
-  if (openingHours) jsonLd.openingHoursSpecification = openingHours;
   if (founder) {
     jsonLd.founder = {
       "@type": "Person",
       name: founder.name,
       url: founder.url ?? url,
-    };
-  }
-  if (aggregateRating) {
-    jsonLd.aggregateRating = {
-      "@type": "AggregateRating",
-      ratingValue: aggregateRating.ratingValue,
-      reviewCount: aggregateRating.reviewCount,
     };
   }
 

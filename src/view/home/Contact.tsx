@@ -1,11 +1,11 @@
 import Link from "next/link";
 import { SECTION_ACCENT } from "@/view/styling/accentHeading";
 import type { Home } from "@/domain/home/Home";
-import type { Identity } from "@/domain/site/Identity";
+import type { Clinica } from "@/domain/clinica/Clinica";
 import { AccentHeading } from "@/view/general/AccentHeading";
 import { RichTextProse } from "@/view/general/RichTextProse";
 
-export function Contact({ identity, content }: { identity: Identity; content: Home["contact"] }) {
+export function Contact({ clinica, content }: { clinica: Clinica; content: Home["contact"] }) {
   return (
     <section
       id="contato"
@@ -32,18 +32,18 @@ export function Contact({ identity, content }: { identity: Identity; content: Ho
         <address className="not-italic block">
           <div className="mt-14">
             <a
-              href={identity.whatsappUrl}
+              href={clinica.whatsappUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="bg-terracotta-deep hover:bg-foreground group inline-flex items-baseline justify-between gap-6 px-7 py-5 text-parchment no-underline transition-colors sm:justify-start"
-              aria-label={`Iniciar conversa pelo WhatsApp ${identity.phoneDisplay}`}
+              aria-label={`Iniciar conversa pelo WhatsApp ${clinica.whatsappDisplay}`}
             >
               <span className="flex flex-col items-start gap-1">
                 <span className="display-italic text-[1.2rem] sm:text-[1.3rem]">
                   {content.whatsappLabel}
                 </span>
                 <span className="text-parchment/75 text-[0.92rem] tracking-wide">
-                  {identity.phoneDisplay}
+                  {clinica.whatsappDisplay}
                 </span>
               </span>
               <span
@@ -54,14 +54,14 @@ export function Contact({ identity, content }: { identity: Identity; content: Ho
               </span>
             </a>
 
-            {identity.email && (
+            {clinica.email && (
               <p className="marginalia mt-5">
                 ou por e-mail —{" "}
                 <a
-                  href={`mailto:${identity.email}`}
+                  href={`mailto:${clinica.email}`}
                   className="text-quill hover:text-terracotta decoration-terracotta/40 hover:decoration-terracotta underline decoration-1 underline-offset-[0.25em] transition-colors"
                 >
-                  {identity.email}
+                  {clinica.email}
                 </a>
               </p>
             )}
@@ -81,33 +81,19 @@ export function Contact({ identity, content }: { identity: Identity; content: Ho
 
           <dl className="text-quill mt-14 grid grid-cols-1 gap-y-8 sm:grid-cols-2 sm:gap-x-12">
             <div>
-              <dt className="display text-quill mb-2 text-[0.96rem]">Atendimento presencial</dt>
+              <dt className="display text-quill mb-2 text-[0.96rem]">Atendimento</dt>
               <dd className="text-foreground text-[1.1rem] leading-[1.4]">
-                {identity.city}–{identity.region}
+                On-line · Brasil e exterior
               </dd>
             </div>
 
-            <div>
-              <dt className="display text-quill mb-2 text-[0.96rem]">Atendimento online</dt>
-              <dd className="text-foreground text-[1.1rem] leading-[1.4]">
-                Em todo o {identity.country}
-              </dd>
-            </div>
-
-            {identity.availability.hours && (
-              <div>
-                <dt className="display text-quill mb-2 text-[0.96rem]">Faixa de horário</dt>
-                <dd className="text-foreground text-[1.1rem] leading-[1.4]">
-                  {identity.availability.hours}
-                </dd>
-              </div>
-            )}
-
-            {identity.availability.responseNote && (
+            {/* The availability state itself renders from TASK-029's
+                AvailabilityLine, which owns the wording of its three cases. */}
+            {clinica.availability.responseWindow && (
               <div>
                 <dt className="display text-quill mb-2 text-[0.96rem]">Tempo de resposta</dt>
                 <dd className="text-foreground text-[1.1rem] leading-[1.4]">
-                  {identity.availability.responseNote}
+                  {clinica.availability.responseWindow}
                 </dd>
               </div>
             )}

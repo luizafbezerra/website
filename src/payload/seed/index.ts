@@ -1,9 +1,8 @@
 import config from "@payload-config";
 import { getPayload } from "payload";
+import { seedClinica } from "./clinica";
 import { seedFaq } from "./faq";
-import { seedHome } from "./home";
-import { seedMandala } from "./mandala";
-import { seedSettings } from "./settings";
+import { seedPages } from "./pages";
 
 /**
  * Seed Payload globals and collections from the domain layer's code defaults — the same
@@ -20,9 +19,8 @@ async function main() {
   const payload = await getPayload({ config });
   payload.logger.info("Seeding from the domain defaults …");
 
-  await seedSettings(payload);
-  await seedHome(payload);
-  await seedMandala(payload);
+  await seedClinica(payload);
+  await seedPages(payload);
   await seedFaq(payload);
 
   payload.logger.info("Seed complete.");

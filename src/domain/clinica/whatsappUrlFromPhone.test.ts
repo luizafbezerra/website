@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { IDENTITY_DEFAULTS } from "./Identity";
+import { CLINICA_DEFAULTS } from "./Clinica";
 import { whatsappUrlFromPhone } from "./whatsappUrlFromPhone";
 
 describe("whatsappUrlFromPhone", () => {
@@ -12,12 +12,12 @@ describe("whatsappUrlFromPhone", () => {
   });
 
   it("derives the same link from the stored phone and its display form", () => {
-    expect(whatsappUrlFromPhone(IDENTITY_DEFAULTS.phoneDisplay)).toBe(
-      whatsappUrlFromPhone(IDENTITY_DEFAULTS.phoneE164),
+    expect(whatsappUrlFromPhone(CLINICA_DEFAULTS.whatsappDisplay)).toBe(
+      whatsappUrlFromPhone(CLINICA_DEFAULTS.whatsappE164),
     );
   });
 
-  it("keeps the default identity's derived link in sync with its phone number", () => {
-    expect(IDENTITY_DEFAULTS.whatsappUrl).toBe(whatsappUrlFromPhone(IDENTITY_DEFAULTS.phoneE164));
+  it("keeps the clinic defaults' derived link in sync with its phone number", () => {
+    expect(CLINICA_DEFAULTS.whatsappUrl).toBe(whatsappUrlFromPhone(CLINICA_DEFAULTS.whatsappE164));
   });
 });

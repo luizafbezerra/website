@@ -3,7 +3,7 @@ import { Cardo, Vollkorn } from "next/font/google";
 import { notFound } from "next/navigation";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { getIdentity } from "@/domain/site/getIdentity";
+import { getClinica } from "@/domain/clinica/getClinica";
 import { LOCALE_TAGS } from "@/domain/site/Locale";
 import { BASE_URL } from "@/infrastructure/env/baseUrl";
 import { SITE_INDEXABLE } from "@/infrastructure/env/siteIndexable";
@@ -45,20 +45,22 @@ export const generateMetadata = async ({ params }: LocaleRouteProps): Promise<Me
   // would never be read.
   if (!hasLocale(routing.locales, locale)) return {};
 
-  // `getIdentity` always resolves (falls back to IDENTITY_DEFAULTS when Payload
-  // is off), so siteName/description are the single source for these defaults —
-  // no local duplicates needed.
-  const identity = await getIdentity(locale);
+  // `getClinica` always resolves (falls back to CLINICA_DEFAULTS when Payload is
+  // off), so the clinic name and her positioning sentence are the single source
+  // for these defaults — no local duplicates needed.
+  const clinica = await getClinica(locale);
   return {
     // Lets Next resolve the relative OG image route against the real origin.
     metadataBase: new URL(BASE_URL),
     title: {
-      default: identity.siteName,
+      default: clinica.clinicName,
       // REQ-011's `<página> · Símbolos do Self`. The name comes from the CMS
       // rather than a literal, so she owns it.
-      template: `%s · ${identity.siteName}`,
+      template: `%s · ${clinica.clinicName}`,
     },
-    description: identity.description,
+    // Her positioning sentence is the site's default description: one line that
+    // answers what this is, for whom, and how far it reaches.
+    description: clinica.positioning,
     // Pre-launch belt-and-suspenders. Pair with robots.ts (Disallow: /) so the
     // placeholder credential, portrait, and bio cannot be indexed before the
     // content pass lands. Once NEXT_PUBLIC_SITE_INDEXABLE flips at launch, the
@@ -75,7 +77,7 @@ export const generateMetadata = async ({ params }: LocaleRouteProps): Promise<Me
         }),
     openGraph: {
       type: "website",
-      siteName: identity.siteName,
+      siteName: clinica.clinicName,
     },
   };
 };

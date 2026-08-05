@@ -28,14 +28,18 @@ export function Voices({
         </header>
 
         <ul className="space-y-28 sm:space-y-32">
-          {testimonials.map((quote) => (
-            <li key={quote.attribution}>
+          {testimonials.map((quote, idx) => (
+            // Attribution is a first name or an initial, so it is not unique.
+            <li key={`${quote.attribution}-${idx}`}>
               <figure className="mx-auto max-w-[58ch]">
                 <blockquote className="display-italic text-ink text-balance text-center text-[clamp(1.25rem,2.1vw,1.55rem)] leading-[1.45]">
                   {quote.body}
                 </blockquote>
+                {/* "M., orientação de carreira" — the presentation CONCEPT §11
+                    fixes: initial plus context, never a full name or a rating. */}
                 <figcaption className="marginalia mt-8 text-center">
                   — {quote.attribution}
+                  {quote.context ? `, ${quote.context}` : ""}
                 </figcaption>
               </figure>
             </li>

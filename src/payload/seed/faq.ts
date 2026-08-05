@@ -3,8 +3,9 @@ import { FAQ_DEFAULTS } from "@/domain/faq/FaqEntry";
 
 /**
  * Seed the `faq` collection from FAQ_DEFAULTS. Find-or-create by `question` so
- * re-running doesn't duplicate rows; `order` follows the array index. Skips
- * revalidation so it can run outside a Next request, like the other seeders.
+ * re-running doesn't duplicate rows; `order` follows the array index within the
+ * whole list, which is also the order inside each section. Skips revalidation so
+ * it can run outside a Next request, like the other seeders.
  */
 export async function seedFaq(payload: Payload): Promise<void> {
   for (let i = 0; i < FAQ_DEFAULTS.length; i++) {
@@ -16,7 +17,12 @@ export async function seedFaq(payload: Payload): Promise<void> {
       overrideAccess: true,
     });
 
-    const data = { question: entry.question, answer: entry.answer, order: i };
+    const data = {
+      question: entry.question,
+      answer: entry.answer,
+      category: entry.category,
+      order: i,
+    };
 
     if (existing.docs.length > 0) {
       await payload.update({

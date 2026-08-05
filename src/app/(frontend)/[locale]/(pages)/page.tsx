@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
 import { Fragment, type ReactNode } from "react";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { getHome } from "@/domain/home/getHome";
+import { getClinica } from "@/domain/clinica/getClinica";
+import { HOME_DEFAULTS } from "@/domain/home/Home";
 import type { SectionType } from "@/domain/sections/sectionRegistry";
-import { getIdentity } from "@/domain/site/getIdentity";
-import { getNavigation } from "@/domain/site/getNavigation";
 import { type Locale, LOCALE_TAGS } from "@/domain/site/Locale";
 import { pagePath } from "@/domain/site/pagePath";
+import { siteNavigation } from "@/domain/site/siteNavigation";
 import { getTestimonials } from "@/domain/testimonials/getTestimonials";
-import { getMandala } from "@/domain/zodiac/getMandala";
+import { MANDALA_DEFAULTS } from "@/domain/zodiac/MandalaContent";
 import { absoluteUrl } from "@/infrastructure/env/baseUrl";
 import { Footer } from "@/view/chrome/Footer";
 import { Header } from "@/view/chrome/Header";
@@ -22,7 +22,7 @@ import { Voices } from "@/view/home/Voices";
 import { Symbols } from "@/view/mandala/Symbols";
 import {
   BreadcrumbJsonLd,
-  LocalBusinessJsonLd,
+  OnlineClinicJsonLd,
   PersonJsonLd,
   ReviewsJsonLd,
   WebSiteJsonLd,
@@ -42,14 +42,19 @@ export default async function Home({ params }: HomeProps) {
   const { locale } = await params;
   setRequestLocale(locale);
 
-  const [identity, home, navLinks, testimonials, mandala, t] = await Promise.all([
-    getIdentity(locale),
-    getHome(locale),
-    getNavigation(locale),
+  const [clinica, testimonials, t] = await Promise.all([
+    getClinica(locale),
     getTestimonials(locale),
-    getMandala(locale),
     getTranslations({ locale, namespace: "nav" }),
   ]);
+
+  // This page's editorial copy comes from code defaults, not from the CMS: the
+  // seven `home-*` globals it used to read are gone (their model predates
+  // CONCEPT v3) and the `page-inicio` global that replaces them is built section
+  // by section in TASK-035. Same for the wheel's prose and the section order.
+  const home = HOME_DEFAULTS;
+  const mandala = MANDALA_DEFAULTS;
+  const navLinks = siteNavigation();
 
   const url = absoluteUrl(pagePath("inicio", locale));
 
@@ -57,7 +62,7 @@ export default async function Home({ params }: HomeProps) {
   // order configured on the Home global, skipping any that are disabled.
   const sectionNodes: Record<SectionType, ReactNode> = {
     pillars: <Pillars content={home.pillars} />,
-    about: <About identity={identity} content={home.about} />,
+    about: <About clinica={clinica} content={home.about} />,
     cosmos: <Cosmos />,
     // Desktop-only: the painted wheel needs the room and pointer affordances of
     // a wide viewport. CSS gate (lg = ≥1024px) — SSR-safe, no client JS.
@@ -67,18 +72,18 @@ export default async function Home({ params }: HomeProps) {
       </div>
     ),
     voices: <Voices testimonials={testimonials} content={home.voices} />,
-    contact: <Contact identity={identity} content={home.contact} />,
+    contact: <Contact clinica={clinica} content={home.contact} />,
   };
 
   return (
     <>
       <PersonJsonLd
-        name={identity.fullName}
+        name={clinica.fullName}
         url={url}
-        jobTitle={`${identity.role} — ${identity.tradition}`}
-        email={identity.email}
-        telephone={identity.phoneE164}
-        description={identity.tagline}
+        jobTitle={clinica.role}
+        email={clinica.email}
+        telephone={clinica.whatsappE164}
+        description={clinica.positioning}
         knowsAbout={[
           "Psicologia analítica",
           "Análise junguiana",
@@ -91,32 +96,24 @@ export default async function Home({ params }: HomeProps) {
         // She works in both languages (CONCEPT §6) — for an anglophone searcher
         // this is the signal that matters most.
         knowsLanguage={[LOCALE_TAGS.pt, LOCALE_TAGS.en]}
-        workLocation={{
-          city: identity.city,
-          region: identity.region,
-          country: identity.country,
-        }}
       />
 
-      <LocalBusinessJsonLd
-        type="MedicalBusiness"
-        name={`Consultório de ${identity.fullName}`}
+      <OnlineClinicJsonLd
+        name={clinica.clinicName}
         url={url}
-        description={`Consultório de psicologia clínica em ${identity.city}–${identity.region}. Análise junguiana para adultos. Atendimento presencial e online.`}
-        telephone={identity.phoneE164}
-        email={identity.email}
-        city={identity.city}
-        region={identity.region}
-        country={identity.country}
-        priceRange="$$"
-        areaServed={[identity.city, identity.region, identity.country]}
-        founder={{ name: identity.fullName, url }}
+        description={clinica.positioning}
+        telephone={clinica.whatsappE164}
+        email={clinica.email}
+        sameAs={clinica.instagramUrl ? [clinica.instagramUrl] : []}
+        // The international-reach signal, in the vocabulary a machine reads.
+        areaServed={["BR", "Worldwide"]}
+        founder={{ name: clinica.fullName, url }}
       />
 
       <WebSiteJsonLd
-        name={identity.fullName}
+        name={clinica.clinicName}
         url={url}
-        description={identity.tagline}
+        description={clinica.positioning}
         inLanguage={LOCALE_TAGS[locale]}
       />
 
@@ -124,7 +121,7 @@ export default async function Home({ params }: HomeProps) {
 
       {testimonials.length > 0 && (
         <ReviewsJsonLd
-          itemName={identity.fullName}
+          itemName={clinica.clinicName}
           itemUrl={url}
           reviews={testimonials.map((testimonial) => ({
             body: testimonial.body,
@@ -134,17 +131,17 @@ export default async function Home({ params }: HomeProps) {
       )}
 
       <StickyHeaderShell>
-        <Header identity={identity} navLinks={navLinks} />
+        <Header clinica={clinica} navLinks={navLinks} />
       </StickyHeaderShell>
       <main id="main">
-        <Hero identity={identity} content={home.hero} />
+        <Hero clinica={clinica} content={home.hero} />
         {home.sections
           .filter((section) => section.enabled)
           .map((section) => (
             <Fragment key={section.type}>{sectionNodes[section.type]}</Fragment>
           ))}
       </main>
-      <Footer identity={identity} navLinks={navLinks} />
+      <Footer clinica={clinica} navLinks={navLinks} />
     </>
   );
 }

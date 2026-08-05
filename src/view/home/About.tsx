@@ -1,11 +1,11 @@
 import { SECTION_ACCENT } from "@/view/styling/accentHeading";
 import type { Home } from "@/domain/home/Home";
-import type { Identity } from "@/domain/site/Identity";
+import type { Clinica } from "@/domain/clinica/Clinica";
 import { AccentHeading } from "@/view/general/AccentHeading";
 import { PaintedAsset } from "@/view/general/PaintedAsset";
 import { RichTextProse } from "@/view/general/RichTextProse";
 
-export function About({ identity, content }: { identity: Identity; content: Home["about"] }) {
+export function About({ clinica, content }: { clinica: Clinica; content: Home["about"] }) {
   return (
     <section
       id="sobre"
@@ -44,8 +44,8 @@ export function About({ identity, content }: { identity: Identity; content: Home
 
           {/* Each row renders only when it has a real value, so clearing a
               field in the CMS (or an unset CRP) hides the row instead of
-              leaving a dangling label. "Atendimento" is derived from the NAP
-              and always present. */}
+              leaving a dangling label. "Atendimento" states the reach, which is
+              online-only and therefore always the same (CON-001). */}
           <dl className="text-quill mt-12 grid grid-cols-1 gap-y-6 text-[0.98rem] leading-[1.55] sm:grid-cols-[10rem_1fr] sm:gap-x-8 sm:gap-y-5">
             {content.formacao && (
               <>
@@ -54,17 +54,15 @@ export function About({ identity, content }: { identity: Identity; content: Home
               </>
             )}
 
-            {identity.credential && (
+            {clinica.credential && (
               <>
                 <dt className="display text-quill text-[0.96rem]">Registro</dt>
-                <dd className="text-foreground">{identity.credential}</dd>
+                <dd className="text-foreground">{clinica.credential}</dd>
               </>
             )}
 
             <dt className="display text-quill text-[0.96rem]">Atendimento</dt>
-            <dd className="text-foreground">
-              Presencial em {identity.city} · online em todo o {identity.country}
-            </dd>
+            <dd className="text-foreground">On-line · Brasil e exterior</dd>
 
             {content.idiomas && (
               <>

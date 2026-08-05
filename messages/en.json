@@ -25,6 +25,8 @@
   },
   "chrome": {
     "skipToContent": "Skip to content",
+    "headerByline": "psychologist · Jungian tradition",
+    "footerByline": "clinical psychologist",
     "language": {
       "label": "Language",
       "pt": "PT",

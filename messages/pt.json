@@ -25,6 +25,8 @@
   },
   "chrome": {
     "skipToContent": "Pular para o conteúdo",
+    "headerByline": "psicóloga · análise junguiana",
+    "footerByline": "psicóloga clínica",
     "language": {
       "label": "Idioma",
       "pt": "PT",

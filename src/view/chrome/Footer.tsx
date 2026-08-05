@@ -1,9 +1,12 @@
 import Link from "next/link";
-import type { Identity } from "@/domain/site/Identity";
+import { getTranslations } from "next-intl/server";
+import type { Clinica } from "@/domain/clinica/Clinica";
 import type { NavLink } from "@/domain/site/NavLink";
 import { FooterCosmosRestore } from "./FooterCosmosRestore";
 
-export function Footer({ identity, navLinks }: { identity: Identity; navLinks: NavLink[] }) {
+export async function Footer({ clinica, navLinks }: { clinica: Clinica; navLinks: NavLink[] }) {
+  const t = await getTranslations("chrome");
+  const footerByline = t("footerByline");
   const year = new Date().getFullYear();
 
   return (
@@ -15,9 +18,9 @@ export function Footer({ identity, navLinks }: { identity: Identity; navLinks: N
               href="/"
               className="display-italic text-foreground hover:text-terracotta inline-block text-2xl no-underline transition-colors"
             >
-              {identity.fullName}
+              {clinica.fullName}
             </Link>
-            <p className="marginalia mt-2">{identity.footerByline}</p>
+            <p className="marginalia mt-2">{footerByline}</p>
           </div>
 
           <nav aria-label="Rodapé">
@@ -48,10 +51,10 @@ export function Footer({ identity, navLinks }: { identity: Identity; navLinks: N
                   Privacidade
                 </Link>
               </li>
-              {identity.instagramUrl && (
+              {clinica.instagramUrl && (
                 <li>
                   <a
-                    href={identity.instagramUrl}
+                    href={clinica.instagramUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="display-italic text-foreground hover:text-terracotta no-underline transition-colors"
@@ -62,7 +65,7 @@ export function Footer({ identity, navLinks }: { identity: Identity; navLinks: N
               )}
               <li>
                 <a
-                  href={identity.whatsappUrl}
+                  href={clinica.whatsappUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="display-italic text-foreground hover:text-terracotta no-underline transition-colors"
@@ -76,7 +79,7 @@ export function Footer({ identity, navLinks }: { identity: Identity; navLinks: N
 
         <div className="border-rule mt-12 flex flex-col gap-3 border-t pt-8 text-[0.85rem] sm:flex-row sm:items-baseline sm:justify-between">
           <p className="text-quill">
-            © {year} {identity.fullName}. Todos os direitos reservados.
+            © {year} {clinica.fullName}. Todos os direitos reservados.
           </p>
           <FooterCosmosRestore />
         </div>

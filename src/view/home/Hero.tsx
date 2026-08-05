@@ -1,12 +1,12 @@
 import Image from "next/image";
 import type { Home } from "@/domain/home/Home";
-import type { Identity } from "@/domain/site/Identity";
+import type { Clinica } from "@/domain/clinica/Clinica";
 import { RichTextProse } from "@/view/general/RichTextProse";
 import { WhatsAppGlyph } from "@/view/general/WhatsAppGlyph";
 
 const PORTRAIT_FALLBACK = "/portrait/luiza.jpg";
 
-export function Hero({ identity, content }: { identity: Identity; content: Home["hero"] }) {
+export function Hero({ clinica, content }: { clinica: Clinica; content: Home["hero"] }) {
   return (
     <section
       aria-labelledby="hero-heading"
@@ -17,15 +17,15 @@ export function Hero({ identity, content }: { identity: Identity; content: Home[
             what she does before the portrait. On desktop this anchors the
             top-left cell of the two-column grid. */}
         <div className="lg:col-start-1 lg:row-start-1">
-          <p className="tracked mb-8 text-center sm:text-left">
-            Consultório psicológico · estabelecido em {identity.city}
-          </p>
+          {/* Her positioning sentence, verbatim — the line that says where the
+              visitor is and how far the practice reaches (CONCEPT §2). */}
+          <p className="tracked mb-8 text-center sm:text-left">{clinica.positioning}</p>
 
           <h1
             id="hero-heading"
             className="display text-foreground text-balance text-center text-[clamp(2.6rem,6vw,4.4rem)] leading-[1.05] tracking-[-0.012em] sm:text-left"
           >
-            <span className="block">{identity.fullName}</span>
+            <span className="block">{clinica.fullName}</span>
             <span className="display-italic text-terracotta-deep mt-3 block text-[0.42em] tracking-[0.05em]">
               {content.subtitle}
             </span>
@@ -40,7 +40,7 @@ export function Hero({ identity, content }: { identity: Identity; content: Home[
           <div className="relative aspect-[4/5] overflow-hidden">
             <Image
               src={content.portraitUrl ?? PORTRAIT_FALLBACK}
-              alt={`Retrato de ${identity.fullName}, ${identity.role.toLowerCase()}`}
+              alt={`Retrato de ${clinica.fullName}, ${clinica.role.toLowerCase()}`}
               fill
               priority
               sizes="(min-width: 1024px) 26rem, 17rem"
@@ -48,19 +48,19 @@ export function Hero({ identity, content }: { identity: Identity; content: Home[
             />
           </div>
           <figcaption className="marginalia mt-5 text-center lg:text-left">
-            <span className="display-italic text-ink-soft">{identity.shortName}</span> — atendimento
-            presencial e online em todo o {identity.country}.
+            <span className="display-italic text-ink-soft">{clinica.shortName}</span> — atendimento
+            on-line, Brasil e exterior.
           </figcaption>
 
           {/* A quiet WhatsApp affordance for hesitant phone visitors, right under
               the portrait. Desktop hides it — the solid primary button below
               already carries the action. */}
           <a
-            href={identity.whatsappUrl}
+            href={clinica.whatsappUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="text-terracotta-deep hover:text-terracotta mt-4 inline-flex items-baseline gap-2 text-[0.95rem] no-underline transition-colors lg:hidden"
-            aria-label={`Iniciar conversa pelo WhatsApp ${identity.phoneDisplay}`}
+            aria-label={`Iniciar conversa pelo WhatsApp ${clinica.whatsappDisplay}`}
           >
             <WhatsAppGlyph className="text-terracotta h-[1.05em] w-[1.05em] -translate-y-px" />
             <span className="display-italic decoration-terracotta/40 underline decoration-1 underline-offset-[0.28em]">

@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { useTranslations } from "next-intl";
-import { IDENTITY_DEFAULTS } from "@/domain/site/Identity";
+import { CLINICA_DEFAULTS } from "@/domain/clinica/Clinica";
 import { Link } from "@/i18n/navigation";
 
 // Route-level error boundary. Renders inside the root layout (html/body/fonts +
@@ -51,7 +51,7 @@ export default function Error({
             {t("backHome")}
           </Link>
           <a
-            href={IDENTITY_DEFAULTS.whatsappUrl}
+            href={CLINICA_DEFAULTS.whatsappUrl}
             target="_blank"
             rel="noopener noreferrer"
             className={linkClass}

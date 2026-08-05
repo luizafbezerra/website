@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { getLocale, getTranslations } from "next-intl/server";
-import { getIdentity } from "@/domain/site/getIdentity";
-import { getNavigation } from "@/domain/site/getNavigation";
+import { getClinica } from "@/domain/clinica/getClinica";
 import type { Locale } from "@/domain/site/Locale";
+import { siteNavigation } from "@/domain/site/siteNavigation";
 import { Link } from "@/i18n/navigation";
 import { Footer } from "@/view/chrome/Footer";
 import { Header } from "@/view/chrome/Header";
@@ -18,10 +18,8 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function NotFound() {
   const [t, locale] = await Promise.all([getTranslations("notFound"), getLocale()]);
-  const [identity, navLinks] = await Promise.all([
-    getIdentity(locale as Locale),
-    getNavigation(locale as Locale),
-  ]);
+  const clinica = await getClinica(locale as Locale);
+  const navLinks = siteNavigation();
 
   const linkClass =
     "display-italic text-foreground decoration-terracotta hover:text-terracotta inline-flex text-[1.08rem] underline decoration-1 underline-offset-[0.22em] transition-colors";
@@ -29,7 +27,7 @@ export default async function NotFound() {
   return (
     <>
       <StickyHeaderShell>
-        <Header identity={identity} navLinks={navLinks} />
+        <Header clinica={clinica} navLinks={navLinks} />
       </StickyHeaderShell>
       <main
         id="main"
@@ -51,7 +49,7 @@ export default async function NotFound() {
               {t("backHome")}
             </Link>
             <a
-              href={identity.whatsappUrl}
+              href={clinica.whatsappUrl}
               target="_blank"
               rel="noopener noreferrer"
               className={linkClass}
@@ -61,7 +59,7 @@ export default async function NotFound() {
           </div>
         </div>
       </main>
-      <Footer identity={identity} navLinks={navLinks} />
+      <Footer clinica={clinica} navLinks={navLinks} />
     </>
   );
 }

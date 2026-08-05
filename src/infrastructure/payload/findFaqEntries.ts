@@ -7,6 +7,7 @@ import { getPayloadSafe } from "./getPayloadSafe";
 export type PayloadFaq = {
   question?: string | null;
   answer?: string | null;
+  category?: string | null;
 };
 
 /** The collection has no drafts, so every row is public. */

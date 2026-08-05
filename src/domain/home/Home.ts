@@ -81,9 +81,15 @@ export const HOME_DEFAULTS: Home = {
         { text: "." },
       ],
     ]),
+    // Her own rewrite, restored verbatim from `docs/content-export-2026-08.md`:
+    // it lived only in the database, and the destructive migration of TASK-026
+    // would otherwise have dropped it. It seeds the `page-analise` global too.
     intro: richText([
       "Tomo a sério o que se manifesta em sonhos, fantasias, imagens e sintomas. Não são ruído: são as maneiras pelas quais a psique fala sobre o que ainda não cabe em palavras.",
-      "No trabalho clínico, isso aparece como uma atenção demorada, uma curiosidade pelo que está por trás do que dói. Não removo sintomas com pressa; procuro entender o que vieram dizer, para que o caminho à frente seja escolhido, e não apenas suportado.",
+      "Não removo sintomas, trabalho o fortalecimento do seu ego para que esses sintomas não sejam necessários um dia. A clínica analítica não trabalha para eliminar sintomas, lidamos com a psicologia profunda.",
+      "Como fazemos isso? Através da conscientização das próprias emoções, da personalidade, do momento de vida, como se reage às tristezas e felicidades da própria existência. Aliado a isso, o trabalho de forma consistente, através de encontros semanais.",
+      "Gosto de dizer que a psicologia clínica é o trabalho mais “anti capitalista” que existe, pois o que é oferecido não traz uma solução rápida tampouco indolor. Por uma questão ética, o conteúdo dos encontros são ditados pelo paciente, de acordo com aquilo que ele está preparado para trazer.",
+      "Eu só farei pontuações daquilo que acredito que você esteja preparado para receber, respeitando o tempo do seu processo e a sua subjetividade. Não existe pressa no processo de individuação.",
     ]),
     note: "Três frentes que costumam trazer alguém para a análise. Quase sempre se cruzam, e o trabalho começa por onde dói mais agora.",
     items: [

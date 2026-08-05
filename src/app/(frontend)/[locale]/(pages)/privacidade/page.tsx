@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { getIdentity } from "@/domain/site/getIdentity";
-import { getNavigation } from "@/domain/site/getNavigation";
+import { getClinica } from "@/domain/clinica/getClinica";
 import type { Locale } from "@/domain/site/Locale";
 import { pagePath } from "@/domain/site/pagePath";
+import { siteNavigation } from "@/domain/site/siteNavigation";
 import { absoluteUrl } from "@/infrastructure/env/baseUrl";
 import { Link } from "@/i18n/navigation";
 import { Footer } from "@/view/chrome/Footer";
@@ -29,9 +29,9 @@ export default async function PrivacidadePage({ params }: PrivacidadeProps) {
   const { locale } = await params;
   setRequestLocale(locale);
 
-  const [identity, navLinks, nav] = await Promise.all([
-    getIdentity(locale),
-    getNavigation(locale),
+  const navLinks = siteNavigation();
+  const [clinica, nav] = await Promise.all([
+    getClinica(locale),
     getTranslations({ locale, namespace: "nav" }),
   ]);
 
@@ -45,7 +45,7 @@ export default async function PrivacidadePage({ params }: PrivacidadeProps) {
       />
 
       <StickyHeaderShell>
-        <Header identity={identity} navLinks={navLinks} />
+        <Header clinica={clinica} navLinks={navLinks} />
       </StickyHeaderShell>
       <main id="main">
         <nav aria-label="Trilha" className="px-6 pt-24 sm:px-10 sm:pt-28 lg:pt-32">
@@ -98,14 +98,14 @@ export default async function PrivacidadePage({ params }: PrivacidadeProps) {
                   Quem trata os dados
                 </h2>
                 <p>
-                  Os dados pessoais coletados neste site são tratados por {identity.fullName},{" "}
-                  {identity.role}, em {identity.city}–{identity.region}. Contato:{" "}
-                  {identity.email ? (
+                  Os dados pessoais coletados neste site são tratados por {clinica.fullName},{" "}
+                  {clinica.role}, no atendimento on-line da clínica {clinica.clinicName}. Contato:{" "}
+                  {clinica.email ? (
                     <a
-                      href={`mailto:${identity.email}`}
+                      href={`mailto:${clinica.email}`}
                       className="text-quill hover:text-terracotta decoration-terracotta/40 hover:decoration-terracotta underline decoration-1 underline-offset-[0.22em] transition-colors"
                     >
-                      {identity.email}
+                      {clinica.email}
                     </a>
                   ) : (
                     "pelo WhatsApp informado no site"
@@ -166,7 +166,7 @@ export default async function PrivacidadePage({ params }: PrivacidadeProps) {
           </div>
         </section>
       </main>
-      <Footer identity={identity} navLinks={navLinks} />
+      <Footer clinica={clinica} navLinks={navLinks} />
     </>
   );
 }

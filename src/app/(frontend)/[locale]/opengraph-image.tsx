@@ -1,10 +1,13 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { ImageResponse } from "next/og";
-import { IDENTITY_DEFAULTS } from "@/domain/site/Identity";
+import { CLINICA_DEFAULTS } from "@/domain/clinica/Clinica";
 
 export const runtime = "nodejs";
-export const alt = `${IDENTITY_DEFAULTS.fullName} — psicóloga junguiana em ${IDENTITY_DEFAULTS.city}`;
+// Reads the code defaults rather than the CMS: this route renders at build time
+// for a static image. TASK-033 replaces it with per-page cards built from the
+// plate system.
+export const alt = `${CLINICA_DEFAULTS.clinicName} — ${CLINICA_DEFAULTS.positioning}`;
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -66,7 +69,7 @@ export default async function OpengraphImage() {
             color: TERRACOTTA,
           }}
         >
-          {`${IDENTITY_DEFAULTS.role} · ${IDENTITY_DEFAULTS.city}`}
+          {`${CLINICA_DEFAULTS.role} · on-line`}
         </div>
 
         <div
@@ -79,7 +82,7 @@ export default async function OpengraphImage() {
             letterSpacing: "-0.012em",
           }}
         >
-          {IDENTITY_DEFAULTS.fullName}
+          {CLINICA_DEFAULTS.clinicName}
         </div>
 
         <div
@@ -91,7 +94,7 @@ export default async function OpengraphImage() {
             lineHeight: 1.2,
           }}
         >
-          {`${IDENTITY_DEFAULTS.tradition} — para a vida adulta`}
+          {`por ${CLINICA_DEFAULTS.fullName}`}
         </div>
 
         <div
@@ -103,7 +106,7 @@ export default async function OpengraphImage() {
             maxWidth: 560,
           }}
         >
-          {`Para adultos que atravessam ansiedade, lutos, relações ou propósito. Atendimento presencial em ${IDENTITY_DEFAULTS.city} e online em todo o ${IDENTITY_DEFAULTS.country}.`}
+          {CLINICA_DEFAULTS.positioning}
         </div>
       </div>
     </div>,

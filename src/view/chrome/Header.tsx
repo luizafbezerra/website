@@ -1,16 +1,25 @@
 import Image from "next/image";
 import Link from "next/link";
-import type { Identity } from "@/domain/site/Identity";
+import { getTranslations } from "next-intl/server";
+import type { Clinica } from "@/domain/clinica/Clinica";
 import type { NavLink } from "@/domain/site/NavLink";
 import { HeaderMobileNav } from "./HeaderMobileNav";
 import { WhatsAppGlyph } from "@/view/general/WhatsAppGlyph";
 
-export function Header({ identity, navLinks }: { identity: Identity; navLinks: NavLink[] }) {
+/**
+ * The byline is chrome copy, not a clinic fact, so it comes from the message
+ * catalogue rather than the CMS — which is also what makes it translated. The
+ * "por" lockup of CONCEPT §8.6 replaces it in TASK-030.
+ */
+export async function Header({ clinica, navLinks }: { clinica: Clinica; navLinks: NavLink[] }) {
+  const t = await getTranslations("chrome");
+  const headerByline = t("headerByline");
+
   return (
     <header className="bg-parchment border-rule-soft border-b">
       <div className="mx-auto flex max-w-6xl items-center gap-4 px-6 py-4 sm:px-10 sm:py-5">
         <div className="group inline-flex shrink-0 items-center gap-3 sm:items-start sm:gap-4">
-          <Link href="/" className="block shrink-0" aria-label={`${identity.fullName} — início`}>
+          <Link href="/" className="block shrink-0" aria-label={`${clinica.fullName} — início`}>
             <span className="border-terracotta/70 bg-parchment-deep relative block aspect-square w-9 shrink-0 overflow-hidden rounded-full border transition-[box-shadow] duration-200 group-hover:[box-shadow:0_0_0_1px_var(--color-terracotta),0_0_16px_-2px_oklch(0.75_0.13_80/0.5)] sm:w-10">
               <Image
                 src="/art/quaternity.jpg"
@@ -28,11 +37,9 @@ export function Header({ identity, navLinks }: { identity: Identity; navLinks: N
               href="/"
               className="display-italic text-foreground text-[1.15rem] no-underline sm:text-[1.3rem]"
             >
-              {identity.fullName}
+              {clinica.fullName}
             </Link>
-            <span className="marginalia mt-0.5 hidden text-[0.76rem] sm:block">
-              {identity.headerByline}
-            </span>
+            <span className="marginalia mt-0.5 hidden text-[0.76rem] sm:block">{headerByline}</span>
           </span>
         </div>
 
@@ -52,18 +59,18 @@ export function Header({ identity, navLinks }: { identity: Identity; navLinks: N
         </nav>
 
         <a
-          href={identity.whatsappUrl}
+          href={clinica.whatsappUrl}
           target="_blank"
           rel="noopener noreferrer"
           className="display-italic text-foreground hover:text-terracotta decoration-terracotta/50 hover:decoration-terracotta ml-auto hidden items-center gap-2 text-[0.95rem] underline decoration-1 underline-offset-[0.3em] transition-colors md:ml-7 md:inline-flex md:text-[1rem]"
-          aria-label={`Iniciar conversa pelo WhatsApp ${identity.phoneDisplay}`}
+          aria-label={`Iniciar conversa pelo WhatsApp ${clinica.whatsappDisplay}`}
         >
           <WhatsAppGlyph className="text-terracotta h-[1.1em] w-[1.1em] -translate-y-px" />
           <span>WhatsApp</span>
         </a>
 
         <div className="ml-auto md:hidden">
-          <HeaderMobileNav identity={identity} navLinks={navLinks} />
+          <HeaderMobileNav clinica={clinica} navLinks={navLinks} />
         </div>
       </div>
     </header>

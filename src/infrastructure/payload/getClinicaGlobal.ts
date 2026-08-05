@@ -4,10 +4,9 @@ import type { Locale } from "@/domain/site/Locale";
 import { getPayloadSafe } from "./getPayloadSafe";
 
 // ---------------------------------------------------------------------------
-// The raw `settings` global exactly as Payload returns it. Groups flatten to
-// nested objects and every field is optional, so the domain mapper can fall
-// back field-by-field. Read at depth 1 so `ogImage` arrives as a media object
-// rather than an id.
+// The raw `clinica` global exactly as Payload returns it. Named tabs flatten to
+// nested objects and every field is optional, so the domain mapper can fall back
+// field by field.
 //
 // `cache` is React's request-scoped memoizer, not a UI concern: it keeps one
 // database read per request and locale, which is the accessor's own
@@ -19,56 +18,55 @@ import { getPayloadSafe } from "./getPayloadSafe";
 // its pt value, so the domain mappers never have to know a locale exists.
 // ---------------------------------------------------------------------------
 
-type PayloadMediaObject = { url?: string | null };
-
-export type PayloadSettings = {
-  siteName?: string | null;
-  description?: string | null;
-  ogImage?: PayloadMediaObject | string | number | null;
-  social?: Array<{ label?: string | null; url?: string | null }> | null;
-  tagline?: string | null;
+export type PayloadClinica = {
   identity?: {
+    clinicName?: string | null;
     fullName?: string | null;
     shortName?: string | null;
     role?: string | null;
-    tradition?: string | null;
     credential?: string | null;
-  } | null;
-  nap?: {
-    city?: string | null;
-    region?: string | null;
-    country?: string | null;
-    countryCode?: string | null;
+    positioning?: string | null;
   } | null;
   contact?: {
-    phoneE164?: string | null;
-    phoneDisplay?: string | null;
+    whatsappE164?: string | null;
+    whatsappDisplay?: string | null;
     email?: string | null;
     instagramUrl?: string | null;
     instagramHandle?: string | null;
   } | null;
   availability?: {
-    hours?: string | null;
-    responseNote?: string | null;
+    state?: string | null;
+    responseWindow?: string | null;
   } | null;
-  chrome?: {
-    headerByline?: string | null;
-    footerByline?: string | null;
+  fees?: {
+    analysis?: string | null;
+    careerGuidance?: string | null;
+    internationalNote?: string | null;
   } | null;
+  notes?: {
+    analysis?: string | null;
+    careerGuidance?: string | null;
+    unsure?: string | null;
+    english?: string | null;
+  } | null;
+  jung?: {
+    passages?: Array<{ text?: string | null; attribution?: string | null }> | null;
+  } | null;
+  privacy?: { line?: string | null } | null;
 };
 
-/** The `settings` global, or null when Payload is disabled. */
-export const getSettingsGlobal = cache(async function getSettingsGlobal(
+/** The `clinica` global, or null when Payload is disabled. */
+export const getClinicaGlobal = cache(async function getClinicaGlobal(
   locale: Locale,
-): Promise<PayloadSettings | null> {
+): Promise<PayloadClinica | null> {
   const payload = await getPayloadSafe();
   if (!payload) return null;
 
   const doc = await payload.findGlobal({
-    slug: "settings",
+    slug: "clinica",
     locale,
-    depth: 1,
+    depth: 0,
     overrideAccess: true,
   });
-  return doc as PayloadSettings;
+  return doc as PayloadClinica;
 });

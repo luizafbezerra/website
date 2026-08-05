@@ -1,5 +1,6 @@
 import type { GlobalConfig } from "payload";
 import { localizedRichText, localizedText, localizedTextarea } from "../../fields/copyFields";
+import { mediaSlot } from "../../fields/mediaSlot";
 import { PAGES_GROUP, pageAccess, revalidatePageHook } from "./shared";
 
 /**
@@ -23,6 +24,21 @@ export const PagePrimeiraConversa: GlobalConfig = {
     {
       type: "tabs",
       tabs: [
+        {
+          name: "abertura",
+          label: "Abertura",
+          description:
+            "O começo da página: o título e as primeiras linhas, que já respondem o que acontece quando alguém escreve — para leitores e para buscadores.",
+          fields: [
+            localizedText({ name: "heading", label: "Título" }),
+            localizedRichText({
+              name: "lead",
+              label: "Primeiras linhas",
+              description:
+                "Duas ou três frases: o que acontece quando a pessoa escreve, quanto tempo dura, em que idiomas e de onde ela pode estar.",
+            }),
+          ],
+        },
         {
           name: "passoAPasso",
           label: "1 · Passo a passo",
@@ -61,6 +77,25 @@ export const PagePrimeiraConversa: GlobalConfig = {
               label: "Permissões",
               labels: { singular: "Permissão", plural: "Permissões" },
               fields: [localizedTextarea({ name: "text", label: "Texto", required: true })],
+            },
+            {
+              name: "plate",
+              type: "group",
+              label: "A pintura desta página",
+              admin: {
+                description:
+                  "Uma pintura, depois das permissões — o respiro da página, antes das informações práticas. Domínio público, com proveniência verificada.",
+              },
+              fields: [
+                mediaSlot({
+                  name: "image",
+                  label: "Imagem",
+                  description: "A tela inteira, em boa resolução.",
+                }),
+                { name: "painter", type: "text", label: "Pintor(a)" },
+                localizedText({ name: "workTitle", label: "Título da obra" }),
+                { name: "year", type: "text", label: "Ano" },
+              ],
             },
           ],
         },

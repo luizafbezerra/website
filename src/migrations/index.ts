@@ -6,6 +6,7 @@ import * as migration_20260618_030435_restructure_home_globals from "./20260618_
 import * as migration_20260805_013127_concept_v3_cms from "./20260805_013127_concept_v3_cms";
 import * as migration_20260805_020046_concept_v3_credential_line from "./20260805_020046_concept_v3_credential_line";
 import * as migration_20260805_031704_concept_v3_inicio_credencial_drop from "./20260805_031704_concept_v3_inicio_credencial_drop";
+import * as migration_20260805_041259_concept_v3_primeira_conversa from "./20260805_041259_concept_v3_primeira_conversa";
 
 export const migrations = [
   {
@@ -47,5 +48,10 @@ export const migrations = [
     up: migration_20260805_031704_concept_v3_inicio_credencial_drop.up,
     down: migration_20260805_031704_concept_v3_inicio_credencial_drop.down,
     name: "20260805_031704_concept_v3_inicio_credencial_drop",
+  },
+  {
+    up: migration_20260805_041259_concept_v3_primeira_conversa.up,
+    down: migration_20260805_041259_concept_v3_primeira_conversa.down,
+    name: "20260805_041259_concept_v3_primeira_conversa",
   },
 ];

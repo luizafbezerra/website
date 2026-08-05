@@ -255,6 +255,66 @@
   }
 
   /* ---------------------------------------------------------------------- */
+  /* O selo — the wax seal pressed into a chosen bilhete (CONCEPT §9.7).     */
+  /*                                                                         */
+  /* Fires on tap and never gates the handoff: the anchor has already opened  */
+  /* WhatsApp in another tab by the time the first frame paints, so this is   */
+  /* decoration on a note the visitor has finished with, not a transition     */
+  /* they are waiting through. Total 520ms, inside the <600ms budget.         */
+  /* ---------------------------------------------------------------------- */
+  .bilhete-note {
+    transform-origin: top center;
+  }
+
+  .bilhete-note[data-sealed="true"] {
+    animation: bilhete-crease 520ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
+
+  /* The mark is a real painted asset, cropped round — the same crop the header
+     wears. A drawn circle here would be the generated ornament DESIGN bans. */
+  .bilhete-seal {
+    opacity: 0;
+    transform: scale(1.6) rotate(-18deg);
+  }
+
+  .bilhete-note[data-sealed="true"] .bilhete-seal {
+    animation: bilhete-press 420ms cubic-bezier(0.34, 1.3, 0.64, 1) 100ms forwards;
+  }
+
+  @keyframes bilhete-crease {
+    40% {
+      transform: scaleY(0.965);
+    }
+    100% {
+      transform: scaleY(1);
+    }
+  }
+
+  @keyframes bilhete-press {
+    100% {
+      opacity: 1;
+      transform: scale(1) rotate(0deg);
+    }
+  }
+
+  /* The seal still arrives, it just does not travel: the visitor who asked not
+     to be moved still sees the note was signed (CON-007). */
+  @media (prefers-reduced-motion: reduce) {
+    .bilhete-note[data-sealed="true"] {
+      animation: none;
+    }
+
+    .bilhete-seal {
+      transform: none;
+    }
+
+    .bilhete-note[data-sealed="true"] .bilhete-seal {
+      animation: none;
+      opacity: 1;
+    }
+  }
+
+  /* ---------------------------------------------------------------------- */
   /* Cosmos — celestial atlas section.                                       */
   /* Carve-out: parametric ornament permitted within `.cosmos-*` scope only. */
   /* See .impeccable.md → Carve-outs.                                        */

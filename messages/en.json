@@ -21,6 +21,10 @@
     "privacidade": {
       "title": "Privacy",
       "description": "How the data of visitors and of people who get in touch is handled, under Brazil's General Data Protection Law (LGPD)."
+    },
+    "primeiraConversa": {
+      "title": "The first conversation",
+      "description": "What happens when you write: a conversation of about fifty minutes, by video, in English or Portuguese, in your own time zone — from Brazil or anywhere abroad. The steps, the fees, and a note already written for you to send."
     }
   },
   "seo": {
@@ -153,6 +157,29 @@
     "contato": {
       "orByEmail": "or by email —",
       "faqLink": "questions people ask before writing"
+    }
+  },
+  "primeiraConversa": {
+    "skipToBilhete": "go straight to the note",
+    "plate": {
+      "placeholder": "A painting for this page's pause.",
+      "placeholderNote": "The chosen work arrives here through the admin, with painter, title and year."
+    },
+    "logistica": {
+      "fee": "Fee",
+      "feeAnalysis": "Fee · analysis",
+      "feeCareerGuidance": "Fee · career guidance",
+      "feeToDiscuss": "Discussed in the first conversation."
+    },
+    "bilhete": {
+      "send": "send on WhatsApp",
+      "noteAria": "Send the {door} note on WhatsApp",
+      "doors": {
+        "analysis": "for analysis",
+        "careerGuidance": "for career guidance",
+        "unsure": "not sure yet",
+        "english": "in English"
+      }
     }
   }
 }

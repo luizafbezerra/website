@@ -21,6 +21,10 @@
     "privacidade": {
       "title": "Privacidade",
       "description": "Como os dados de quem visita e entra em contato são tratados, na forma da Lei Geral de Proteção de Dados (LGPD)."
+    },
+    "primeiraConversa": {
+      "title": "A primeira conversa",
+      "description": "O que acontece quando você escreve: uma conversa de cerca de cinquenta minutos, por vídeo, em português ou inglês, no seu fuso — do Brasil ou do exterior. Passo a passo, valores e o bilhete já escrito para começar."
     }
   },
   "seo": {
@@ -153,6 +157,29 @@
     "contato": {
       "orByEmail": "ou por e-mail —",
       "faqLink": "perguntas frequentes antes de escrever"
+    }
+  },
+  "primeiraConversa": {
+    "skipToBilhete": "ir direto ao bilhete",
+    "plate": {
+      "placeholder": "Uma pintura para o respiro desta página.",
+      "placeholderNote": "A obra escolhida entra aqui pelo painel, com pintor, título e ano."
+    },
+    "logistica": {
+      "fee": "Valor",
+      "feeAnalysis": "Valor · análise",
+      "feeCareerGuidance": "Valor · orientação profissional",
+      "feeToDiscuss": "A combinar na primeira conversa."
+    },
+    "bilhete": {
+      "send": "enviar pelo WhatsApp",
+      "noteAria": "Enviar pelo WhatsApp o bilhete {door}",
+      "doors": {
+        "analysis": "para a análise",
+        "careerGuidance": "para a orientação profissional",
+        "unsure": "ainda não sei",
+        "english": "in English"
+      }
     }
   }
 }

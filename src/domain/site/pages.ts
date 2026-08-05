@@ -127,7 +127,7 @@ export const SITE_PAGES = [
     inHeaderNav: true,
     footerColumn: "comecar",
     titlePattern: "suffixed",
-    status: "planned",
+    status: "built",
     sitemapPriority: 0.9,
     changeFrequency: "yearly",
   },

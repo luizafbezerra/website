@@ -122,10 +122,24 @@ describe("sitemap derivation", () => {
     expect(entries.map((entry) => entry.path)).toEqual([
       "/",
       "/en",
+      "/primeira-conversa",
+      "/en/first-conversation",
       "/perguntas",
       "/en/questions",
       "/privacidade",
       "/en/privacy",
+    ]);
+  });
+
+  // The registry carries all eight addresses from day one (CONCEPT §6: no URL
+  // ever migrates), and each Phase 6 task flips its own page. Pinning the split
+  // means a page cannot be advertised in the sitemap before its route exists.
+  it("still holds the unbuilt pages, unadvertised", () => {
+    expect(SITE_PAGES.filter((page) => page.status === "planned").map((page) => page.key)).toEqual([
+      "analise",
+      "orientacaoProfissional",
+      "sobre",
+      "internacional",
     ]);
   });
 

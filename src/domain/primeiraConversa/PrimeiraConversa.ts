@@ -1,4 +1,5 @@
 import { EMPTY_PAGE_PLATE, type PagePlate } from "@/domain/media/PagePlate";
+import type { FactRow } from "@/domain/pages/FactRow";
 import type { RichTextContent } from "@/domain/richText/RichTextContent";
 import { richText } from "@/domain/richText/richText";
 
@@ -28,9 +29,6 @@ import { richText } from "@/domain/richText/richText";
 /** One of the five tempos, I–V. */
 export type Step = { numeral: string; title: string; text: string };
 
-/** One row of the logística list — an operational fact and its label. */
-export type LogisticsRow = { label: string; value: string };
-
 /** One threshold doubt, answered short. */
 export type MiniFaqEntry = { question: string; answer: string };
 
@@ -51,7 +49,7 @@ export type PrimeiraConversa = {
   };
   logistica: {
     heading: string;
-    items: LogisticsRow[];
+    items: FactRow[];
   };
   miniFaq: {
     heading: string;

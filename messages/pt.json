@@ -159,17 +159,17 @@
       "faqLink": "perguntas frequentes antes de escrever"
     }
   },
+  "pratico": {
+    "fee": "Valor",
+    "feeAnalysis": "Valor · análise",
+    "feeCareerGuidance": "Valor · orientação profissional",
+    "feeToDiscuss": "A combinar na primeira conversa."
+  },
   "primeiraConversa": {
     "skipToBilhete": "ir direto ao bilhete",
     "plate": {
       "placeholder": "Uma pintura para o respiro desta página.",
       "placeholderNote": "A obra escolhida entra aqui pelo painel, com pintor, título e ano."
-    },
-    "logistica": {
-      "fee": "Valor",
-      "feeAnalysis": "Valor · análise",
-      "feeCareerGuidance": "Valor · orientação profissional",
-      "feeToDiscuss": "A combinar na primeira conversa."
     },
     "bilhete": {
       "send": "enviar pelo WhatsApp",

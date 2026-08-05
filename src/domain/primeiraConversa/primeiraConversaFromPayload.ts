@@ -1,8 +1,8 @@
 import { pagePlateFrom } from "@/domain/media/pagePlateFrom";
+import type { FactRow } from "@/domain/pages/FactRow";
 import type { RichTextContent } from "@/domain/richText/RichTextContent";
 import type { PayloadPagePrimeiraConversa } from "@/infrastructure/payload/getPagePrimeiraConversaGlobal";
 import {
-  type LogisticsRow,
   type MiniFaqEntry,
   PRIMEIRA_CONVERSA_DEFAULTS,
   type PrimeiraConversa,
@@ -71,12 +71,12 @@ function permissionsFrom(
 
 function logisticsFrom(
   raw: NonNullable<PayloadPagePrimeiraConversa["logistica"]>["items"],
-): LogisticsRow[] {
+): FactRow[] {
   if (!Array.isArray(raw)) return PRIMEIRA_CONVERSA_DEFAULTS.logistica.items;
 
   const rows = raw
     .map((row) => ({ label: filled(row?.label), value: filled(row?.value) }))
-    .filter((row): row is LogisticsRow => row.label !== null && row.value !== null);
+    .filter((row): row is FactRow => row.label !== null && row.value !== null);
 
   return rows.length > 0 ? rows : PRIMEIRA_CONVERSA_DEFAULTS.logistica.items;
 }

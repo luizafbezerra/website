@@ -7,6 +7,7 @@ const ALL: NoteOpeners = {
   careerGuidance: "sobre a orientação",
   unsure: "não sei qual caminho",
   english: "about sessions in English",
+  international: "moro fora do Brasil",
 };
 
 describe("noteOpenersFor", () => {
@@ -36,8 +37,22 @@ describe("noteOpenersFor", () => {
     ]);
   });
 
-  it("returns nothing when none is written, so the page can fall back to the plain button", () => {
-    const none: NoteOpeners = { analysis: null, careerGuidance: null, unsure: null, english: null };
+  // The fifth opener is /internacional's, not the bilhete's: the bilhete offers
+  // the four doors of CONCEPT §6 and nothing else, so a written `international`
+  // must never widen the note row on /primeira-conversa.
+  it("never offers the international opener, in either locale", () => {
+    expect(noteOpenersFor(ALL, "pt").map((note) => note.door)).not.toContain("international");
+    expect(noteOpenersFor(ALL, "en").map((note) => note.door)).not.toContain("international");
+  });
+
+  it("returns nothing when no bilhete note is written, so the page falls back to the plain button", () => {
+    const none: NoteOpeners = {
+      analysis: null,
+      careerGuidance: null,
+      unsure: null,
+      english: null,
+      international: "moro fora do Brasil",
+    };
 
     expect(noteOpenersFor(none, "pt")).toEqual([]);
     expect(noteOpenersFor(none, "en")).toEqual([]);

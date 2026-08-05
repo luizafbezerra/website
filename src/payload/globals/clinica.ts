@@ -228,6 +228,12 @@ export const Clinica: GlobalConfig = {
                   "Escrito em inglês de propósito, não traduzido: é o bilhete oferecido a quem fala inglês, inclusive nas páginas em português.",
               },
             },
+            localizedTextarea({
+              name: "international",
+              label: "Bilhete — quem mora fora do Brasil",
+              description:
+                "Só aparece na página Brasil e exterior, no lugar dos quatro da primeira conversa. Diz que a pessoa mora fora — é o que te conta, na própria mensagem, de onde a conversa começou.",
+            }),
           ],
         },
         // ── Passagens de Jung ────────────────────────────────────────────────

@@ -73,6 +73,7 @@ export function clinicaFromPayload(doc: PayloadClinica): Clinica {
       careerGuidance: filled(doc.notes?.careerGuidance) ?? defaults.notes.careerGuidance,
       unsure: filled(doc.notes?.unsure) ?? defaults.notes.unsure,
       english: filled(doc.notes?.english) ?? defaults.notes.english,
+      international: filled(doc.notes?.international) ?? defaults.notes.international,
     },
     jungPassages: passagesFrom(doc.jung),
     privacyLine: filled(doc.privacy?.line),

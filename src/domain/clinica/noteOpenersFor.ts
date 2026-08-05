@@ -14,6 +14,12 @@ export type NoteOpener = { door: keyof NoteOpeners; text: string };
  * other three are already English, so it would render a fourth card saying, more
  * vaguely, what the first one says. It is dropped there.
  *
+ * **`international` is not a door.** It is a fifth opener, written for
+ * /internacional's own ask, where the fact worth attributing is that the visitor
+ * writes from outside Brazil rather than which service they came for. The bilhete
+ * offers the four doors CONCEPT §6 lists and nothing else, so it is excluded here
+ * by omission from `DOORS` — a note she writes for that page cannot widen this row.
+ *
  * Which note a visitor taps is never recorded: the wording of the arriving message
  * is the whole of the attribution (CONCEPT §8.1).
  */

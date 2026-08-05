@@ -49,6 +49,7 @@ export type PayloadClinica = {
     careerGuidance?: string | null;
     unsure?: string | null;
     english?: string | null;
+    international?: string | null;
   } | null;
   jung?: {
     passages?: Array<{ text?: string | null; attribution?: string | null }> | null;

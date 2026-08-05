@@ -16,19 +16,28 @@ import { whatsappUrlFromPhone } from "./whatsappUrlFromPhone";
 export type JungPassage = { text: string; attribution: string | null };
 
 /**
- * The four pre-written openers (CONCEPT §8.1). Three are localized translations
- * of the same invitation; `english` is written in English on purpose, because it
- * is the opener offered to anglophones on the Portuguese pages too.
+ * The pre-written openers (CONCEPT §8.1). The first three are localized
+ * translations of the same invitation; `english` is written in English on
+ * purpose, because it is the opener offered to anglophones on the Portuguese
+ * pages too.
+ *
+ * The first four are the doors CONCEPT §6 puts on /primeira-conversa's bilhete.
+ * `international` is a fifth opener that the bilhete never offers: it belongs to
+ * /internacional's own ask, where the fact worth attributing is not which door a
+ * visitor came through but that they are writing from outside Brazil — the thing
+ * that page exists to give permission for. `noteOpenersFor` keeps it off the
+ * bilhete; `Comecar` reaches it by name.
  *
  * A null opener means she has not written that one, and the note for it does not
- * render — with all four null, /primeira-conversa falls back to the plain button
- * CONCEPT §13.5 describes.
+ * render — with all four bilhete openers null, /primeira-conversa falls back to
+ * the plain button CONCEPT §13.5 describes.
  */
 export type NoteOpeners = {
   analysis: string | null;
   careerGuidance: string | null;
   unsure: string | null;
   english: string | null;
+  international: string | null;
 };
 
 export type Clinica = {
@@ -110,6 +119,8 @@ export const CLINICA_DEFAULTS: Clinica = {
     unsure:
       "Oi, Luiza. Encontrei o seu site e queria conversar, mas ainda não sei qual caminho é o meu.",
     english: "Hi Luiza. I found your website and I'd like to know about sessions in English.",
+    international:
+      "Oi, Luiza. Encontrei o seu site e queria conversar — moro fora do Brasil e gostaria de saber como funciona daqui.",
   },
   jungPassages: [],
   privacyLine: null,

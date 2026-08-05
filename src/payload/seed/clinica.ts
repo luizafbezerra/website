@@ -39,23 +39,31 @@ const ENGLISH = {
     careerGuidance: "Hi Luiza. I found your website and I'd like to know about career guidance.",
     unsure:
       "Hi Luiza. I found your website and I'd like to talk, but I'm not sure which path is mine.",
+    international:
+      "Hi Luiza. I found your website and I'd like to talk — I live outside Brazil and I'd like to know how that works.",
   },
 };
 
 export async function seedClinica(payload: Payload): Promise<void> {
   const d = CLINICA_DEFAULTS;
-  // The three localized openers; `english` is shared and added inside `data`.
+  // The four localized openers; `english` is shared and added inside `data`.
   const PT_NOTES = {
     analysis: d.notes.analysis ?? "",
     careerGuidance: d.notes.careerGuidance ?? "",
     unsure: d.notes.unsure ?? "",
+    international: d.notes.international ?? "",
   };
 
   const data = (
     role: string,
     positioning: string,
     credentials: Array<{ id?: string | null; item: string }>,
-    notes: { analysis: string; careerGuidance: string; unsure: string },
+    notes: {
+      analysis: string;
+      careerGuidance: string;
+      unsure: string;
+      international: string;
+    },
   ) => ({
     identity: {
       clinicName: d.clinicName,

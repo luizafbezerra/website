@@ -212,7 +212,7 @@ The site's signature image component — **her curation become the site's visual
 
 ### The Mark (ornament system)
 
-The mandala mark — her existing avatar — is the identity anchor: header mark, favicon, social-share mark, section-break ornament. It always appears with the **"por" lockup**: `SÍMBOLOS DO SELF · por Luiza Fernandes Bezerra`. Sanctioned ornament sources are exactly two: **the mark, and details cropped from the plates.** If that proves thin, the escalation path is commissioning hand-painted symbols — never generation.
+The mandala mark — her existing avatar — is the identity anchor: header mark, favicon, social-share mark, section-break ornament. It always appears with the **"por" lockup**: `SÍMBOLOS DO SELF · por Luiza Fernandes Bezerra`. Sanctioned ornament sources are exactly three: **the mark, details cropped from the plates, and the approved painted set in `/public/art`** (quaternity · landscape-quaternity · red-script · squared-mandala · winter-star · serpent-flame — client-approved as illuminations, placed by amplificação beside the idea each amplifies). If that proves thin, the escalation path is commissioning more hand-painted symbols — never generation.
 
 ### Cards / Containers
 
@@ -223,7 +223,7 @@ The mandala mark — her existing avatar — is the identity anchor: header mark
 
 ### Navigation
 
-- **Header (all pages):** mark + lockup left · Análise · Orientação profissional · Sobre · Primeira conversa · **[WhatsApp]** as the visually distinct terminal item (the primary-button voice). **Sticky, never hiding** — it does not slide away on scroll — and never a floating bubble. Perguntas and Internacional live in the footer and as contextual links where the doubt occurs.
+- **Header (all pages):** mark + lockup left · Análise · Orientação profissional · Sobre · Primeira conversa · **[WhatsApp]** as the visually distinct terminal item — the primary-button voice, i.e. a filled terracotta-deep chip, not an outline. This is not the banned sticky CTA: the ban targets a CTA riding the viewport outside the page's own flow (a floating bubble, a bar pinned over content); a small filled item inside the header's own static height is no different from any other nav item beside it. **Sticky, never hiding** — it does not slide away on scroll — and never a floating bubble. Perguntas and Internacional live in the footer and as contextual links where the doubt occurs.
 - **Style:** Cardo, restrained, `.tracked`/`.tracked-ink` tracked-caps voice. Ink at rest, terracotta on hover/active; 1px underline at a generous offset, never a background fill. Mobile gets a dedicated `HeaderMobileNav`.
 - **Footer (all pages):** three columns — _A clínica_ (pages) · _Começar_ (primeira conversa, perguntas, internacional, WhatsApp, email, availability) · _O mundo_ (Instagram, CRP, "português e inglês · Brasil e exterior", privacidade) — plus the **colophon band**: the canonical sentence binding clinic name to her name + CRP, plate credits, © year.
 - **One page registry:** header and footer derive from a single canonical page list so they can never disagree.

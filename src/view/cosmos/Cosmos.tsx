@@ -262,14 +262,19 @@ function CosmosBody({ onDismissForever, sky }: CosmosProps & { onDismissForever:
         isMobile && "cosmos-mobile",
       )}
     >
-      <header className="mx-auto max-w-3xl px-6 pt-24 pb-10 sm:px-10 sm:pt-28 sm:pb-14">
-        <p className="tracked mb-5 text-center sm:text-left">{Data.sectionEyebrow}</p>
-        <h2 className="display text-foreground text-balance text-[clamp(1.95rem,3.8vw,2.75rem)] leading-[1.13] tracking-[-0.008em]">
-          {Data.sectionTitle}
-        </h2>
-        <p className="body-italic text-ink-soft mt-7 max-w-[58ch] text-[1.06rem] leading-[1.7]">
-          {Data.sectionDek}
-        </p>
+      {/* Padding outside the measure, like PageSection — with the px inside
+          `max-w-3xl` this column sat 40px right of every other section's
+          reading edge, the one place the page's funnel of widths wobbled. */}
+      <header className="px-6 pt-24 pb-10 sm:px-10 sm:pt-28 sm:pb-14">
+        <div className="mx-auto w-full max-w-3xl">
+          <p className="tracked mb-5 text-center sm:text-left">{Data.sectionEyebrow}</p>
+          <h2 className="display text-foreground text-balance text-[clamp(1.95rem,3.8vw,2.75rem)] leading-[1.13] tracking-[-0.008em]">
+            {Data.sectionTitle}
+          </h2>
+          <p className="body-italic text-ink-soft mt-7 max-w-[58ch] text-[1.06rem] leading-[1.7]">
+            {Data.sectionDek}
+          </p>
+        </div>
       </header>
 
       {/* Painted prelude flattened to a single image for mobile + reduced-
@@ -367,8 +372,8 @@ function CosmosBody({ onDismissForever, sky }: CosmosProps & { onDismissForever:
         </div>
       </div>
 
-      <footer className="mx-auto max-w-3xl px-6 pt-12 pb-24 sm:px-10 sm:pt-16 sm:pb-28">
-        <p className="marginalia text-center sm:text-left">
+      <footer className="px-6 pt-12 pb-24 sm:px-10 sm:pt-16 sm:pb-28">
+        <p className="marginalia mx-auto w-full max-w-3xl text-center sm:text-left">
           <span aria-hidden="true" className="text-terracotta mr-2">
             ·
           </span>

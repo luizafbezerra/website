@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { MOON_PHASES, moonPhaseAt } from "./moonPhase";
+import { isMoonPhase, MOON_PHASES, moonPhaseAt, moonPhaseCenterFraction } from "./moonPhase";
 
 const SYNODIC_MONTH_MS = 29.530588853 * 24 * 60 * 60 * 1000;
 const REFERENCE_NEW_MOON = new Date(Date.UTC(2000, 0, 6, 18, 14, 0));
@@ -56,5 +56,34 @@ describe("moonPhaseAt", () => {
     expect(MOON_PHASES).toContain(moon.phase);
     expect(moon.fraction).toBeGreaterThanOrEqual(0);
     expect(moon.fraction).toBeLessThan(1);
+  });
+});
+
+describe("isMoonPhase", () => {
+  it("accepts every phase name", () => {
+    for (const phase of MOON_PHASES) {
+      expect(isMoonPhase(phase)).toBe(true);
+    }
+  });
+
+  it("rejects anything that is not one of the eight names", () => {
+    expect(isMoonPhase("")).toBe(false);
+    expect(isMoonPhase("blood")).toBe(false);
+    expect(isMoonPhase("Full")).toBe(false);
+    expect(isMoonPhase("waxing-crescent")).toBe(false);
+  });
+});
+
+describe("moonPhaseCenterFraction", () => {
+  it("round-trips: the centre of each phase reads back as that phase", () => {
+    for (const phase of MOON_PHASES) {
+      const at = atOffset(moonPhaseCenterFraction(phase));
+      expect(moonPhaseAt(at).phase).toBe(phase);
+    }
+  });
+
+  it("centres new at the cycle start and full at its middle", () => {
+    expect(moonPhaseCenterFraction("new")).toBe(0);
+    expect(moonPhaseCenterFraction("full")).toBe(0.5);
   });
 });

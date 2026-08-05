@@ -315,6 +315,59 @@
   }
 
   /* ---------------------------------------------------------------------- */
+  /* A mandala que respira — the mark beside the bio digest (CONCEPT §9.11). */
+  /*                                                                         */
+  /* ±2% on a slow six-second cycle: an ornament with a pulse, subtle enough  */
+  /* to be felt rather than watched. Never labelled a breathing exercise —    */
+  /* no instructions, no timer — and perfectly still under reduced motion.    */
+  /* ---------------------------------------------------------------------- */
+  @media (prefers-reduced-motion: no-preference) {
+    .mandala-respira {
+      animation: mandala-respira 6s ease-in-out infinite;
+    }
+
+    @keyframes mandala-respira {
+      50% {
+        scale: 1.02;
+      }
+    }
+  }
+
+  /* ---------------------------------------------------------------------- */
+  /* Como é começar — the beats ink in, one after the other (home §8).       */
+  /*                                                                         */
+  /* Scroll-scrubbed, not time-fired: the stagger is the I→II→III sequence    */
+  /* made visible. Progressive enhancement only — browsers without            */
+  /* scroll-driven animations, and readers who prefer reduced motion, get     */
+  /* the beats already on the page (the keyframe animates *from* hidden, so   */
+  /* without a timeline nothing is ever hidden).                              */
+  /* ---------------------------------------------------------------------- */
+  @media (prefers-reduced-motion: no-preference) {
+    @supports ((animation-timeline: view()) and (animation-range: entry)) {
+      .beat-reveal {
+        animation: beat-ink auto ease-out backwards;
+        animation-timeline: view();
+        animation-range: entry 10% entry 55%;
+      }
+
+      .beat-reveal:nth-child(2) {
+        animation-range: entry 25% entry 70%;
+      }
+
+      .beat-reveal:nth-child(3) {
+        animation-range: entry 40% entry 85%;
+      }
+
+      @keyframes beat-ink {
+        from {
+          opacity: 0;
+          translate: 0 0.75rem;
+        }
+      }
+    }
+  }
+
+  /* ---------------------------------------------------------------------- */
   /* Instagram bridge — the floating prints (home §3).                       */
   /*                                                                         */
   /* The latest posts hang like small framed prints around the one on the    */

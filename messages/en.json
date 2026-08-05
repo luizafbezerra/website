@@ -101,8 +101,7 @@
       "binding": "{clinic} is the online analytical-psychology practice of {name}.",
       "plateCredits": "Paintings in the public domain, provenance verified.",
       "rights": "© {year} {name}",
-      "moon": "under the {phase} of {month}",
-      "moonSlot": "the painted moon — {phase}"
+      "moon": "under the {phase} of {month}"
     },
     "moonPhase": {
       "new": "new moon",
@@ -171,6 +170,15 @@
       "fallbackHeading": "One painting, up close",
       "platePlaceholder": "A high-resolution canvas, travelled from top to bottom.",
       "platePlaceholderNote": "The chosen painting arrives through the admin panel."
+    },
+    "brasilExterior": {
+      "horasAria": "Local times right now",
+      "cities": {
+        "brasilia": "Bras\u00edlia",
+        "lisboa": "Lisbon",
+        "londres": "London",
+        "novaYork": "New York"
+      }
     },
     "contato": {
       "orByEmail": "or by email —",

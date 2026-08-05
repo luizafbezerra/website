@@ -123,16 +123,18 @@ list so they can never disagree.
 │                       Orientação profissional — with the boundary sentence
 ├── 5  O sintoma        approach digest: the symptom as a call + rotating Jung
 │      como chamado     passage → /analise
-├── 6  Cosmos           ★ wow (desktop) · on phones, a designed substitute — one
-│                       painting as a scroll-cinema (§9.1) — never a hidden hole
-├── 7  Sobre digest     4 lines + the origin-story hook → /sobre
-├── 8  Brasil e         short band: Portugal · Inglaterra · EUA · pt/en
+├── 6  Sobre digest     4 lines + the origin-story hook → /sobre
+├── 7  Brasil e         short band: Portugal · Inglaterra · EUA · pt/en
 │      exterior         → /internacional
-├── 9  Como é começar   3 beats, ~80 words → /primeira-conversa
-├── 10 Vozes            testimonials — mix curated across both services + at least
+├── 8  Como é começar   3 beats, ~80 words → /primeira-conversa
+├── 9  Vozes            testimonials — mix curated across both services + at least
 │                       one voice from abroad (all consent-gated; hides at zero)
-└── 11 Contato          WhatsApp · email · availability state · response window
-                        (times anchored to horário de Brasília)
+├── 10 Contato          WhatsApp · email · availability state · response window
+│                       (times anchored to horário de Brasília)
+└── 11 Cosmos           ★ wow (desktop) — the page's farewell, after the ask, so
+                        it never sits between a visitor and the CTA · on phones,
+                        a designed substitute — one painting as a scroll-cinema
+                        (§9.1) — never a hidden hole
 
 /analise                A ANÁLISE      (the approach page — for análise, the
 │                       approach IS the product)

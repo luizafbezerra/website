@@ -35,9 +35,12 @@ export const revalidate = 3600;
  *
  * The order is the page's argument, and it is fixed in code rather than
  * configured: recognition, then credentials, then her world, then the two doors,
- * then the approach, the wow, the person, the reach, the process, the voices,
- * and only then the ask. A CMS that could reorder this could break the one thing
- * the page does.
+ * then the approach, the person, the reach, the process, the voices, the ask —
+ * and only then the wow. The Cosmos closes the page rather than interrupting it:
+ * a visitor deciding whether to write never has to cross a scroll-pinned scene
+ * to reach the ask, and the one who lingers past it gets the wonder as the
+ * page's farewell. A CMS that could reorder this could break the one thing the
+ * page does.
  *
  * The route stays thin — two domain reads plus the testimonials, then props. The
  * entity graph is emitted once by the shared `(pages)` layout, so only the two
@@ -81,12 +84,12 @@ export default async function Home({ params }: HomeProps) {
       <InstagramBridge clinica={clinica} content={inicio.instagram} posts={instagramPosts} />
       <DoisCaminhos content={inicio.doisCaminhos} />
       <OSintoma clinica={clinica} content={inicio.oSintoma} at={renderedAt} />
-      <WowSlot content={inicio.cosmos} />
       <SobreDigest content={inicio.sobreDigest} />
       <BrasilExterior content={inicio.brasilExterior} />
       <ComoComecar content={inicio.comoComecar} />
       <Vozes testimonials={testimonials} content={inicio.vozes} />
       <Contato clinica={clinica} content={inicio.contato} />
+      <WowSlot content={inicio.cosmos} />
     </>
   );
 }

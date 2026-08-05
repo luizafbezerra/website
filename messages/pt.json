@@ -101,8 +101,7 @@
       "binding": "{clinic} é a clínica de psicologia analítica on-line de {name}.",
       "plateCredits": "Pinturas de domínio público, com proveniência verificada.",
       "rights": "© {year} {name}",
-      "moon": "sob {phase} de {month}",
-      "moonSlot": "a lua pintada — {phase}"
+      "moon": "sob {phase} de {month}"
     },
     "moonPhase": {
       "new": "a lua nova",
@@ -171,6 +170,15 @@
       "fallbackHeading": "Uma pintura, de perto",
       "platePlaceholder": "Uma tela em alta resolução, percorrida de cima a baixo.",
       "platePlaceholderNote": "A pintura escolhida entra aqui pelo painel."
+    },
+    "brasilExterior": {
+      "horasAria": "Horários locais agora",
+      "cities": {
+        "brasilia": "Brasília",
+        "lisboa": "Lisboa",
+        "londres": "Londres",
+        "novaYork": "Nova York"
+      }
     },
     "contato": {
       "orByEmail": "ou por e-mail —",

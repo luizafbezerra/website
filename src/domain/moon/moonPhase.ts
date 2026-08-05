@@ -28,6 +28,15 @@ export const MOON_PHASES = [
 
 export type MoonPhase = (typeof MOON_PHASES)[number];
 
+export function isMoonPhase(value: string): value is MoonPhase {
+  return (MOON_PHASES as readonly string[]).includes(value);
+}
+
+/** The point in the cycle a phase name is centred on: 0 for new, 0.5 for full. */
+export function moonPhaseCenterFraction(phase: MoonPhase): number {
+  return MOON_PHASES.indexOf(phase) / MOON_PHASES.length;
+}
+
 export type MoonState = {
   phase: MoonPhase;
   /** Position in the cycle: 0 is new, 0.5 is full. */

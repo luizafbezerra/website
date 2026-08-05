@@ -4,6 +4,7 @@ import { SectionHeading } from "@/view/general/SectionHeading";
 import { SectionLink } from "@/view/general/SectionLink";
 import type { ComponentProps } from "react";
 import { Link } from "@/i18n/navigation";
+import { cn } from "@/view/styling/cn";
 
 /**
  * Section 4 of CONCEPT §6 — the two doors of §4, side by side, and the sentence
@@ -53,12 +54,19 @@ function DoorColumn({
   className?: string;
 }) {
   return (
-    <div className={className}>
-      <h3 className="display text-foreground text-[clamp(1.45rem,2.4vw,1.85rem)] leading-[1.2] text-balance">
+    <div className={cn("flex flex-col", className)}>
+      {/* min-h reserves room for a two-line title so the shorter "Análise"
+          heading doesn't leave its body paragraph sitting higher than the
+          longer door's — both columns' prose stays flush across the rule. */}
+      <h3 className="display text-foreground min-h-[2.4em] text-[clamp(1.45rem,2.4vw,1.85rem)] leading-[1.2] text-balance">
         {door.title}
       </h3>
       <p className="body-prose text-ink mt-5">{door.body}</p>
-      <SectionLink href={href} className="mt-7">
+      {/* mt-auto lands both doors' links on one baseline when the grid
+          stretches the columns to equal height; stacked, it resolves to zero
+          and pt-7 alone keeps the interval. `self-start` preserves the link's
+          hitbox at its text width against the column's stretch. */}
+      <SectionLink href={href} className="mt-auto self-start pt-7">
         {door.linkLabel}
       </SectionLink>
     </div>

@@ -9,10 +9,11 @@ import { SectionHeading } from "@/view/general/SectionHeading";
 import { SectionLink } from "@/view/general/SectionLink";
 
 /**
- * Section 11 of CONCEPT §6 — the close. The one place on this page where the
- * WhatsApp block is the loudest thing on screen, and it earns that by arriving
- * last: the conversation is the reward for a calm read, never a demand made over
- * one (REQ-004).
+ * Section 10 of CONCEPT §6 — the close of the argument. The one place on this
+ * page where the WhatsApp block is the loudest thing on screen, and it earns
+ * that by arriving after the whole read: the conversation is the reward for a
+ * calm read, never a demand made over one (REQ-004). Only the Cosmos — the
+ * farewell, not the argument — sits below it.
  *
  * The availability line sits with it rather than in the margin. DESIGN's
  * Marginalia-Is-Voice rule keeps operational facts out of decorative small type,

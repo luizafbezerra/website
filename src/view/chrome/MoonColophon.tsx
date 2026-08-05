@@ -1,23 +1,27 @@
+"use client";
+
 import Image from "next/image";
 import { useFormatter, useTranslations } from "next-intl";
-import { type MoonPhase, moonPhaseAt } from "@/domain/moon/moonPhase";
-import { MediaPlaceholder } from "@/view/general/MediaPlaceholder";
+import { useEffect, useState } from "react";
+import { isMoonPhase, type MoonPhase, moonPhaseAt } from "@/domain/moon/moonPhase";
+import { MoonGlyph } from "@/view/chrome/MoonGlyph";
 import { cn } from "@/view/styling/cn";
 
 /**
- * A lua no colofão (CONCEPT §9.4): eight small painted moon plates, of which the
- * footer shows tonight's. Books of hours tracked the moon; this gives every page
- * a heartbeat for the cost of arithmetic.
+ * A lua no colofão (CONCEPT §9.4): the footer shows tonight's moon. Books of
+ * hours tracked the moon; this gives every page a heartbeat for the cost of
+ * arithmetic.
  *
  * Deliberately discrete and far from any call to action — it is a colophon
  * ornament, not a nudge. The phase name is the ornament's whole payload; nothing
  * about it reads the visitor.
  *
- * The eight slots exist now and hold labeled placeholders until the plates are
- * painted (REQ-005). Filling `MOON_PLATES` is the only change needed then.
+ * Until the eight painted plates exist (REQ-005) the phase is drawn as a small
+ * engraved diagram (MoonGlyph). Filling `MOON_PLATES` is the only change needed
+ * when the paintings land.
  */
 
-const MOON_PLATE_SIZE_PX = 40;
+const MOON_SIZE_PX = 28;
 
 /** One painted plate per phase. Null until the paintings exist. */
 const MOON_PLATES: Record<MoonPhase, string | null> = {
@@ -32,6 +36,23 @@ const MOON_PLATES: Record<MoonPhase, string | null> = {
 };
 
 /**
+ * A `?moon=<phase>` query override for eyeballing all eight states — read after
+ * hydration, so the statically rendered page stays byte-identical without it.
+ * It swaps glyph and label together; only the month stays real. A picture the
+ * visitor asked for, never a reading of the visitor.
+ */
+function useForcedMoonPhase(): MoonPhase | null {
+  const [forced, setForced] = useState<MoonPhase | null>(null);
+
+  useEffect(() => {
+    const requested = new URLSearchParams(window.location.search).get("moon");
+    setForced(requested !== null && isMoonPhase(requested) ? requested : null);
+  }, []);
+
+  return forced;
+}
+
+/**
  * `at` is the render time: statically rendered pages carry the phase of their
  * last revalidation, which is well inside the ~3.7 days each name covers.
  */
@@ -40,7 +61,8 @@ export function MoonColophon({ at, className }: { at: Date; className?: string }
   const phaseName = useTranslations("chrome.moonPhase");
   const format = useFormatter();
 
-  const { phase } = moonPhaseAt(at);
+  const forcedPhase = useForcedMoonPhase();
+  const phase = forcedPhase ?? moonPhaseAt(at).phase;
   const name = phaseName(phase);
   const plate = MOON_PLATES[phase];
 
@@ -50,17 +72,12 @@ export function MoonColophon({ at, className }: { at: Date; className?: string }
         <Image
           src={plate}
           alt=""
-          width={MOON_PLATE_SIZE_PX}
-          height={MOON_PLATE_SIZE_PX}
+          width={MOON_SIZE_PX}
+          height={MOON_SIZE_PX}
           className="shrink-0 select-none"
         />
       ) : (
-        <MediaPlaceholder
-          size="compact"
-          aspectRatio="1 / 1"
-          description={t("moonSlot", { phase: name })}
-          className="w-10 shrink-0"
-        />
+        <MoonGlyph phase={phase} size={MOON_SIZE_PX} />
       )}
       <span>{t("moon", { phase: name, month: format.dateTime(at, { month: "long" }) })}</span>
     </p>

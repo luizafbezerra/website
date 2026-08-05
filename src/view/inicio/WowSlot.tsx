@@ -7,8 +7,10 @@ import { Cosmos } from "@/view/cosmos/Cosmos";
 import { Lamina } from "./Lamina";
 
 /**
- * Section 6 of CONCEPT §6 — the page's one wow, and the boundary that decides
- * which one it is.
+ * Section 11 of CONCEPT §6 — the page's one wow, and the boundary that decides
+ * which one it is. It closes the page, after the ask: the visitor deciding
+ * whether to write never crosses a scroll-pinned scene on the way to the CTA,
+ * and the one who stays past it leaves through wonder.
  *
  * The Cosmos owns the slot where there is room and motion is welcome; everywhere
  * else A Lâmina does. The rule DESIGN sets is that a desktop-only set-piece gets

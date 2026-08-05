@@ -21,11 +21,12 @@ import { LanguageToggle } from "./LanguageToggle";
  * exist. Perguntas and Internacional are deliberately absent: they belong in the
  * footer and wherever the doubt actually occurs.
  *
- * The WhatsApp item is distinguished by a hairline terracotta frame rather than
- * a solid block. It has to read as the terminal action (DESIGN, Navigation), but
- * a filled CTA riding a fixed header is a sticky CTA, which the site bans
- * outright — the solid terracotta block belongs in the flow of a page, at the
- * end of a thought.
+ * The WhatsApp item carries the primary-button voice (DESIGN, Navigation) — a
+ * solid terracotta-deep chip, distinct from the nav links around it. This is
+ * not the banned sticky CTA: that ban is about a CTA that rides the viewport
+ * outside the page flow (a floating bubble, a bar pinned over content); this
+ * is a small item inside the header's own static height, on-screen only when
+ * the header itself is, exactly like every other nav item beside it.
  */
 
 export async function Header({ clinica, locale }: { clinica: Clinica; locale: Locale }) {
@@ -93,7 +94,7 @@ export async function Header({ clinica, locale }: { clinica: Clinica; locale: Lo
               target="_blank"
               rel="noopener noreferrer"
               aria-label={chrome("whatsapp.aria", { phone: clinica.whatsappDisplay })}
-              className="border-terracotta text-foreground hover:bg-terracotta-deep hover:text-parchment hover:border-terracotta-deep inline-flex items-center gap-2 border px-4 py-2 no-underline transition-colors"
+              className="bg-terracotta-deep hover:bg-foreground text-parchment inline-flex items-center gap-2 px-4 py-2 no-underline transition-colors"
             >
               <WhatsAppGlyph className="h-[1.1em] w-[1.1em] -translate-y-px" />
               <span className="display-italic">WhatsApp</span>

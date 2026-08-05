@@ -65,11 +65,11 @@ export function WhatsAppCta({
       rel="noopener noreferrer"
       aria-label={ariaLabel}
       className={cn(
-        "bg-terracotta-deep hover:bg-foreground text-parchment group inline-flex items-baseline gap-3 px-7 py-4 no-underline transition-colors",
+        "bg-terracotta-deep hover:bg-foreground text-parchment group inline-flex items-center gap-3 px-7 py-4 no-underline transition-colors",
         className,
       )}
     >
-      <WhatsAppGlyph className="h-[1.05em] w-[1.05em] -translate-y-px" />
+      <WhatsAppGlyph className="h-[1.05em] w-[1.05em]" />
       <span className="display-italic">{text}</span>
       <span aria-hidden="true" className="transition-transform group-hover:translate-x-0.5">
         →

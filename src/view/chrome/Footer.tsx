@@ -122,8 +122,6 @@ export async function Footer({ clinica, locale }: { clinica: Clinica; locale: Lo
                 year: renderedAt.getFullYear(),
                 name: clinica.fullName,
               })}
-              {" · "}
-              {chrome("colophon.plateCredits")}
             </span>
             <MoonColophon at={renderedAt} />
           </div>

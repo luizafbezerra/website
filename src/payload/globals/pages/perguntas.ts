@@ -78,7 +78,7 @@ export const PagePerguntas: GlobalConfig = {
           name: "plate",
           label: "A pintura",
           description:
-            "Uma pintura no meio da leitura — o respiro entre as seções sobre o trabalho e as seções sobre como ele funciona. Domínio público, com proveniência verificada.",
+            "Uma pintura ao fim das perguntas — o respiro depois da última resposta, antes do convite para escrever. Domínio público, com proveniência verificada.",
           fields: [
             mediaSlot({
               name: "image",

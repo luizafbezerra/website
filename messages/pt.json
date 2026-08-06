@@ -220,7 +220,7 @@
   },
   "perguntas": {
     "plate": {
-      "placeholder": "Uma pintura para o meio da leitura.",
+      "placeholder": "Uma pintura para fechar a página, depois da última resposta.",
       "placeholderNote": "A obra escolhida entra aqui pelo painel, com pintor, título e ano."
     }
   },

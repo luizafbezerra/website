@@ -35,12 +35,21 @@ import { useMotionAllowed } from "@/view/general/useMotionAllowed";
 // exact pixels (Áries at ~4 o'clock, the annulus between radii 142 and 325 of a
 // 690 viewBox). A different painting uploaded into the same slot would silently
 // misalign all twelve sectors, so the asset is versioned with the code that
-// measures it. Replacing it means recalibrating the geometry.
+// measures it. Replacing it means recalibrating the geometry. Re-encoding it at
+// the same proportions does not: the geometry is viewBox-relative, so the 1024px
+// WebP below is the same painting at 39% of the original scan's bytes.
 // ---------------------------------------------------------------------------
 
-const WHEEL_SRC = "/art/wheel.jpg";
+const WHEEL_SRC = "/art/wheel.webp";
 const PANEL_ID = "mandala-detail";
 const tabId = (id: ZodiacSignId) => `mandala-sign-${id}`;
+
+/**
+ * How much of the panel has to be on screen for an activation to have visibly
+ * answered. Below this the wheel is scrolled up to bring the pair into view —
+ * see the effect that uses it.
+ */
+const PANEL_REVEAL_MIN_PX = 200;
 
 /**
  * The sectors, prepared once at module load.
@@ -78,10 +87,30 @@ export function MandalaWheel({ readings }: { readings: Record<ZodiacSignId, Sign
   const [turnedId, setTurnedId] = useState<ZodiacSignId | null>(null);
   const [rotationDeg, setRotationDeg] = useState(0);
   const tablistRef = useRef<SVGGElement>(null);
+  const wheelRef = useRef<HTMLDivElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const target = turnedId ? (SECTORS.find((s) => s.id === turnedId)?.rotation ?? 0) : 0;
     setRotationDeg((prev) => prev + shortestRotationDelta(prev, target));
+  }, [turnedId]);
+
+  // Where the panel sits beside the wheel there is nothing to do; where it sits
+  // *below* it — every viewport narrower than `lg` — a tap can put the answer it
+  // asked for entirely off screen, and the only feedback left on screen is the
+  // turn itself. So bring the pair into view together, scrolling to the wheel
+  // rather than to the panel: the chosen figure stays visible above what it is
+  // saying. Only an explicit activation does this, never a passing cursor.
+  //
+  // `scroll-padding-top` clears the sticky header and `prefers-reduced-motion`
+  // turns the animation off, both from `globals.css` — the platform owns the
+  // offset and whether this glides or jumps.
+  useEffect(() => {
+    if (!turnedId) return;
+    const panel = panelRef.current;
+    if (!panel) return;
+    if (window.innerHeight - panel.getBoundingClientRect().top >= PANEL_REVEAL_MIN_PX) return;
+    wheelRef.current?.scrollIntoView({ block: "start" });
   }, [turnedId]);
 
   useEffect(() => {
@@ -176,7 +205,7 @@ export function MandalaWheel({ readings }: { readings: Record<ZodiacSignId, Sign
 
   return (
     <div className="mt-14 grid items-start gap-12 lg:mt-20 lg:grid-cols-[minmax(0,22rem)_1fr] lg:gap-16">
-      <div className="mx-auto w-[min(24rem,86vw)] lg:mx-0 lg:w-full">
+      <div ref={wheelRef} className="mx-auto w-[min(24rem,86vw)] lg:mx-0 lg:w-full">
         <div
           className="relative aspect-square w-full transition-transform duration-[600ms] ease-[cubic-bezier(0.3,0,0.2,1)] motion-reduce:transition-none"
           style={{
@@ -277,6 +306,7 @@ export function MandalaWheel({ readings }: { readings: Record<ZodiacSignId, Sign
           the wheel into what the wheel is showing them. The focus ring is the
           site-wide `:focus-visible` rule in `globals.css`, not a local override. */}
       <div
+        ref={panelRef}
         id={PANEL_ID}
         role="tabpanel"
         data-wheel-panel

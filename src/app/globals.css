@@ -81,6 +81,12 @@
     color-scheme: light;
     scroll-behavior: smooth;
     scroll-padding-top: 5.5rem;
+    /* Lets a height transition end on `auto` instead of a measured pixel value,
+       which is what makes /perguntas' disclosures open smoothly without
+       JavaScript measuring anything. Off by default for backwards
+       compatibility; opting in changes nothing until a transition asks for a
+       keyword. */
+    interpolate-size: allow-keywords;
     font-size: 100%;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
@@ -470,6 +476,69 @@
 
     .instagram-caption-swap > * {
       animation: none;
+    }
+  }
+
+  /* ---------------------------------------------------------------------- */
+  /* Perguntas — each question a disclosure that opens onto its answer.      */
+  /*                                                                         */
+  /* Native <details>, and the reason is not convenience. The answers stay    */
+  /* in the document: find-in-page reveals the match and opens the question   */
+  /* around it, a fragment link opens its own question on arrival, and a      */
+  /* crawler reads all sixteen answers without running anything. A            */
+  /* JavaScript accordion built on conditional rendering gives up all three.  */
+  /*                                                                         */
+  /* The height transition is CSS alone — no measuring, no client component.  */
+  /* `interpolate-size` on the root (see @layer base) is what lets            */
+  /* `block-size` land on `auto`, and `content-visibility` is transitioned    */
+  /* with `allow-discrete` so the content stays rendered for the length of    */
+  /* the close instead of vanishing on the first frame. Browsers without      */
+  /* ::details-content discard these two rules entirely and toggle instantly: */
+  /* the correct fallback, since nothing is hidden — only the easing is.      */
+  /* ---------------------------------------------------------------------- */
+  .pergunta-summary {
+    list-style: none;
+    cursor: pointer;
+  }
+
+  .pergunta-summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .pergunta::details-content {
+    block-size: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition:
+      block-size 300ms cubic-bezier(0.22, 1, 0.36, 1),
+      opacity 200ms ease-out,
+      content-visibility 300ms allow-discrete;
+  }
+
+  .pergunta[open]::details-content {
+    block-size: auto;
+    opacity: 1;
+  }
+
+  /* The scribe's mark. Closed it is a hairline cross; opening turns the stem
+     down onto the bar, so an open question is marked by a single stroke drawn
+     by the same hand. One moving part, no icon swap. */
+  .pergunta-mark-stem {
+    transform-box: view-box;
+    transform-origin: 50% 50%;
+    transition: rotate 300ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .pergunta[open] .pergunta-mark-stem {
+    rotate: 90deg;
+  }
+
+  /* The answer still arrives and the mark still turns — they just do not
+     travel (CON-007). */
+  @media (prefers-reduced-motion: reduce) {
+    .pergunta::details-content,
+    .pergunta-mark-stem {
+      transition: none;
     }
   }
 

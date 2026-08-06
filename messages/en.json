@@ -220,7 +220,7 @@
   },
   "perguntas": {
     "plate": {
-      "placeholder": "A painting for the middle of the read.",
+      "placeholder": "A painting to close the page, after the last answer.",
       "placeholderNote": "The chosen work arrives here through the admin, with painter, title and year."
     }
   },

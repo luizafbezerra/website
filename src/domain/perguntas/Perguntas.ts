@@ -37,7 +37,7 @@ export type Perguntas = {
     intro: string;
   };
   sections: Record<FaqCategory, PerguntasSection>;
-  /** The page's one plate, taken at the breath in the middle of the scroll. */
+  /** The page's one plate, after the last answer — the painting closes the page. */
   plate: PagePlate;
   fecho: {
     heading: string;
@@ -52,7 +52,8 @@ export const PERGUNTAS_DEFAULTS: Perguntas = {
     heading: "Perguntas frequentes",
     // The page's complete answer, in the first screen (REQ-006): which two works
     // the questions are about, in what format, in which languages, and from where
-    // somebody may be reading. The credential strip under it answers "who".
+    // somebody may be reading. It carries this alone — the page prints no
+    // credential strip, and the questions under it are closed until asked.
     intro:
       "As dúvidas que mais chegam antes de uma primeira conversa — sobre a análise junguiana, sobre a orientação profissional e de carreira, e sobre como o atendimento funciona: on-line, uma vez por semana, em português ou em inglês, para todo o Brasil e para quem mora no exterior.",
   },

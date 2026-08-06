@@ -29,7 +29,9 @@ export function HeaderMobileNav({
   const [open, setOpen] = useState<boolean>(false);
   const drawerRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
   const titleId = useId();
+  const dialogId = useId();
 
   useEffect(() => {
     if (!open) return;
@@ -68,16 +70,22 @@ export function HeaderMobileNav({
     return () => {
       window.removeEventListener("keydown", onKey);
       document.body.style.overflow = previousOverflow;
+      // Hand the keyboard back to the button that opened the drawer. Letting
+      // focus fall to `<body>` instead — which is what closing did before —
+      // makes a keyboard visitor re-tab the whole document to get anywhere
+      // (WCAG 2.4.3), and it is silent: nothing on screen says it happened.
+      triggerRef.current?.focus({ preventScroll: true });
     };
   }, [open]);
 
   return (
     <>
       <button
+        ref={triggerRef}
         type="button"
         onClick={() => setOpen(true)}
         aria-expanded={open}
-        aria-controls={titleId}
+        aria-controls={dialogId}
         aria-label={t("nav.open")}
         className="text-foreground hover:text-terracotta focus-visible:ring-terracotta focus-visible:ring-offset-parchment inline-flex h-11 w-11 items-center justify-center rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 lg:hidden"
       >
@@ -90,6 +98,7 @@ export function HeaderMobileNav({
 
       {open && (
         <div
+          id={dialogId}
           className="fixed inset-0 z-40 lg:hidden"
           role="dialog"
           aria-modal="true"

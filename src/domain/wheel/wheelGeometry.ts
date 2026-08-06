@@ -1,4 +1,4 @@
-// Calibration for the painted wheel at /art/wheel.jpg.
+// Calibration for the painted wheel at /art/wheel.webp.
 // In the painting Áries (the ram) sits at roughly the 4 o'clock position,
 // which is +30° in SVG coordinates (0° = east, +y = south).
 // The twelve signs progress counter-clockwise from there, so the painted

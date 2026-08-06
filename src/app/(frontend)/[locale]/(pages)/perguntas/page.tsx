@@ -7,7 +7,6 @@ import { getPerguntas } from "@/domain/perguntas/getPerguntas";
 import type { Locale } from "@/domain/site/Locale";
 import { pagePath } from "@/domain/site/pagePath";
 import { absoluteUrl } from "@/infrastructure/env/baseUrl";
-import { Credencial } from "@/view/general/Credencial";
 import { Abertura } from "@/view/perguntas/Abertura";
 import { Fecho } from "@/view/perguntas/Fecho";
 import { Secoes } from "@/view/perguntas/Secoes";
@@ -68,11 +67,13 @@ export default async function PerguntasPage({ params }: PerguntasProps) {
       />
 
       <Abertura content={page.abertura} />
-      {/* `column`, not the default `wide`: this page opens on a reading column
-          rather than on Início's two-column spread, and the strip has to start
-          where the `h1` above it does. It earns its place because a cold searcher
-          arriving from a FAQ rich result may never see another page of the site. */}
-      <Credencial clinica={clinica} width="column" />
+      {/* No credential strip. DESIGN reserves the full band for Início and /sobre —
+          the two pages whose job is verification — and this one's job is to answer
+          a doubt: a strip of facts between the opening and the first question is a
+          band of things the visitor did not come here to read. What it answered for
+          the cold searcher survives without it: the opening states the format,
+          languages and reach, and the footer's colophon binds the clinic to her name
+          and CRP on every page. */}
       <Secoes sections={sections} headings={page.sections} plate={page.plate} />
       <Fecho clinica={clinica} content={page.fecho} />
     </>

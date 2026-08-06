@@ -1,4 +1,5 @@
 import type { Sobre } from "@/domain/sobre/Sobre";
+import { PageOpening } from "@/view/general/PageOpening";
 import { RichTextProse } from "@/view/general/RichTextProse";
 
 /**
@@ -22,23 +23,18 @@ import { RichTextProse } from "@/view/general/RichTextProse";
  */
 export function Abertura({ content }: { content: Sobre["abertura"] }) {
   return (
-    <section
-      aria-labelledby="abertura-heading"
-      className="px-6 pt-32 pb-16 sm:px-10 sm:pt-36 sm:pb-20 lg:pt-40"
-    >
-      <div className="mx-auto w-full max-w-3xl">
-        <h1
-          id="abertura-heading"
-          className="display text-foreground text-[clamp(2rem,4vw,3.1rem)] leading-[1.12] tracking-[-0.005em] text-balance"
-        >
-          {content.heading}
-        </h1>
+    <PageOpening labelledBy="abertura-heading">
+      <h1
+        id="abertura-heading"
+        className="display text-foreground text-[clamp(2rem,4vw,3.1rem)] leading-[1.12] tracking-[-0.005em] text-balance"
+      >
+        {content.heading}
+      </h1>
 
-        <RichTextProse
-          data={content.lead}
-          className="body-prose dropcap text-ink mt-10 max-w-[62ch]"
-        />
-      </div>
-    </section>
+      <RichTextProse
+        data={content.lead}
+        className="body-prose dropcap text-ink mt-10 max-w-[62ch]"
+      />
+    </PageOpening>
   );
 }

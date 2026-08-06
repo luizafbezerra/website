@@ -1,4 +1,5 @@
 import type { Perguntas } from "@/domain/perguntas/Perguntas";
+import { PageOpening } from "@/view/general/PageOpening";
 
 /**
  * The page's opening — its one `h1`, one paragraph, and the page's single drop cap.
@@ -7,8 +8,9 @@ import type { Perguntas } from "@/domain/perguntas/Perguntas";
  * heading, so `/en/questions` printed Portuguese and the document had no `h1` at
  * all. The paragraph is the whole AEO front-load (REQ-006): which two works the
  * questions are about, in what format, at what rhythm, in which languages, and
- * from where somebody may be reading. The credential strip directly under it
- * answers the remaining question, "who will receive me here?".
+ * from where somebody may be reading. It is the page's only prose — the credential
+ * strip that used to sit under it is gone (see the page), so the first question
+ * follows straight after.
  *
  * No tracked-caps eyebrow, and the CMS field for one was removed rather than left
  * unrendered. DESIGN §6 names a kicker over a heading as scaffolding rather than
@@ -22,20 +24,15 @@ import type { Perguntas } from "@/domain/perguntas/Perguntas";
  */
 export function Abertura({ content }: { content: Perguntas["abertura"] }) {
   return (
-    <section
-      aria-labelledby="abertura-heading"
-      className="px-6 pt-32 pb-16 sm:px-10 sm:pt-36 sm:pb-20 lg:pt-40"
-    >
-      <div className="mx-auto w-full max-w-3xl">
-        <h1
-          id="abertura-heading"
-          className="display text-foreground text-[clamp(2rem,4vw,3.1rem)] leading-[1.12] tracking-[-0.005em] text-balance"
-        >
-          {content.heading}
-        </h1>
+    <PageOpening labelledBy="abertura-heading">
+      <h1
+        id="abertura-heading"
+        className="display text-foreground text-[clamp(2rem,4vw,3.1rem)] leading-[1.12] tracking-[-0.005em] text-balance"
+      >
+        {content.heading}
+      </h1>
 
-        <p className="body-prose dropcap text-ink mt-10 max-w-[62ch]">{content.intro}</p>
-      </div>
-    </section>
+      <p className="body-prose dropcap text-ink mt-10 max-w-[62ch]">{content.intro}</p>
+    </PageOpening>
   );
 }

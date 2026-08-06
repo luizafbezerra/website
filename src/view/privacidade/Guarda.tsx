@@ -16,10 +16,14 @@ import { ItemList } from "./ItemList";
  *
  * The section stays on plain parchment. Its counterpart takes the page's one tonal
  * event, because the relief belongs to the longer list.
+ *
+ * A `beat`: three checkable lines answering the section above them. Reading this
+ * page should feel like reading a short document, not like scrolling four
+ * monuments.
  */
 export function Guarda({ content }: { content: Privacidade["guarda"] }) {
   return (
-    <PageSection labelledBy="guarda-heading">
+    <PageSection labelledBy="guarda-heading" pace="beat">
       <SectionHeading id="guarda-heading">{content.heading}</SectionHeading>
       <ItemList items={content.items} className="mt-12" />
     </PageSection>

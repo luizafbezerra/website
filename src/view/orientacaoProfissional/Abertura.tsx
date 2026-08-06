@@ -1,5 +1,6 @@
 import type { Clinica } from "@/domain/clinica/Clinica";
 import type { OrientacaoProfissional } from "@/domain/orientacaoProfissional/OrientacaoProfissional";
+import { PageOpening } from "@/view/general/PageOpening";
 import { RichTextProse } from "@/view/general/RichTextProse";
 import { WhoLine } from "@/view/general/WhoLine";
 
@@ -32,26 +33,20 @@ export function Abertura({
   clinica: Clinica;
 }) {
   return (
-    <section
-      id="abertura"
-      aria-labelledby="abertura-heading"
-      className="px-6 pt-32 pb-16 sm:px-10 sm:pt-36 sm:pb-20 lg:pt-40"
-    >
-      <div className="mx-auto w-full max-w-3xl">
-        <h1
-          id="abertura-heading"
-          className="display text-foreground text-[clamp(2rem,4vw,3.1rem)] leading-[1.12] tracking-[-0.005em] text-balance"
-        >
-          {content.heading}
-        </h1>
+    <PageOpening id="abertura" labelledBy="abertura-heading">
+      <h1
+        id="abertura-heading"
+        className="display text-foreground text-[clamp(2rem,4vw,3.1rem)] leading-[1.12] tracking-[-0.005em] text-balance"
+      >
+        {content.heading}
+      </h1>
 
-        <WhoLine clinica={clinica} className="mt-5" />
+      <WhoLine clinica={clinica} className="mt-5" />
 
-        <RichTextProse
-          data={content.body}
-          className="body-prose dropcap text-ink mt-10 max-w-[62ch]"
-        />
-      </div>
-    </section>
+      <RichTextProse
+        data={content.body}
+        className="body-prose dropcap text-ink mt-10 max-w-[62ch]"
+      />
+    </PageOpening>
   );
 }

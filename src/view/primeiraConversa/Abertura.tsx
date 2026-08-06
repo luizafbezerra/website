@@ -1,6 +1,7 @@
 import { useTranslations } from "next-intl";
 import type { Clinica } from "@/domain/clinica/Clinica";
 import type { PrimeiraConversa } from "@/domain/primeiraConversa/PrimeiraConversa";
+import { PageOpening } from "@/view/general/PageOpening";
 import { RichTextProse } from "@/view/general/RichTextProse";
 import { WhoLine } from "@/view/general/WhoLine";
 import { BILHETE_ANCHOR } from "./bilheteAnchor";
@@ -35,35 +36,30 @@ export function Abertura({
   const t = useTranslations("primeiraConversa");
 
   return (
-    <section
-      aria-labelledby="abertura-heading"
-      className="px-6 pt-32 pb-16 sm:px-10 sm:pt-36 sm:pb-20 lg:pt-40"
-    >
-      <div className="mx-auto w-full max-w-3xl">
-        <h1
-          id="abertura-heading"
-          className="display text-foreground text-[clamp(2rem,4vw,3.1rem)] leading-[1.12] tracking-[-0.005em] text-balance"
+    <PageOpening labelledBy="abertura-heading">
+      <h1
+        id="abertura-heading"
+        className="display text-foreground text-[clamp(2rem,4vw,3.1rem)] leading-[1.12] tracking-[-0.005em] text-balance"
+      >
+        {content.heading}
+      </h1>
+
+      <WhoLine clinica={clinica} className="mt-5" />
+
+      <RichTextProse
+        data={content.lead}
+        className="body-prose dropcap text-ink mt-10 max-w-[62ch]"
+      />
+
+      <p className="mt-10">
+        <a
+          href={`#${BILHETE_ANCHOR}`}
+          className="marginalia text-quill hover:text-terracotta decoration-terracotta/40 hover:decoration-terracotta inline-flex items-baseline gap-2 underline decoration-1 underline-offset-[0.28em] transition-colors"
         >
-          {content.heading}
-        </h1>
-
-        <WhoLine clinica={clinica} className="mt-5" />
-
-        <RichTextProse
-          data={content.lead}
-          className="body-prose dropcap text-ink mt-10 max-w-[62ch]"
-        />
-
-        <p className="mt-10">
-          <a
-            href={`#${BILHETE_ANCHOR}`}
-            className="marginalia text-quill hover:text-terracotta decoration-terracotta/40 hover:decoration-terracotta inline-flex items-baseline gap-2 underline decoration-1 underline-offset-[0.28em] transition-colors"
-          >
-            <span>{t("skipToBilhete")}</span>
-            <span aria-hidden="true">↓</span>
-          </a>
-        </p>
-      </div>
-    </section>
+          <span>{t("skipToBilhete")}</span>
+          <span aria-hidden="true">↓</span>
+        </a>
+      </p>
+    </PageOpening>
   );
 }

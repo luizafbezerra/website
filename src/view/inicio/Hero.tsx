@@ -25,7 +25,13 @@ const PORTRAIT_ASPECT = "4 / 5";
  * rule gives the page ~1.5 mobile screens to show a follower the three
  * signatures of the feed, and the mark is the only one the chrome supplies — so
  * every line here has to earn its height or the Instagram row never crests in
- * time.
+ * time. Its own bottom padding used to work against that, being a step *wider*
+ * than every other page's opening; it now carries `PageOpening`'s bottom scale,
+ * which is the tightest measure in the rhythm, and the credential strip's rules
+ * do the separating below it.
+ *
+ * The band is not built from `PageOpening` itself: this opening is a two-column
+ * spread at a wider measure, not the shared reading column.
  *
  * The `h1` carries the clinic name and her name together: it is the one place
  * the "por" lockup is stated at display scale, and it is the page's only `h1`
@@ -38,7 +44,7 @@ export function Hero({ clinica, content }: { clinica: Clinica; content: Inicio["
   return (
     <section
       aria-labelledby="hero-heading"
-      className="px-6 pt-32 pb-16 sm:px-10 sm:pt-36 sm:pb-20 lg:pt-40 lg:pb-24"
+      className="px-6 pt-32 pb-10 sm:px-10 sm:pt-36 sm:pb-12 lg:pt-40 lg:pb-16"
     >
       <div className="mx-auto grid max-w-6xl grid-cols-1 gap-x-16 gap-y-12 lg:grid-cols-[1.5fr_1fr]">
         <div className="lg:col-start-1">

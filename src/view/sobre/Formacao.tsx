@@ -26,10 +26,15 @@ import { SectionHeading } from "@/view/general/SectionHeading";
  * for any of these, and a guessed year on the page whose job is verification is
  * the one mistake this page cannot afford (CONCEPT §11: provenance is never
  * invented — the rule that governs a plate's year governs hers).
+ *
+ * A `beat`, for the same reason the section is cold: the restraint is the
+ * argument, and a record given the monumental interval on both sides would be
+ * making a monument of it. It belongs to the two warm sections it sits between —
+ * they are the ones this page is asking a reader to believe.
  */
 export function Formacao({ content }: { content: Sobre["formacao"] }) {
   return (
-    <PageSection labelledBy="formacao-heading">
+    <PageSection labelledBy="formacao-heading" pace="beat">
       <SectionHeading id="formacao-heading">{content.heading}</SectionHeading>
 
       <ul className="border-rule-soft mt-12 border-t">

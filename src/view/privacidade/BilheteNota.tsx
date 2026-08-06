@@ -18,10 +18,14 @@ import { SectionLink } from "@/view/general/SectionLink";
  *
  * One paragraph, then the way to the page it describes. Nothing here needs a
  * heading of its own or a diagram; the mechanism is small enough to say.
+ *
+ * A `beat`, matching `Guarda`: one paragraph and a link do not carry the interval
+ * a major act carries, and on this page the alternating cadence is what keeps a
+ * compliance notice reading as prose.
  */
 export function BilheteNota({ content }: { content: Privacidade["bilheteNota"] }) {
   return (
-    <PageSection labelledBy="bilhete-nota-heading">
+    <PageSection labelledBy="bilhete-nota-heading" pace="beat">
       <SectionHeading id="bilhete-nota-heading">{content.heading}</SectionHeading>
 
       <p className="body-prose text-ink mt-10 max-w-[62ch]">{content.body}</p>

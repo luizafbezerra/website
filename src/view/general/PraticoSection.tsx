@@ -26,6 +26,13 @@ import { type FeeScope, useFeeRows } from "@/view/general/useFeeRows";
  * "Valores" row in its own list, in the USD/EUR terms §8.9 gives it. Printing the
  * shared note there as well would say the same thing twice on the one page whose
  * subject it is.
+ *
+ * **A beat, not a movement.** Every page that carries this band puts it directly
+ * after the band that explains the work, and it answers that explanation with
+ * what the work costs and how to start. The two belong together, so the band
+ * takes the quicker interval on both sides and the sequence reads as one passage
+ * — the argument arriving at its practical end, rather than a fourth slab in a
+ * row of equal slabs.
  */
 export function PraticoSection({
   id,
@@ -50,13 +57,17 @@ export function PraticoSection({
   const feeRows = useFeeRows(clinica.fees, fees);
 
   return (
-    <PageSection id={id} labelledBy={labelledBy} tone={tone}>
+    <PageSection id={id} labelledBy={labelledBy} tone={tone} pace="beat">
       <SectionHeading id={labelledBy}>{heading}</SectionHeading>
 
       <FactList rows={[...feeRows, ...rows]} className="mt-12" />
 
+      {/* Body scale, like the rows above it: how somebody in Lisbon pays is a
+          fact they act on, and DESIGN's Marginalia-Is-Voice rule keeps those out
+          of small type. It stays `ink-soft` because it is an aside to the price,
+          not a row of the list. */}
       {fees !== "none" && clinica.fees.internationalNote && (
-        <p className="text-ink-soft mt-6 max-w-[54ch] text-sm">{clinica.fees.internationalNote}</p>
+        <p className="text-ink-soft mt-6 max-w-[54ch]">{clinica.fees.internationalNote}</p>
       )}
 
       {children}

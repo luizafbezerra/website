@@ -28,6 +28,10 @@ const SIGNATURE_ASPECT = "5 / 2";
  *
  * Nothing follows this section — no CTA, no second ask. That is CONCEPT §6's own
  * section list, and it is also the point: the page ends the way a letter does.
+ *
+ * A `beat`, because that is what a letter's signature is: it sits under the
+ * closing line rather than standing apart from it, and the footer's own rule does
+ * the separating below.
  */
 export function Assinatura({
   clinica,
@@ -39,7 +43,7 @@ export function Assinatura({
   const t = useTranslations("sobre.assinatura");
 
   return (
-    <PageSection labelledBy="assinatura-line">
+    <PageSection labelledBy="assinatura-line" pace="beat">
       <p
         id="assinatura-line"
         className="display-italic text-ink-soft max-w-[38ch] text-[clamp(1.45rem,2.4vw,1.85rem)] leading-[1.3]"

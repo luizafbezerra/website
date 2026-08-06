@@ -8,33 +8,37 @@ import { analiseFromPayload } from "./analiseFromPayload";
 const upload = (url: string, alt = "uma pintura") => ({ url, alt, width: 1400, height: 1000 });
 
 describe("analiseFromPayload", () => {
-  it("maps an untouched global to the defaults, except the motif that gates its section", () => {
+  it("maps an untouched global to the defaults, except the parallels' launch state", () => {
     expect(analiseFromPayload({})).toEqual({
       ...ANALISE_DEFAULTS,
-      sonhoAmpliado: { ...ANALISE_DEFAULTS.sonhoAmpliado, motif: null, parallels: [] },
+      // The one deliberate disagreement: the defaults carry three labeled rows
+      // for the seed to write, but the mapper reads an absent array literally —
+      // a parallel with nothing to read does not render.
+      sonhoAmpliado: { ...ANALISE_DEFAULTS.sonhoAmpliado, parallels: [] },
     });
-    // Everything else agrees field for field, so a page rendered from a blank
-    // document and a page rendered with Payload off read the same.
-    expect(analiseFromPayload({}).oQueTrazem).toEqual(ANALISE_DEFAULTS.oQueTrazem);
-    expect(analiseFromPayload({}).pratico).toEqual(ANALISE_DEFAULTS.pratico);
+    // A page rendered from a blank document and a page rendered with Payload
+    // off read the same — including Sonho ampliado, whose default motif is null
+    // (the section waits for her words everywhere).
+    expect(analiseFromPayload({}).sonhoAmpliado.motif).toBeNull();
   });
 
   it("treats a cleared field as an absence, not as a value", () => {
     const doc: PayloadPageAnalise = {
       abertura: { heading: "   " },
-      oMetodo: { closingLine: "" },
+      oMetodo: { closingLine: "", toolsLine: "  " },
       mandala: { intro: "  " },
       oQueTrazem: { linkLabel: " " },
-      paraComecar: { body: "\n" },
+      pratico: { comecar: { body: "\n" } },
     };
 
     const page = analiseFromPayload(doc);
 
     expect(page.abertura.heading).toBe(ANALISE_DEFAULTS.abertura.heading);
     expect(page.oMetodo.closingLine).toBe(ANALISE_DEFAULTS.oMetodo.closingLine);
+    expect(page.oMetodo.toolsLine).toBe(ANALISE_DEFAULTS.oMetodo.toolsLine);
     expect(page.mandala.intro).toBe(ANALISE_DEFAULTS.mandala.intro);
     expect(page.oQueTrazem.linkLabel).toBe(ANALISE_DEFAULTS.oQueTrazem.linkLabel);
-    expect(page.paraComecar.body).toBe(ANALISE_DEFAULTS.paraComecar.body);
+    expect(page.pratico.comecar.body).toBe(ANALISE_DEFAULTS.pratico.comecar.body);
   });
 
   it("falls back on rich text that Lexical left with no paragraphs", () => {
@@ -42,51 +46,39 @@ describe("analiseFromPayload", () => {
 
     const page = analiseFromPayload({
       abertura: { body: emptied },
-      aVisao: { body: emptied },
-      oQueTrazem: { intro: emptied },
+      oMetodo: { body: emptied, individuacao: emptied },
     });
 
     expect(page.abertura.body).toBe(ANALISE_DEFAULTS.abertura.body);
-    expect(page.aVisao.body).toBe(ANALISE_DEFAULTS.aVisao.body);
     // Her five paragraphs. An emptied editor state must never delete them.
-    expect(page.oQueTrazem.intro).toBe(ANALISE_DEFAULTS.oQueTrazem.intro);
+    expect(page.oMetodo.body).toBe(ANALISE_DEFAULTS.oMetodo.body);
+    expect(page.oMetodo.individuacao).toBe(ANALISE_DEFAULTS.oMetodo.individuacao);
   });
 
   it("keeps her wording section by section when she has written it", () => {
     const page = analiseFromPayload({
       abertura: { heading: "A análise" },
-      pratico: { heading: "O combinado" },
+      pratico: { heading: "O combinado", comecar: { body: "Me escreva." } },
     });
 
     expect(page.abertura.heading).toBe("A análise");
     expect(page.pratico.heading).toBe("O combinado");
+    expect(page.pratico.comecar.body).toBe("Me escreva.");
     // Untouched siblings still fall back.
-    expect(page.aVisao.heading).toBe(ANALISE_DEFAULTS.aVisao.heading);
+    expect(page.oMetodo.heading).toBe(ANALISE_DEFAULTS.oMetodo.heading);
+    expect(page.pratico.comecar.linkLabel).toBe(ANALISE_DEFAULTS.pratico.comecar.linkLabel);
   });
 
-  // Payload materializes an untouched array as `[]`. The three arrays belonging
+  // Payload materializes an untouched array as `[]`. The two arrays belonging
   // to sections CONCEPT §6 requires read that as un-edited; `parallels` does not.
   it("falls back on the required sections' empty arrays", () => {
     const page = analiseFromPayload({
-      oMetodo: { tools: [] },
       oQueTrazem: { pillars: [] },
       pratico: { items: [] },
     });
 
-    expect(page.oMetodo.tools).toEqual(ANALISE_DEFAULTS.oMetodo.tools);
     expect(page.oQueTrazem.pillars).toEqual(ANALISE_DEFAULTS.oQueTrazem.pillars);
     expect(page.pratico.items).toEqual(ANALISE_DEFAULTS.pratico.items);
-  });
-
-  it("reads an empty parallels array literally — that is the launch state", () => {
-    const page = analiseFromPayload({
-      sonhoAmpliado: { motif: ANALISE_DEFAULTS.sonhoAmpliado.motif, parallels: [] },
-    });
-
-    expect(page.sonhoAmpliado.parallels).toEqual([]);
-    // The section still renders: its intro and motif carry it (CONCEPT §9.3).
-    expect(page.sonhoAmpliado.motif).toBe(ANALISE_DEFAULTS.sonhoAmpliado.motif);
-    expect(page.sonhoAmpliado.intro).toBe(ANALISE_DEFAULTS.sonhoAmpliado.intro);
   });
 
   it("keeps the pillars in stored order and numbers the ones she left blank", () => {
@@ -107,20 +99,18 @@ describe("analiseFromPayload", () => {
 
   it("drops half-typed rows, and falls back when nothing readable survives", () => {
     const page = analiseFromPayload({
-      oMetodo: { tools: [{ title: "Sem texto ainda" }, { title: "Os sonhos", text: "Pronto." }] },
       pratico: { items: [{ label: "Duração" }, { label: "Idiomas", value: "Português." }] },
       oQueTrazem: { pillars: [{ title: "Sem texto" }] },
     });
 
-    expect(page.oMetodo.tools).toEqual([{ title: "Os sonhos", text: "Pronto." }]);
     expect(page.pratico.items).toEqual([{ label: "Idiomas", value: "Português." }]);
     // Every pillar was unreadable, so her three survive rather than vanishing.
     expect(page.oQueTrazem.pillars).toEqual(ANALISE_DEFAULTS.oQueTrazem.pillars);
   });
 
-  it("resolves the visão plate to its label and image, and to null while the scan is missing", () => {
+  it("resolves the método plate to its label and image, and to null while the scan is missing", () => {
     const withImage = analiseFromPayload({
-      aVisao: {
+      oMetodo: {
         plate: {
           image: upload("/media/individuacao.jpg", "uma figura ao amanhecer"),
           painter: "Odilon Redon",
@@ -130,7 +120,7 @@ describe("analiseFromPayload", () => {
       },
     });
 
-    expect(withImage.aVisao.plate).toEqual({
+    expect(withImage.oMetodo.plate).toEqual({
       image: {
         src: "/media/individuacao.jpg",
         alt: "uma figura ao amanhecer",
@@ -144,19 +134,19 @@ describe("analiseFromPayload", () => {
 
     // Provenance can be recorded before the scan is sourced (REQ-005), and is
     // never invented — an unset line stays null rather than being guessed.
-    const labelOnly = analiseFromPayload({ aVisao: { plate: { painter: "Odilon Redon" } } });
+    const labelOnly = analiseFromPayload({ oMetodo: { plate: { painter: "Odilon Redon" } } });
 
-    expect(labelOnly.aVisao.plate.image).toBeNull();
-    expect(labelOnly.aVisao.plate.painter).toBe("Odilon Redon");
-    expect(labelOnly.aVisao.plate.workTitle).toBeNull();
+    expect(labelOnly.oMetodo.plate.image).toBeNull();
+    expect(labelOnly.oMetodo.plate.painter).toBe("Odilon Redon");
+    expect(labelOnly.oMetodo.plate.workTitle).toBeNull();
   });
 
   it("refuses an upload with no intrinsic size rather than shipping layout shift", () => {
     const page = analiseFromPayload({
-      aVisao: { plate: { image: { url: "/media/sem-medidas.jpg", alt: "x" } } },
+      oMetodo: { plate: { image: { url: "/media/sem-medidas.jpg", alt: "x" } } },
     });
 
-    expect(page.aVisao.plate.image).toBeNull();
+    expect(page.oMetodo.plate.image).toBeNull();
   });
 
   // -------------------------------------------------------------------------
@@ -199,8 +189,31 @@ describe("analiseFromPayload", () => {
   });
 
   // -------------------------------------------------------------------------
-  // Sonho ampliado — a parallel renders only once it has something to read.
+  // Sonho ampliado — gated on the motif, and a parallel renders only once it
+  // has something to read.
   // -------------------------------------------------------------------------
+
+  it("stays hidden until she writes the motif, and turns on with it", () => {
+    // The one field with no code fallback: her switch for the whole section.
+    // The default is null too, so the section waits everywhere by default.
+    expect(ANALISE_DEFAULTS.sonhoAmpliado.motif).toBeNull();
+    expect(analiseFromPayload({ sonhoAmpliado: { motif: "   " } }).sonhoAmpliado.motif).toBeNull();
+    expect(analiseFromPayload({ sonhoAmpliado: {} }).sonhoAmpliado.motif).toBeNull();
+
+    expect(
+      analiseFromPayload({ sonhoAmpliado: { motif: "Sonhei com o mar." } }).sonhoAmpliado.motif,
+    ).toBe("Sonhei com o mar.");
+  });
+
+  it("reads an empty parallels array literally — that is the resting state", () => {
+    const page = analiseFromPayload({
+      sonhoAmpliado: { motif: "Sonhei com o mar.", parallels: [] },
+    });
+
+    expect(page.sonhoAmpliado.parallels).toEqual([]);
+    // The section still renders: its intro and motif carry it (CONCEPT §9.3).
+    expect(page.sonhoAmpliado.intro).toBe(ANALISE_DEFAULTS.sonhoAmpliado.intro);
+  });
 
   it("keeps a parallel with text, a parallel with only a painting, and drops a bare label", () => {
     const page = analiseFromPayload({
@@ -229,21 +242,6 @@ describe("analiseFromPayload", () => {
     });
   });
 
-  it("keeps a parallel that is only a painting, with no line and no label yet", () => {
-    // The likelier order of work: she uploads the detail she found, then types
-    // the credit. The image alone is already the parallel.
-    const page = analiseFromPayload({
-      sonhoAmpliado: {
-        parallels: [{ label: "Uma pintura", image: upload("/media/porta.jpg", "uma porta") }],
-      },
-    });
-
-    expect(page.sonhoAmpliado.parallels).toHaveLength(1);
-    expect(page.sonhoAmpliado.parallels[0]?.plate.image?.src).toBe("/media/porta.jpg");
-    expect(page.sonhoAmpliado.parallels[0]?.plate.painter).toBeNull();
-    expect(page.sonhoAmpliado.parallels[0]?.text).toBeNull();
-  });
-
   it("keeps a parallel whose provenance is recorded before its scan exists", () => {
     // REQ-005 reaching this section: the frame stands in for the image alone, and
     // the gallery label is already something to read.
@@ -264,20 +262,6 @@ describe("analiseFromPayload", () => {
     });
 
     expect(page.sonhoAmpliado.parallels).toEqual([]);
-  });
-
-  it("lets a cleared motif hide the section, and keeps a written one", () => {
-    // The one field with no code fallback: her switch for the whole section.
-    expect(analiseFromPayload({ sonhoAmpliado: { motif: "   " } }).sonhoAmpliado.motif).toBeNull();
-    expect(analiseFromPayload({ sonhoAmpliado: {} }).sonhoAmpliado.motif).toBeNull();
-
-    expect(
-      analiseFromPayload({ sonhoAmpliado: { motif: "Sonhei com o mar." } }).sonhoAmpliado.motif,
-    ).toBe("Sonhei com o mar.");
-
-    // But the code default is still a real motif, so a page rendered with Payload
-    // off shows the section rather than losing it.
-    expect(ANALISE_DEFAULTS.sonhoAmpliado.motif).not.toBeNull();
   });
 
   it("leaves the closing line absent until she writes it", () => {

@@ -1,10 +1,14 @@
 import { useTranslations } from "next-intl";
+import type { Clinica } from "@/domain/clinica/Clinica";
 import type { PrimeiraConversa } from "@/domain/primeiraConversa/PrimeiraConversa";
 import { RichTextProse } from "@/view/general/RichTextProse";
+import { WhoLine } from "@/view/general/WhoLine";
 import { BILHETE_ANCHOR } from "./bilheteAnchor";
 
 /**
- * The page's opening — its one `h1`, her lead, and the page's single drop cap.
+ * The page's opening — its one `h1`, the who-line (which replaced the credential
+ * band here in the 2026-08 condensation), her lead, and the page's single drop
+ * cap.
  *
  * The lead is the whole AEO front-load (REQ-006): what a first conversation is,
  * how long it lasts, in which languages, from where, and at what commitment. A
@@ -21,7 +25,13 @@ import { BILHETE_ANCHOR } from "./bilheteAnchor";
  * write is friction disguised as narrative. It is a text link in the marginalia
  * voice, not a second call to action: the terracotta block belongs to the bilhete.
  */
-export function Abertura({ content }: { content: PrimeiraConversa["abertura"] }) {
+export function Abertura({
+  content,
+  clinica,
+}: {
+  content: PrimeiraConversa["abertura"];
+  clinica: Clinica;
+}) {
   const t = useTranslations("primeiraConversa");
 
   return (
@@ -36,6 +46,8 @@ export function Abertura({ content }: { content: PrimeiraConversa["abertura"] })
         >
           {content.heading}
         </h1>
+
+        <WhoLine clinica={clinica} className="mt-5" />
 
         <RichTextProse
           data={content.lead}

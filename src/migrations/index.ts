@@ -11,6 +11,7 @@ import * as migration_20260805_055245_concept_v3_phase6_pages from "./20260805_0
 import * as migration_20260805_153311_instagram_auth_and_jobs from "./20260805_153311_instagram_auth_and_jobs";
 import * as migration_20260805_153332_inicio_instagram_tiles_drop from "./20260805_153332_inicio_instagram_tiles_drop";
 import * as migration_20260805_213941_instagram_refresh_workflow from "./20260805_213941_instagram_refresh_workflow";
+import * as migration_20260806_030430_concept_v3_condense_service_pages from "./20260806_030430_concept_v3_condense_service_pages";
 
 export const migrations = [
   {
@@ -77,5 +78,10 @@ export const migrations = [
     up: migration_20260805_213941_instagram_refresh_workflow.up,
     down: migration_20260805_213941_instagram_refresh_workflow.down,
     name: "20260805_213941_instagram_refresh_workflow",
+  },
+  {
+    up: migration_20260806_030430_concept_v3_condense_service_pages.up,
+    down: migration_20260806_030430_concept_v3_condense_service_pages.down,
+    name: "20260806_030430_concept_v3_condense_service_pages",
   },
 ];

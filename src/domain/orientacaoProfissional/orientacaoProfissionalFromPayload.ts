@@ -3,7 +3,6 @@ import type { FactRow } from "@/domain/pages/FactRow";
 import type { RichTextContent } from "@/domain/richText/RichTextContent";
 import type { PayloadPageOrientacaoProfissional } from "@/infrastructure/payload/getPageOrientacaoProfissionalGlobal";
 import {
-  type CareerCase,
   type Distinction,
   ORIENTACAO_PROFISSIONAL_DEFAULTS,
   type OrientacaoProfissional,
@@ -31,18 +30,10 @@ function filledRichText(value: RichTextContent | null | undefined): RichTextCont
 //
 // Payload materializes an untouched array field as `[]` rather than as absent, so
 // "she cleared this" and "she never opened this tab" are the same value (TASK-035's
-// finding). All three arrays here belong to sections CONCEPT §6 requires — the four
+// finding). All the arrays here belong to sections CONCEPT §6 requires — the four
 // situations, the movements of the percurso, the distinctions that decide the page
 // — and none of them has a designed empty state, so of the two readings only one is
 // safe: an empty array is treated as un-edited.
-//
-// The two *scalar* slots that may legitimately be absent are handled the other way
-// round, and deliberately: `nemCoaching.anchor` is one Jungian sentence and
-// `oPercurso.deliverable` is the promise, both of which have code drafts, so they
-// fall back like any other field — but both are typed `string | null` because a
-// draft could be removed from the defaults without the view breaking. The plate is
-// the only genuinely absent-able thing on the page, and provenance is never
-// invented (CONCEPT §11), which is why `pagePlateFrom` gives it no default.
 //
 // Within a populated array, a row with no readable text is still dropped: a
 // half-typed row has nothing a visitor could read.
@@ -52,12 +43,12 @@ const ROMAN_NUMERALS = ["I", "II", "III", "IV", "V", "VI"];
 
 function casesFrom(
   raw: NonNullable<PayloadPageOrientacaoProfissional["paraQuem"]>["cases"],
-): CareerCase[] {
+): string[] {
   if (!Array.isArray(raw)) return ORIENTACAO_PROFISSIONAL_DEFAULTS.paraQuem.cases;
 
   const cases = raw
-    .map((entry) => ({ title: filled(entry?.title), text: filled(entry?.text) }))
-    .filter((entry): entry is CareerCase => entry.title !== null && entry.text !== null);
+    .map((entry) => filled(entry?.text))
+    .filter((text): text is string => text !== null);
 
   return cases.length > 0 ? cases : ORIENTACAO_PROFISSIONAL_DEFAULTS.paraQuem.cases;
 }
@@ -132,21 +123,20 @@ export function orientacaoProfissionalFromPayload(
       body: filledRichText(doc.nemCoaching?.body) ?? defaults.nemCoaching.body,
       distinctions: distinctionsFrom(doc.nemCoaching?.distinctions),
       anchor: filled(doc.nemCoaching?.anchor) ?? defaults.nemCoaching.anchor,
+      bridge: {
+        body: filled(doc.nemCoaching?.bridge?.body) ?? defaults.nemCoaching.bridge.body,
+        linkLabel:
+          filled(doc.nemCoaching?.bridge?.linkLabel) ?? defaults.nemCoaching.bridge.linkLabel,
+      },
       plate: pagePlateFrom(doc.nemCoaching?.plate),
-    },
-    perguntaMaisFunda: {
-      heading: filled(doc.perguntaMaisFunda?.heading) ?? defaults.perguntaMaisFunda.heading,
-      body: filled(doc.perguntaMaisFunda?.body) ?? defaults.perguntaMaisFunda.body,
-      linkLabel: filled(doc.perguntaMaisFunda?.linkLabel) ?? defaults.perguntaMaisFunda.linkLabel,
     },
     pratico: {
       heading: filled(doc.pratico?.heading) ?? defaults.pratico.heading,
       items: praticoFrom(doc.pratico?.items),
-    },
-    comecar: {
-      heading: filled(doc.comecar?.heading) ?? defaults.comecar.heading,
-      body: filled(doc.comecar?.body) ?? defaults.comecar.body,
-      linkLabel: filled(doc.comecar?.linkLabel) ?? defaults.comecar.linkLabel,
+      comecar: {
+        body: filled(doc.pratico?.comecar?.body) ?? defaults.pratico.comecar.body,
+        linkLabel: filled(doc.pratico?.comecar?.linkLabel) ?? defaults.pratico.comecar.linkLabel,
+      },
     },
   };
 }

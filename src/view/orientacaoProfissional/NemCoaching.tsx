@@ -4,6 +4,7 @@ import { PageSection } from "@/view/general/PageSection";
 import { Plate } from "@/view/general/Plate";
 import { RichTextProse } from "@/view/general/RichTextProse";
 import { SectionHeading } from "@/view/general/SectionHeading";
+import { SectionLink } from "@/view/general/SectionLink";
 
 const PLATE_ASPECT = "3 / 2";
 
@@ -73,6 +74,21 @@ export function NemCoaching({ content }: { content: OrientacaoProfissional["nemC
         <p className="display-italic text-ink-soft mt-16 max-w-[44ch] text-[clamp(1.45rem,2.4vw,1.85rem)] leading-[1.35]">
           {content.anchor}
         </p>
+      )}
+
+      {/* The bridge to /analise, folded in as this section's close (2026-08
+          condensation — it no longer holds a band of its own). The craft is
+          restraint: one paragraph, a quiet hand-off, no second call to action.
+          A visitor who discovers their question was the other one should read
+          this as permission, not as a more expensive product being offered. */}
+      {content.bridge.body && (
+        <p className="body-prose text-ink mt-14 max-w-[58ch]">{content.bridge.body}</p>
+      )}
+
+      {content.bridge.linkLabel && (
+        <SectionLink href="/analise" className="mt-8">
+          {content.bridge.linkLabel}
+        </SectionLink>
       )}
 
       <Plate

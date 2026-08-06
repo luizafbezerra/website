@@ -31,24 +31,20 @@ export type PayloadPagePrimeiraConversa = {
       title?: string | null;
       text?: string | null;
     }>;
-  } | null;
-  permissoes?: {
-    heading?: string | null;
-    items?: PayloadArrayRow<{ text?: string | null }>;
-    plate?: {
-      image?: PayloadMediaField;
-      painter?: string | null;
-      workTitle?: string | null;
-      year?: string | null;
+    permissoes?: {
+      items?: PayloadArrayRow<{ text?: string | null }>;
+      plate?: {
+        image?: PayloadMediaField;
+        painter?: string | null;
+        workTitle?: string | null;
+        year?: string | null;
+      } | null;
     } | null;
   } | null;
   logistica?: {
     heading?: string | null;
     items?: PayloadArrayRow<{ label?: string | null; value?: string | null }>;
-  } | null;
-  miniFaq?: {
-    heading?: string | null;
-    items?: PayloadArrayRow<{ question?: string | null; answer?: string | null }>;
+    doubts?: PayloadArrayRow<{ question?: string | null; answer?: string | null }>;
     linkLabel?: string | null;
   } | null;
   bilhete?: {

@@ -255,23 +255,25 @@ describe("/analise's twin", () => {
     expect(text).not.toContain("Ashwini, o cavaleiro.");
   });
 
-  it("quotes the dream motif and omits the parallels she has not written", () => {
-    const text = textOf("analise", "pt");
+  it("keeps Sonho ampliado absent while her motif is unwritten — the default state", () => {
+    // The intro alone must not keep the section alive here when the page hides it.
+    expect(textOf("analise", "pt")).not.toContain(ANALISE_DEFAULTS.sonhoAmpliado.heading);
+  });
 
-    expect(text).toContain(`> ${ANALISE_DEFAULTS.sonhoAmpliado.motif}`);
+  it("quotes the motif once she writes it, and omits the parallels she has not", () => {
+    const withMotif = {
+      ...ANALISE_DEFAULTS,
+      sonhoAmpliado: {
+        ...ANALISE_DEFAULTS.sonhoAmpliado,
+        motif: "Sonhei que encontrava um cômodo desconhecido na minha casa.",
+      },
+    };
+    const text = renderMarkdown(analiseDoc(withMotif, contextFor("analise", "pt")));
+
+    expect(text).toContain("> Sonhei que encontrava um cômodo desconhecido na minha casa.");
     for (const parallel of ANALISE_DEFAULTS.sonhoAmpliado.parallels) {
       expect(text).not.toContain(`**${parallel.label}**`);
     }
-  });
-
-  it("drops the whole section when she clears the motif", () => {
-    const cleared = {
-      ...ANALISE_DEFAULTS,
-      sonhoAmpliado: { ...ANALISE_DEFAULTS.sonhoAmpliado, motif: null, intro: "" },
-    };
-    const text = renderMarkdown(analiseDoc(cleared, contextFor("analise", "pt")));
-
-    expect(text).not.toContain(ANALISE_DEFAULTS.sonhoAmpliado.heading);
   });
 });
 

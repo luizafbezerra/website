@@ -137,40 +137,43 @@ list so they can never disagree.
                         (§9.1) — never a hidden hole
 
 /analise                A ANÁLISE      (the approach page — for análise, the
-│                       approach IS the product)
+│                       approach IS the product; condensed to five bands, 2026-08)
 │  job: understand what Jungian analysis with her is and how it works, enough to begin
 ├── 1  Abertura         espaço seguro de escuta, reflexão e transformação; the
-│                       symptom has a purpose — a call from the unconscious
-├── 2  A visão          the whole person · individuação ("tornar-se quem você
-│                       realmente é, integrando suas luzes e sombras")
-├── 3  O método         free, welcoming, non-judgemental dialogue + symbolic tools:
-│                       dream analysis · images/fantasies/symbols of daily life ·
-│                       repetitive patterns · "é um trabalho de colaboração"
-├── 4  A mandala        ★ this page's wow — the painted wheel as archetypal
-│                       vocabulary (readings ship only in her words or with her
-│                       sign-off; visual-only until then)
-├── 5  O que as         the three pillars in full + the boundary line to
-│      pessoas trazem   orientação ("quando a pergunta é qual profissão →")
-├── 6  Prático          weekly · online · pt/en · Brasil e exterior
-└── 7  Para começar     → /primeira-conversa · WhatsApp
+│                       symptom has a purpose — a call from the unconscious;
+│                       who-line (name · CRP, from A Clínica) under the h1
+├── 2  O que as         the three pillars in full + the boundary line to
+│      pessoas trazem   orientação ("quando a pergunta é qual profissão →") —
+│                       recognition before method
+├── 3  Como o trabalho  her five verbatim paragraphs as the spine · one line for
+│      acontece         the symbolic material (dreams · daily images · repeating
+│                       patterns) · individuação described, never promised ·
+│                       "é um trabalho de colaboração"
+├── 4  Na prática       weekly · online · pt/en · Brasil e exterior — closing on
+│                       the ask (→ /primeira-conversa · WhatsApp)
+└── 5  A mandala        ★ this page's wow — the painted wheel as archetypal
+                        vocabulary, closing the page after the ask like the
+                        Cosmos closes the home (readings ship only in her words
+                        or with her sign-off; visual-only until then)
 
 /orientacao-profissional   ORIENTAÇÃO PROFISSIONAL E DE CARREIRA
+│                          (condensed to five bands, 2026-08)
 │  job: decide whether this bounded program answers my career question
 │       (vs a coach, vs a loose vocational test)
-├── 1  Abertura         what it is; PUC-SP specialization; the promise in her words
+├── 1  Abertura         what it is; PUC-SP aprimoramento; the promise in her
+│                       words; who-line under the h1
 ├── 2  Para quem        first career choice · transition · work that lost meaning ·
-│                       restarts (younger adults enter through this door)
+│                       restarts — one line each (younger adults enter here)
 ├── 3  O percurso       up to 12 weekly online meetings: tests + conversations +
 │                       activities; what you leave with
 ├── 4  Nem coaching,    the honest comparison: a licensed psychologist, tests
 │      nem teste solto  inside a guided psychological process, vocation read in
 │                       depth (the page's one Jungian anchor: vocation as a door
-│                       of individuação)
-├── 5  Quando a         bridge to análise → /analise
-│      pergunta é
-│      mais funda
-├── 6  Prático          duration · online · pt/en · fee (TBD — her decision)
-└── 7  Começar          → /primeira-conversa (orientação-specific opener) · WhatsApp
+│                       of individuação) — closing on the bridge to análise
+│                       ("quando a pergunta é mais funda" → /analise)
+└── 5  Na prática       duration · online · pt/en · fee (TBD — her decision) —
+                        closing on the ask (→ /primeira-conversa,
+                        orientação-specific opener · WhatsApp)
      NOTE: no zodiac imagery anywhere on this page — a wheel next to psychological
      tests would read as predictive assessment. Its art moment, if any, is a small
      painted crossroads/labyrinth plate (§9, could-have).
@@ -190,16 +193,19 @@ list so they can never disagree.
 │                       online, Brasil e exterior, pt/en
 └── 5  Assinatura       her signature closes the page
 
-/primeira-conversa      A PRIMEIRA CONVERSA
+/primeira-conversa      A PRIMEIRA CONVERSA   (condensed to four bands, 2026-08)
 │  job: cross the threshold — know exactly what happens when I write, and write
-├── 1  Passo a passo    I–V in manuscript numerals: message → scheduling → the
-│                       day → the fifty minutes → what you decide after
-├── 2  Permissões       "você não precisa preparar nada · não precisa saber
-│                       nomear o que sente · não existe assunto pequeno demais"
-├── 3  Logística        fee (TBD) · duration · platform · rescheduling · time
-│                       zones · languages
-├── 4  Mini-FAQ         the 4–5 threshold doubts → /perguntas
-└── 5  O bilhete        pre-written WhatsApp openers, tap to choose: one for
+├── 1  Abertura         fifty minutes · video · pt/en · from anywhere · the
+│                       decision stays yours; who-line under the h1
+├── 2  Como acontece    I–IV in manuscript numerals: message → scheduling →
+│                       the fifty minutes → what you decide after — steps carry
+│                       logistics only; the three permissions close the band
+│                       ("você não precisa preparar nada · não precisa saber
+│                       nomear o que sente · não existe assunto pequeno demais")
+├── 3  O combinado      fee (TBD) · duration · platform · rescheduling · time
+│                       zones · languages — plus the threshold doubts the page
+│                       has not already answered → /perguntas
+└── 4  O bilhete        pre-written WhatsApp openers, tap to choose: one for
                         análise · one for orientação · one "não sei qual caminho
                         é o meu" · one in English. Each opener is worded per
                         origin — the arriving message tells her where the
@@ -333,8 +339,12 @@ Ordered by conversion impact:
 7. **The colophon sentence** — every page's footer states, once, canonically: Símbolos do
    Self is the online clinic of psychologist Luiza Fernandes Bezerra (CRP). Humans, Google
    and LLMs all read the same binding.
-8. **The credential line** — who · how · from-where-to-where · what, in one strip on every
-   core page. Only client-confirmed facts enter it.
+8. **The credential line** — who · how · from-where-to-where · what, in one strip on Início
+   and /sobre, the pages whose job is verification. Only client-confirmed facts enter it.
+   The service and threshold pages carry a who-line instead (2026-08 condensation): one
+   clause under the h1 — "com a psicóloga {nome}" + CRP once confirmed — composed from the
+   same A Clínica facts, so the pages that speak in first person name who is speaking
+   without repeating the strip's facts their own prose already states.
 9. **Currency & time-zone policy** — pt-BR pages quote BRL (or "a combinar"); the
    international page and /en quote USD/EUR on their own terms ("valores em dólar/euro —
    combinamos na primeira conversa"), never automatic side-by-side conversion. All times

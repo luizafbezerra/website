@@ -12,24 +12,22 @@ import { PAGES_GROUP, pageAccess, revalidatePageHook } from "./shared";
 
 /**
  * A Análise (`/analise`) — the approach page. For analysis the approach *is* the
- * product, so this page carries the vision, the method, the three pillars, and
- * the painted wheel that moved here from the retired `/simbolos` route.
+ * product, so this page carries the pillars, her account of the method, and the
+ * painted wheel that moved here from the retired `/simbolos` route.
+ *
+ * The 2026-08 condensation cut the page from eight bands to five, and the tabs
+ * follow: the pillars moved up to section 2 (recognition before method), her five
+ * verbatim paragraphs became the method section's spine (`oMetodo.body`), A visão
+ * dissolved into the method's individuação note, the three titled tools collapsed
+ * to one line, the ask folded into the practical band (`pratico.comecar`), and
+ * the mandala closes the page after the ask — the same grammar as the Cosmos on
+ * the home.
  *
  * The wheel's readings (the twelve signs' prose) are deliberately empty: the
  * wheel ships visual-only and a reading renders only in her words (REQ-007 /
  * CONCEPT §11 authorship policy). The interlocking reference data — element,
  * ruler, the nakshatra table — stays in `src/domain/zodiac/`, because it is
  * scholarly reference, not editorial voice.
- *
- * TASK-037 added four fields and removed one: `aVisao.plate` (PAT-002's plate for
- * this page, set beside the individuação idea it amplifies), `oMetodo.closingLine`
- * ("é um trabalho de colaboração", which closes the section rather than sitting
- * inside its body), `sonhoAmpliado.intro` (so the section says what amplificação
- * is while her parallels are still being curated) and `oQueTrazem.linkLabel` (the
- * hand-off to the other door). `oQueTrazem.eyebrow` went: DESIGN §6 names a
- * tracked-caps kicker above a section as scaffolding rather than voice, so no
- * section on this site renders one, and a field that can never reach the page is
- * a field she would type into a void.
  */
 
 const ELEMENT_GROUPS: { element: Element; label: string }[] = [
@@ -88,83 +86,14 @@ export const PageAnalise: GlobalConfig = {
             localizedRichText({ name: "body", label: "Texto" }),
           ],
         },
-        // ── 2 A visão ────────────────────────────────────────────────────────
-        {
-          name: "aVisao",
-          label: "2 · A visão",
-          description:
-            "A pessoa inteira e a individuação. Descreva o conceito — nunca como resultado prometido a quem lê.",
-          fields: [
-            localizedText({ name: "heading", label: "Título" }),
-            localizedRichText({ name: "body", label: "Texto" }),
-            {
-              name: "plate",
-              type: "group",
-              label: "A pintura desta página",
-              admin: {
-                description:
-                  "Uma pintura ao lado da ideia de individuação — a imagem que amplia o texto, não que o decora. Domínio público, com proveniência verificada.",
-              },
-              fields: [
-                mediaSlot({
-                  name: "image",
-                  label: "Imagem",
-                  description: "A tela inteira, em boa resolução.",
-                }),
-                { name: "painter", type: "text", label: "Pintor(a)" },
-                localizedText({ name: "workTitle", label: "Título da obra" }),
-                { name: "year", type: "text", label: "Ano" },
-              ],
-            },
-          ],
-        },
-        // ── 3 O método ───────────────────────────────────────────────────────
-        {
-          name: "oMetodo",
-          label: "3 · O método",
-          description:
-            "O diálogo livre e sem julgamento, e as ferramentas simbólicas: sonhos, imagens e fantasias do dia a dia, padrões que se repetem.",
-          fields: [
-            localizedText({ name: "heading", label: "Título" }),
-            localizedRichText({ name: "body", label: "Texto" }),
-            {
-              name: "tools",
-              type: "array",
-              label: "Ferramentas",
-              labels: { singular: "Ferramenta", plural: "Ferramentas" },
-              fields: [
-                localizedText({ name: "title", label: "Título", required: true }),
-                localizedTextarea({ name: "text", label: "Texto" }),
-              ],
-            },
-            localizedTextarea({
-              name: "closingLine",
-              label: "Linha de fechamento",
-              description: 'A frase que encerra a seção. Ex.: "É um trabalho de colaboração."',
-            }),
-          ],
-        },
-        // ── 4 A mandala ──────────────────────────────────────────────────────
-        {
-          name: "mandala",
-          label: "4 · A mandala",
-          description:
-            "A roda pintada, o momento de encantamento desta página. Ela é visual: cada leitura abaixo só aparece no site depois que você a escrever. Enquanto estiverem em branco, a roda fala apenas pela imagem.",
-          fields: [
-            localizedText({ name: "heading", label: "Título" }),
-            localizedTextarea({ name: "intro", label: "Introdução" }),
-            ...signCollapsibles,
-          ],
-        },
-        // ── 5 O que as pessoas trazem ────────────────────────────────────────
+        // ── 2 O que as pessoas trazem ────────────────────────────────────────
         {
           name: "oQueTrazem",
-          label: "5 · O que as pessoas trazem",
+          label: "2 · O que as pessoas trazem",
           description:
             "Os três pilares por inteiro, e a linha que encaminha quem pergunta “qual profissão” para a orientação profissional.",
           fields: [
             localizedText({ name: "heading", label: "Título" }),
-            localizedRichText({ name: "intro", label: "Introdução" }),
             localizedTextarea({ name: "note", label: "Nota das frentes" }),
             {
               name: "pillars",
@@ -194,10 +123,61 @@ export const PageAnalise: GlobalConfig = {
             }),
           ],
         },
-        // ── 6 Sonho ampliado ─────────────────────────────────────────────────
+        // ── 3 Como o trabalho acontece ───────────────────────────────────────
+        {
+          name: "oMetodo",
+          label: "3 · Como o trabalho acontece",
+          description:
+            "As suas cinco parágrafos sobre como o trabalho acontece, a linha das ferramentas simbólicas e a nota sobre individuação — descrita, nunca prometida.",
+          fields: [
+            localizedText({ name: "heading", label: "Título" }),
+            localizedRichText({
+              name: "body",
+              label: "Texto",
+              description: "O seu texto sobre como o trabalho acontece — a espinha da seção.",
+            }),
+            localizedTextarea({
+              name: "toolsLine",
+              label: "Linha das ferramentas",
+              description:
+                "Uma frase nomeando o material simbólico: os sonhos, as imagens do dia a dia, os padrões que se repetem.",
+            }),
+            localizedRichText({
+              name: "individuacao",
+              label: "Nota sobre individuação",
+              description:
+                "A pessoa inteira e a individuação. Descreva o conceito — nunca como resultado prometido a quem lê.",
+            }),
+            localizedTextarea({
+              name: "closingLine",
+              label: "Linha de fechamento",
+              description: 'A frase que encerra a seção. Ex.: "É um trabalho de colaboração."',
+            }),
+            {
+              name: "plate",
+              type: "group",
+              label: "A pintura desta página",
+              admin: {
+                description:
+                  "Uma pintura ao lado da ideia de individuação — a imagem que amplia o texto, não que o decora. Domínio público, com proveniência verificada.",
+              },
+              fields: [
+                mediaSlot({
+                  name: "image",
+                  label: "Imagem",
+                  description: "A tela inteira, em boa resolução.",
+                }),
+                { name: "painter", type: "text", label: "Pintor(a)" },
+                localizedText({ name: "workTitle", label: "Título da obra" }),
+                { name: "year", type: "text", label: "Ano" },
+              ],
+            },
+          ],
+        },
+        // ── 4 Sonho ampliado ─────────────────────────────────────────────────
         {
           name: "sonhoAmpliado",
-          label: "6 · Sonho ampliado",
+          label: "4 · Sonho ampliado",
           description:
             "A amplificação demonstrada: um motivo de sonho e três paralelos ao lado dele — um detalhe de pintura, um mito em uma linha, uma passagem de Jung. Só entra no ar com as suas palavras.",
           fields: [
@@ -239,12 +219,12 @@ export const PageAnalise: GlobalConfig = {
             localizedTextarea({ name: "closingLine", label: "Sua linha final" }),
           ],
         },
-        // ── 7 Prático ────────────────────────────────────────────────────────
+        // ── 5 Na prática ─────────────────────────────────────────────────────
         {
           name: "pratico",
-          label: "7 · Prático",
+          label: "5 · Na prática",
           description:
-            "Semanal, on-line, português e inglês, Brasil e exterior. O valor vem de A Clínica — em branco, o site escreve “a combinar”.",
+            "Semanal, on-line, português e inglês, Brasil e exterior — e o convite final, que fecha esta seção. O valor vem de A Clínica; em branco, o site escreve “a combinar”.",
           fields: [
             localizedText({ name: "heading", label: "Título" }),
             {
@@ -257,17 +237,30 @@ export const PageAnalise: GlobalConfig = {
                 localizedText({ name: "value", label: "Valor" }),
               ],
             },
+            {
+              name: "comecar",
+              type: "group",
+              label: "Para começar",
+              admin: {
+                description: "O convite que fecha a seção. O bilhete da análise vem de A Clínica.",
+              },
+              fields: [
+                localizedTextarea({ name: "body", label: "Texto" }),
+                localizedText({ name: "linkLabel", label: "Rótulo do link" }),
+              ],
+            },
           ],
         },
-        // ── 8 Para começar ───────────────────────────────────────────────────
+        // ── 6 A mandala ──────────────────────────────────────────────────────
         {
-          name: "paraComecar",
-          label: "8 · Para começar",
-          description: "O convite final. O bilhete da análise vem de A Clínica.",
+          name: "mandala",
+          label: "6 · A mandala",
+          description:
+            "A roda pintada fecha a página, depois do convite — o momento de encantamento. Ela é visual: cada leitura abaixo só aparece no site depois que você a escrever. Enquanto estiverem em branco, a roda fala apenas pela imagem.",
           fields: [
             localizedText({ name: "heading", label: "Título" }),
-            localizedTextarea({ name: "body", label: "Texto" }),
-            localizedText({ name: "linkLabel", label: "Rótulo do link" }),
+            localizedTextarea({ name: "intro", label: "Introdução" }),
+            ...signCollapsibles,
           ],
         },
       ],

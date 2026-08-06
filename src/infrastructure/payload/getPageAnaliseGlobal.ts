@@ -45,26 +45,8 @@ export type PayloadPageAnalise = {
     heading?: string | null;
     body?: RichTextContent | null;
   } | null;
-  aVisao?: {
-    heading?: string | null;
-    body?: RichTextContent | null;
-    plate?: PayloadPlate;
-  } | null;
-  oMetodo?: {
-    heading?: string | null;
-    body?: RichTextContent | null;
-    tools?: PayloadArrayRow<{ title?: string | null; text?: string | null }>;
-    closingLine?: string | null;
-  } | null;
-  mandala?:
-    | ({
-        heading?: string | null;
-        intro?: string | null;
-      } & PayloadSignReadings)
-    | null;
   oQueTrazem?: {
     heading?: string | null;
-    intro?: RichTextContent | null;
     note?: string | null;
     pillars?: PayloadArrayRow<{
       numeral?: string | null;
@@ -73,6 +55,14 @@ export type PayloadPageAnalise = {
     }>;
     boundary?: string | null;
     linkLabel?: string | null;
+  } | null;
+  oMetodo?: {
+    heading?: string | null;
+    body?: RichTextContent | null;
+    toolsLine?: string | null;
+    individuacao?: RichTextContent | null;
+    closingLine?: string | null;
+    plate?: PayloadPlate;
   } | null;
   sonhoAmpliado?: {
     heading?: string | null;
@@ -89,12 +79,14 @@ export type PayloadPageAnalise = {
   pratico?: {
     heading?: string | null;
     items?: PayloadArrayRow<{ label?: string | null; value?: string | null }>;
+    comecar?: { body?: string | null; linkLabel?: string | null } | null;
   } | null;
-  paraComecar?: {
-    heading?: string | null;
-    body?: string | null;
-    linkLabel?: string | null;
-  } | null;
+  mandala?:
+    | ({
+        heading?: string | null;
+        intro?: string | null;
+      } & PayloadSignReadings)
+    | null;
 };
 
 /** The `page-analise` global, or null when Payload is disabled. */

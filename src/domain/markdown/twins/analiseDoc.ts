@@ -1,7 +1,6 @@
 import type { Analise, DreamParallel } from "@/domain/analise/Analise";
 import {
   blocks,
-  bullets,
   factBullets,
   labelled,
   link,
@@ -10,6 +9,7 @@ import {
   paragraph,
   quote,
   section,
+  bullets,
 } from "@/domain/markdown/MarkdownBlock";
 import { richTextToMarkdown } from "@/domain/markdown/richTextToMarkdown";
 import type { TwinContext } from "@/domain/markdown/TwinContext";
@@ -17,8 +17,9 @@ import { twinDocument } from "@/domain/markdown/twinDocument";
 import { twinFeeRows } from "@/domain/markdown/twinFeeRows";
 
 /**
- * A Análise's twin — the seven sections of CONCEPT §6 plus the page's opening,
- * in the page's own order.
+ * A Análise's twin — the five bands of the condensed page, in the page's own
+ * order: what people bring, how the work happens (her verbatim text), the
+ * practical facts with the ask folded in, and the mandala closing after it.
  *
  * **The wheel's reference data and its per-sign readings are not here**, and this
  * is the largest omission in any twin. The mandala section keeps its heading and
@@ -26,16 +27,14 @@ import { twinFeeRows } from "@/domain/markdown/twinFeeRows";
  * every symbol on it — *the signs are vocabulary, never a reading about you*
  * (CONCEPT §11) — which is precisely the sentence a machine should be able to
  * quote back. What it drops is the twelve × five nomenclature table
- * (`src/domain/zodiac/zodiacContent.ts`: element, modality, ruler, body, three
- * lunar mansions each), which is scholarly apparatus for a drawing that does not
- * exist in text, and her twenty-four per-sign readings, which are `null` at
- * launch by design (REQ-007). If she writes them, they become the page's longest
- * prose and this decision is worth revisiting — see the plan's execution notes.
+ * (`src/domain/zodiac/zodiacContent.ts`), which is scholarly apparatus for a
+ * drawing that does not exist in text, and her twenty-four per-sign readings,
+ * which are `null` at launch by design (REQ-007).
  *
- * `Sonho ampliado` mirrors the page's own condition: the section renders only
- * while her dream motif is written, so clearing that field removes it here too.
- * Each parallel appears only when it has text; the plate slot beside it never
- * does, because a twin states no asset.
+ * `Sonho ampliado` mirrors the page's own condition: it appears only while her
+ * dream motif is written — the intro alone must not keep the section alive here
+ * when the page hides it. Each parallel appears only when it has text; the plate
+ * slot beside it never does, because a twin states no asset.
  */
 export function analiseDoc(page: Analise, ctx: TwinContext): MarkdownBlock[] {
   const { pageUrls } = ctx;
@@ -44,19 +43,9 @@ export function analiseDoc(page: Analise, ctx: TwinContext): MarkdownBlock[] {
     title: page.abertura.heading,
     lead: richTextToMarkdown(page.abertura.body),
     sections: blocks(
-      section(2, page.aVisao.heading, richTextToMarkdown(page.aVisao.body)),
-      section(
-        2,
-        page.oMetodo.heading,
-        richTextToMarkdown(page.oMetodo.body),
-        bullets(page.oMetodo.tools.map((tool) => labelled(tool.title, tool.text))),
-        paragraph(page.oMetodo.closingLine),
-      ),
-      section(2, page.mandala.heading, paragraph(page.mandala.intro)),
       section(
         2,
         page.oQueTrazem.heading,
-        richTextToMarkdown(page.oQueTrazem.intro),
         paragraph(page.oQueTrazem.note),
         // Ordered I–III on the page, so ordered here.
         numbered(page.oQueTrazem.pillars.map((pillar) => labelled(pillar.title, pillar.text))),
@@ -65,14 +54,24 @@ export function analiseDoc(page: Analise, ctx: TwinContext): MarkdownBlock[] {
       ),
       section(
         2,
-        page.sonhoAmpliado.heading,
-        paragraph(page.sonhoAmpliado.intro),
-        // Quoted speech: CONCEPT §9.3's example of a motif somebody brings to a
-        // session, not prose in her name.
-        quote(page.sonhoAmpliado.motif),
-        bullets(page.sonhoAmpliado.parallels.map(parallel)),
-        paragraph(page.sonhoAmpliado.closingLine),
+        page.oMetodo.heading,
+        richTextToMarkdown(page.oMetodo.body),
+        paragraph(page.oMetodo.toolsLine),
+        richTextToMarkdown(page.oMetodo.individuacao),
+        paragraph(page.oMetodo.closingLine),
       ),
+      page.sonhoAmpliado.motif
+        ? section(
+            2,
+            page.sonhoAmpliado.heading,
+            paragraph(page.sonhoAmpliado.intro),
+            // Quoted speech: CONCEPT §9.3's example of a motif somebody brings to
+            // a session, not prose in her name.
+            quote(page.sonhoAmpliado.motif),
+            bullets(page.sonhoAmpliado.parallels.map(parallel)),
+            paragraph(page.sonhoAmpliado.closingLine),
+          )
+        : null,
       section(
         2,
         page.pratico.heading,
@@ -83,13 +82,11 @@ export function analiseDoc(page: Analise, ctx: TwinContext): MarkdownBlock[] {
           ...page.pratico.items,
         ]),
         paragraph(ctx.clinica.fees.internationalNote),
+        // The ask, folded into the band exactly as the page folds it.
+        paragraph(page.pratico.comecar.body),
+        paragraph(link(page.pratico.comecar.linkLabel, pageUrls.primeiraConversa)),
       ),
-      section(
-        2,
-        page.paraComecar.heading,
-        paragraph(page.paraComecar.body),
-        paragraph(link(page.paraComecar.linkLabel, pageUrls.primeiraConversa)),
-      ),
+      section(2, page.mandala.heading, paragraph(page.mandala.intro)),
     ),
   });
 }

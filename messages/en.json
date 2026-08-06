@@ -73,6 +73,7 @@
   "chrome": {
     "skipToContent": "Skip to content",
     "headerByline": "psychologist · Jungian tradition",
+    "whoLine": "With psychologist {name}",
     "footerByline": "clinical psychologist",
     "lockupBy": "by",
     "homeAria": "{name} — home",
@@ -173,7 +174,7 @@
     "brasilExterior": {
       "horasAria": "Local times right now",
       "cities": {
-        "brasilia": "Bras\u00edlia",
+        "brasilia": "Brasília",
         "lisboa": "Lisbon",
         "londres": "London",
         "novaYork": "New York"

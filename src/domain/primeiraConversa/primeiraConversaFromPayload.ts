@@ -31,9 +31,9 @@ function filledRichText(value: RichTextContent | null | undefined): RichTextCont
 // Payload materializes an untouched array field as `[]` rather than as absent, so
 // "she cleared this" and "she never opened this tab" are the same value (the
 // finding recorded in TASK-035's notes). All four arrays here belong to sections
-// CONCEPT §6 requires — the five tempos, the three permissions, the practical
-// facts, the threshold doubts — so of the two readings only one is safe: an empty
-// array is treated as un-edited. Início's Instagram tiles take the opposite rule
+// CONCEPT §6 requires — the tempos, the three permissions, the practical facts,
+// the threshold doubts — so of the two readings only one is safe: an empty array
+// is treated as un-edited. Início's Instagram tiles take the opposite rule
 // because that section has a designed empty state; none of these do.
 //
 // Within a populated array, a row with no text is still dropped: a half-typed row
@@ -58,15 +58,15 @@ function stepsFrom(raw: NonNullable<PayloadPagePrimeiraConversa["passoAPasso"]>[
 }
 
 function permissionsFrom(
-  raw: NonNullable<PayloadPagePrimeiraConversa["permissoes"]>["items"],
+  raw: NonNullable<NonNullable<PayloadPagePrimeiraConversa["passoAPasso"]>["permissoes"]>["items"],
 ): string[] {
-  if (!Array.isArray(raw)) return PRIMEIRA_CONVERSA_DEFAULTS.permissoes.items;
+  if (!Array.isArray(raw)) return PRIMEIRA_CONVERSA_DEFAULTS.passoAPasso.permissoes.items;
 
   const items = raw
     .map((item) => filled(item?.text))
     .filter((text): text is string => text !== null);
 
-  return items.length > 0 ? items : PRIMEIRA_CONVERSA_DEFAULTS.permissoes.items;
+  return items.length > 0 ? items : PRIMEIRA_CONVERSA_DEFAULTS.passoAPasso.permissoes.items;
 }
 
 function logisticsFrom(
@@ -81,16 +81,16 @@ function logisticsFrom(
   return rows.length > 0 ? rows : PRIMEIRA_CONVERSA_DEFAULTS.logistica.items;
 }
 
-function miniFaqFrom(
-  raw: NonNullable<PayloadPagePrimeiraConversa["miniFaq"]>["items"],
+function doubtsFrom(
+  raw: NonNullable<PayloadPagePrimeiraConversa["logistica"]>["doubts"],
 ): MiniFaqEntry[] {
-  if (!Array.isArray(raw)) return PRIMEIRA_CONVERSA_DEFAULTS.miniFaq.items;
+  if (!Array.isArray(raw)) return PRIMEIRA_CONVERSA_DEFAULTS.logistica.doubts;
 
   const entries = raw
     .map((entry) => ({ question: filled(entry?.question), answer: filled(entry?.answer) }))
     .filter((entry): entry is MiniFaqEntry => entry.question !== null && entry.answer !== null);
 
-  return entries.length > 0 ? entries : PRIMEIRA_CONVERSA_DEFAULTS.miniFaq.items;
+  return entries.length > 0 ? entries : PRIMEIRA_CONVERSA_DEFAULTS.logistica.doubts;
 }
 
 /** Normalize the raw `page-primeira-conversa` global, falling back field by field. */
@@ -105,20 +105,16 @@ export function primeiraConversaFromPayload(doc: PayloadPagePrimeiraConversa): P
     passoAPasso: {
       heading: filled(doc.passoAPasso?.heading) ?? defaults.passoAPasso.heading,
       steps: stepsFrom(doc.passoAPasso?.steps),
-    },
-    permissoes: {
-      heading: filled(doc.permissoes?.heading) ?? defaults.permissoes.heading,
-      items: permissionsFrom(doc.permissoes?.items),
-      plate: pagePlateFrom(doc.permissoes?.plate),
+      permissoes: {
+        items: permissionsFrom(doc.passoAPasso?.permissoes?.items),
+        plate: pagePlateFrom(doc.passoAPasso?.permissoes?.plate),
+      },
     },
     logistica: {
       heading: filled(doc.logistica?.heading) ?? defaults.logistica.heading,
       items: logisticsFrom(doc.logistica?.items),
-    },
-    miniFaq: {
-      heading: filled(doc.miniFaq?.heading) ?? defaults.miniFaq.heading,
-      items: miniFaqFrom(doc.miniFaq?.items),
-      linkLabel: filled(doc.miniFaq?.linkLabel) ?? defaults.miniFaq.linkLabel,
+      doubts: doubtsFrom(doc.logistica?.doubts),
+      linkLabel: filled(doc.logistica?.linkLabel) ?? defaults.logistica.linkLabel,
     },
     bilhete: {
       heading: filled(doc.bilhete?.heading) ?? defaults.bilhete.heading,

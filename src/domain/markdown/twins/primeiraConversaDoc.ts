@@ -18,13 +18,13 @@ import { twinFeeRows } from "@/domain/markdown/twinFeeRows";
 import type { PrimeiraConversa } from "@/domain/primeiraConversa/PrimeiraConversa";
 
 /**
- * A primeira conversa's twin — the five sections of CONCEPT §6, in the page's own
- * order.
+ * A primeira conversa's twin — the four bands of the condensed page, in the
+ * page's own order.
  *
  * This is the page an assistant is most likely to be *acting* from: somebody has
- * asked how to start. So the twin keeps the whole step sequence, the three
- * permissions, the fee for both doors, the four threshold doubts — and it quotes
- * the pre-written openers as text.
+ * asked how to start. So the twin keeps the whole step sequence with the three
+ * permissions beside it, the fee for both doors with the surviving threshold
+ * doubts, and it quotes the pre-written openers as text.
  *
  * **It quotes them; it does not link them.** On the page each opener is a tap that
  * opens WhatsApp with that message already composed, which is the attribution
@@ -48,9 +48,10 @@ export function primeiraConversaDoc(page: PrimeiraConversa, ctx: TwinContext): M
         2,
         page.passoAPasso.heading,
         numbered(page.passoAPasso.steps.map((step) => labelled(step.title, step.text))),
+        // No numerals: the three permissions are not a sequence. They close the
+        // band on the page and they close the section here.
+        bullets(page.passoAPasso.permissoes.items),
       ),
-      // No numerals: three permissions are not a sequence.
-      section(2, page.permissoes.heading, bullets(page.permissoes.items)),
       section(
         2,
         page.logistica.heading,
@@ -59,14 +60,10 @@ export function primeiraConversaDoc(page: PrimeiraConversa, ctx: TwinContext): M
           ...page.logistica.items,
         ]),
         paragraph(ctx.clinica.fees.internationalNote),
-      ),
-      section(
-        2,
-        page.miniFaq.heading,
         // Discrete Q&A blocks (CONCEPT §10), like /perguntas — the question as its
         // own heading, so a retrieval step can return one answer.
-        ...page.miniFaq.items.map((item) => section(3, item.question, paragraph(item.answer))),
-        paragraph(link(page.miniFaq.linkLabel, ctx.pageUrls.perguntas)),
+        ...page.logistica.doubts.map((item) => section(3, item.question, paragraph(item.answer))),
+        paragraph(link(page.logistica.linkLabel, ctx.pageUrls.perguntas)),
       ),
       section(
         2,

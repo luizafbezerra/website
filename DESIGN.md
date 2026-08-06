@@ -230,7 +230,8 @@ The mandala mark — her existing avatar — is the identity anchor: header mark
 
 ### Operational strips (facts in body voice, never decorative)
 
-- **The credential line:** one strip on every core page — CRP · PUC-SP · desde 2014 · on-line · pt/en · Brasil e exterior. Only client-confirmed facts enter it.
+- **The credential line:** one strip on Início and /sobre — CRP · PUC-SP · desde 2014 · on-line · pt/en · Brasil e exterior. Only client-confirmed facts enter it.
+- **The who-line:** on /analise, /orientacao-profissional and /primeira-conversa the strip's job is carried by one quiet clause under the `h1` — "Com a psicóloga {nome}" + CRP once confirmed — composed from the same A Clínica facts, body type, small (`WhoLine`).
 - **The availability line:** one editable line, three states (com horários disponíveis · lista de espera curta · sem novos atendimentos — escreva e eu aviso) + the response window ("respondo em até um dia útil, horário de Brasília").
 
 ### O bilhete (the opener chooser)

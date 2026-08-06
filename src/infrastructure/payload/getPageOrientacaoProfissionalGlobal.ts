@@ -26,7 +26,7 @@ export type PayloadPageOrientacaoProfissional = {
   } | null;
   paraQuem?: {
     heading?: string | null;
-    cases?: PayloadArrayRow<{ title?: string | null; text?: string | null }>;
+    cases?: PayloadArrayRow<{ text?: string | null }>;
   } | null;
   oPercurso?: {
     heading?: string | null;
@@ -43,6 +43,7 @@ export type PayloadPageOrientacaoProfissional = {
     body?: RichTextContent | null;
     distinctions?: PayloadArrayRow<{ title?: string | null; text?: string | null }>;
     anchor?: string | null;
+    bridge?: { body?: string | null; linkLabel?: string | null } | null;
     plate?: {
       image?: PayloadMediaField;
       painter?: string | null;
@@ -50,19 +51,10 @@ export type PayloadPageOrientacaoProfissional = {
       year?: string | null;
     } | null;
   } | null;
-  perguntaMaisFunda?: {
-    heading?: string | null;
-    body?: string | null;
-    linkLabel?: string | null;
-  } | null;
   pratico?: {
     heading?: string | null;
     items?: PayloadArrayRow<{ label?: string | null; value?: string | null }>;
-  } | null;
-  comecar?: {
-    heading?: string | null;
-    body?: string | null;
-    linkLabel?: string | null;
+    comecar?: { body?: string | null; linkLabel?: string | null } | null;
   } | null;
 };
 

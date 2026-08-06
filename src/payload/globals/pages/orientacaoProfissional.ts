@@ -18,6 +18,11 @@ import { PAGES_GROUP, pageAccess, revalidatePageHook } from "./shared";
  * Section 1 is the page's opening as well as its first CONCEPT §6 section, so
  * unlike `page-primeira-conversa` this global needed no extra `abertura` tab: the
  * `h1` and the front-loaded lead are `abertura.heading` and `abertura.body`.
+ *
+ * The 2026-08 condensation cut the page from eight bands to five, and the tabs
+ * follow: the four situations became one line each, the bridge to análise folded
+ * into "nem coaching" as its closing paragraph (`nemCoaching.bridge`), and the
+ * ask folded into the practical band (`pratico.comecar`).
  */
 export const PageOrientacaoProfissional: GlobalConfig = {
   slug: "page-orientacao-profissional",
@@ -52,7 +57,7 @@ export const PageOrientacaoProfissional: GlobalConfig = {
           name: "paraQuem",
           label: "2 · Para quem",
           description:
-            "Primeira escolha, transição, trabalho que perdeu sentido, recomeços. É por esta porta que entram os mais jovens.",
+            "Primeira escolha, transição, trabalho que perdeu sentido, recomeços — uma linha por situação. É por esta porta que entram os mais jovens.",
           fields: [
             localizedText({ name: "heading", label: "Título" }),
             {
@@ -60,10 +65,10 @@ export const PageOrientacaoProfissional: GlobalConfig = {
               type: "array",
               label: "Situações",
               labels: { singular: "Situação", plural: "Situações" },
-              fields: [
-                localizedText({ name: "title", label: "Título", required: true }),
-                localizedTextarea({ name: "text", label: "Texto" }),
-              ],
+              admin: {
+                description: "Uma linha por situação, direta — o leitor encontra a sua e segue.",
+              },
+              fields: [localizedTextarea({ name: "text", label: "Texto", required: true })],
             },
           ],
         },
@@ -132,6 +137,19 @@ export const PageOrientacaoProfissional: GlobalConfig = {
                 "A única frase junguiana da página: a vocação como uma das portas da individuação. Uma ou duas linhas. Em branco, não aparece.",
             }),
             {
+              name: "bridge",
+              type: "group",
+              label: "Quando a pergunta é mais funda",
+              admin: {
+                description:
+                  "A ponte para a análise, fechando esta seção — para quem chegou pela porta errada, e está tudo bem.",
+              },
+              fields: [
+                localizedTextarea({ name: "body", label: "Texto" }),
+                localizedText({ name: "linkLabel", label: "Rótulo do link para A Análise" }),
+              ],
+            },
+            {
               name: "plate",
               type: "group",
               label: "A pintura desta página",
@@ -153,21 +171,10 @@ export const PageOrientacaoProfissional: GlobalConfig = {
           ],
         },
         {
-          name: "perguntaMaisFunda",
-          label: "5 · Quando a pergunta é mais funda",
-          description:
-            "A ponte para a análise, para quem chegou pela porta errada — e está tudo bem.",
-          fields: [
-            localizedText({ name: "heading", label: "Título" }),
-            localizedTextarea({ name: "body", label: "Texto" }),
-            localizedText({ name: "linkLabel", label: "Rótulo do link para A Análise" }),
-          ],
-        },
-        {
           name: "pratico",
-          label: "6 · Prático",
+          label: "5 · Na prática",
           description:
-            "Duração, formato on-line, idiomas, de onde. O valor vem de A Clínica — em branco, o site escreve “a combinar”, e aqui aparece só o valor da orientação, nunca o da análise ao lado.",
+            "Duração, formato on-line, idiomas, de onde — e o convite final, que fecha esta seção. O valor vem de A Clínica; em branco, o site escreve “a combinar”, e aqui aparece só o valor da orientação, nunca o da análise ao lado.",
           fields: [
             localizedText({ name: "heading", label: "Título" }),
             {
@@ -180,16 +187,19 @@ export const PageOrientacaoProfissional: GlobalConfig = {
                 localizedText({ name: "value", label: "Valor" }),
               ],
             },
-          ],
-        },
-        {
-          name: "comecar",
-          label: "7 · Começar",
-          description: "O convite final. O bilhete da orientação vem de A Clínica.",
-          fields: [
-            localizedText({ name: "heading", label: "Título" }),
-            localizedTextarea({ name: "body", label: "Texto" }),
-            localizedText({ name: "linkLabel", label: "Rótulo do link" }),
+            {
+              name: "comecar",
+              type: "group",
+              label: "Começar",
+              admin: {
+                description:
+                  "O convite que fecha a seção. O bilhete da orientação vem de A Clínica.",
+              },
+              fields: [
+                localizedTextarea({ name: "body", label: "Texto" }),
+                localizedText({ name: "linkLabel", label: "Rótulo do link" }),
+              ],
+            },
           ],
         },
       ],

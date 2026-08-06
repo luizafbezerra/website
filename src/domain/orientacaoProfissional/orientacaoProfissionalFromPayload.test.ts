@@ -15,9 +15,8 @@ describe("orientacaoProfissionalFromPayload", () => {
     const doc: PayloadPageOrientacaoProfissional = {
       abertura: { heading: "   " },
       oPercurso: { deliverable: "" },
-      nemCoaching: { anchor: "  " },
-      perguntaMaisFunda: { linkLabel: "" },
-      comecar: { body: " " },
+      nemCoaching: { anchor: "  ", bridge: { linkLabel: "" } },
+      pratico: { comecar: { body: " " } },
     };
 
     const page = orientacaoProfissionalFromPayload(doc);
@@ -25,10 +24,10 @@ describe("orientacaoProfissionalFromPayload", () => {
     expect(page.abertura.heading).toBe(ORIENTACAO_PROFISSIONAL_DEFAULTS.abertura.heading);
     expect(page.oPercurso.deliverable).toBe(ORIENTACAO_PROFISSIONAL_DEFAULTS.oPercurso.deliverable);
     expect(page.nemCoaching.anchor).toBe(ORIENTACAO_PROFISSIONAL_DEFAULTS.nemCoaching.anchor);
-    expect(page.perguntaMaisFunda.linkLabel).toBe(
-      ORIENTACAO_PROFISSIONAL_DEFAULTS.perguntaMaisFunda.linkLabel,
+    expect(page.nemCoaching.bridge.linkLabel).toBe(
+      ORIENTACAO_PROFISSIONAL_DEFAULTS.nemCoaching.bridge.linkLabel,
     );
-    expect(page.comecar.body).toBe(ORIENTACAO_PROFISSIONAL_DEFAULTS.comecar.body);
+    expect(page.pratico.comecar.body).toBe(ORIENTACAO_PROFISSIONAL_DEFAULTS.pratico.comecar.body);
   });
 
   it("falls back on rich text that Lexical left with no paragraphs", () => {
@@ -54,25 +53,26 @@ describe("orientacaoProfissionalFromPayload", () => {
   it("keeps her wording section by section when she has written it", () => {
     const doc: PayloadPageOrientacaoProfissional = {
       abertura: { heading: "Orientação de carreira" },
-      pratico: { heading: "O combinado" },
-      comecar: { linkLabel: "como começa" },
+      pratico: { heading: "O combinado", comecar: { linkLabel: "como começa" } },
+      nemCoaching: { bridge: { body: "A pergunta era outra." } },
     };
 
     const page = orientacaoProfissionalFromPayload(doc);
 
     expect(page.abertura.heading).toBe("Orientação de carreira");
     expect(page.pratico.heading).toBe("O combinado");
-    expect(page.comecar.linkLabel).toBe("como começa");
+    expect(page.pratico.comecar.linkLabel).toBe("como começa");
+    expect(page.nemCoaching.bridge.body).toBe("A pergunta era outra.");
     // Untouched siblings still fall back.
     expect(page.nemCoaching.heading).toBe(ORIENTACAO_PROFISSIONAL_DEFAULTS.nemCoaching.heading);
-    expect(page.perguntaMaisFunda.body).toBe(
-      ORIENTACAO_PROFISSIONAL_DEFAULTS.perguntaMaisFunda.body,
+    expect(page.nemCoaching.bridge.linkLabel).toBe(
+      ORIENTACAO_PROFISSIONAL_DEFAULTS.nemCoaching.bridge.linkLabel,
     );
   });
 
   // Payload materializes an untouched array as `[]`, so every array on this page
-  // reads an empty one as un-edited: all three belong to sections CONCEPT §6
-  // requires, and none has a designed empty state.
+  // reads an empty one as un-edited: all belong to sections CONCEPT §6 requires,
+  // and none has a designed empty state.
   it("falls back on every empty array rather than dropping a required section", () => {
     const page = orientacaoProfissionalFromPayload({
       paraQuem: { cases: [] },
@@ -87,6 +87,22 @@ describe("orientacaoProfissionalFromPayload", () => {
       ORIENTACAO_PROFISSIONAL_DEFAULTS.nemCoaching.distinctions,
     );
     expect(page.pratico.items).toEqual(ORIENTACAO_PROFISSIONAL_DEFAULTS.pratico.items);
+  });
+
+  it("reads the situations as plain lines, dropping the blank ones", () => {
+    const page = orientacaoProfissionalFromPayload({
+      paraQuem: {
+        cases: [{ text: "Escolher o primeiro curso." }, { text: "   " }, { text: "Recomeçar." }],
+      },
+    });
+
+    expect(page.paraQuem.cases).toEqual(["Escolher o primeiro curso.", "Recomeçar."]);
+
+    // Nothing readable in any row: the section falls back rather than vanishing.
+    const unreadable = orientacaoProfissionalFromPayload({
+      paraQuem: { cases: [{ text: "  " }] },
+    });
+    expect(unreadable.paraQuem.cases).toEqual(ORIENTACAO_PROFISSIONAL_DEFAULTS.paraQuem.cases);
   });
 
   it("keeps the movements in stored order and numbers the ones she left blank", () => {
@@ -126,18 +142,11 @@ describe("orientacaoProfissionalFromPayload", () => {
     ]);
   });
 
-  // Both sides of every row filter, on every array. A row with a title and no text
-  // and a row with text and no title are equally unreadable, and covering only the
-  // first is the surviving mutant the primeira-conversa build was bitten by.
+  // Both sides of every row filter. A row with a title and no text and a row with
+  // text and no title are equally unreadable, and covering only the first is the
+  // surviving mutant the primeira-conversa build was bitten by.
   it("drops half-typed rows from either side, and falls back when nothing readable survives", () => {
     const partial = orientacaoProfissionalFromPayload({
-      paraQuem: {
-        cases: [
-          { title: "Sem texto ainda" },
-          { text: "Sem título ainda" },
-          { title: "Transição", text: "Mudar." },
-        ],
-      },
       oPercurso: {
         steps: [
           { title: "Sem texto" },
@@ -161,7 +170,6 @@ describe("orientacaoProfissionalFromPayload", () => {
       },
     });
 
-    expect(partial.paraQuem.cases).toEqual([{ title: "Transição", text: "Mudar." }]);
     // "III", not "I": the numeral comes from the row's stored position, the same
     // rule `primeiraConversaFromPayload` uses. Numbering the survivors instead would
     // make a movement's numeral shift while she is still filling in the one above it.
@@ -173,11 +181,9 @@ describe("orientacaoProfissionalFromPayload", () => {
 
     // Nothing readable in any row: the section falls back rather than vanishing.
     const unreadable = orientacaoProfissionalFromPayload({
-      paraQuem: { cases: [{ title: "Só o título" }] },
       nemCoaching: { distinctions: [{ text: "Só o texto" }] },
     });
 
-    expect(unreadable.paraQuem.cases).toEqual(ORIENTACAO_PROFISSIONAL_DEFAULTS.paraQuem.cases);
     expect(unreadable.nemCoaching.distinctions).toEqual(
       ORIENTACAO_PROFISSIONAL_DEFAULTS.nemCoaching.distinctions,
     );

@@ -18,10 +18,14 @@ import { MandalaWheel } from "./MandalaWheel";
  * page's opening answers them. An id named after a deleted address is a name the
  * next reader has to decode.
  *
- * `tone="deep"` — one of this page's two tonal events (the other is the terminal
- * ask). The wheel is a saturated painted asset, and a deeper parchment is what
- * separates a set-piece from the plate two sections above it; on plain parchment
- * the two would read as the same kind of thing.
+ * `tone="deep"` — this page's one tonal event. The wheel is a saturated painted
+ * asset, and a deeper parchment is what separates a set-piece from the plate in
+ * the method section above it; on plain parchment the two would read as the same
+ * kind of thing.
+ *
+ * Since the 2026-08 condensation the wheel closes the page, after the ask — the
+ * same grammar as the Cosmos on the home (PRODUCT: "the wow is the farewell,
+ * never an obstacle between a visitor and the ask").
  */
 export function Mandala({ content }: { content: Analise["mandala"] }) {
   return (

@@ -73,6 +73,7 @@
   "chrome": {
     "skipToContent": "Pular para o conteúdo",
     "headerByline": "psicóloga · análise junguiana",
+    "whoLine": "Com a psicóloga {name}",
     "footerByline": "psicóloga clínica",
     "lockupBy": "por",
     "homeAria": "{name} — início",

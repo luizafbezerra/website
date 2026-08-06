@@ -1,21 +1,18 @@
 import type { Analise } from "@/domain/analise/Analise";
 import { PageSection } from "@/view/general/PageSection";
-import { RichTextProse } from "@/view/general/RichTextProse";
 import { SectionHeading } from "@/view/general/SectionHeading";
 import { SectionLink } from "@/view/general/SectionLink";
 
 /**
- * Section 5 of CONCEPT §6 — the three pillars in full, and the line that routes
- * the career question to the other door.
+ * The three pillars in full, and the line that routes the career question to the
+ * other door. Second band of the page since the 2026-08 condensation:
+ * recognition before method, because the searcher's first question is "does she
+ * work with what I have". (Her five-paragraph intro moved to `OMetodo`, where it
+ * is the method section's spine — it was always her account of how she works.)
  *
- * **The intro and the three pillars are her own words, verbatim.** She rewrote
- * them herself; they existed only in the database until TASK-026 rescued them.
- * Nothing in this component may reword, trim or re-punctuate them, and the mapper
- * refuses to let an emptied field delete them.
- *
- * No tracked-caps eyebrow above the heading, even though the global once carried
- * a field for one. DESIGN §6 names a kicker over every section as scaffolding
- * rather than voice, and the field is gone.
+ * **The three pillars are her own words, verbatim.** Nothing in this component
+ * may reword, trim or re-punctuate them, and the mapper refuses to let an
+ * emptied field delete them.
  *
  * `.roman-numeral` I–III is genuine here in a way it is not anywhere else on this
  * page: the pillars are the numbered themes of CONCEPT §4's first door, and she
@@ -33,9 +30,7 @@ export function OQueTrazem({ content }: { content: Analise["oQueTrazem"] }) {
     <PageSection id="o-que-trazem" labelledBy="o-que-trazem-heading">
       <SectionHeading id="o-que-trazem-heading">{content.heading}</SectionHeading>
 
-      <RichTextProse data={content.intro} className="body-prose text-ink mt-8 max-w-[62ch]" />
-
-      {content.note && <p className="marginalia mt-10 max-w-[52ch]">{content.note}</p>}
+      {content.note && <p className="marginalia mt-8 max-w-[52ch]">{content.note}</p>}
 
       <ul className="mt-14 space-y-12">
         {content.pillars.map((pillar) => (

@@ -6,13 +6,11 @@ import type { Locale } from "@/domain/site/Locale";
 import { pagePath } from "@/domain/site/pagePath";
 import { absoluteUrl } from "@/infrastructure/env/baseUrl";
 import { Abertura } from "@/view/analise/Abertura";
-import { AVisao } from "@/view/analise/AVisao";
 import { Mandala } from "@/view/analise/Mandala";
 import { OMetodo } from "@/view/analise/OMetodo";
 import { OQueTrazem } from "@/view/analise/OQueTrazem";
 import { SonhoAmpliado } from "@/view/analise/SonhoAmpliado";
-import { Comecar } from "@/view/general/Comecar";
-import { Credencial } from "@/view/general/Credencial";
+import { ComecarFold } from "@/view/general/ComecarFold";
 import { PraticoSection } from "@/view/general/PraticoSection";
 import { BreadcrumbJsonLd } from "@/view/seo/jsonLd";
 import { pageMetadata } from "@/view/seo/pageMetadata";
@@ -30,24 +28,22 @@ export async function generateMetadata({ params }: AnaliseProps): Promise<Metada
 export const revalidate = 86400;
 
 /**
- * A Análise — the seven sections of CONCEPT §6, in the map's order, plus the
- * page's own opening.
+ * A Análise — five bands (2026-08 condensation of CONCEPT §6's seven sections).
  *
- * For análise the approach *is* the product, so this is the deepest read on the
- * site and its order is an argument: what it is → what it sees (the whole person)
- * → how it works (the dialogue and the symbolic tools) → the wheel, which is the
- * vocabulary those tools speak → what people actually arrive with, in her own
- * words → the method demonstrated on one dream → the practical facts → the ask.
- * Every section before the last exists to make the last one unnecessary to argue.
+ * The order is the page's argument, uninterrupted from question to ask: what it
+ * is (and who receives you) → what people bring, in recognition terms → how the
+ * work happens, in her own words → the practical facts, closing on the ask. The
+ * wheel comes after the ask, as the page's farewell — the same grammar as the
+ * Cosmos on the home, so the wow never sits between a visitor and the CTA.
  *
- * Sonho ampliado is the one section that can be absent: it renders only while her
- * dream motif is written, so clearing that field in the admin removes it (CONCEPT
- * §9.3 requires her words, and the section must not degrade into empty frames).
- * The component owns that condition, so this list stays a literal section order.
+ * Sonho ampliado can be present between the method and the facts: it renders
+ * only while her dream motif is written (CONCEPT §9.3 requires her words), and
+ * it ships empty. The component owns that condition.
  *
  * No `FaqJsonLd` and no `Service` payload here — the two services are declared
  * once by the shared `(pages)` layout's entity graph, so only this page's
- * breadcrumb is added.
+ * breadcrumb is added. The credential band is gone (the who-line in the opening
+ * carries its job); the strip remains on Início and /sobre.
  */
 export default async function AnalisePage({ params }: AnaliseProps) {
   const { locale } = await params;
@@ -68,15 +64,9 @@ export default async function AnalisePage({ params }: AnaliseProps) {
         ]}
       />
 
-      <Abertura content={page.abertura} />
-      {/* `column`, not the default `wide`: this page opens on a reading column
-          rather than on Início's two-column spread, and the strip has to start
-          where the `h1` above it does. */}
-      <Credencial clinica={clinica} width="column" />
-      <AVisao content={page.aVisao} />
-      <OMetodo content={page.oMetodo} />
-      <Mandala content={page.mandala} />
+      <Abertura content={page.abertura} clinica={clinica} />
       <OQueTrazem content={page.oQueTrazem} />
+      <OMetodo content={page.oMetodo} />
       <SonhoAmpliado content={page.sonhoAmpliado} />
       <PraticoSection
         id="pratico"
@@ -85,14 +75,10 @@ export default async function AnalisePage({ params }: AnaliseProps) {
         rows={page.pratico.items}
         clinica={clinica}
         fees="analysis"
-      />
-      <Comecar
-        id="para-comecar"
-        labelledBy="para-comecar-heading"
-        content={page.paraComecar}
-        clinica={clinica}
-        opener="analysis"
-      />
+      >
+        <ComecarFold content={page.pratico.comecar} clinica={clinica} opener="analysis" />
+      </PraticoSection>
+      <Mandala content={page.mandala} />
     </>
   );
 }

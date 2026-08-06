@@ -5,14 +5,12 @@ import { getOrientacaoProfissional } from "@/domain/orientacaoProfissional/getOr
 import type { Locale } from "@/domain/site/Locale";
 import { pagePath } from "@/domain/site/pagePath";
 import { absoluteUrl } from "@/infrastructure/env/baseUrl";
-import { Comecar } from "@/view/general/Comecar";
-import { Credencial } from "@/view/general/Credencial";
+import { ComecarFold } from "@/view/general/ComecarFold";
+import { PraticoSection } from "@/view/general/PraticoSection";
 import { Abertura } from "@/view/orientacaoProfissional/Abertura";
 import { NemCoaching } from "@/view/orientacaoProfissional/NemCoaching";
 import { OPercurso } from "@/view/orientacaoProfissional/OPercurso";
 import { ParaQuem } from "@/view/orientacaoProfissional/ParaQuem";
-import { PerguntaMaisFunda } from "@/view/orientacaoProfissional/PerguntaMaisFunda";
-import { Pratico } from "@/view/orientacaoProfissional/Pratico";
 import { BreadcrumbJsonLd } from "@/view/seo/jsonLd";
 import { pageMetadata } from "@/view/seo/pageMetadata";
 
@@ -26,22 +24,24 @@ export async function generateMetadata({ params }: OrientacaoProfissionalProps):
 export const revalidate = 3600;
 
 /**
- * Orientação profissional e de carreira — the seven sections of CONCEPT §6, in the
- * map's order.
+ * Orientação profissional e de carreira — five bands (2026-08 condensation of
+ * CONCEPT §6's seven sections).
  *
- * The order is the page's argument, and it is built for the reader PRODUCT
- * describes: younger, comparison-shopping, reading fast. Answer first (what it is,
- * how long, what you leave with), let them recognise themselves second, show the
- * shape of the work third, and only then make the distinction the page exists to
- * make. The bridge to /analise follows, the price after that, and the ask last.
+ * The order is the page's argument, built for the reader PRODUCT describes:
+ * younger, comparison-shopping, reading fast. Answer first (what it is, how
+ * long, what you leave with — and who conducts it, in the who-line), let them
+ * recognise themselves second, show the shape of the work third, then make the
+ * distinction the page exists to make — which now also carries the bridge to
+ * /analise as its closing paragraph. The price and the ask share the final band.
  *
- * This is also the site's strongest non-brand search asset (CONCEPT §10), which is
- * why the front-load lands entirely in the first section rather than being spread
- * across the scroll.
+ * This is also the site's strongest non-brand search asset (CONCEPT §10), which
+ * is why the front-load lands entirely in the first section rather than being
+ * spread across the scroll.
  *
  * The entity graph — Organization, Person and both Services — is emitted once by
  * the shared `(pages)` layout, so only this page's breadcrumb is added here. No
- * `FAQPage`: that type stays on /perguntas.
+ * `FAQPage`: that type stays on /perguntas. The credential band is gone (the
+ * who-line carries its job); the strip remains on Início and /sobre.
  */
 export default async function OrientacaoProfissionalPage({ params }: OrientacaoProfissionalProps) {
   const { locale } = await params;
@@ -65,27 +65,24 @@ export default async function OrientacaoProfissionalPage({ params }: OrientacaoP
         ]}
       />
 
-      <Abertura content={page.abertura} />
-      {/* `column`, not the default `wide`: this page opens on a reading column
-          rather than on Início's two-column spread, and the strip has to start
-          where the `h1` above it does. */}
-      <Credencial clinica={clinica} width="column" />
+      <Abertura content={page.abertura} clinica={clinica} />
       <ParaQuem content={page.paraQuem} />
       <OPercurso content={page.oPercurso} />
       <NemCoaching content={page.nemCoaching} />
-      <PerguntaMaisFunda content={page.perguntaMaisFunda} />
-      <Pratico clinica={clinica} content={page.pratico} />
       {/* The orientação-specific opener CONCEPT §6 asks for: the note this tap
           composes names the door it came through, so the message that reaches her
           WhatsApp says the conversation started here — attribution in her wording,
           with nothing tracked about the visitor (CONCEPT §8.1). */}
-      <Comecar
-        id="comecar"
-        labelledBy="comecar-heading"
-        content={page.comecar}
+      <PraticoSection
+        id="pratico"
+        labelledBy="pratico-heading"
+        heading={page.pratico.heading}
+        rows={page.pratico.items}
         clinica={clinica}
-        opener="careerGuidance"
-      />
+        fees="careerGuidance"
+      >
+        <ComecarFold content={page.pratico.comecar} clinica={clinica} opener="careerGuidance" />
+      </PraticoSection>
     </>
   );
 }

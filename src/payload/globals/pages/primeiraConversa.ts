@@ -7,6 +7,12 @@ import { PAGES_GROUP, pageAccess, revalidatePageHook } from "./shared";
  * A primeira conversa (`/primeira-conversa`) — the threshold page: know exactly
  * what happens when I write, and write.
  *
+ * The 2026-08 condensation cut the page from seven bands to four, and the tabs
+ * follow: the steps went from five tempos to four (the day-of beat merged into
+ * scheduling), the three permissions became the steps band's coda
+ * (`passoAPasso.permissoes`), and the mini-FAQ shrank to the doubts the page has
+ * not already answered, folded into the combinado band (`logistica.doubts`).
+ *
  * The four note openers themselves live in A Clínica (they are quoted on more
  * than one page); this page holds only how they are introduced.
  */
@@ -41,9 +47,9 @@ export const PagePrimeiraConversa: GlobalConfig = {
         },
         {
           name: "passoAPasso",
-          label: "1 · Passo a passo",
+          label: "1 · Como acontece",
           description:
-            "Cinco tempos, I a V: a mensagem, o agendamento, o dia, os cinquenta minutos, o que se decide depois.",
+            "Quatro tempos, I a IV: a mensagem, o agendamento, os cinquenta minutos, o que se decide depois — e as três permissões fechando a seção.",
           fields: [
             localizedText({ name: "heading", label: "Título" }),
             {
@@ -51,59 +57,65 @@ export const PagePrimeiraConversa: GlobalConfig = {
               type: "array",
               label: "Passos",
               labels: { singular: "Passo", plural: "Passos" },
+              admin: {
+                description:
+                  "Só a logística de cada tempo: as garantias moram nas permissões abaixo, uma vez só.",
+              },
               fields: [
                 {
                   name: "numeral",
                   type: "text",
                   label: "Numeral",
-                  admin: { description: "I a V." },
+                  admin: { description: "I a IV." },
                 },
                 localizedText({ name: "title", label: "Título" }),
                 localizedTextarea({ name: "text", label: "Texto" }),
               ],
             },
-          ],
-        },
-        {
-          name: "permissoes",
-          label: "2 · Permissões",
-          description:
-            "Não precisa preparar nada, não precisa saber nomear o que sente, não existe assunto pequeno demais. Uma linha por permissão.",
-          fields: [
-            localizedText({ name: "heading", label: "Título" }),
             {
-              name: "items",
-              type: "array",
-              label: "Permissões",
-              labels: { singular: "Permissão", plural: "Permissões" },
-              fields: [localizedTextarea({ name: "text", label: "Texto", required: true })],
-            },
-            {
-              name: "plate",
+              name: "permissoes",
               type: "group",
-              label: "A pintura desta página",
+              label: "Permissões",
               admin: {
                 description:
-                  "Uma pintura, depois das permissões — o respiro da página, antes das informações práticas. Domínio público, com proveniência verificada.",
+                  "Não precisa preparar nada, não precisa saber nomear o que sente, não existe assunto pequeno demais. Uma linha por permissão — elas fecham a seção, com a pintura.",
               },
               fields: [
-                mediaSlot({
-                  name: "image",
-                  label: "Imagem",
-                  description: "A tela inteira, em boa resolução.",
-                }),
-                { name: "painter", type: "text", label: "Pintor(a)" },
-                localizedText({ name: "workTitle", label: "Título da obra" }),
-                { name: "year", type: "text", label: "Ano" },
+                {
+                  name: "items",
+                  type: "array",
+                  label: "Permissões",
+                  labels: { singular: "Permissão", plural: "Permissões" },
+                  fields: [localizedTextarea({ name: "text", label: "Texto", required: true })],
+                },
+                {
+                  name: "plate",
+                  type: "group",
+                  label: "A pintura desta página",
+                  admin: {
+                    description:
+                      "Uma pintura, depois das permissões — o respiro da página, antes das informações práticas. Domínio público, com proveniência verificada.",
+                  },
+                  fields: [
+                    mediaSlot({
+                      name: "image",
+                      label: "Imagem",
+                      description: "A tela inteira, em boa resolução.",
+                    }),
+                    { name: "painter", type: "text", label: "Pintor(a)" },
+                    localizedText({ name: "workTitle", label: "Título da obra" }),
+                    { name: "year", type: "text", label: "Ano" },
+                  ],
+                },
               ],
             },
           ],
         },
         {
           name: "logistica",
-          label: "3 · Logística",
+          label: "2 · O combinado",
           description:
-            "Duração, plataforma, remarcação, fuso, idiomas. O valor vem de A Clínica — em branco, o site escreve “a combinar”. Os horários são sempre no horário de Brasília.",
+            "Duração, plataforma, remarcação, fuso, idiomas — e as dúvidas de soleira que as seções acima não respondem. O valor vem de A Clínica; em branco, o site escreve “a combinar”.",
           fields: [
             localizedText({ name: "heading", label: "Título" }),
             {
@@ -116,20 +128,15 @@ export const PagePrimeiraConversa: GlobalConfig = {
                 localizedText({ name: "value", label: "Valor" }),
               ],
             },
-          ],
-        },
-        {
-          name: "miniFaq",
-          label: "4 · Mini-FAQ",
-          description:
-            "As quatro ou cinco dúvidas que travam alguém na soleira, e o link para a página de perguntas.",
-          fields: [
-            localizedText({ name: "heading", label: "Título" }),
             {
-              name: "items",
+              name: "doubts",
               type: "array",
-              label: "Perguntas",
-              labels: { singular: "Pergunta", plural: "Perguntas" },
+              label: "Dúvidas de soleira",
+              labels: { singular: "Dúvida", plural: "Dúvidas" },
+              admin: {
+                description:
+                  "Só as dúvidas que o resto da página ainda não respondeu; as outras moram em Perguntas, a um link daqui.",
+              },
               fields: [
                 localizedText({ name: "question", label: "Pergunta", required: true }),
                 localizedTextarea({ name: "answer", label: "Resposta" }),
@@ -140,7 +147,7 @@ export const PagePrimeiraConversa: GlobalConfig = {
         },
         {
           name: "bilhete",
-          label: "5 · O bilhete",
+          label: "3 · O bilhete",
           description:
             "A pessoa toca um bilhete já escrito e ele vai para o seu WhatsApp. Os quatro textos estão em A Clínica → Bilhetes; aqui fica só a apresentação.",
           fields: [

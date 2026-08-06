@@ -16,16 +16,16 @@ import { twinFeeRows } from "@/domain/markdown/twinFeeRows";
 import type { OrientacaoProfissional } from "@/domain/orientacaoProfissional/OrientacaoProfissional";
 
 /**
- * Orientação profissional e de carreira's twin — the seven sections of CONCEPT
- * §6, in the page's own order.
+ * Orientação profissional e de carreira's twin — the five bands of the condensed
+ * page, in the page's own order.
  *
  * This is the site's strongest non-brand search asset (CONCEPT §10) and the page
  * a comparing reader reads fastest, which is exactly the reader an assistant is
  * usually answering for. So the twin keeps the whole comparison apparatus: the
  * four situations, the four movements, the three distinctions, the deliverable
- * sentence, the boundary with análise, and the fee row — everything the page uses
- * to answer "what do I get, how long does it take, and how is this different from
- * coaching".
+ * sentence, the boundary with análise (folded into "nem coaching", as on the
+ * page), and the fee row — everything the page uses to answer "what do I get,
+ * how long does it take, and how is this different from coaching".
  *
  * The fee is scoped to `careerGuidance`: a page quotes its own service, so a
  * reader is never asked to compare two prices they are not choosing between.
@@ -45,7 +45,7 @@ export function orientacaoProfissionalDoc(
         page.paraQuem.heading,
         // Unordered on purpose: these are alternatives, only one of which is the
         // reader's.
-        bullets(page.paraQuem.cases.map((item) => labelled(item.title, item.text))),
+        bullets(page.paraQuem.cases),
       ),
       section(
         2,
@@ -60,12 +60,9 @@ export function orientacaoProfissionalDoc(
         richTextToMarkdown(page.nemCoaching.body),
         bullets(page.nemCoaching.distinctions.map((item) => labelled(item.title, item.text))),
         paragraph(page.nemCoaching.anchor),
-      ),
-      section(
-        2,
-        page.perguntaMaisFunda.heading,
-        paragraph(page.perguntaMaisFunda.body),
-        paragraph(link(page.perguntaMaisFunda.linkLabel, pageUrls.analise)),
+        // The bridge to análise, folded in exactly as the page folds it.
+        paragraph(page.nemCoaching.bridge.body),
+        paragraph(link(page.nemCoaching.bridge.linkLabel, pageUrls.analise)),
       ),
       section(
         2,
@@ -75,12 +72,9 @@ export function orientacaoProfissionalDoc(
           ...page.pratico.items,
         ]),
         paragraph(ctx.clinica.fees.internationalNote),
-      ),
-      section(
-        2,
-        page.comecar.heading,
-        paragraph(page.comecar.body),
-        paragraph(link(page.comecar.linkLabel, pageUrls.primeiraConversa)),
+        // The ask, folded into the band exactly as the page folds it.
+        paragraph(page.pratico.comecar.body),
+        paragraph(link(page.pratico.comecar.linkLabel, pageUrls.primeiraConversa)),
       ),
     ),
   });

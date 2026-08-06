@@ -7,7 +7,6 @@ import {
   ANALISE_DEFAULTS,
   type Analise,
   type DreamParallel,
-  type MethodTool,
   type Pillar,
   type SignReading,
 } from "./Analise";
@@ -33,34 +32,21 @@ function filledRichText(value: RichTextContent | null | undefined): RichTextCont
 // notes: Payload materializes an untouched array field as `[]`, so "she cleared
 // this section" and "she never opened this tab" arrive as the same value).
 //
-//   · `oMetodo.tools` and `oQueTrazem.pillars` fall back to the defaults. Both
-//     belong to sections CONCEPT §6 requires by name — the symbolic tools and the
-//     three pillars *are* those sections — and neither has a designed empty
-//     state, so of the two readings only "un-edited" is safe. The pillars matter
-//     most: they are her own words, and an empty array must never delete them.
+//   · `oQueTrazem.pillars` falls back to the defaults. The three pillars *are*
+//     that section, they are her own words, and an empty array must never
+//     delete them.
 //   · `pratico.items` likewise: a prático section with no facts but a price is a
 //     page that stopped answering the question a comparing reader came with.
 //   · `sonhoAmpliado.parallels` is the one array that reads `[]` literally.
 //     That section has a designed partial state by construction — a parallel
 //     renders only once she has curated it (CONCEPT §9.3), so all three being
-//     absent is the *launch* state, not a fault. Falling back would print three
-//     labels with nothing to read.
+//     absent is the resting state, not a fault.
 //
 // Within a populated array, a row with no readable text is still dropped: a
 // half-typed row has nothing a visitor could read.
 // ---------------------------------------------------------------------------
 
 const ROMAN_NUMERALS = ["I", "II", "III"];
-
-function toolsFrom(raw: NonNullable<PayloadPageAnalise["oMetodo"]>["tools"]): MethodTool[] {
-  if (!Array.isArray(raw)) return ANALISE_DEFAULTS.oMetodo.tools;
-
-  const tools = raw
-    .map((tool) => ({ title: filled(tool?.title), text: filled(tool?.text) }))
-    .filter((tool): tool is MethodTool => tool.title !== null && tool.text !== null);
-
-  return tools.length > 0 ? tools : ANALISE_DEFAULTS.oMetodo.tools;
-}
 
 function pillarsFrom(raw: NonNullable<PayloadPageAnalise["oQueTrazem"]>["pillars"]): Pillar[] {
   if (!Array.isArray(raw)) return ANALISE_DEFAULTS.oQueTrazem.pillars;
@@ -89,7 +75,7 @@ function praticoItemsFrom(raw: NonNullable<PayloadPageAnalise["pratico"]>["items
 
 /**
  * The three parallels of Sonho ampliado. No fallback: an empty array is the
- * launch state, and a parallel with only a label has nothing a visitor could
+ * resting state, and a parallel with only a label has nothing a visitor could
  * read — its content is her curation (CONCEPT §9.3), so it waits.
  *
  * What counts as content: her line, a painting, or a recorded provenance. The
@@ -140,45 +126,28 @@ export function analiseFromPayload(doc: PayloadPageAnalise): Analise {
       heading: filled(doc.abertura?.heading) ?? defaults.abertura.heading,
       body: filledRichText(doc.abertura?.body) ?? defaults.abertura.body,
     },
-    aVisao: {
-      heading: filled(doc.aVisao?.heading) ?? defaults.aVisao.heading,
-      body: filledRichText(doc.aVisao?.body) ?? defaults.aVisao.body,
-      plate: pagePlateFrom(doc.aVisao?.plate),
-    },
-    oMetodo: {
-      heading: filled(doc.oMetodo?.heading) ?? defaults.oMetodo.heading,
-      body: filledRichText(doc.oMetodo?.body) ?? defaults.oMetodo.body,
-      tools: toolsFrom(doc.oMetodo?.tools),
-      closingLine: filled(doc.oMetodo?.closingLine) ?? defaults.oMetodo.closingLine,
-    },
-    mandala: {
-      heading: filled(doc.mandala?.heading) ?? defaults.mandala.heading,
-      intro: filled(doc.mandala?.intro) ?? defaults.mandala.intro,
-      readings: readingsFrom(doc.mandala),
-    },
     oQueTrazem: {
       heading: filled(doc.oQueTrazem?.heading) ?? defaults.oQueTrazem.heading,
-      intro: filledRichText(doc.oQueTrazem?.intro) ?? defaults.oQueTrazem.intro,
       note: filled(doc.oQueTrazem?.note) ?? defaults.oQueTrazem.note,
       pillars: pillarsFrom(doc.oQueTrazem?.pillars),
       boundary: filled(doc.oQueTrazem?.boundary) ?? defaults.oQueTrazem.boundary,
       linkLabel: filled(doc.oQueTrazem?.linkLabel) ?? defaults.oQueTrazem.linkLabel,
     },
+    oMetodo: {
+      heading: filled(doc.oMetodo?.heading) ?? defaults.oMetodo.heading,
+      // Her five paragraphs. An emptied editor state must never delete them.
+      body: filledRichText(doc.oMetodo?.body) ?? defaults.oMetodo.body,
+      toolsLine: filled(doc.oMetodo?.toolsLine) ?? defaults.oMetodo.toolsLine,
+      individuacao: filledRichText(doc.oMetodo?.individuacao) ?? defaults.oMetodo.individuacao,
+      closingLine: filled(doc.oMetodo?.closingLine) ?? defaults.oMetodo.closingLine,
+      plate: pagePlateFrom(doc.oMetodo?.plate),
+    },
     sonhoAmpliado: {
       heading: filled(doc.sonhoAmpliado?.heading) ?? defaults.sonhoAmpliado.heading,
       intro: filled(doc.sonhoAmpliado?.intro) ?? defaults.sonhoAmpliado.intro,
-      // The one field on the page that does NOT fall back, and the only place
-      // where this mapper and `ANALISE_DEFAULTS` deliberately disagree.
-      //
-      // The motif is the section's own switch: clearing it removes Sonho ampliado
-      // from the site, which is her escape hatch if she would rather not
-      // demonstrate the method at all (the drafted motif is a quoted dream, not
-      // her clinical prose, but it is still not a line she wrote). Falling back
-      // would make that switch unreachable without a deploy. The default is still
-      // real — it is what the seed writes and what renders when Payload is off —
-      // so the only state that reaches `null` here is a document whose motif she
-      // emptied on purpose. Início's Instagram tiles take the same shape of
-      // decision for the same reason: a designed empty state must be reachable.
+      // No fallback: the motif is the section's own switch. The default is null
+      // too — the section waits for her words everywhere (CONCEPT §9.3), and
+      // writing the motif in the admin is what turns it on.
       motif: filled(doc.sonhoAmpliado?.motif),
       parallels: parallelsFrom(doc.sonhoAmpliado?.parallels),
       closingLine: filled(doc.sonhoAmpliado?.closingLine),
@@ -186,11 +155,15 @@ export function analiseFromPayload(doc: PayloadPageAnalise): Analise {
     pratico: {
       heading: filled(doc.pratico?.heading) ?? defaults.pratico.heading,
       items: praticoItemsFrom(doc.pratico?.items),
+      comecar: {
+        body: filled(doc.pratico?.comecar?.body) ?? defaults.pratico.comecar.body,
+        linkLabel: filled(doc.pratico?.comecar?.linkLabel) ?? defaults.pratico.comecar.linkLabel,
+      },
     },
-    paraComecar: {
-      heading: filled(doc.paraComecar?.heading) ?? defaults.paraComecar.heading,
-      body: filled(doc.paraComecar?.body) ?? defaults.paraComecar.body,
-      linkLabel: filled(doc.paraComecar?.linkLabel) ?? defaults.paraComecar.linkLabel,
+    mandala: {
+      heading: filled(doc.mandala?.heading) ?? defaults.mandala.heading,
+      intro: filled(doc.mandala?.intro) ?? defaults.mandala.intro,
+      readings: readingsFrom(doc.mandala),
     },
   };
 }

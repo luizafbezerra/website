@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import type { Clinica } from "@/domain/clinica/Clinica";
 import type { FactRow } from "@/domain/pages/FactRow";
 import { FactList } from "@/view/general/FactList";
@@ -34,6 +35,7 @@ export function PraticoSection({
   clinica,
   fees,
   tone,
+  children,
 }: {
   id?: string;
   labelledBy: string;
@@ -42,6 +44,8 @@ export function PraticoSection({
   clinica: Clinica;
   fees: FeeScope;
   tone?: "parchment" | "deep";
+  /** What closes the band after the facts — a folded ask, threshold doubts. */
+  children?: ReactNode;
 }) {
   const feeRows = useFeeRows(clinica.fees, fees);
 
@@ -54,6 +58,8 @@ export function PraticoSection({
       {fees !== "none" && clinica.fees.internationalNote && (
         <p className="text-ink-soft mt-6 max-w-[54ch] text-sm">{clinica.fees.internationalNote}</p>
       )}
+
+      {children}
     </PageSection>
   );
 }

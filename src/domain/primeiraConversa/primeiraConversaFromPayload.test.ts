@@ -14,14 +14,14 @@ describe("primeiraConversaFromPayload", () => {
   it("treats a cleared field as an absence, not as a value", () => {
     const doc: PayloadPagePrimeiraConversa = {
       abertura: { heading: "   " },
-      miniFaq: { linkLabel: "" },
+      logistica: { linkLabel: "" },
       bilhete: { chooseLabel: "  " },
     };
 
     const page = primeiraConversaFromPayload(doc);
 
     expect(page.abertura.heading).toBe(PRIMEIRA_CONVERSA_DEFAULTS.abertura.heading);
-    expect(page.miniFaq.linkLabel).toBe(PRIMEIRA_CONVERSA_DEFAULTS.miniFaq.linkLabel);
+    expect(page.logistica.linkLabel).toBe(PRIMEIRA_CONVERSA_DEFAULTS.logistica.linkLabel);
     expect(page.bilhete.chooseLabel).toBe(PRIMEIRA_CONVERSA_DEFAULTS.bilhete.chooseLabel);
   });
 
@@ -52,16 +52,16 @@ describe("primeiraConversaFromPayload", () => {
   // requires, and none has a designed empty state.
   it("falls back on every empty array rather than dropping a required section", () => {
     const page = primeiraConversaFromPayload({
-      passoAPasso: { steps: [] },
-      permissoes: { items: [] },
-      logistica: { items: [] },
-      miniFaq: { items: [] },
+      passoAPasso: { steps: [], permissoes: { items: [] } },
+      logistica: { items: [], doubts: [] },
     });
 
     expect(page.passoAPasso.steps).toEqual(PRIMEIRA_CONVERSA_DEFAULTS.passoAPasso.steps);
-    expect(page.permissoes.items).toEqual(PRIMEIRA_CONVERSA_DEFAULTS.permissoes.items);
+    expect(page.passoAPasso.permissoes.items).toEqual(
+      PRIMEIRA_CONVERSA_DEFAULTS.passoAPasso.permissoes.items,
+    );
     expect(page.logistica.items).toEqual(PRIMEIRA_CONVERSA_DEFAULTS.logistica.items);
-    expect(page.miniFaq.items).toEqual(PRIMEIRA_CONVERSA_DEFAULTS.miniFaq.items);
+    expect(page.logistica.doubts).toEqual(PRIMEIRA_CONVERSA_DEFAULTS.logistica.doubts);
   });
 
   it("keeps the tempos in stored order and numbers the ones she left blank", () => {
@@ -83,29 +83,43 @@ describe("primeiraConversaFromPayload", () => {
   it("drops half-typed rows, and falls back when nothing readable survives", () => {
     const partial = primeiraConversaFromPayload({
       passoAPasso: { steps: [{ title: "Sem texto ainda" }, { title: "II", text: "Pronto." }] },
-      logistica: { items: [{ label: "Duração" }, { label: "Idiomas", value: "Português." }] },
-      miniFaq: { items: [{ question: "Sem resposta?" }] },
+      logistica: {
+        items: [{ label: "Duração" }, { label: "Idiomas", value: "Português." }],
+        doubts: [{ question: "Sem resposta?" }],
+      },
     });
 
     expect(partial.passoAPasso.steps).toEqual([{ numeral: "II", title: "II", text: "Pronto." }]);
     expect(partial.logistica.items).toEqual([{ label: "Idiomas", value: "Português." }]);
-    // Every row was unreadable, so the section falls back rather than vanishing.
-    expect(partial.miniFaq.items).toEqual(PRIMEIRA_CONVERSA_DEFAULTS.miniFaq.items);
+    // Every doubt was unreadable, so the section falls back rather than vanishing.
+    expect(partial.logistica.doubts).toEqual(PRIMEIRA_CONVERSA_DEFAULTS.logistica.doubts);
+  });
+
+  it("reads the permissions from their group inside the steps band", () => {
+    const page = primeiraConversaFromPayload({
+      passoAPasso: {
+        permissoes: { items: [{ text: "Você não precisa preparar nada." }, { text: "   " }] },
+      },
+    });
+
+    expect(page.passoAPasso.permissoes.items).toEqual(["Você não precisa preparar nada."]);
   });
 
   it("resolves the plate to its label and image, and to null while the scan is missing", () => {
     const withImage = primeiraConversaFromPayload({
-      permissoes: {
-        plate: {
-          image: upload("/media/soleira.jpg", "uma porta entreaberta"),
-          painter: "Vilhelm Hammershøi",
-          workTitle: "Interior com portas abertas",
-          year: "1905",
+      passoAPasso: {
+        permissoes: {
+          plate: {
+            image: upload("/media/soleira.jpg", "uma porta entreaberta"),
+            painter: "Vilhelm Hammershøi",
+            workTitle: "Interior com portas abertas",
+            year: "1905",
+          },
         },
       },
     });
 
-    expect(withImage.permissoes.plate).toEqual({
+    expect(withImage.passoAPasso.permissoes.plate).toEqual({
       image: {
         src: "/media/soleira.jpg",
         alt: "uma porta entreaberta",
@@ -120,19 +134,21 @@ describe("primeiraConversaFromPayload", () => {
     // The label can be recorded before the scan is sourced — the frame stands in
     // for the image alone (REQ-005), and provenance is never invented.
     const labelOnly = primeiraConversaFromPayload({
-      permissoes: { plate: { painter: "Vilhelm Hammershøi", year: "1905" } },
+      passoAPasso: { permissoes: { plate: { painter: "Vilhelm Hammershøi", year: "1905" } } },
     });
 
-    expect(labelOnly.permissoes.plate.image).toBeNull();
-    expect(labelOnly.permissoes.plate.painter).toBe("Vilhelm Hammershøi");
-    expect(labelOnly.permissoes.plate.workTitle).toBeNull();
+    expect(labelOnly.passoAPasso.permissoes.plate.image).toBeNull();
+    expect(labelOnly.passoAPasso.permissoes.plate.painter).toBe("Vilhelm Hammershøi");
+    expect(labelOnly.passoAPasso.permissoes.plate.workTitle).toBeNull();
   });
 
   it("refuses an upload with no intrinsic size rather than shipping layout shift", () => {
     const page = primeiraConversaFromPayload({
-      permissoes: { plate: { image: { url: "/media/sem-medidas.jpg", alt: "x" } } },
+      passoAPasso: {
+        permissoes: { plate: { image: { url: "/media/sem-medidas.jpg", alt: "x" } } },
+      },
     });
 
-    expect(page.permissoes.plate.image).toBeNull();
+    expect(page.passoAPasso.permissoes.plate.image).toBeNull();
   });
 });

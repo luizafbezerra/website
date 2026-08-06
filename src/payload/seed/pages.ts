@@ -121,43 +121,42 @@ export async function seedPages(payload: Payload): Promise<void> {
   });
 
   // ── A Análise ─────────────────────────────────────────────────────────────
-  // Her five-paragraph pillars intro and the three pillars are hers, verbatim;
-  // the rest is drafted from CONCEPT §6.
+  // Her five-paragraph method text and the three pillars are hers, verbatim;
+  // the rest is drafted from CONCEPT §6 (as condensed in 2026-08).
   const analise = ANALISE_DEFAULTS;
   await payload.updateGlobal({
     ...shared,
     slug: "page-analise",
     data: {
       abertura: { heading: analise.abertura.heading, body: rt(analise.abertura.body) },
-      aVisao: { heading: analise.aVisao.heading, body: rt(analise.aVisao.body) },
-      oMetodo: {
-        heading: analise.oMetodo.heading,
-        body: rt(analise.oMetodo.body),
-        tools: analise.oMetodo.tools,
-        closingLine: analise.oMetodo.closingLine,
-      },
-      mandala: { heading: analise.mandala.heading, intro: analise.mandala.intro },
       oQueTrazem: {
         heading: analise.oQueTrazem.heading,
-        intro: rt(analise.oQueTrazem.intro),
         note: analise.oQueTrazem.note,
         pillars: analise.oQueTrazem.pillars,
         boundary: analise.oQueTrazem.boundary,
         linkLabel: analise.oQueTrazem.linkLabel,
       },
+      oMetodo: {
+        heading: analise.oMetodo.heading,
+        body: rt(analise.oMetodo.body),
+        toolsLine: analise.oMetodo.toolsLine,
+        individuacao: rt(analise.oMetodo.individuacao),
+        closingLine: analise.oMetodo.closingLine,
+      },
       sonhoAmpliado: {
         heading: analise.sonhoAmpliado.heading,
         intro: analise.sonhoAmpliado.intro,
+        // Null: the section waits for her words (its motif is its own switch).
         motif: analise.sonhoAmpliado.motif,
         // Labels only: the three kinds of parallel exist as rows for her to fill.
         parallels: analise.sonhoAmpliado.parallels.map(({ label }) => ({ label })),
       },
-      pratico: { heading: analise.pratico.heading, items: analise.pratico.items },
-      paraComecar: {
-        heading: analise.paraComecar.heading,
-        body: analise.paraComecar.body,
-        linkLabel: analise.paraComecar.linkLabel,
+      pratico: {
+        heading: analise.pratico.heading,
+        items: analise.pratico.items,
+        comecar: analise.pratico.comecar,
       },
+      mandala: { heading: analise.mandala.heading, intro: analise.mandala.intro },
     },
   });
 
@@ -168,7 +167,10 @@ export async function seedPages(payload: Payload): Promise<void> {
     slug: "page-orientacao-profissional",
     data: {
       abertura: { heading: orientacao.abertura.heading, body: rt(orientacao.abertura.body) },
-      paraQuem: { heading: orientacao.paraQuem.heading, cases: orientacao.paraQuem.cases },
+      paraQuem: {
+        heading: orientacao.paraQuem.heading,
+        cases: orientacao.paraQuem.cases.map((text) => ({ text })),
+      },
       oPercurso: {
         heading: orientacao.oPercurso.heading,
         body: rt(orientacao.oPercurso.body),
@@ -180,17 +182,12 @@ export async function seedPages(payload: Payload): Promise<void> {
         body: rt(orientacao.nemCoaching.body),
         distinctions: orientacao.nemCoaching.distinctions,
         anchor: orientacao.nemCoaching.anchor,
+        bridge: orientacao.nemCoaching.bridge,
       },
-      perguntaMaisFunda: {
-        heading: orientacao.perguntaMaisFunda.heading,
-        body: orientacao.perguntaMaisFunda.body,
-        linkLabel: orientacao.perguntaMaisFunda.linkLabel,
-      },
-      pratico: { heading: orientacao.pratico.heading, items: orientacao.pratico.items },
-      comecar: {
-        heading: orientacao.comecar.heading,
-        body: orientacao.comecar.body,
-        linkLabel: orientacao.comecar.linkLabel,
+      pratico: {
+        heading: orientacao.pratico.heading,
+        items: orientacao.pratico.items,
+        comecar: orientacao.pratico.comecar,
       },
     },
   });
@@ -230,19 +227,15 @@ export async function seedPages(payload: Payload): Promise<void> {
       passoAPasso: {
         heading: primeiraConversa.passoAPasso.heading,
         steps: primeiraConversa.passoAPasso.steps,
-      },
-      permissoes: {
-        heading: primeiraConversa.permissoes.heading,
-        items: primeiraConversa.permissoes.items.map((text) => ({ text })),
+        permissoes: {
+          items: primeiraConversa.passoAPasso.permissoes.items.map((text) => ({ text })),
+        },
       },
       logistica: {
         heading: primeiraConversa.logistica.heading,
         items: primeiraConversa.logistica.items,
-      },
-      miniFaq: {
-        heading: primeiraConversa.miniFaq.heading,
-        items: primeiraConversa.miniFaq.items,
-        linkLabel: primeiraConversa.miniFaq.linkLabel,
+        doubts: primeiraConversa.logistica.doubts,
+        linkLabel: primeiraConversa.logistica.linkLabel,
       },
       bilhete: {
         heading: primeiraConversa.bilhete.heading,

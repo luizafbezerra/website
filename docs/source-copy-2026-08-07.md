@@ -5,7 +5,7 @@ renderizado em nenhuma página: existe para que cada parágrafo dela tenha um de
 que cada correção gramatical fique visível e possa ser vetada individualmente, e para que as decisões
 que o texto dela abre fiquem registradas em vez de resolvidas em silêncio.
 
-Executa `plan/design-site-copy-1.md`, Fase 1 (TASK-001 a TASK-005).
+Executa `plan/design-site-copy-1.md`, Fases 1 a 4.
 
 Três regras governam tudo o que segue:
 
@@ -351,6 +351,37 @@ Seis das oito páginas ficaram dentro do limite. **Duas não conseguem ficar, e 
 Nos dois casos, chegar a três exigiria reescrever uma frase sua ou apagar um fato que o conceito
 fixa. O orçamento perde. Está registrado em teste, com o motivo, e o teste falha se o número subir
 **ou** se um dia deixar de ser necessário.
+
+## Os textos que os buscadores leem (Fase 4)
+
+Cada página tem, além do texto visível, uma descrição curta que aparece no Google e nas prévias de
+link, e um bloco de dados estruturados que assistentes de IA leem. Eles não podem discordar da
+página. Depois das mudanças acima, duas descrições discordavam:
+
+- **`/orientacao-profissional`** dizia "com psicóloga e aprimoramento pela PUC-SP", que além de
+  soar truncado usava a palavra do registro acadêmico numa página cuja primeira linha agora diz,
+  na sua voz, "Sou **especializada** … pela PUC-SP". Passou a "com psicóloga especializada pela
+  PUC-SP". **É a decisão de OPEN-A aplicada aqui:** a prosa da página e a descrição da página usam
+  a sua palavra; o registro acadêmico continua dizendo _Aprimoramento_, porque é o nome do
+  certificado.
+- **`/`** dizia "orientação profissional de carreira", sem o "e". O nome do serviço em todo o resto
+  do site é "orientação profissional **e** de carreira". Corrigido.
+
+As duas descrições de serviço dos dados estruturados foram relidas e **continuam corretas** — a sua
+frase, na verdade, as confirma: a de orientação já dizia "até doze encontros semanais — testes
+psicológicos, conversas e atividades", que é exatamente o que você escreveu. A lista de temas
+(psicologia analítica, análise junguiana, psicoterapia on-line, sonhos, individuação, ansiedade,
+orientação profissional) também continua verdadeira. Nada mudou nelas.
+
+As versões em Markdown das páginas, que existem para assistentes de IA lerem, são geradas a partir
+do mesmo texto e foram conferidas uma a uma: trazem a sua prosa, as suas aspas curvas, o seu
+travessão e as seis linhas completas da formação.
+
+**A linha "Com a psicóloga Luiza Fernandes Bezerra"** que aparece sob o título das páginas foi
+reconferida ao lado da sua prosa. Em `/sobre` não aparece, porque ali o título já é o seu nome. Em
+`/orientacao-profissional` ela ficou melhor do que antes: o rascunho que a sua frase substituiu
+dizia "conduzido por psicóloga com aprimoramento…", repetindo "psicóloga" imediatamente abaixo de
+"Com a psicóloga". A sua frase em primeira pessoa não repete.
 
 ## Verificação dos blocos que já estavam no site (TASK-020)
 

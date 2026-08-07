@@ -1115,9 +1115,63 @@
 }
 
 @layer utilities {
+  /* Feather a photograph or painted asset into the parchment, so it reads as an
+     image tipped into the page rather than a rectangle pasted onto it.
+
+     **Why this is three masks and not one.** A single radial gradient cannot do
+     this job. Sized the default way (`farthest-corner`) it puts 100% of its ramp
+     at the _corner_, so the middle of each side sits at only 1/√2 ≈ 71% along it
+     and stays largely opaque — the corners dissolve, the edges get cut square, and
+     the result is the rectangle-with-rounded-corners this used to be. Sized
+     `closest-side` it fixes the edges but must then surrender the corners
+     completely, which turns every image into an oval cameo. Both failures are
+     geometry, not tuning: one ellipse cannot both reach zero on the mid-edges and
+     keep the corners.
+
+     So the shape is composed instead — a squircle. Two linear feathers, one per
+     axis, take the four sides down to nothing; a lazy radial takes only the
+     corners. `mask-composite: intersect` multiplies them, so a pixel survives only
+     where all three agree. Mid-edges keep straight, unhurried falloff; corners get
+     hit by all three at once and vanish. Between a rectangle and an oval, which is
+     where this wants to sit.
+
+     **The ramps are eased, not linear.** `black → transparent` changes slope
+     abruptly at both ends and the eye reads those two discontinuities as rings
+     (Mach bands). Intersecting three smooth ramps multiplies into a curve with no
+     such corner, and the intermediate stops keep 8-bit alpha from banding along
+     the long shallow stretches.
+
+     **The dial** is `--vignette-feather` with the radial's first stop. Larger
+     feather + earlier radial = rounder; smaller + later = boxier. Support: masks
+     are Baseline (Dec 2023). A browser with `mask-image` but no `mask-composite`
+     would union the layers and simply render no feather — a clean degradation. */
   .vignette {
-    -webkit-mask-image: radial-gradient(ellipse at center, black 60%, transparent 92%);
-    mask-image: radial-gradient(ellipse at center, black 60%, transparent 92%);
+    --vignette-feather: 13%;
+    --vignette-x: linear-gradient(
+      to right,
+      transparent 0,
+      rgb(0 0 0) var(--vignette-feather),
+      rgb(0 0 0) calc(100% - var(--vignette-feather)),
+      transparent 100%
+    );
+    --vignette-y: linear-gradient(
+      to bottom,
+      transparent 0,
+      rgb(0 0 0) var(--vignette-feather),
+      rgb(0 0 0) calc(100% - var(--vignette-feather)),
+      transparent 100%
+    );
+    --vignette-corners: radial-gradient(
+      ellipse farthest-corner at center,
+      rgb(0 0 0) 55%,
+      rgb(0 0 0 / 72%) 74%,
+      rgb(0 0 0 / 30%) 90%,
+      transparent 100%
+    );
+    -webkit-mask-image: var(--vignette-x), var(--vignette-y), var(--vignette-corners);
+    -webkit-mask-composite: source-in;
+    mask-image: var(--vignette-x), var(--vignette-y), var(--vignette-corners);
+    mask-composite: intersect;
   }
 
   .parchment-grain {

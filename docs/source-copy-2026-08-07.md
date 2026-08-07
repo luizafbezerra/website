@@ -308,6 +308,23 @@ _Registrado. Sem ação, salvo se ela preferir variar._
 
 ---
 
+## Verificação dos blocos que já estavam no site (TASK-020)
+
+Conferido em 07/08/2026, na Fase 2:
+
+- **SRC-A** é idêntico, caractere por caractere, a `CLINICA_DEFAULTS.positioning`. Nada a fazer.
+- **SRC-C** e **SRC-D** já eram os parágrafos 2 a 5 de `METODO_INTRO`. Continuam idênticos, com as
+  duas correções das linhas 1 e 2 da tabela acima e nada mais.
+- **SRC-G.2** já estava nas linhas de "Na prática" das três páginas que a carregam: `Idiomas` e
+  `De onde` em `/analise` e `/orientacao-profissional`, e as equivalentes em `/internacional`. Não
+  foi duplicada.
+
+A conferência não é manual: `src/domain/sourceCopy.test.ts` repete cada bloco dela como literal
+e compara com o que os defaults trazem. Se alguém reescrever uma frase dela, `pnpm test` falha.
+Foi verificado deliberadamente contra quatro edições que um revisor de estilo faria — desfazer a
+tríade final, endireitar as aspas curvas, trocar o travessão por hífen, remover o ponto de
+exclamação — e o teste barra as quatro.
+
 ## Verificação CON-001 (TASK-005)
 
 `grep -rn "Guarulhos\|onsultóri\|presencial" src/domain src/payload/seed messages`

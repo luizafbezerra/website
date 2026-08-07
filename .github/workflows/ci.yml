@@ -31,6 +31,13 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
+      # payload-types.ts and importMap.js are gitignored generated files that
+      # Typecheck depends on. Neither generator needs a live database — they
+      # introspect payload.config.ts and the admin folder, not the DB — so
+      # this runs without POSTGRES_URL, unlike the Vercel build.
+      - name: Generate Payload types
+        run: pnpm generate:importmap && pnpm generate:types
+
       - name: Typecheck
         run: pnpm typecheck
 

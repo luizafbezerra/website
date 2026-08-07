@@ -1448,8 +1448,8 @@
        they never pulse in lockstep. Amplitude stays at "felt rather than
        watched", the mandala-respira discipline. */
     .ceu-mag-1 {
-      animation: ceu-kindle var(--ceu-kindle-duration, 4s) ease-in-out
-        var(--ceu-kindle-delay, 0s) infinite;
+      animation: ceu-kindle var(--ceu-kindle-duration, 4s) ease-in-out var(--ceu-kindle-delay, 0s)
+        infinite;
     }
 
     @keyframes ceu-kindle {
@@ -1513,11 +1513,12 @@
          the reveal's range is behind it. */
       .ceu-mag-1 {
         animation:
-          ceu-kindle var(--ceu-kindle-duration, 4s) ease-in-out var(--ceu-kindle-delay, 0s)
-            infinite,
+          ceu-kindle var(--ceu-kindle-duration, 4s) ease-in-out var(--ceu-kindle-delay, 0s) infinite,
           ceu-star-out auto linear backwards;
         animation-timeline: auto, --ceu-dusk;
-        animation-range: normal, entry 6% entry 30%;
+        animation-range:
+          normal,
+          entry 6% entry 30%;
       }
 
       .ceu-mag-2 {

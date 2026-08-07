@@ -326,7 +326,10 @@ describe("/sobre's twin", () => {
     const text = textOf("sobre", "pt");
 
     expect(text).toContain("- Graduação em Psicologia — PUC-SP");
-    expect(text).toContain("- Extensão em Fenômenos Anômalos — USP");
+    // Her own course names, from her 2026-08-07 text. This row and the Instituto
+    // Numen one used to be truncated because no source document named them.
+    expect(text).toContain("- Pós-graduação em Psicologia Clínica — Instituto Numen");
+    expect(text).toContain("- Extensão em Psicologia, Religião e Fenômenos Anômalos — USP");
     // `period` is unset on every row, so no row prints a parenthesis.
     expect(text).not.toMatch(/— (PUC-SP|USP|Instituto Numen) \(/);
   });

@@ -34,7 +34,12 @@ export function sobreDoc(page: Sobre, ctx: TwinContext): MarkdownBlock[] {
     lead: richTextToMarkdown(page.abertura.lead),
     sections: blocks(
       section(2, page.quemE.heading, richTextToMarkdown(page.quemE.body)),
-      section(2, page.formacao.heading, bullets(page.formacao.items.map(formacaoLine))),
+      section(
+        2,
+        page.formacao.heading,
+        page.formacao.intro ? paragraph(page.formacao.intro) : null,
+        bullets(page.formacao.items.map(formacaoLine)),
+      ),
       section(
         2,
         page.aClinica.heading,

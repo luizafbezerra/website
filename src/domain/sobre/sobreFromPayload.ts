@@ -69,6 +69,12 @@ export function sobreFromPayload(doc: PayloadPageSobre): Sobre {
     },
     formacao: {
       heading: filled(doc.formacao?.heading) ?? defaults.formacao.heading,
+      // Falls back like every other text field on the page. The type is nullable
+      // so the section can render without an intro, but the default is her own
+      // sentence, so a blank stored value means "Payload has nothing", not "she
+      // removed it" — the no-fallback form is reserved for fields whose default is
+      // null too (see `sonhoAmpliado.motif`).
+      intro: filled(doc.formacao?.intro) ?? defaults.formacao.intro,
       items: formacaoFrom(doc.formacao?.items),
     },
     aClinica: {

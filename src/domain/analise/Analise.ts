@@ -15,14 +15,29 @@ import { ZODIAC_SIGN_IDS, type ZodiacSignId } from "@/domain/zodiac/zodiacConten
 // ANALISE_DEFAULTS is what renders when Payload is off or a field is blank, and
 // it is also what `seed/pages.ts` writes on a fresh database.
 //
-// **On the copy in these defaults.** Two blocks are *hers, verbatim* and must
-// never be reworded: `oMetodo.body` (the five paragraphs she rewrote herself,
-// rescued from the database in TASK-026 — they are her account of how she works,
-// which is why they moved from the pillars' intro to the method section) and the
-// three `oQueTrazem.pillars`. Everything else is a *draft* stating only facts
-// CONCEPT already fixes. Drafts state facts plainly; only her words get to be
-// profound. Nothing drafted here is her voice until she says it is; TASK-052
-// owns the review.
+// **On the copy in these defaults.** After her 2026-08-07 text landed, this is
+// the page with the most of her own writing on it. *Hers, verbatim* — never to be
+// reworded, and pinned by `src/domain/sourceCopy.test.ts`:
+//
+//   · `oMetodo.body` — the five paragraphs she rewrote herself, rescued from the
+//     database in TASK-026, which is why they moved from the pillars' intro to
+//     the method section. Two mechanical corrections; see `METODO_INTRO`.
+//   · the three `oQueTrazem.pillars`
+//   · `abertura.body` paragraph 2 (SRC-F.1)
+//   · `oMetodo.individuacao` (SRC-F.2), minus its closing guardrail sentence
+//   · `oMetodo.closingLine` (SRC-F.4)
+//   · `pratico.comecar.body` (SRC-H)
+//
+// `oMetodo.toolsLine` is her vocabulary condensed rather than her sentences
+// carried over — the one field on this page where that was necessary, and the
+// ledger's OPEN-B. Everything else is a *draft* stating only facts CONCEPT
+// already fixes. Drafts state facts plainly; only her words get to be profound.
+// Nothing drafted here is her voice until she says it is; TASK-052 owns the
+// review.
+//
+// Every correction to her text is a vetoable row in
+// `docs/source-copy-2026-08-07.md`. Nothing in this file may edit her prose
+// without adding a row there first.
 //
 // Two policies bind this page harder than any other:
 //   · **Individuação is described, never promised** (CONCEPT §11). `oMetodo`'s
@@ -70,10 +85,11 @@ export type Analise = {
     heading: string;
     /** Her five paragraphs, verbatim — the section's spine. */
     body: RichTextContent;
-    /** One sentence naming the symbolic material, in place of three titled blocks. */
+    /** How a session goes and what it works with, in place of three titled blocks. */
     toolsLine: string;
     /** The whole person and individuação — described, never promised. */
     individuacao: RichTextContent;
+    /** Hers, verbatim. Exempt from the humanize pass (CON-005). */
     closingLine: string;
     plate: PagePlate;
   };
@@ -107,13 +123,26 @@ export const EMPTY_SIGN_READINGS: Record<ZodiacSignId, SignReading> = Object.fro
  * Her own account of how she works — five paragraphs, verbatim, carried here
  * from `src/payload/seed/pages.ts` where TASK-026 rescued them from the database
  * before the destructive migration. This is content, not code: never reword it,
- * never trim it, never "improve" its punctuation.
+ * never trim it, never "improve" its rhythm.
+ *
+ * **Two mechanical corrections, and only two.** She authorised grammar fixes on
+ * 2026-08-07 under a closed licence (plan CON-003), so paragraph 4 now reads
+ * `é ditado` for her `são ditados` (the subject is *o conteúdo*, singular) and
+ * `“anticapitalista”` for her `“anti capitalista”` (the prefix takes no hyphen
+ * before a consonant). Both are logged as vetoable rows 1 and 2 in
+ * `docs/source-copy-2026-08-07.md`, which is where any further edit has to be
+ * argued before it is made.
+ *
+ * Her curly quotes stay curly and her em dashes stay em dashes. `writing:humanize`
+ * §14 and §19 are suspended for this codebase precisely because of this
+ * paragraph (plan CON-004) — its typography is the voice sample the skill's own
+ * precedence rule defers to.
  */
 const METODO_INTRO = richText([
   "Tomo a sério o que se manifesta em sonhos, fantasias, imagens e sintomas. Não são ruído: são as maneiras pelas quais a psique fala sobre o que ainda não cabe em palavras.",
   "Não removo sintomas, trabalho o fortalecimento do seu ego para que esses sintomas não sejam necessários um dia. A clínica analítica não trabalha para eliminar sintomas, lidamos com a psicologia profunda.",
   "Como fazemos isso? Através da conscientização das próprias emoções, da personalidade, do momento de vida, como se reage às tristezas e felicidades da própria existência. Aliado a isso, o trabalho de forma consistente, através de encontros semanais.",
-  "Gosto de dizer que a psicologia clínica é o trabalho mais “anti capitalista” que existe, pois o que é oferecido não traz uma solução rápida tampouco indolor. Por uma questão ética, o conteúdo dos encontros são ditados pelo paciente, de acordo com aquilo que ele está preparado para trazer.",
+  "Gosto de dizer que a psicologia clínica é o trabalho mais “anticapitalista” que existe, pois o que é oferecido não traz uma solução rápida tampouco indolor. Por uma questão ética, o conteúdo dos encontros é ditado pelo paciente, de acordo com aquilo que ele está preparado para trazer.",
   "Eu só farei pontuações daquilo que acredito que você esteja preparado para receber, respeitando o tempo do seu processo e a sua subjetividade. Não existe pressa no processo de individuação.",
 ]);
 
@@ -141,12 +170,18 @@ export const ANALISE_DEFAULTS: Analise = {
     // The h1 carries the search term the page targets ("análise junguiana") and
     // still reads as the page's own name — CONCEPT §10 puts this cluster here.
     heading: "A análise junguiana",
-    // The whole AEO front-load (REQ-012): what it is, how often, in which
-    // languages, from where — then the one idea the page unfolds. The who-line
-    // rendered under it comes from A Clínica.
+    // Paragraph 1 is the AEO front-load (REQ-012): what it is, how often, in
+    // which languages, from where. The who-line rendered under it comes from A
+    // Clínica. Paragraph 2 is **hers, verbatim** (SRC-F.1) — it says what the
+    // drafted paragraph it replaced was reaching for, in her own frame: the
+    // symptom has a purpose. Her lead-in sentence ("Eu trabalho com a Psicologia
+    // Analítica, desenvolvida por Carl Gustav Jung.") is deliberately absent,
+    // because paragraph 1 already names the tradition and repeating it here
+    // spends the GUD-001 budget on nothing; that omission is OPEN-D in the
+    // ledger and it is hers to overrule.
     body: richText([
       "A análise é um espaço seguro de escuta, reflexão e transformação: psicoterapia de orientação junguiana, on-line, em encontros semanais, em português ou em inglês, de qualquer lugar do Brasil ou do exterior.",
-      "O que costuma trazer alguém até aqui — a ansiedade que não passa, um luto que não se resolve, a sensação de estar no caminho errado — não é apenas um defeito a corrigir. O sintoma é também um chamado do inconsciente: algo pedindo para ser escutado antes de poder mudar.",
+      "Diferente de abordagens que focam apenas em calar um sintoma (como a ansiedade ou a angústia), a clínica da psicologia profunda entende que o sintoma tem um propósito: ele é um chamado do nosso inconsciente pedindo atenção.",
     ]),
   },
   oQueTrazem: {
@@ -166,21 +201,39 @@ export const ANALISE_DEFAULTS: Analise = {
     // Hers, verbatim — the drafted paraphrase that once opened this section is
     // gone; her own five paragraphs are the section.
     body: METODO_INTRO,
+    // Her vocabulary, condensed to one field. SRC-F.3 is a paragraph plus three
+    // bullets, and this band holds a single line (CONCEPT §6), so this is the
+    // **one place her text did not land verbatim** — printing her bullets as
+    // bullets needs a repeatable field, which is OPEN-B in the ledger and her
+    // call to make.
     toolsLine:
-      "O material de trabalho é o que a sua psique já produz: os sonhos, as imagens e fantasias do dia a dia, os padrões que se repetem.",
+      "As sessões são um espaço de diálogo livre, acolhedor e sem julgamentos. Além da conversa, o trabalho recorre a ferramentas simbólicas para alcançar o que está além do racional: os sonhos, as imagens, fantasias e símbolos do seu dia a dia, os padrões que se repetem e bloqueiam o seu desenvolvimento.",
+    // Hers, verbatim (SRC-F.2), with the italic run on `Individuação` where she
+    // capitalised it. The closing sentence is **ours**: CONCEPT §11's guarantee
+    // that individuação is described, never promised. Her prose describes a
+    // continuous process and so already satisfies the rule, which is why whether
+    // this sentence stays is OPEN-C in the ledger rather than settled here.
     individuacao: richText([
       [
         {
-          text: "A psicologia analítica não trata um sintoma isolado, e sim a pessoa inteira. Jung deu um nome ao movimento de uma vida em direção a si mesma: ",
+          text: "Nesta abordagem, olhamos para o ser humano de forma integral. Nós exploramos não apenas a sua história de vida e seus desafios conscientes, mas também a linguagem do seu mundo interno. Trabalhamos com a ideia de ",
         },
-        { text: "individuação", italic: true },
+        { text: "Individuação", italic: true },
         {
-          text: " — tornar-se quem você realmente é, integrando suas luzes e sombras. É um conceito que descreve a direção do trabalho, não um resultado que a análise prometa.",
+          text: " — o processo contínuo de se tornar quem você realmente é, integrando suas luzes e sombras. É um conceito que descreve a direção do trabalho, não um resultado que a análise prometa.",
         },
       ],
     ]),
-    // Quoted from CONCEPT §6, which takes it from her own words.
-    closingLine: "É um trabalho de colaboração.",
+    // Hers, verbatim and in full (SRC-F.4). CONCEPT §6 quoted only its first
+    // sentence; her 2026-08-07 text gives the whole thing.
+    //
+    // **Exempt from the humanize pass.** The `-ing` tail ("promovendo…") and the
+    // closing triad ("equilíbrio, sentido e vitalidade") are the two patterns
+    // `writing:humanize` §3 and §7 exist to strip, and here they are her voice
+    // rather than a tell. REQ-004 keeps the pass off her copy; CON-005 lists this
+    // field by name. An agent that "fixes" this line has broken the page.
+    closingLine:
+      "É um trabalho de colaboração. Juntos, vamos construir pontes entre o seu consciente e o seu inconsciente, promovendo mais equilíbrio, sentido e vitalidade para a sua vida.",
     plate: EMPTY_PAGE_PLATE,
   },
   sonhoAmpliado: {
@@ -223,8 +276,13 @@ export const ANALISE_DEFAULTS: Analise = {
       { label: "Horários", value: "Sempre no horário de Brasília." },
     ],
     // The ask closes the practical band instead of holding a band of its own.
+    //
+    // The body is **hers, verbatim** (SRC-H), `si mesmo(a)` and all — CON-003
+    // forbids tidying those parentheses. It carries no imperative, and does not
+    // need one: `ComecarFold` renders the WhatsApp block immediately below it, so
+    // the invitation is her sentence and the verb is the button.
     comecar: {
-      body: "Se algo aqui parece com o que você está vivendo, me escreva. A primeira conversa serve para nos conhecermos — e você decide depois.",
+      body: "Se você sente que é o momento de iniciar essa jornada de volta para si mesmo(a), será uma alegria acompanhar o seu processo.",
       linkLabel: "o que acontece na primeira conversa",
     },
   },

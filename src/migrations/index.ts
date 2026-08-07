@@ -14,6 +14,7 @@ import * as migration_20260805_213941_instagram_refresh_workflow from "./2026080
 import * as migration_20260806_030430_concept_v3_condense_service_pages from "./20260806_030430_concept_v3_condense_service_pages";
 import * as migration_20260806_222852_concept_v3_sobre_signature_drop from "./20260806_222852_concept_v3_sobre_signature_drop";
 import * as migration_20260807_011121_concept_v3_lamina_drop from "./20260807_011121_concept_v3_lamina_drop";
+import * as migration_20260807_145513_sobre_formacao_intro from "./20260807_145513_sobre_formacao_intro";
 
 export const migrations = [
   {
@@ -95,5 +96,10 @@ export const migrations = [
     up: migration_20260807_011121_concept_v3_lamina_drop.up,
     down: migration_20260807_011121_concept_v3_lamina_drop.down,
     name: "20260807_011121_concept_v3_lamina_drop",
+  },
+  {
+    up: migration_20260807_145513_sobre_formacao_intro.up,
+    down: migration_20260807_145513_sobre_formacao_intro.down,
+    name: "20260807_145513_sobre_formacao_intro",
   },
 ];

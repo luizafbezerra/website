@@ -202,9 +202,14 @@ export async function seedPages(payload: Payload): Promise<void> {
     data: {
       abertura: { heading: sobre.abertura.heading, lead: rt(sobre.abertura.lead) },
       quemE: { heading: sobre.quemE.heading, body: rt(sobre.quemE.body) },
-      // `period` is null on every row: no source document states a year, and a
-      // guessed one on the page whose job is verification is unrecoverable.
-      formacao: { heading: sobre.formacao.heading, items: sobre.formacao.items },
+      // `period` is null on every row: not even her own 2026-08-07 text states a
+      // year, and a guessed one on the page whose job is verification is
+      // unrecoverable.
+      formacao: {
+        heading: sobre.formacao.heading,
+        intro: sobre.formacao.intro,
+        items: sobre.formacao.items,
+      },
       aClinica: {
         heading: sobre.aClinica.heading,
         body: rt(sobre.aClinica.body),

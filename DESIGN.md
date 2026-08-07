@@ -244,7 +244,7 @@ On /primeira-conversa: pre-written WhatsApp openers, tap to choose — análise 
 - **Tracked kicker** (`.tracked` / `.tracked-ink`): the world's label voice (Cardo caps, 0.22em tracking). A _named brand voice_, not a per-section eyebrow.
 - **Marginalia** (`.marginalia`): Cardo/Vollkorn italic quill notes in the margin — voice only, never operational facts. The glosa (one interlinear English line, hero margin + /sobre) lives here.
 - **Manuscript numerals** (`.roman-numeral`): Cardo italic terracotta enumerators (I–V) where an ordered sequence genuinely exists — the pillars, the passo a passo.
-- **Wow set-pieces — one per page, never competing:** the **Cosmos** celestial atlas on the home (desktop; scroll-pinned Three.js, entirely under its carve-out in PRODUCT.md) and the **painted wheel** on /analise (a real painted asset — archetypal vocabulary, visual-only until her readings exist). On phones and under reduced motion the Cosmos slot gets a _designed substitute_ — A Lâmina (one painting as a scroll-cinema) or minimally a full-bleed painted celestial plate — never a hidden section.
+- **Wow set-pieces — one per page, never competing:** the **Cosmos** celestial atlas on the home (desktop; scroll-pinned Three.js, entirely under its carve-out in PRODUCT.md) and the **painted wheel** on /analise (a real painted asset — archetypal vocabulary, visual-only until her readings exist). On phones and under reduced motion the Cosmos slot gets a _designed substitute_ — **O céu desta noite**, the static chart of the real sky over São Paulo on a dark cobalt ground (the one sanctioned dark plate on the site, bounded to itself) — never a hidden section.
 
 ## 6. Do's and Don'ts
 

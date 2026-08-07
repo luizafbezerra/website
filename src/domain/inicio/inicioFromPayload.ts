@@ -50,17 +50,9 @@ function beatsFrom(raw: NonNullable<PayloadPageInicio["comoComecar"]>["beats"]):
 
 const ROMAN_NUMERALS = ["I", "II", "III", "IV", "V"];
 
-function captionsFrom(raw: Array<{ text?: string | null }> | null | undefined): string[] {
-  if (!Array.isArray(raw)) return [];
-  return raw
-    .map((caption) => filled(caption?.text))
-    .filter((text): text is string => text !== null);
-}
-
 /** Normalize the raw `page-inicio` global, falling back field by field. */
 export function inicioFromPayload(doc: PayloadPageInicio): Inicio {
   const defaults = INICIO_DEFAULTS;
-  const lamina = doc.cosmos?.lamina;
 
   return {
     hero: {
@@ -90,14 +82,6 @@ export function inicioFromPayload(doc: PayloadPageInicio): Inicio {
     },
     cosmos: {
       caption: filled(doc.cosmos?.caption),
-      lamina: {
-        plate: pageImageFrom(lamina?.plate),
-        painter: filled(lamina?.painter),
-        workTitle: filled(lamina?.workTitle),
-        year: filled(lamina?.year),
-        captions: captionsFrom(lamina?.captions),
-        closingLine: filled(lamina?.closingLine),
-      },
     },
     sobreDigest: {
       heading: filled(doc.sobreDigest?.heading) ?? defaults.sobreDigest.heading,

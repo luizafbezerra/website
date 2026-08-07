@@ -360,12 +360,17 @@ a vector stand-in inverts any of them into banned generated ornament.
 
 **The three best:**
 
-1. **A Lâmina — one painting as the mobile scroll-cinema.** ★ the Cosmos substitute on
-   phones. The viewport becomes a lens travelling down a tall crop of one classical canvas
-   at near-1:1 scale — brushwork, craquelure, a face emerging — two or three rubricated
-   captions surfacing at chosen details, ending on the whole plate with painter, year, and
-   one line from her. Does the one thing a 1080px feed tile cannot: scale. Her curation, so
-   the wow is hers. _(medium)_ — **greenlit**
+1. **A Lâmina — one painting as the mobile scroll-cinema.** The viewport becomes a lens
+   travelling down a tall crop of one classical canvas at near-1:1 scale — brushwork,
+   craquelure, a face emerging — two or three rubricated captions surfacing at chosen
+   details, ending on the whole plate with painter, year, and one line from her. Does the
+   one thing a 1080px feed tile cannot: scale. Her curation, so the wow is hers.
+   _(medium)_ — **dropped**, on evidence. Built and screenshotted at 390×844: a phone
+   viewport is 2.16:1, so `object-fit: cover` on any plate less tall than that scales to
+   height, crops the width, and the lens does not move at all. The effect needs a canvas
+   taller than 2.16:1 — a scroll panorama, not a tall painting — which is a curation
+   burden on her that the result does not repay. Replaced as the mobile substitute by
+   §9.5.
 2. **O quadro inteiro — the tile that un-crops.** In the Instagram section, each tile
    appears as the square followers know; tap, and the frame expands — the rest of the canvas
    fades in around the familiar fragment, with painter, year, and the Jung passage she
@@ -385,11 +390,30 @@ a vector stand-in inverts any of them into banned generated ornament.
    actual phase ("sob a lua minguante de agosto"). Books of hours tracked the moon; every
    page gets a heartbeat for near-zero cost. Kept in the colophon, far from the CTA.
    _(small)_ — **greenlit**, kept discrete and simple
-5. **O céu desta noite** — the Cosmos driven by the real sky over São Paulo tonight,
-   rendered through the existing painted vocabulary; a server-side static star-chart plate
-   becomes the mobile/reduced-motion frame. The strongest "alive between visits" signal
-   possible. _(large)_ — **greenlit as the first post-launch follow-up**; the Cosmos ships
-   with its data interface ready for it
+5. **O céu desta noite** — the real sky over São Paulo tonight, drawn as a star chart on a
+   dark cobalt ground with gilt hairlines. ★ the Cosmos substitute on phones and under
+   reduced motion. The strongest "alive between visits" signal possible, and the quietest:
+   it holds still, so it asks nothing of a visitor who is deciding whether to write.
+   _(small, as the static chart)_ — **greenlit, ships at launch** in that form. The figures
+   are the 26 real Bright Star Catalog constellations already in the repo; sidereal time →
+   alt/az for −23,55° / −46,63° → stereographic projection onto a horizon disc, everything
+   below the horizon dropped. Server-side arithmetic only — no API, no key, nothing
+   per-visitor, the same precedent as the moon colophon. Refined 2026-08 with **o
+   anoitecer**: where motion is allowed and the browser can scrub it, night falls on the
+   chart as it scrolls into view — the twilight lifts, the stars come out brightest-first,
+   the figures ink themselves in last — and afterwards the sky holds still except a gentle
+   flicker on the first-magnitude stars. The stillness remains the default: reduced motion,
+   older browsers, and no-JS readers get the finished chart, already night. Driving the full 3D Cosmos from
+   the same data stays a post-launch follow-up _(large)_; the Cosmos ships with its data
+   interface ready for it.
+
+   It indexes a **place and a time, never a person** — the same sky for every visitor,
+   which is what keeps it on the correct side of the no-personalisation rule (§11). It is
+   also the menu's best-founded idea rather than its prettiest: constellations are the
+   textbook case of figures projected onto scattered points, and Jung read the sky as the
+   original screen for that projection (_Aion_; the astrological experiment in
+   _Synchronicity_). Amplification is the same move.
+
 6. **Estações da casa** — the hero plate, section symbols and one colophon line rotate with
    the actual Brazilian season, from four CMS-scheduled sets she curates. Alive by curation —
    her actual skill — with a southern-hemisphere correctness that quietly says "this is
@@ -484,8 +508,8 @@ a vector stand-in inverts any of them into banned generated ornament.
   translated slugs, hreflang, browser-language greeting, and the PT·EN header toggle
 - Instagram bridge high on the home (placeholder tiles first, live feed when she completes
   the Meta connection)
-- Cosmos on the home with **A Lâmina** as the designed mobile substitute — the wheel on
-  /analise, visual-first
+- Cosmos on the home with **O céu desta noite** (the static star chart, §9.5) as the
+  designed mobile and reduced-motion substitute — the wheel on /analise, visual-first
 - The greenlit touches: O selo · O quadro inteiro · Sonho ampliado · the moon colophon
   (discrete) — placeholders stand in wherever her words or curation are still pending
 - /primeira-conversa with the service-aware bilhete (incl. the English opener)
@@ -505,8 +529,8 @@ a vector stand-in inverts any of them into banned generated ornament.
 
 ### COULD have
 
-- O céu desta noite — greenlit as the first post-launch follow-up (the Cosmos ships with
-  its data interface ready)
+- The **live** O céu desta noite: the 3D Cosmos itself driven by tonight's sky, not only
+  the static chart that ships at launch (the Cosmos ships with its data interface ready)
 - Iluminura que se pinta · O fio · A mandala que respira · Vocabulário iluminado
 - /vocabulario when her definitions exist
 - A small painted crossroads plate as orientação's art moment
@@ -547,7 +571,8 @@ a vector stand-in inverts any of them into banned generated ornament.
 1. **Fee** — value and international differential: hers. Mechanism decided: a CMS field
    that falls back to "a combinar" until she sets it.
 2. **The wheel's readings** — decided: visual-only at launch; her words when they exist.
-3. **Creative touches** — decided: A Lâmina, O selo, O quadro inteiro, Sonho ampliado and
-   the moon colophon ship at launch; O céu desta noite follows post-launch; Estações da
-   casa and Glosa are dropped; the rest of §9 stays on the menu.
+3. **Creative touches** — decided: O céu desta noite (as the static chart), O selo, O
+   quadro inteiro, Sonho ampliado and the moon colophon ship at launch; driving the live
+   Cosmos from the same sky data follows post-launch; A Lâmina, Estações da casa and Glosa
+   are dropped; the rest of §9 stays on the menu.
 4. **Portrait logistics** — who shoots, when. Until then the placeholder policy (§11) holds.

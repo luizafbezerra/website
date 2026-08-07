@@ -117,50 +117,19 @@ export const PageInicio: GlobalConfig = {
             localizedText({ name: "linkLabel", label: "Rótulo do link para A Análise" }),
           ],
         },
-        // ── 6 Cosmos / A Lâmina ──────────────────────────────────────────────
+        // ── 6 Cosmos / O céu desta noite ─────────────────────────────────────
         {
           name: "cosmos",
           label: "6 · Cosmos",
           description:
-            "O momento de encantamento da página. No computador, o céu; no telefone, uma pintura sua percorrida de perto (A Lâmina) — nunca um espaço vazio.",
+            "O momento de encantamento da página. No computador, o céu em movimento; no telefone, a carta do céu real sobre São Paulo esta noite — nunca um espaço vazio. A carta é calculada, não curada: nada a preencher aqui além da legenda.",
           fields: [
             localizedTextarea({
               name: "caption",
               label: "Legenda do Cosmos",
-              description: "A nota à margem que acompanha o céu.",
+              description:
+                "A nota à margem que acompanha o céu. Em branco, o site escreve a data da noite.",
             }),
-            {
-              name: "lamina",
-              type: "group",
-              label: "A Lâmina (telefone)",
-              admin: {
-                description:
-                  "Uma pintura só sua, percorrida de cima a baixo quase em tamanho real, terminando na tela inteira.",
-              },
-              fields: [
-                mediaSlot({
-                  name: "plate",
-                  label: "Pintura",
-                  description: "Uma tela em alta resolução, domínio público verificado.",
-                }),
-                { name: "painter", type: "text", label: "Pintor" },
-                localizedText({ name: "workTitle", label: "Título da obra" }),
-                { name: "year", type: "text", label: "Ano" },
-                {
-                  name: "captions",
-                  type: "array",
-                  label: "Legendas do percurso",
-                  labels: { singular: "Legenda", plural: "Legendas" },
-                  admin: { description: "Duas ou três, cada uma para um detalhe da pintura." },
-                  fields: [localizedText({ name: "text", label: "Legenda", required: true })],
-                },
-                localizedTextarea({
-                  name: "closingLine",
-                  label: "Sua linha final",
-                  description: "Uma frase sua, quando a pintura aparece inteira.",
-                }),
-              ],
-            },
           ],
         },
         // ── 7 Sobre (resumo) ─────────────────────────────────────────────────

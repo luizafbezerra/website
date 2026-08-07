@@ -49,14 +49,6 @@ export type PayloadPageInicio = {
   } | null;
   cosmos?: {
     caption?: string | null;
-    lamina?: {
-      plate?: PayloadMediaField;
-      painter?: string | null;
-      workTitle?: string | null;
-      year?: string | null;
-      captions?: PayloadArrayRow<{ text?: string | null }>;
-      closingLine?: string | null;
-    } | null;
   } | null;
   sobreDigest?: {
     heading?: string | null;

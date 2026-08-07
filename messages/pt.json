@@ -166,10 +166,11 @@
       "seePost": "ver no Instagram",
       "follow": "acompanhar em {handle}"
     },
-    "lamina": {
-      "fallbackHeading": "Uma pintura, de perto",
-      "platePlaceholder": "Uma tela em alta resolução, percorrida de cima a baixo.",
-      "platePlaceholderNote": "A pintura escolhida entra aqui pelo painel."
+    "ceu": {
+      "heading": "O céu desta noite",
+      "subtitle": "As constelações sobre São Paulo, agora. Cada noite desenha uma carta diferente.",
+      "chartLabel": "Carta do céu sobre São Paulo em {date}, com as constelações visíveis acima do horizonte",
+      "caption": "o céu sobre São Paulo · {date}"
     },
     "brasilExterior": {
       "horasAria": "Horários locais agora",

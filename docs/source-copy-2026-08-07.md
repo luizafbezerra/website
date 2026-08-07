@@ -5,7 +5,7 @@ renderizado em nenhuma página: existe para que cada parágrafo dela tenha um de
 que cada correção gramatical fique visível e possa ser vetada individualmente, e para que as decisões
 que o texto dela abre fiquem registradas em vez de resolvidas em silêncio.
 
-Executa `plan/design-site-copy-1.md`, Fases 1 a 4.
+Executa `plan/design-site-copy-1.md`, Fases 1 a 5.
 
 Três regras governam tudo o que segue:
 

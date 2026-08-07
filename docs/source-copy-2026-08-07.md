@@ -19,14 +19,16 @@ Três regras governam tudo o que segue:
 
 > **Recuperação do texto.** O texto original chegou como mensagem de chat, não como arquivo. Foi
 > recuperado do transcript da sessão de 07/08/2026 (`b8ae6762`) e transcrito abaixo sem edição —
-> inclusive os espaços iniciais das listas e as aspas curvas dela.
+> inclusive os espaços que marcam as listas dela, as quebras de linha e as aspas curvas.
 
 ---
 
 ## Original, sem edição
 
-Em bloco de código, não em citação: as nove linhas de lista dela começam com um espaço, e um
-formatador de Markdown os removeria. Aqui o texto fica byte a byte como ela o escreveu.
+Em bloco de código, não em citação: as nove linhas de lista dela começam com um espaço, e em
+citação um formatador de Markdown os removeria. Dentro do bloco o texto fica como ela o escreveu,
+com uma única exceção sem efeito: espaços no **fim** de quatro linhas, que o formatador remove e
+que nenhum leitor veria.
 
 ```text
 Instead of "Consultório estabelecido em Guarulhos" -> "Clínica de psicologia analítica (Jung) on-line para todo o Brasil e exterior."

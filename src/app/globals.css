@@ -237,13 +237,257 @@
   }
 
   /* Sticky and never hiding (CONCEPT §6, DESIGN §6): no hide-on-scroll
-     transform, which also means the header is not a containing block for the
-     mobile drawer's `position: fixed` overlay. */
+     transform — which also keeps the header from becoming a containing block
+     for the drawer <dialog> in browsers that drop it out of the top layer
+     during its exit transition (no `overlay` support). */
   .sticky-header {
     position: fixed;
     inset-inline: 0;
     top: 0;
     z-index: 30;
+  }
+
+  /* ---------------------------------------------------------------------- */
+  /* The mobile nav drawer — opening the book's índice (DESIGN §5).          */
+  /*                                                                         */
+  /* A native <dialog>: `showModal()` supplies the top layer, focus trap,    */
+  /* Escape and focus return. The choreography is @starting-style +          */
+  /* allow-discrete transitions — browsers without them snap open and closed */
+  /* but lose nothing functional. The ink-wash backdrop falls over the page, */
+  /* the parchment panel arrives on the bilhete curve, the margin is ruled   */
+  /* top-to-bottom, and the entries settle like a table of contents being    */
+  /* set. Exits are faster than entrances and travel as one piece — a drawer */
+  /* should leave quicker than it arrives.                                   */
+  /* ---------------------------------------------------------------------- */
+  dialog.nav-drawer {
+    position: fixed;
+    inset: 0 0 0 auto;
+    margin: 0;
+    border: none;
+    padding: 0;
+    width: min(20rem, 86vw);
+    max-width: none;
+    height: 100dvh;
+    max-height: none;
+    background: var(--color-parchment);
+    color: var(--color-ink);
+    overflow-y: auto;
+  }
+
+  dialog.nav-drawer[open] {
+    display: flex;
+    flex-direction: column;
+  }
+
+  dialog.nav-drawer::backdrop {
+    background-color: oklch(0.22 0.02 35 / 0);
+  }
+
+  dialog.nav-drawer[open]::backdrop {
+    background-color: oklch(0.22 0.02 35 / 0.3);
+  }
+
+  /* The page behind the drawer holds still. */
+  body:has(dialog.nav-drawer[open]) {
+    overflow: hidden;
+  }
+
+  /* The panel's left hairline is an element, not a border, so the entrance
+     can draw it like a scribe ruling the margin before lettering. In
+     browsers that skip the animation it is simply present. */
+  .nav-drawer-rule {
+    position: absolute;
+    inset-block: 0;
+    left: 0;
+    width: 1px;
+    background: var(--color-rule-soft);
+  }
+
+  /* The trigger's glyph: three hand-set ink rules — the middle one stops
+     short, like a ruled line the scribe ended early, and hover draws it out.
+     Open crosses the outer two into an ×; the drawer's close button is the
+     same crossed pair, so the shape the trigger becomes is the shape that
+     dismisses it. */
+  .nav-trigger-glyph,
+  .nav-close-glyph {
+    position: relative;
+    width: 1.25rem;
+    height: 1rem;
+  }
+
+  .nav-trigger-glyph > span,
+  .nav-close-glyph > span {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: currentColor;
+  }
+
+  .nav-trigger-glyph > span:nth-child(1) {
+    top: 0;
+  }
+
+  .nav-trigger-glyph > span:nth-child(2) {
+    top: 50%;
+    translate: 0 -50%;
+    scale: 0.7 1;
+    transform-origin: left center;
+  }
+
+  .nav-trigger-glyph > span:nth-child(3) {
+    bottom: 0;
+  }
+
+  .nav-trigger:hover .nav-trigger-glyph > span:nth-child(2),
+  .nav-trigger:focus-visible .nav-trigger-glyph > span:nth-child(2) {
+    scale: 1 1;
+  }
+
+  /* 1px strokes in a 1rem-tall glyph: the outer strokes' centers sit 7.5px
+     from the glyph's vertical center, so that is the travel that crosses
+     them there. */
+  .nav-trigger[aria-expanded="true"] .nav-trigger-glyph > span:nth-child(1) {
+    translate: 0 7.5px;
+    rotate: 45deg;
+  }
+
+  .nav-trigger[aria-expanded="true"] .nav-trigger-glyph > span:nth-child(2) {
+    opacity: 0;
+  }
+
+  .nav-trigger[aria-expanded="true"] .nav-trigger-glyph > span:nth-child(3) {
+    translate: 0 -7.5px;
+    rotate: -45deg;
+  }
+
+  .nav-close-glyph > span {
+    top: 50%;
+    translate: 0 -50%;
+  }
+
+  .nav-close-glyph > span:nth-child(1) {
+    rotate: 45deg;
+  }
+
+  .nav-close-glyph > span:nth-child(2) {
+    rotate: -45deg;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    dialog.nav-drawer {
+      translate: 100% 0;
+      transition:
+        translate 220ms cubic-bezier(0.5, 0, 0.75, 0.4),
+        display 220ms allow-discrete,
+        overlay 220ms allow-discrete;
+    }
+
+    dialog.nav-drawer[open] {
+      translate: 0 0;
+      transition:
+        translate 400ms cubic-bezier(0.22, 1, 0.36, 1),
+        display 400ms allow-discrete,
+        overlay 400ms allow-discrete;
+    }
+
+    @starting-style {
+      dialog.nav-drawer[open] {
+        translate: 100% 0;
+      }
+    }
+
+    dialog.nav-drawer::backdrop {
+      transition:
+        background-color 200ms ease-in,
+        display 200ms allow-discrete,
+        overlay 200ms allow-discrete;
+    }
+
+    dialog.nav-drawer[open]::backdrop {
+      transition:
+        background-color 300ms ease-out,
+        display 300ms allow-discrete,
+        overlay 300ms allow-discrete;
+    }
+
+    @starting-style {
+      dialog.nav-drawer[open]::backdrop {
+        background-color: oklch(0.22 0.02 35 / 0);
+      }
+    }
+
+    dialog.nav-drawer[open] .nav-drawer-rule {
+      transform-origin: top;
+      animation: nav-drawer-rule-draw 420ms cubic-bezier(0.22, 1, 0.36, 1) 80ms backwards;
+    }
+
+    /* Each group carries its --drawer-i from the component; the last delay
+       lands ≈300ms, inside the panel's own entrance. Closing plays no
+       stagger — the animation leaves with [open] and the content rides the
+       panel out as one. */
+    dialog.nav-drawer[open] .nav-drawer-settle {
+      animation: nav-drawer-settle 300ms cubic-bezier(0.22, 1, 0.36, 1) backwards;
+      animation-delay: calc(90ms + var(--drawer-i, 0) * 35ms);
+    }
+
+    @keyframes nav-drawer-rule-draw {
+      from {
+        scale: 1 0;
+      }
+    }
+
+    @keyframes nav-drawer-settle {
+      from {
+        opacity: 0;
+        translate: 0 0.4rem;
+      }
+    }
+
+    .nav-trigger-glyph > span {
+      transition:
+        translate 200ms cubic-bezier(0.22, 1, 0.36, 1),
+        rotate 200ms cubic-bezier(0.22, 1, 0.36, 1),
+        scale 150ms cubic-bezier(0.22, 1, 0.36, 1),
+        opacity 150ms ease-out;
+    }
+  }
+
+  /* The visitor who asked not to be moved gets a changed room, not a
+     traveling one: drawer and backdrop crossfade in place, the margin rule
+     and the entries are simply present, the trigger swaps shape without
+     morphing. */
+  @media (prefers-reduced-motion: reduce) {
+    dialog.nav-drawer {
+      opacity: 0;
+      transition:
+        opacity 160ms ease-out,
+        display 160ms allow-discrete,
+        overlay 160ms allow-discrete;
+    }
+
+    dialog.nav-drawer[open] {
+      opacity: 1;
+    }
+
+    @starting-style {
+      dialog.nav-drawer[open] {
+        opacity: 0;
+      }
+    }
+
+    dialog.nav-drawer::backdrop {
+      transition:
+        background-color 160ms ease-out,
+        display 160ms allow-discrete,
+        overlay 160ms allow-discrete;
+    }
+
+    @starting-style {
+      dialog.nav-drawer[open]::backdrop {
+        background-color: oklch(0.22 0.02 35 / 0);
+      }
+    }
   }
 
   .body-prose p {

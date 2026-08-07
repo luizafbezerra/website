@@ -175,7 +175,9 @@ export const SOBRE_DEFAULTS: Sobre = {
     body: richText([
       "Símbolos do Self nasceu como uma página: pinturas clássicas e frases de Jung, uma a uma, para mais de quarenta e cinco mil pessoas. O nome passou da página para a clínica.",
       "Símbolos do Self é o lugar; eu sou quem recebe você nele. Na página, as imagens ficam por si; na clínica, elas viram trabalho — entre duas pessoas, no tempo de quem chega.",
-      "O atendimento é on-line, em português ou em inglês, para todo o Brasil e para quem mora fora.",
+      // "on-line" is in the page's lead and in the credential strip above; a third
+      // and fourth occurrence on one page is a defect (GUD-001).
+      "O atendimento é em português ou em inglês, para todo o Brasil e para quem mora fora.",
     ]),
     linkLabel: "como é a primeira conversa",
   },

@@ -308,6 +308,50 @@ _Registrado. Sem ação, salvo se ela preferir variar._
 
 ---
 
+## O que reescrevemos no nosso próprio texto (Fase 3)
+
+A contrapartida da tabela de correções: ali estão as nove edições feitas **no seu** texto; aqui
+estão as feitas **no nosso**. O seu texto ficou fora desta passagem por completo (REQ-004).
+
+Foram varridas 383 frases dos defaults contra onze padrões de escrita gerada por IA. **Cinco
+casaram, e todas as cinco são suas** — quatro por conterem "psicologia profunda" (que é o nome do
+campo) e uma pela construção "não apenas… mas também", que é sua. Nenhuma frase nossa casou com
+nenhum padrão. Ou seja: a parte mecânica desta fase não tinha nada a fazer, e uma passagem feita
+sem a exclusão do seu texto teria "corrigido" a sua voz em cinco lugares.
+
+As quatro reescritas reais foram encontradas lendo, não medindo, e todas são de texto nosso:
+
+| Onde                         | Antes                                                                                          | Depois                                                                                                                                     |
+| ---------------------------- | ---------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| `/` · O que eu publico       | "cada publicação tem a sua vez no centro — e as palavras que a acompanham ganham a página"     | "cada publicação fica no centro, uma por vez, com o texto que a acompanha"                                                                 |
+| `/` · O sintoma como chamado | "O trabalho não é silenciar esse chamado, e sim escutá-lo…"                                    | "O trabalho é escutar esse chamado… em vez de silenciá-lo."                                                                                |
+| `/orientacao-profissional`   | "a vocação não é uma etiqueta que se descobre: é uma das portas por onde passa a individuação" | "uma vocação não é uma etiqueta à espera de ser descoberta. Ela se forma junto com a pessoa, no processo que Jung chamou de individuação." |
+| `/perguntas` · fecho         | "o que esta página não resolve a gente resolve conversando"                                    | "O que esta página não responde, eu respondo por mensagem."                                                                                |
+
+Duas frases nossas foram encurtadas por repetição, não por estilo (ver abaixo): a de "Brasil e
+exterior" no início e a de fecho de "De uma página a uma clínica", que diziam "on-line" pela
+terceira e quarta vez na mesma página.
+
+### Orçamento de repetição
+
+Sete expressões carregam o posicionamento inteiro do site, e por isso se repetem: cada página quer
+dizer que o atendimento é on-line, bilíngue, junguiano e de qualquer lugar. Uma página assim lê-se
+como ênfase; três, como formulário. O limite é três ocorrências por página.
+
+Seis das oito páginas ficaram dentro do limite. **Duas não conseguem ficar, e isso é deliberado:**
+
+- **`/sobre`** diz "psicologia analítica"/"junguiana" cinco vezes. Três delas são suas e não podem
+  ser tocadas: o título "Uma escuta cuidadosa, na tradição junguiana.", a sua frase sobre a
+  Psicologia Analítica do Carl Gustav Jung, e o seu próprio "Aprimoramento em Psicologia Clínica
+  Junguiana". A quarta é o colofão. A quinta é a abertura, mantida porque é a página que responde
+  "quem é esta psicóloga" para buscadores e assistentes.
+- **`/internacional`** diz "on-line" quatro vezes: o título da página (que é o termo que quem mora
+  fora digita), a sua frase de abertura, o colofão e a linha de credenciais.
+
+Nos dois casos, chegar a três exigiria reescrever uma frase sua ou apagar um fato que o conceito
+fixa. O orçamento perde. Está registrado em teste, com o motivo, e o teste falha se o número subir
+**ou** se um dia deixar de ser necessário.
+
 ## Verificação dos blocos que já estavam no site (TASK-020)
 
 Conferido em 07/08/2026, na Fase 2:

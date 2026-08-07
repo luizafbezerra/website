@@ -69,7 +69,7 @@ export const PERGUNTAS_DEFAULTS: Perguntas = {
   plate: EMPTY_PAGE_PLATE,
   fecho: {
     heading: "Ficou uma pergunta de fora?",
-    body: "Escreva mesmo assim. Nenhuma pergunta é pequena demais para uma mensagem, e o que esta página não resolve a gente resolve conversando.",
+    body: "Escreva mesmo assim. O que esta página não responde, eu respondo por mensagem.",
     whatsappLabel: "escrever no WhatsApp",
     linkLabel: "o que acontece na primeira conversa",
   },

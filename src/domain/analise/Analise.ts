@@ -240,8 +240,10 @@ export const ANALISE_DEFAULTS: Analise = {
     heading: "Sonho ampliado",
     // A fact about her method, which CONCEPT §5 fixes: amplificação is her craft,
     // "setting a symbol beside its parallels".
+    // "na tradição junguiana" removed: the h1 and the abertura both name it, and
+    // Jung is named in this same sentence anyway (GUD-001).
     intro:
-      "Amplificação é o nome desse gesto na tradição junguiana. Quando uma imagem insiste, ela não é traduzida de fora: é posta ao lado das suas parentes — na pintura, no mito, na obra de Jung — até que o próprio sonhador reconheça o que ela pede.",
+      "Amplificação é o nome desse gesto. Quando uma imagem insiste, ela não é traduzida de fora: é posta ao lado das suas parentes — na pintura, no mito, na obra de Jung — até que o próprio sonhador reconheça o que ela pede.",
     // Null until her curation exists: the section is gated on the motif, and a
     // dream quote beside empty parallel labels is scaffolding a visitor has to
     // look at. Prod already stores it cleared; the default now agrees.

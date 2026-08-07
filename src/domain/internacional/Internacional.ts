@@ -97,8 +97,10 @@ export const INTERNACIONAL_DEFAULTS: Internacional = {
       "Atendo pessoas que moram fora do Brasil e pessoas de outros países, em português ou em inglês, por chamada de vídeo. Já acompanhei brasileiros em Portugal, na Inglaterra e nos Estados Unidos.",
       "Análise junguiana e orientação profissional e de carreira, em encontros semanais. Na primeira conversa acertamos o fuso, o idioma e o pagamento.",
     ]),
+    // The appositive ", on-line," is gone: the h1, her opening sentence and the
+    // credential strip all say it above this line (GUD-001).
     trustLine:
-      "O atendimento segue a regulamentação brasileira de telepsicologia: é assim que uma psicóloga brasileira atende, on-line, quem vive em outro país.",
+      "O atendimento segue a regulamentação brasileira de telepsicologia: é assim que uma psicóloga brasileira atende quem vive em outro país.",
   },
   brasileirosFora: {
     heading: "Para brasileiros fora do Brasil",

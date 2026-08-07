@@ -123,7 +123,7 @@ export const INICIO_DEFAULTS: Inicio = {
     // not the website's idea of it.
     heading: "O que eu publico",
     intro:
-      "No Instagram, tudo passa depressa. Aqui, cada publicação tem a sua vez no centro — e as palavras que a acompanham ganham a página.",
+      "No Instagram, tudo passa depressa. Aqui cada publicação fica no centro, uma por vez, com o texto que a acompanha.",
   },
   doisCaminhos: {
     heading: "Dois caminhos",
@@ -145,8 +145,10 @@ export const INICIO_DEFAULTS: Inicio = {
   oSintoma: {
     heading: "O sintoma como chamado",
     body: richText([
-      "O que insiste — a ansiedade que volta, o sonho que se repete, o cansaço que não passa com descanso — raramente é apenas um defeito a corrigir. Na tradição junguiana, é uma forma de a psique dizer algo que ainda não coube em palavras.",
-      "O trabalho não é silenciar esse chamado, e sim escutá-lo até entender do que ele trata.",
+      // The tradition is named in the hero positioning and in the Análise door
+      // above; naming it a third time here put the page over budget (GUD-001).
+      "O que insiste — a ansiedade que volta, o sonho que se repete, o cansaço que não passa com descanso — raramente é apenas um defeito a corrigir. É uma forma de a psique dizer algo que ainda não coube em palavras.",
+      "O trabalho é escutar esse chamado até entender do que ele trata, em vez de silenciá-lo.",
     ]),
     linkLabel: "como eu trabalho",
   },
@@ -164,7 +166,10 @@ export const INICIO_DEFAULTS: Inicio = {
   },
   brasilExterior: {
     heading: "Brasil e exterior",
-    body: "O atendimento é on-line, em português ou em inglês, no seu fuso. Já acompanhei pessoas em Portugal, na Inglaterra e nos Estados Unidos — morar fora não interrompe uma análise.",
+    // "on-line" is deliberately absent: the hero's positioning sentence and the
+    // credential strip both say it before a reader reaches this section, and a
+    // fourth occurrence on one page is a defect rather than emphasis (GUD-001).
+    body: "O atendimento é em português ou em inglês, no seu fuso. Já acompanhei pessoas em Portugal, na Inglaterra e nos Estados Unidos — morar fora não interrompe uma análise.",
     linkLabel: "quem mora fora",
   },
   comoComecar: {

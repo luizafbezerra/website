@@ -191,7 +191,7 @@ export const ORIENTACAO_PROFISSIONAL_DEFAULTS: OrientacaoProfissional = {
       },
     ],
     anchor:
-      "Na tradição junguiana, a vocação não é uma etiqueta que se descobre: é uma das portas por onde passa a individuação — o trabalho de tornar-se quem você já é.",
+      "Na tradição junguiana, uma vocação não é uma etiqueta à espera de ser descoberta. Ela se forma junto com a pessoa, no processo que Jung chamou de individuação.",
     // The bridge for somebody who came through the wrong door, folded in as this
     // section's close. It has to read as "that's fine", never as an upsell.
     bridge: {

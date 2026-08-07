@@ -272,11 +272,16 @@
     background: var(--color-parchment);
     color: var(--color-ink);
     overflow-y: auto;
+    /* Every layout property the open panel needs lives here, not under
+       `[open]`: the attribute drops the instant the dialog closes, while
+       `display` is still held at `flex` by the allow-discrete transition. A
+       `flex-direction` declared under `[open]` would revert to `row` on that
+       first exit frame and throw the whole column sideways mid-animation. */
+    flex-direction: column;
   }
 
   dialog.nav-drawer[open] {
     display: flex;
-    flex-direction: column;
   }
 
   dialog.nav-drawer::backdrop {
@@ -374,21 +379,26 @@
     rotate: -45deg;
   }
 
+  /* The pace is the céu's, not a web drawer's: the same
+     cubic-bezier(0.22, 1, 0.36, 1) the night-sky words drift in on, at
+     durations long enough to read as unhurried. A nav still has to answer
+     the tap, so this lands near a third of the céu's 2.8s rather than
+     matching it outright — the arrival is a slow settle, not a slideshow. */
   @media (prefers-reduced-motion: no-preference) {
     dialog.nav-drawer {
       translate: 100% 0;
       transition:
-        translate 220ms cubic-bezier(0.5, 0, 0.75, 0.4),
-        display 220ms allow-discrete,
-        overlay 220ms allow-discrete;
+        translate 460ms cubic-bezier(0.4, 0, 0.7, 0.5),
+        display 460ms allow-discrete,
+        overlay 460ms allow-discrete;
     }
 
     dialog.nav-drawer[open] {
       translate: 0 0;
       transition:
-        translate 400ms cubic-bezier(0.22, 1, 0.36, 1),
-        display 400ms allow-discrete,
-        overlay 400ms allow-discrete;
+        translate 760ms cubic-bezier(0.22, 1, 0.36, 1),
+        display 760ms allow-discrete,
+        overlay 760ms allow-discrete;
     }
 
     @starting-style {
@@ -399,16 +409,16 @@
 
     dialog.nav-drawer::backdrop {
       transition:
-        background-color 200ms ease-in,
-        display 200ms allow-discrete,
-        overlay 200ms allow-discrete;
+        background-color 420ms ease-in,
+        display 420ms allow-discrete,
+        overlay 420ms allow-discrete;
     }
 
     dialog.nav-drawer[open]::backdrop {
       transition:
-        background-color 300ms ease-out,
-        display 300ms allow-discrete,
-        overlay 300ms allow-discrete;
+        background-color 700ms ease-out,
+        display 700ms allow-discrete,
+        overlay 700ms allow-discrete;
     }
 
     @starting-style {
@@ -419,16 +429,18 @@
 
     dialog.nav-drawer[open] .nav-drawer-rule {
       transform-origin: top;
-      animation: nav-drawer-rule-draw 420ms cubic-bezier(0.22, 1, 0.36, 1) 80ms backwards;
+      animation: nav-drawer-rule-draw 900ms cubic-bezier(0.22, 1, 0.36, 1) 120ms backwards;
     }
 
-    /* Each group carries its --drawer-i from the component; the last delay
-       lands ≈300ms, inside the panel's own entrance. Closing plays no
-       stagger — the animation leaves with [open] and the content rides the
-       panel out as one. */
+    /* Each group carries its --drawer-i from the component. The entries are
+       lettered under the rule as it is still being drawn, the last one
+       starting at ~620ms and resolving near 1.4s — the pace of a page being
+       set, not of a panel reporting for duty. Closing plays no stagger: the
+       animation leaves with [open] and the content rides the panel out as
+       one piece. */
     dialog.nav-drawer[open] .nav-drawer-settle {
-      animation: nav-drawer-settle 300ms cubic-bezier(0.22, 1, 0.36, 1) backwards;
-      animation-delay: calc(90ms + var(--drawer-i, 0) * 35ms);
+      animation: nav-drawer-settle 760ms cubic-bezier(0.22, 1, 0.36, 1) backwards;
+      animation-delay: calc(140ms + var(--drawer-i, 0) * 80ms);
     }
 
     @keyframes nav-drawer-rule-draw {
@@ -440,16 +452,16 @@
     @keyframes nav-drawer-settle {
       from {
         opacity: 0;
-        translate: 0 0.4rem;
+        translate: 0 0.5rem;
       }
     }
 
     .nav-trigger-glyph > span {
       transition:
-        translate 200ms cubic-bezier(0.22, 1, 0.36, 1),
-        rotate 200ms cubic-bezier(0.22, 1, 0.36, 1),
-        scale 150ms cubic-bezier(0.22, 1, 0.36, 1),
-        opacity 150ms ease-out;
+        translate 380ms cubic-bezier(0.22, 1, 0.36, 1),
+        rotate 380ms cubic-bezier(0.22, 1, 0.36, 1),
+        scale 300ms cubic-bezier(0.22, 1, 0.36, 1),
+        opacity 260ms ease-out;
     }
   }
 
@@ -461,9 +473,9 @@
     dialog.nav-drawer {
       opacity: 0;
       transition:
-        opacity 160ms ease-out,
-        display 160ms allow-discrete,
-        overlay 160ms allow-discrete;
+        opacity 260ms ease-out,
+        display 260ms allow-discrete,
+        overlay 260ms allow-discrete;
     }
 
     dialog.nav-drawer[open] {
@@ -478,9 +490,9 @@
 
     dialog.nav-drawer::backdrop {
       transition:
-        background-color 160ms ease-out,
-        display 160ms allow-discrete,
-        overlay 160ms allow-discrete;
+        background-color 260ms ease-out,
+        display 260ms allow-discrete,
+        overlay 260ms allow-discrete;
     }
 
     @starting-style {

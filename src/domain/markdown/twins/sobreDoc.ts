@@ -20,8 +20,8 @@ import type { FormacaoItem, Sobre } from "@/domain/sobre/Sobre";
  * no confirmed year prints with no year rather than with a guess (the domain
  * defaults leave `period` unset on all six for exactly that reason).
  *
- * Her portrait slot and her scanned signature are not mentioned. The closing line
- * above the signature is, because it is the last thing she says on the page.
+ * Her portrait slot is not mentioned: a twin describes what she says, not which
+ * images the page hangs beside it.
  *
  * CON-002 binds the English twin as it binds the page: she is a clinical
  * psychologist working in the Jungian tradition, never a "Jungian analyst" — and
@@ -41,9 +41,6 @@ export function sobreDoc(page: Sobre, ctx: TwinContext): MarkdownBlock[] {
         richTextToMarkdown(page.aClinica.body),
         paragraph(link(page.aClinica.linkLabel, ctx.pageUrls.primeiraConversa)),
       ),
-      // No heading of its own on the page either: the signature closes the
-      // reading column, and nothing follows a signature.
-      paragraph(page.assinatura.closingLine),
     ),
   });
 }

@@ -331,10 +331,10 @@ describe("/sobre's twin", () => {
     expect(text).not.toMatch(/— (PUC-SP|USP|Instituto Numen) \(/);
   });
 
-  it("mentions neither the portrait slot nor the signature image, but keeps her closing line", () => {
+  it("describes what she says, never the images the page hangs beside it", () => {
     const text = textOf("sobre", "pt");
 
-    expect(text).toContain(SOBRE_DEFAULTS.assinatura.closingLine);
+    expect(text).toContain(SOBRE_DEFAULTS.aClinica.linkLabel);
     expect(text).not.toMatch(/retrato|assinatura|signature/i);
   });
 });

@@ -10,7 +10,6 @@ import { BreadcrumbJsonLd } from "@/view/seo/jsonLd";
 import { pageMetadata } from "@/view/seo/pageMetadata";
 import { AClinica } from "@/view/sobre/AClinica";
 import { Abertura } from "@/view/sobre/Abertura";
-import { Assinatura } from "@/view/sobre/Assinatura";
 import { Formacao } from "@/view/sobre/Formacao";
 import { QuemE } from "@/view/sobre/QuemE";
 
@@ -26,14 +25,20 @@ export async function generateMetadata({ params }: SobreProps): Promise<Metadata
 export const revalidate = 86400;
 
 /**
- * Sobre — the four sections of CONCEPT §6, in the map's order, after the page's
+ * Sobre — the three sections of CONCEPT §6, in the map's order, after the page's
  * opening and the credential strip.
  *
  * The order is the page's argument, and it is the one page where the site's thesis
  * resolves: **the world recruits; the person converts.** Her name and her lead
  * introduce the person, the strip proves she is licensed, her prose and her face
  * make her a person rather than a profile, the record answers the sceptic, and the
- * clinic's story hands the world back its name. Then she signs it.
+ * clinic's story hands the world back its name.
+ *
+ * A signature closed the page until 2026-08: a scanned hand she does not have, so
+ * the slot could only ever be a labeled frame, and CONCEPT's own ban on typeset
+ * script (DESIGN §6) meant there was no honest stand-in to put there. The clinic's
+ * story ends on her giving the name away, which is a better last note than an empty
+ * box promising one.
  *
  * "Credencial above the fold" (CONCEPT §6.1) is satisfied by the band sitting
  * directly under the opening rather than by a tab of its own: the facts belong to
@@ -41,8 +46,8 @@ export const revalidate = 86400;
  *
  * No CTA section. CONCEPT §6 gives this page none, the sticky header carries the
  * WhatsApp item the whole way down, and the one quiet hand-off to
- * /primeira-conversa lives at the end of the clinic's story — before the
- * signature, because nothing follows a signature.
+ * /primeira-conversa lives at the end of the clinic's story, which is now also the
+ * end of the page.
  *
  * The `Person` node of the entity graph already points at this URL from the shared
  * `(pages)` layout, so only this page's breadcrumb is added here.
@@ -73,7 +78,6 @@ export default async function SobrePage({ params }: SobreProps) {
       <QuemE clinica={clinica} content={page.quemE} />
       <Formacao content={page.formacao} />
       <AClinica content={page.aClinica} />
-      <Assinatura clinica={clinica} content={page.assinatura} />
     </>
   );
 }

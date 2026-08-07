@@ -211,11 +211,6 @@
   "sobre": {
     "quemE": {
       "portraitAlt": "Retrato de {name}"
-    },
-    "assinatura": {
-      "placeholder": "A assinatura de Luiza, digitalizada.",
-      "placeholderNote": "O arquivo entra aqui pelo painel, sem publicar o site de novo.",
-      "alt": "Assinatura de {name}"
     }
   },
   "perguntas": {

@@ -16,7 +16,6 @@ describe("sobreFromPayload", () => {
       abertura: { heading: "   " },
       formacao: { heading: "" },
       aClinica: { linkLabel: "  " },
-      assinatura: { closingLine: "\n" },
     };
 
     const page = sobreFromPayload(doc);
@@ -24,7 +23,6 @@ describe("sobreFromPayload", () => {
     expect(page.abertura.heading).toBe(SOBRE_DEFAULTS.abertura.heading);
     expect(page.formacao.heading).toBe(SOBRE_DEFAULTS.formacao.heading);
     expect(page.aClinica.linkLabel).toBe(SOBRE_DEFAULTS.aClinica.linkLabel);
-    expect(page.assinatura.closingLine).toBe(SOBRE_DEFAULTS.assinatura.closingLine);
   });
 
   it("falls back on rich text that Lexical left with no paragraphs", () => {
@@ -114,10 +112,9 @@ describe("sobreFromPayload", () => {
     ]);
   });
 
-  it("resolves the portrait and the signature, each independently of the other", () => {
+  it("resolves the portrait she has uploaded", () => {
     const page = sobreFromPayload({
       quemE: { portrait: upload("/media/luiza.jpg", "Luiza sentada, luz de janela") },
-      assinatura: { image: { url: "/media/assinatura.png", alt: "", width: 800, height: 300 } },
     });
 
     expect(page.quemE.portrait).toEqual({
@@ -126,26 +123,13 @@ describe("sobreFromPayload", () => {
       width: 1200,
       height: 1500,
     });
-    expect(page.assinatura.image).toEqual({
-      src: "/media/assinatura.png",
-      alt: "",
-      width: 800,
-      height: 300,
-    });
-
-    // The signature can land months before the portrait shoot, and the reverse.
-    const portraitOnly = sobreFromPayload({ quemE: { portrait: upload("/media/luiza.jpg") } });
-    expect(portraitOnly.quemE.portrait).not.toBeNull();
-    expect(portraitOnly.assinatura.image).toBeNull();
   });
 
   it("refuses an upload with no intrinsic size rather than shipping layout shift", () => {
     const page = sobreFromPayload({
       quemE: { portrait: { url: "/media/sem-medidas.jpg", alt: "x" } },
-      assinatura: { image: { url: "/media/sem-medidas.png", alt: "x" } },
     });
 
     expect(page.quemE.portrait).toBeNull();
-    expect(page.assinatura.image).toBeNull();
   });
 });

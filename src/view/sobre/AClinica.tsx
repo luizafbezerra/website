@@ -23,8 +23,7 @@ import { SectionLink } from "@/view/general/SectionLink";
  * the whole way down and the footer carries the ask — but a reader who has just
  * been convinced should not have to scroll back up to act on it. One link in the
  * marginalia voice, the same grammar every other prose section on the site ends
- * with, and it stops here rather than after her signature: nothing follows a
- * signature.
+ * with, and it is the last thing on the page.
  */
 export function AClinica({ content }: { content: Sobre["aClinica"] }) {
   return (

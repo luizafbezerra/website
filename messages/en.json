@@ -211,11 +211,6 @@
   "sobre": {
     "quemE": {
       "portraitAlt": "Portrait of {name}"
-    },
-    "assinatura": {
-      "placeholder": "Luiza's signature, scanned.",
-      "placeholderNote": "The file arrives here through the admin panel, with no redeploy.",
-      "alt": "Signature of {name}"
     }
   },
   "perguntas": {

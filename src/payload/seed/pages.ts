@@ -210,7 +210,6 @@ export async function seedPages(payload: Payload): Promise<void> {
         body: rt(sobre.aClinica.body),
         linkLabel: sobre.aClinica.linkLabel,
       },
-      assinatura: { closingLine: sobre.assinatura.closingLine },
     },
   });
 

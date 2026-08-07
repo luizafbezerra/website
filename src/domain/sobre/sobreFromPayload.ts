@@ -76,11 +76,5 @@ export function sobreFromPayload(doc: PayloadPageSobre): Sobre {
       body: filledRichText(doc.aClinica?.body) ?? defaults.aClinica.body,
       linkLabel: filled(doc.aClinica?.linkLabel) ?? defaults.aClinica.linkLabel,
     },
-    assinatura: {
-      // Same rule as the portrait: a signature is a scanned asset or it is a
-      // labeled frame. Typeset script would be the banned stand-in (DESIGN §6).
-      image: pageImageFrom(doc.assinatura?.image),
-      closingLine: filled(doc.assinatura?.closingLine) ?? defaults.assinatura.closingLine,
-    },
   };
 }

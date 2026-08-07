@@ -64,11 +64,6 @@ export type Sobre = {
     body: RichTextContent;
     linkLabel: string;
   };
-  assinatura: {
-    /** Her scanned signature — `null` renders a labeled frame, never typeset script. */
-    image: PageImage | null;
-    closingLine: string;
-  };
 };
 
 export const SOBRE_DEFAULTS: Sobre = {
@@ -127,12 +122,5 @@ export const SOBRE_DEFAULTS: Sobre = {
       "O atendimento é on-line, em português ou em inglês, para todo o Brasil e para quem mora fora.",
     ]),
     linkLabel: "como é a primeira conversa",
-  },
-  assinatura: {
-    image: null,
-    // A welcome, not an ask: the WhatsApp item in the header and the footer's
-    // Começar column already carry the invitation, and CONCEPT §6 gives this page
-    // no "começar" section on purpose.
-    closingLine: "Se fizer sentido, será um prazer receber você.",
   },
 };

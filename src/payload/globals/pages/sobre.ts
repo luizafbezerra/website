@@ -1,5 +1,5 @@
 import type { GlobalConfig } from "payload";
-import { localizedRichText, localizedText, localizedTextarea } from "../../fields/copyFields";
+import { localizedRichText, localizedText } from "../../fields/copyFields";
 import { mediaSlot } from "../../fields/mediaSlot";
 import { PAGES_GROUP, pageAccess, revalidatePageHook } from "./shared";
 
@@ -98,24 +98,6 @@ export const PageSobre: GlobalConfig = {
               label: "Rótulo do link para A primeira conversa",
               description:
                 "A única saída da página, em voz baixa — para quem terminou de ler e quer saber como é começar.",
-            }),
-          ],
-        },
-        {
-          name: "assinatura",
-          label: "5 · Assinatura",
-          description: "A sua assinatura fecha a página.",
-          fields: [
-            mediaSlot({
-              name: "image",
-              label: "Assinatura",
-              description: "Sua assinatura digitalizada, fundo transparente se possível.",
-            }),
-            localizedTextarea({
-              name: "closingLine",
-              label: "Linha final",
-              description:
-                "Uma frase só, sua, antes da assinatura — um acolhimento, não um pedido. O convite para escrever já está no menu e no rodapé.",
             }),
           ],
         },

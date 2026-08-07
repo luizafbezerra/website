@@ -10,9 +10,9 @@ import type { PayloadMediaField } from "./PayloadMedia";
 // to nested objects and every field is optional, so the domain mapper can fall
 // back section by section.
 //
-// Read at `depth: 1` for the two uploads this page carries — the portrait and the
-// scanned signature. At depth 0 both come back as bare row ids with no URL and no
-// intrinsic size, which is nothing a page can render.
+// Read at `depth: 1` for the one upload this page carries, her portrait. At depth 0
+// it comes back as a bare row id with no URL and no intrinsic size, which is
+// nothing a page can render.
 //
 // `cache` is React's request-scoped memoizer, kept here — on the I/O — so the
 // domain layer above stays free of framework imports.
@@ -42,10 +42,6 @@ export type PayloadPageSobre = {
     heading?: string | null;
     body?: RichTextContent | null;
     linkLabel?: string | null;
-  } | null;
-  assinatura?: {
-    image?: PayloadMediaField;
-    closingLine?: string | null;
   } | null;
 };
 

@@ -25,69 +25,45 @@ Três regras governam tudo o que segue:
 
 ## Original, sem edição
 
-> Instead of "Consultório estabelecido em Guarulhos" -> "Clínica de psicologia analítica (Jung)
-> on-line para todo o Brasil e exterior."
->
-> To be added in the most relevant place: "Sou especializada em orientação profissional e
-> orientação de carreira pela PUC - SP. Através de testes psicológicos, conversas e atividades
-> propostas, posso te ajudar a descobrir a profissão que faz mais sentido no momento atual da sua
-> vida. São feitos até 12 encontros semanais, on-line."
->
-> "Não removo sintomas, trabalho o fortalecimento do seu ego para que esses sintomas não sejam
-> necessários um dia. A clínica analítica não trabalha para eliminar sintomas, lidamos com a
-> psicologia profunda.
-> Como fazemos isso? Através da conscientização das próprias emoções, da personalidade, do momento
-> de vida, como se reage às tristezas e felicidades da própria existência. Aliado a isso, o
-> trabalho de forma consistente, através de encontros semanais."
->
-> "Gosto de dizer que a psicologia clínica é o trabalho mais “anti capitalista” que existe, pois o
-> que é oferecido não traz uma solução rápida tampouco indolor. Por uma questão ética, o conteúdo
-> dos encontros são ditados pelo paciente, de acordo com aquilo que ele está preparado para trazer.
-> Eu só farei pontuações daquilo que acredito que você esteja preparado para receber, respeitando o
-> tempo do seu processo e a sua subjetividade. Não existe pressa no processo de individuação."
->
-> "A minha jornada na psicologia já soma 22 anos, com atuação direta na clínica desde 2014. Meu
-> objetivo é oferecer um espaço seguro de escuta, reflexão e transformação para quem busca se
-> conhecer de forma autêntica e profunda.
-> A minha abordagem teórica e acadêmica é a Psicologia Analítica do Carl Gustav Jung.
-> À primeira vez que entrei em contato com a sua teoria, estava no segundo ano de faculdade, foi um
-> caminho sem volta para mim! Desde então fiz matérias focadas nessa linha, assim como o TCC e
-> posteriormente as pós graduações.
-> Qual a minha trajetória acadêmica?
-> Acredito que o cuidado com o outro exige estudo constante e aprofundamento rigoroso. Minha
-> trajetória inclui:
-> Graduação em Psicologia pela PUC-SP.
-> Pós-graduação em Psicologia Clínica pelo Instituto Numen.
-> Aprimoramento em Psicologia Clínica Junguiana e em Orientação Profissional e de Carreira, ambos
-> pela PUC-SP.
-> Cursos de Extensão: Psicologia e Religião (PUC-SP) e Psicologia, Religião e Fenômenos Anômalos
-> (USP).
->
-> O que é a Psicologia Analítica?
-> Eu trabalho com a Psicologia Analítica, desenvolvida por Carl Gustav Jung. Diferente de
-> abordagens que focam apenas em calar um sintoma (como a ansiedade ou a angústia), a clínica da
-> psicologia profunda entende que o sintoma tem um propósito: ele é um chamado do nosso
-> inconsciente pedindo atenção.
-> Nesta abordagem, olhamos para o ser humano de forma integral. Nós exploramos não apenas a sua
-> história de vida e seus desafios conscientes, mas também a linguagem do seu mundo interno.
-> Trabalhamos com a ideia de Individuação — o processo contínuo de se tornar quem você realmente é,
-> integrando suas luzes e sombras.
-> Como funciona a clínica nessa abordagem?
-> Na prática, as sessões são um espaço de diálogo livre, acolhedor e sem julgamentos. Além da
-> conversa, o processo clínico analítico frequentemente utiliza ferramentas simbólicas para acessar
-> o que está além do racional, como:
-> A análise e interpretação de sonhos.
-> A exploração de imagens, fantasias e símbolos que surgem no seu dia a dia.
-> A compreensão de padrões repetitivos que bloqueiam o seu desenvolvimento.
-> É um trabalho de colaboração. Juntos, vamos construir pontes entre o seu consciente e o seu
-> inconsciente, promovendo mais equilíbrio, sentido e vitalidade para a sua vida.
-> Atendimentos
-> Para garantir que a distância não seja um obstáculo para o seu processo de autoconhecimento, os
-> meus atendimentos acontecem no formato online.
-> Idiomas: Sessões em Português e Inglês.
-> Alcance: Atendo pacientes de todo o Brasil e brasileiros e estrangeiros ao redor do mundo.
-> Se você sente que é o momento de iniciar essa jornada de volta para si mesmo(a), será uma alegria
-> acompanhar o seu processo."
+Em bloco de código, não em citação: as nove linhas de lista dela começam com um espaço, e um
+formatador de Markdown os removeria. Aqui o texto fica byte a byte como ela o escreveu.
+
+```text
+Instead of "Consultório estabelecido em Guarulhos" -> "Clínica de psicologia analítica (Jung) on-line para todo o Brasil e exterior."
+
+To be added in the most relevant place: "Sou especializada em orientação profissional e orientação de carreira pela PUC - SP. Através de testes psicológicos, conversas e atividades propostas, posso te ajudar a descobrir a profissão que faz mais sentido no momento atual da sua vida. São feitos até 12 encontros semanais, on-line."
+
+"Não removo sintomas, trabalho o fortalecimento do seu ego para que esses sintomas não sejam necessários um dia. A clínica analítica não trabalha para eliminar sintomas, lidamos com a psicologia profunda.
+Como fazemos isso? Através da conscientização das próprias emoções, da personalidade, do momento de vida, como se reage às tristezas e felicidades da própria existência. Aliado a isso, o trabalho de forma consistente, através de encontros semanais."
+
+"Gosto de dizer que a psicologia clínica é o trabalho mais “anti capitalista” que existe, pois o que é oferecido não traz uma solução rápida tampouco indolor. Por uma questão ética, o conteúdo dos encontros são ditados pelo paciente, de acordo com aquilo que ele está preparado para trazer.
+Eu só farei pontuações daquilo que acredito que você esteja preparado para receber, respeitando o tempo do seu processo e a sua subjetividade. Não existe pressa no processo de individuação."
+
+"A minha jornada na psicologia já soma 22 anos, com atuação direta na clínica desde 2014. Meu objetivo é oferecer um espaço seguro de escuta, reflexão e transformação para quem busca se conhecer de forma autêntica e profunda.
+A minha abordagem teórica e acadêmica é a Psicologia Analítica do Carl Gustav Jung.
+À primeira vez que entrei em contato com a sua teoria, estava no segundo ano de faculdade, foi um caminho sem volta para mim! Desde então fiz matérias focadas nessa linha, assim como o TCC e posteriormente as pós graduações.
+Qual a minha trajetória acadêmica?
+Acredito que o cuidado com o outro exige estudo constante e aprofundamento rigoroso. Minha trajetória inclui:
+ Graduação em Psicologia pela PUC-SP.
+ Pós-graduação em Psicologia Clínica pelo Instituto Numen.
+ Aprimoramento em Psicologia Clínica Junguiana e em Orientação Profissional e de Carreira, ambos pela PUC-SP.
+ Cursos de Extensão: Psicologia e Religião (PUC-SP) e Psicologia, Religião e Fenômenos Anômalos (USP).
+
+O que é a Psicologia Analítica?
+Eu trabalho com a Psicologia Analítica, desenvolvida por Carl Gustav Jung. Diferente de abordagens que focam apenas em calar um sintoma (como a ansiedade ou a angústia), a clínica da psicologia profunda entende que o sintoma tem um propósito: ele é um chamado do nosso inconsciente pedindo atenção.
+Nesta abordagem, olhamos para o ser humano de forma integral. Nós exploramos não apenas a sua história de vida e seus desafios conscientes, mas também a linguagem do seu mundo interno. Trabalhamos com a ideia de Individuação — o processo contínuo de se tornar quem você realmente é, integrando suas luzes e sombras.
+Como funciona a clínica nessa abordagem?
+Na prática, as sessões são um espaço de diálogo livre, acolhedor e sem julgamentos. Além da conversa, o processo clínico analítico frequentemente utiliza ferramentas simbólicas para acessar o que está além do racional, como:
+ A análise e interpretação de sonhos.
+ A exploração de imagens, fantasias e símbolos que surgem no seu dia a dia.
+ A compreensão de padrões repetitivos que bloqueiam o seu desenvolvimento.
+É um trabalho de colaboração. Juntos, vamos construir pontes entre o seu consciente e o seu inconsciente, promovendo mais equilíbrio, sentido e vitalidade para a sua vida.
+Atendimentos
+Para garantir que a distância não seja um obstáculo para o seu processo de autoconhecimento, os meus atendimentos acontecem no formato online.
+ Idiomas: Sessões em Português e Inglês.
+ Alcance: Atendo pacientes de todo o Brasil e brasileiros e estrangeiros ao redor do mundo.
+Se você sente que é o momento de iniciar essa jornada de volta para si mesmo(a), será uma alegria acompanhar o seu processo."
+```
 
 Instruções que acompanharam o texto: _"feel free to correct grammar too"_ (origem da licença
 CON-003) e _"o texto precisa passar por uma passagem de writing:humanize"_ (Fase 3, que por

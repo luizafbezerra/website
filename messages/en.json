@@ -166,10 +166,11 @@
       "seePost": "see it on Instagram",
       "follow": "follow at {handle}"
     },
-    "lamina": {
-      "fallbackHeading": "One painting, up close",
-      "platePlaceholder": "A high-resolution canvas, travelled from top to bottom.",
-      "platePlaceholderNote": "The chosen painting arrives through the admin panel."
+    "ceu": {
+      "heading": "The sky tonight",
+      "subtitle": "The constellations over São Paulo, right now. Each night draws a different chart.",
+      "chartLabel": "Chart of the sky over São Paulo on {date}, showing the constellations above the horizon",
+      "caption": "the sky over São Paulo · {date}"
     },
     "brasilExterior": {
       "horasAria": "Local times right now",

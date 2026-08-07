@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { getClinica } from "@/domain/clinica/getClinica";
+import { computeNightSky } from "@/domain/cosmos/nightSky";
 import { getInicio } from "@/domain/inicio/getInicio";
 import { getInstagramFeed } from "@/domain/instagram/getInstagramFeed";
 import type { Locale } from "@/domain/site/Locale";
@@ -21,7 +22,10 @@ import { WowSlot } from "@/view/inicio/WowSlot";
 import { BreadcrumbJsonLd, ReviewsJsonLd } from "@/view/seo/jsonLd";
 import { pageMetadata } from "@/view/seo/pageMetadata";
 
-type HomeProps = { params: Promise<{ locale: Locale }> };
+type HomeProps = {
+  params: Promise<{ locale: Locale }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+};
 
 export async function generateMetadata({ params }: HomeProps): Promise<Metadata> {
   const { locale } = await params;
@@ -46,9 +50,17 @@ export const revalidate = 3600;
  * entity graph is emitted once by the shared `(pages)` layout, so only the two
  * payloads that belong to *this* page are added here.
  */
-export default async function Home({ params }: HomeProps) {
+export default async function Home({ params, searchParams }: HomeProps) {
   const { locale } = await params;
   setRequestLocale(locale);
+
+  // Dev-only preview of O céu desta noite at another instant. Guarded before
+  // the await: reading searchParams opts a route out of static rendering, so
+  // production never touches it — the sky stays hourly-revalidated and is
+  // never addressable by URL, which keeps the chart indexing a place and a
+  // time, never a person (CONCEPT §11).
+  const skyOverride =
+    process.env.NODE_ENV === "development" ? parseSkyInstant((await searchParams).ceu) : null;
 
   const [clinica, inicio, testimonials, instagramPosts, t] = await Promise.all([
     getClinica(locale),
@@ -89,7 +101,20 @@ export default async function Home({ params }: HomeProps) {
       <ComoComecar content={inicio.comoComecar} />
       <Vozes testimonials={testimonials} content={inicio.vozes} />
       <Contato clinica={clinica} content={inicio.contato} />
-      <WowSlot content={inicio.cosmos} />
+      {/* The sky is computed here, on the server, from the same render clock as
+          the rotating passage — so every visitor to this render sees one sky,
+          and it is São Paulo's rather than the reader's. */}
+      <WowSlot content={inicio.cosmos} sky={computeNightSky(skyOverride ?? renderedAt)} />
     </>
   );
+}
+
+/**
+ * `?ceu=2027-01-15T22:00:00-03:00` (any string `new Date` accepts; a naive
+ * datetime reads in the dev machine's zone). Invalid or absent means now.
+ */
+function parseSkyInstant(value: string | string[] | undefined): Date | null {
+  if (typeof value !== "string") return null;
+  const parsed = new Date(value);
+  return Number.isNaN(parsed.getTime()) ? null : parsed;
 }

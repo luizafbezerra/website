@@ -34,18 +34,6 @@ export type Door = {
   linkLabel: string;
 };
 
-/** A Lâmina — the mobile Cosmos substitute (CONCEPT §9.1). */
-export type Lamina = {
-  plate: PageImage | null;
-  painter: string | null;
-  workTitle: string | null;
-  year: string | null;
-  /** Two or three, surfacing at chosen details as the lens travels. */
-  captions: string[];
-  /** Her line, when the painting finally appears whole. */
-  closingLine: string | null;
-};
-
 /** One beat of "como é começar". */
 export type Beat = { numeral: string; text: string };
 
@@ -78,8 +66,12 @@ export type Inicio = {
     linkLabel: string;
   };
   cosmos: {
+    /**
+     * The marginalia beside the wow slot. The slot's substitute — O céu desta
+     * noite (CONCEPT §9.5) — carries no other authored content: the chart is
+     * computed, not curated.
+     */
     caption: string | null;
-    lamina: Lamina;
   };
   sobreDigest: {
     heading: string;
@@ -160,14 +152,6 @@ export const INICIO_DEFAULTS: Inicio = {
   },
   cosmos: {
     caption: null,
-    lamina: {
-      plate: null,
-      painter: null,
-      workTitle: null,
-      year: null,
-      captions: [],
-      closingLine: null,
-    },
   },
   sobreDigest: {
     heading: "Quem recebe você",

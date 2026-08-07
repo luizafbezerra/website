@@ -118,34 +118,17 @@ describe("inicioFromPayload", () => {
     });
   });
 
-  describe("a lâmina", () => {
-    it("carries the travelling captions in order and drops the blank ones", () => {
-      const doc: PayloadPageInicio = {
-        cosmos: {
-          lamina: {
-            plate: upload("/media/lamina.jpg", "uma tela"),
-            captions: [{ text: "o rosto" }, { text: "  " }, { text: "a mão" }],
-            closingLine: "Foi aqui que eu parei.",
-          },
-        },
-      };
+  describe("o cosmos", () => {
+    it("carries her marginalia through", () => {
+      const doc: PayloadPageInicio = { cosmos: { caption: "o que insiste, lá em cima" } };
 
-      const { lamina } = inicioFromPayload(doc).cosmos;
-
-      expect(lamina.captions).toEqual(["o rosto", "a mão"]);
-      expect(lamina.plate?.src).toBe("/media/lamina.jpg");
-      expect(lamina.closingLine).toBe("Foi aqui que eu parei.");
+      expect(inicioFromPayload(doc).cosmos.caption).toBe("o que insiste, lá em cima");
     });
 
-    it("is entirely empty until she curates it", () => {
-      expect(inicioFromPayload({}).cosmos.lamina).toEqual({
-        plate: null,
-        painter: null,
-        workTitle: null,
-        year: null,
-        captions: [],
-        closingLine: null,
-      });
+    it("leaves the caption null so the chart can date itself", () => {
+      // The wow slot's substitute — O céu desta noite — is computed rather than
+      // curated, so an untouched Cosmos section is complete, not unfinished.
+      expect(inicioFromPayload({}).cosmos).toEqual({ caption: null });
     });
   });
 });

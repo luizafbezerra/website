@@ -27,6 +27,16 @@
   --color-rule: oklch(0.84 0.018 70);
   --color-rule-soft: oklch(0.88 0.014 72);
 
+  /* The night sky of "O céu desta noite" (CONCEPT §9.5). The site's only dark
+     ground, sanctioned by the Cosmos carve-out in PRODUCT.md and bounded to
+     that one plate: a chart of the night sky on parchment is a chart of
+     nothing. Zenith → dome → horizon, deepening outward the way the real sky
+     does away from a city's light. */
+  --color-cosmos-night: oklch(0.13 0.03 262);
+  --color-cosmos-dome: oklch(0.19 0.06 258);
+  --color-cosmos-zenith: oklch(0.28 0.09 255);
+  --color-starlight: oklch(0.98 0.01 90);
+
   --color-background: var(--color-parchment);
   --color-foreground: var(--color-ink);
   --color-primary: var(--color-terracotta);
@@ -1366,6 +1376,194 @@
       transform: translateY(-50%);
       width: 14rem;
       text-align: left;
+    }
+  }
+
+  /* ---------------------------------------------------------------------- */
+  /* O céu desta noite — o anoitecer (CONCEPT §9.5).                         */
+  /*                                                                         */
+  /* Night falls on the chart as it scrolls into view: the twilight veil     */
+  /* lifts, the stars come out brightest-first — the order real dusk         */
+  /* follows, cut along the same magnitude classes the chart draws as size — */
+  /* and the constellation figures ink themselves in last, because the       */
+  /* lines need their stars before they mean anything. Scroll-scrubbed, not  */
+  /* time-fired: the visitor drives dusk, and scrolling back rewinds it.     */
+  /*                                                                         */
+  /* Progressive enhancement only, on the beat-reveal precedent: every       */
+  /* keyframe animates *from* hidden toward the element's own resting value, */
+  /* so without a timeline (Firefox), under reduced motion, or with no JS    */
+  /* at all, nothing is ever missing — the chart is simply already night.    */
+  /* The armature never animates: the instrument is printed on the page,     */
+  /* and night falls inside it.                                              */
+  /* ---------------------------------------------------------------------- */
+  /* The section's own dusk and dawn: instead of parchment cutting to night at
+     a hard edge, the page's ground goes down with the sun on the way in —
+     parchment deepening through late gold, rose, and the violet hour into the
+     chart's night — and comes back out the same way below the caption, so the
+     footer is reached at morning. The gradients are the sky itself, not
+     ornament, and they live entirely inside the one sanctioned dark plate;
+     solid night still carries the chart between them. Static paint: the
+     "animation" is the visitor scrolling through it, so it needs no motion
+     gate and costs reduced-motion readers nothing. */
+  .ceu-section {
+    /* Each ramp is deliberately dense: a handful of stops reads as bands
+       (Mach bands — the same failure the vignette's comment documents),
+       because the eye sees every abrupt slope change. Thirteen stops keep
+       each segment's slope close to its neighbors', and both ends ease in
+       almost imperceptibly — the parchment barely warms for the first fifth,
+       and the last fifth settles into night rather than arriving at it.
+
+       The runways are viewport-scale on purpose: dusk is most of a screen of
+       scroll, so the page turns to night at the pace of an actual sunset
+       rather than a curtain drop. And the two ramps end on different grounds
+       because their neighbors differ — Contato above sits on parchment-deep,
+       the footer below on the body's plain parchment — so each ramp meets
+       its own neighbor without a seam. */
+    --ceu-runway: max(46rem, 105svh);
+    --ceu-runway-out: max(34rem, 75svh);
+    --ceu-dusk-ramp:
+      var(--color-parchment-deep) 0%, oklch(0.93 0.022 74) 9%, oklch(0.91 0.028 72) 18%,
+      oklch(0.88 0.035 70) 27%, oklch(0.8 0.05 65) 36%, oklch(0.7 0.055 48) 45%,
+      oklch(0.6 0.05 25) 54%, oklch(0.5 0.05 315) 62%, oklch(0.4 0.055 285) 70%,
+      oklch(0.3 0.055 266) 78%, oklch(0.21 0.045 262) 86%, oklch(0.16 0.035 262) 93%,
+      var(--color-cosmos-night) 100%;
+    --ceu-dawn-ramp:
+      var(--color-parchment) 0%, oklch(0.955 0.016 74) 9%, oklch(0.93 0.024 73) 18%,
+      oklch(0.88 0.035 70) 27%, oklch(0.8 0.05 65) 36%, oklch(0.7 0.055 48) 45%,
+      oklch(0.6 0.05 25) 54%, oklch(0.5 0.05 315) 62%, oklch(0.4 0.055 285) 70%,
+      oklch(0.3 0.055 266) 78%, oklch(0.21 0.045 262) 86%, oklch(0.16 0.035 262) 93%,
+      var(--color-cosmos-night) 100%;
+    padding-top: calc(var(--ceu-runway) + 3rem);
+    padding-bottom: calc(var(--ceu-runway-out) + 3rem);
+    background:
+      linear-gradient(to bottom, var(--ceu-dusk-ramp)) top / 100% var(--ceu-runway) no-repeat,
+      linear-gradient(to top, var(--ceu-dawn-ramp)) bottom / 100% var(--ceu-runway-out) no-repeat,
+      var(--color-cosmos-night);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    /* The first-magnitude flicker — time-fired and independent of dusk, so
+       the brightest handful breathe even where scroll-driven animations do
+       not exist. Period and phase arrive per star as custom properties, so
+       they never pulse in lockstep. Amplitude stays at "felt rather than
+       watched", the mandala-respira discipline. */
+    .ceu-mag-1 {
+      animation: ceu-kindle var(--ceu-kindle-duration, 4s) ease-in-out
+        var(--ceu-kindle-delay, 0s) infinite;
+    }
+
+    @keyframes ceu-kindle {
+      50% {
+        opacity: 0.6;
+      }
+    }
+
+    /* The section's words wait until each line is fully in view (the
+       CeuRevealTrigger observer stamps the attributes), then drift in from
+       the left over nearly three seconds — time-fired rather than
+       scroll-scrubbed, because dreamy means the same unhurried pace at any
+       scroll speed. Armed (hidden) only by the client after hydration and
+       only inside this media query, so no-JS, machine, and reduced-motion
+       readers all get the words simply present. */
+    .ceu-reveal[data-ceu-armed] {
+      opacity: 0;
+      translate: -2.5rem 0;
+    }
+
+    .ceu-reveal[data-ceu-inview] {
+      opacity: 1;
+      translate: 0 0;
+      transition:
+        opacity 2.8s cubic-bezier(0.22, 1, 0.36, 1),
+        translate 2.8s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    /* The subtitle trails its heading by a breath. */
+    .ceu-reveal-late[data-ceu-inview] {
+      transition-delay: 0.45s;
+    }
+
+    @supports ((animation-timeline: view()) and (animation-range: entry)) {
+      /* The chart's wrapper div is the timeline subject, not the svg: a plain
+         block is a CSS box under every engine's definition, and a subject
+         that failed to resolve would strand every star at its hidden
+         from-keyframe. */
+      .ceu-dusk-frame {
+        view-timeline: --ceu-dusk;
+      }
+
+      .ceu-veil {
+        animation: ceu-veil-lift auto linear backwards;
+        animation-timeline: --ceu-dusk;
+        animation-range: entry 0% entry 62%;
+      }
+
+      /* The base star rule is the last wave — the unnamed vertices that only
+         appear once the sky has actually darkened. The brighter classes
+         override the range to arrive earlier, exactly as they do outside. */
+      .ceu-star {
+        animation: ceu-star-out auto linear backwards;
+        animation-timeline: --ceu-dusk;
+        animation-range: entry 40% entry 72%;
+      }
+
+      /* First magnitude carries both animations: the scrubbed reveal last in
+         the list, so its backwards fill owns opacity until dusk has actually
+         reached that star, and the time-fired flicker takes over only once
+         the reveal's range is behind it. */
+      .ceu-mag-1 {
+        animation:
+          ceu-kindle var(--ceu-kindle-duration, 4s) ease-in-out var(--ceu-kindle-delay, 0s)
+            infinite,
+          ceu-star-out auto linear backwards;
+        animation-timeline: auto, --ceu-dusk;
+        animation-range: normal, entry 6% entry 30%;
+      }
+
+      .ceu-mag-2 {
+        animation-range: entry 16% entry 44%;
+      }
+
+      .ceu-mag-3 {
+        animation-range: entry 28% entry 58%;
+      }
+
+      /* Each figure draws itself from one star toward the next (the dash is
+         the whole segment, courtesy of pathLength=1). Two offset waves keep
+         the figures from arriving as one synchronized grid. */
+      .ceu-figure {
+        stroke-dasharray: 1;
+        animation: ceu-figure-draw auto ease-out backwards;
+        animation-timeline: --ceu-dusk;
+        animation-range: entry 54% entry 90%;
+      }
+
+      .ceu-figure:nth-child(3n) {
+        animation-range: entry 60% entry 94%;
+      }
+
+      .ceu-figure:nth-child(3n + 2) {
+        animation-range: entry 48% entry 86%;
+      }
+
+      @keyframes ceu-veil-lift {
+        from {
+          opacity: 0.8;
+        }
+      }
+
+      @keyframes ceu-star-out {
+        from {
+          opacity: 0;
+        }
+      }
+
+      @keyframes ceu-figure-draw {
+        from {
+          stroke-dashoffset: 1;
+          opacity: 0;
+        }
+      }
     }
   }
 }

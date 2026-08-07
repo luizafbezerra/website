@@ -18,6 +18,26 @@ const CosmosCanvas = dynamic(() => import("./CosmosCanvas").then((m) => m.Cosmos
 
 const SIGIL_COUNT = 12;
 
+/**
+ * Whether the in-cosmos "Continuar a leitura ↓" button is rendered.
+ *
+ * Off by choice, not because the affordance stopped working: the whole wiring
+ * below it — `dismiss`, the scroll-position snapshot, the footer's restore
+ * control — is untouched and still correct. Flip this to `true` to bring the
+ * button back; nothing else needs changing.
+ *
+ * Deliberately a constant rather than a CMS field. It is a decision about the
+ * page's composition, not copy she should be asked to maintain, and a field
+ * nobody edits is a field that reads as an unanswered question in the admin.
+ *
+ * The cost, worth knowing before flipping it back: with the button gone the
+ * only way past the cinema is to scroll its 375vh pin, roughly four screens.
+ * That is a bounded chore rather than a trap, and it applies to desktop
+ * pointer users alone — the pin collapses under `prefers-reduced-motion` and
+ * does not exist at all below 767px.
+ */
+const SHOW_SKIP_AFFORDANCE = false;
+
 const initialSigilPositions = (): SigilScreenPosition[] =>
   Array.from({ length: SIGIL_COUNT }, () => ({ x: 0.5, y: 0.5, visible: false }));
 
@@ -357,18 +377,21 @@ function CosmosBody({ onDismissForever, sky }: CosmosProps & { onDismissForever:
             </aside>
           ) : null}
 
-          {/* Skip affordance. Mirrors the epigraph at bottom-right but lives
-              outside the descent-beat opacity envelope so it stays available
-              from the moment the scene mounts. Click unmounts cosmos for the
-              rest of this visit; the footer toggle brings it back. */}
-          <div className="cosmos-skip">
-            <button type="button" className="cosmos-skip-cta" onClick={onDismissForever}>
-              <span aria-hidden="true" className="cosmos-skip-dot">
-                ·
-              </span>
-              Continuar a leitura ↓
-            </button>
-          </div>
+          {/* Skip affordance, behind `SHOW_SKIP_AFFORDANCE`. Mirrors the epigraph
+              at bottom-right but lives outside the descent-beat opacity envelope
+              so it stays available from the moment the scene mounts. Click
+              unmounts cosmos for the rest of this visit; the footer toggle
+              brings it back. */}
+          {SHOW_SKIP_AFFORDANCE && (
+            <div className="cosmos-skip">
+              <button type="button" className="cosmos-skip-cta" onClick={onDismissForever}>
+                <span aria-hidden="true" className="cosmos-skip-dot">
+                  ·
+                </span>
+                Continuar a leitura ↓
+              </button>
+            </div>
+          )}
         </div>
       </div>
 

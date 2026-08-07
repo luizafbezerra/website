@@ -1,5 +1,11 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
+  "crons": [
+    {
+      "path": "/api/payload-jobs/run?limit=5",
+      "schedule": "0 4 * * *"
+    }
+  ],
   "headers": [
     {
       "source": "/((?!admin).*)",

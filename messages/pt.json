@@ -1,0 +1,264 @@
+{
+  "nav": {
+    "inicio": "Início",
+    "analise": "Análise",
+    "orientacaoProfissional": "Orientação profissional",
+    "sobre": "Sobre",
+    "primeiraConversa": "Primeira conversa",
+    "perguntas": "Perguntas",
+    "internacional": "Brasil e exterior",
+    "privacidade": "Privacidade"
+  },
+  "meta": {
+    "inicio": {
+      "title": "Símbolos do Self · psicologia analítica (Jung) on-line, por Luiza Fernandes Bezerra",
+      "description": "Clínica de psicologia analítica (Jung) on-line para todo o Brasil e exterior. Análise e orientação profissional de carreira com Luiza Fernandes Bezerra, psicóloga."
+    },
+    "perguntas": {
+      "title": "Perguntas frequentes",
+      "description": "Dúvidas sobre a análise junguiana e a orientação profissional on-line: primeira conversa, duração, frequência, valores, sigilo, fuso horário, Brasil e exterior."
+    },
+    "privacidade": {
+      "title": "Privacidade",
+      "description": "O que o site guarda — a sua escolha de idioma, no seu próprio navegador, e estatísticas de visita anônimas e agregadas — e o que ele nunca faz: identificar, seguir ou personalizar para quem visita."
+    },
+    "primeiraConversa": {
+      "title": "A primeira conversa",
+      "description": "O que acontece quando você escreve: uma conversa de cerca de cinquenta minutos, por vídeo, em português ou inglês, no seu fuso — do Brasil ou do exterior. Passo a passo, valores e o bilhete já escrito para começar."
+    },
+    "sobre": {
+      "title": "Sobre Luiza Fernandes Bezerra",
+      "description": "Luiza Fernandes Bezerra, psicóloga clínica na tradição da psicologia analítica de Jung: graduação e aprimoramentos na PUC-SP, pós no Instituto Numen, clínica desde 2014. Análise e orientação profissional on-line, em português e inglês, para todo o Brasil e o exterior."
+    },
+    "internacional": {
+      "title": "Brasil e exterior",
+      "description": "Psicóloga brasileira on-line para quem mora fora do Brasil: análise junguiana e orientação profissional em português ou em inglês, no seu fuso, com o horário de Brasília como referência. Já acompanhei pessoas em Portugal, na Inglaterra e nos Estados Unidos; valores em dólar ou em euro."
+    },
+    "orientacaoProfissional": {
+      "title": "Orientação profissional e de carreira",
+      "description": "Orientação profissional e de carreira on-line, com psicóloga e aprimoramento pela PUC-SP: até doze encontros semanais com testes psicológicos, conversas e atividades, para chegar à profissão que faz mais sentido no momento atual da sua vida. Primeira escolha, transição de carreira ou recomeço — em português ou inglês, no Brasil e no exterior."
+    },
+    "analise": {
+      "title": "Análise junguiana on-line",
+      "description": "Psicoterapia de orientação junguiana on-line com Luiza Fernandes Bezerra, psicóloga: encontros semanais, em português ou inglês, para todo o Brasil e o exterior. Ansiedade, lutos, sonhos, relações, carreira e propósito."
+    }
+  },
+  "seo": {
+    "services": {
+      "analise": {
+        "name": "Análise junguiana (psicoterapia)",
+        "description": "Psicoterapia de orientação junguiana, on-line e semanal, em português e inglês, para todo o Brasil e o exterior."
+      },
+      "orientacaoProfissional": {
+        "name": "Orientação profissional e de carreira",
+        "description": "Programa on-line de até doze encontros semanais — testes psicológicos, conversas e atividades — para escolher ou reorientar a profissão."
+      }
+    },
+    "knowsAbout": [
+      "Psicologia analítica",
+      "Análise junguiana",
+      "Psicoterapia on-line",
+      "Sonhos",
+      "Individuação",
+      "Ansiedade",
+      "Orientação profissional"
+    ]
+  },
+  "twin": {
+    "pages": "Páginas",
+    "page": "Página",
+    "alternate": "In English",
+    "index": "Índice de todas as páginas"
+  },
+  "chrome": {
+    "skipToContent": "Pular para o conteúdo",
+    "headerByline": "psicóloga · análise junguiana",
+    "whoLine": "Com a psicóloga {name}",
+    "footerByline": "psicóloga clínica",
+    "lockupBy": "por",
+    "homeAria": "{name} — início",
+    "nav": {
+      "primary": "Principal",
+      "footer": "Rodapé",
+      "title": "Navegação",
+      "open": "Abrir navegação",
+      "close": "Fechar navegação"
+    },
+    "language": {
+      "label": "Idioma",
+      "pt": "PT",
+      "en": "EN",
+      "switchToPt": "Ler em português",
+      "switchToEn": "Read in English"
+    },
+    "footer": {
+      "clinica": "A clínica",
+      "comecar": "Começar",
+      "mundo": "O mundo",
+      "email": "E-mail",
+      "reach": "português e inglês · Brasil e exterior"
+    },
+    "colophon": {
+      "binding": "{clinic} é a clínica de psicologia analítica on-line de {name}.",
+      "rights": "© {year} {name}",
+      "moon": "sob {phase} de {month}"
+    },
+    "moonPhase": {
+      "new": "a lua nova",
+      "waxingCrescent": "a lua crescente",
+      "firstQuarter": "o quarto crescente",
+      "waxingGibbous": "a lua gibosa crescente",
+      "full": "a lua cheia",
+      "waningGibbous": "a lua gibosa minguante",
+      "lastQuarter": "o quarto minguante",
+      "waningCrescent": "a lua minguante"
+    },
+    "whatsapp": {
+      "label": "Conversar pelo WhatsApp",
+      "aria": "Iniciar conversa pelo WhatsApp {phone}"
+    },
+    "availability": {
+      "label": "Agenda",
+      "open": "Com horários disponíveis.",
+      "waitlist": "Lista de espera curta.",
+      "closed": "Sem novos atendimentos no momento — escreva e eu aviso."
+    },
+    "cosmosRestore": "Reabrir a abertura cósmica ↻",
+    "credentialLabel": "Credenciais"
+  },
+  "placeholder": {
+    "pending": "Em preparação",
+    "aria": "Espaço reservado: {description}",
+    "slots": {
+      "portrait": "O retrato de Luiza — luz natural, fundo calmo.",
+      "portraitNote": "A foto definitiva entra aqui assim que a sessão acontecer."
+    }
+  },
+  "notFound": {
+    "metaTitle": "Página não encontrada",
+    "eyebrow": "Erro 404",
+    "title": "Esta página <em>se perdeu</em> pelo caminho.",
+    "body": "O endereço que você procura não existe ou foi movido — acontece. Volte ao início ou, se preferir falar comigo, o WhatsApp está sempre por perto.",
+    "backHome": "Voltar ao início",
+    "whatsapp": "Conversar pelo WhatsApp"
+  },
+  "error": {
+    "eyebrow": "Algo saiu do lugar",
+    "title": "Um <em>imprevisto</em> aconteceu.",
+    "body": "Não foi possível carregar esta página agora. Tente novamente em instantes; se o problema continuar, me escreva pelo WhatsApp e eu dou um jeito.",
+    "retry": "Tentar novamente",
+    "backHome": "Voltar ao início",
+    "whatsapp": "Conversar pelo WhatsApp"
+  },
+  "loading": {
+    "label": "Carregando…"
+  },
+  "inicio": {
+    "hero": {
+      "by": "por {name}",
+      "portraitAlt": "Retrato de {name}",
+      "portraitCaption": "Quem recebe você."
+    },
+    "instagram": {
+      "tileAction": "Trazer a publicação para o centro: {work}",
+      "tileCurrent": "Publicação em destaque: {work}",
+      "tileFallbackLabel": "publicação {number}",
+      "seePost": "ver no Instagram",
+      "follow": "acompanhar em {handle}"
+    },
+    "lamina": {
+      "fallbackHeading": "Uma pintura, de perto",
+      "platePlaceholder": "Uma tela em alta resolução, percorrida de cima a baixo.",
+      "platePlaceholderNote": "A pintura escolhida entra aqui pelo painel."
+    },
+    "brasilExterior": {
+      "horasAria": "Horários locais agora",
+      "cities": {
+        "brasilia": "Brasília",
+        "lisboa": "Lisboa",
+        "londres": "Londres",
+        "novaYork": "Nova York"
+      }
+    },
+    "contato": {
+      "orByEmail": "ou por e-mail —",
+      "faqLink": "perguntas frequentes antes de escrever"
+    }
+  },
+  "pratico": {
+    "fee": "Valor",
+    "feeAnalysis": "Valor · análise",
+    "feeCareerGuidance": "Valor · orientação profissional",
+    "feeToDiscuss": "A combinar na primeira conversa."
+  },
+  "primeiraConversa": {
+    "skipToBilhete": "ir direto ao bilhete",
+    "plate": {
+      "placeholder": "Uma pintura para o respiro desta página.",
+      "placeholderNote": "A obra escolhida entra aqui pelo painel, com pintor, título e ano."
+    },
+    "bilhete": {
+      "send": "enviar pelo WhatsApp",
+      "noteAria": "Enviar pelo WhatsApp o bilhete {door}",
+      "doors": {
+        "analysis": "para a análise",
+        "careerGuidance": "para a orientação profissional",
+        "unsure": "ainda não sei",
+        "english": "in English"
+      }
+    }
+  },
+  "sobre": {
+    "quemE": {
+      "portraitAlt": "Retrato de {name}"
+    }
+  },
+  "perguntas": {
+    "plate": {
+      "placeholder": "Uma pintura para fechar a página, depois da última resposta.",
+      "placeholderNote": "A obra escolhida entra aqui pelo painel, com pintor, título e ano."
+    }
+  },
+  "internacional": {
+    "plate": {
+      "placeholder": "Uma pintura de mar, viagem ou porto — a distância como paisagem.",
+      "placeholderNote": "A obra escolhida entra aqui pelo painel, com pintor, título e ano."
+    }
+  },
+  "orientacaoProfissional": {
+    "plate": {
+      "placeholder": "Uma encruzilhada ou um labirinto pintado — a única imagem desta página.",
+      "placeholderNote": "A obra escolhida entra aqui pelo painel, com pintor, título e ano."
+    }
+  },
+  "privacidade": {
+    "responsible": "Responsável",
+    "contact": "Contato"
+  },
+  "analise": {
+    "plate": {
+      "placeholder": "Uma pintura ao lado da ideia de individuação.",
+      "placeholderNote": "A obra escolhida entra aqui pelo painel, com pintor, título e ano."
+    },
+    "mandala": {
+      "wheelAlt": "Mandala pintada com doze figuras zodiacais, vinte e sete mansões lunares védicas e a Terra ao centro",
+      "tablistLabel": "As doze figuras da roda",
+      "panelLabel": "Detalhes da figura escolhida",
+      "signAria": "{sign}, {dates}",
+      "hint": "Passe o cursor — ou navegue com as setas do teclado — por uma das doze figuras. Toque para trazê-la ao alto.",
+      "hintVedic": "Cada figura abre, ao lado do seu retrato, um segundo capítulo védico: as três mansões lunares que a sua faixa atravessa.",
+      "fields": {
+        "element": "Elemento",
+        "modality": "Modalidade",
+        "ruler": "Regente",
+        "body": "Corpo",
+        "archetype": "Arquétipo"
+      },
+      "vedic": "Tradição védica",
+      "vedicSub": "Três mansões lunares"
+    },
+    "sonho": {
+      "parallelPlaceholder": "O detalhe de pintura deste paralelo."
+    }
+  }
+}

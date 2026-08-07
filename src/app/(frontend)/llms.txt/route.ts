@@ -1,119 +1,119 @@
-import { getAllPosts } from "@/app/actions/blog";
-import { getFaq } from "@/app/actions/faq";
-import { getIdentity } from "@/app/actions/identity";
-import { Blog } from "@/core/blog";
 import { NextResponse } from "next/server";
+import { getTranslations } from "next-intl/server";
+import { getClinica } from "@/domain/clinica/getClinica";
+import { credentialStrip } from "@/domain/markdown/credentialStrip";
+import {
+  blocks,
+  bullets,
+  heading,
+  labelled,
+  type MarkdownBlock,
+  link,
+  paragraph,
+} from "@/domain/markdown/MarkdownBlock";
+import { renderMarkdown } from "@/domain/markdown/renderMarkdown";
+import { twinPath } from "@/domain/markdown/twinPath";
+import { DEFAULT_LOCALE, type Locale, otherLocale, SITE_LOCALES } from "@/domain/site/Locale";
+import { pagePath } from "@/domain/site/pagePath";
+import { builtPages, type PageKey } from "@/domain/site/pages";
+import { estimateTokens } from "@/domain/tokens/estimateTokens";
+import { formatTokens } from "@/domain/tokens/formatTokens";
+import { absoluteUrl, BASE_URL } from "@/infrastructure/env/baseUrl";
+import { twinMarkdown } from "../llms/twinMarkdown";
+
+/**
+ * `/llms.txt` — the machine-readable index of everything public (REQ-011,
+ * CONCEPT §10).
+ *
+ * Front-loaded, because agents budget their patience as well as their context: the
+ * first lines answer who she is, what she does, how far the practice reaches and
+ * how to reach her. Then one line per page per locale, each with its title, its
+ * front-loaded description, its canonical URL, its Markdown twin and the twin's
+ * measured size.
+ *
+ * **Everything here is derived.** The page list is `builtPages()` × locales from
+ * the canonical registry, so the index cannot advertise a route that does not exist
+ * or miss one that does; the addresses come from `pagePath` and `twinPath`; the
+ * titles and descriptions are the same `meta.<key>` strings the pages' `<title>`
+ * and `<meta name="description">` carry; and every token count is measured on the
+ * bytes that twin actually serves. The version this replaced listed two of the
+ * eight pages, with hand-written descriptions and one hand-kept size hint.
+ *
+ * **One bilingual file, not one per locale.** The convention puts this document at
+ * the origin root, and a client that fetches it should discover the whole site
+ * rather than half of it plus a pointer; a second index under `/en` would be a
+ * second place for the identity block to go stale. So the identity is stated once,
+ * in Portuguese with the English positioning sentence beside it, and the pages are
+ * listed in two sections — each page's title and description in its own language.
+ */
 
 export const revalidate = 3600;
 
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? "https://example.com";
-
-/** Human-readable token count: "~840 tokens" / "~1.4k tokens". */
-function fmtTokens(n: number): string {
-  return n >= 1000 ? `~${(n / 1000).toFixed(1)}k tokens` : `~${n} tokens`;
-}
-
-/**
- * Posts carry no body in the lightweight `getAllPosts` shape, so estimate from
- * reading time (≈200 words/min) bumped to tokens — Portuguese runs a little
- * over one token per word. Coarse on purpose; the exact count lives in each
- * `/blog/<slug>.md` front-matter.
- */
-function postTokens(readingTimeMinutes: number): number {
-  return Math.round(readingTimeMinutes * 200 * 1.4);
-}
-
-// Flat Markdown index of public content for AI agents (the /llms.txt
-// convention). Front-loaded: the first lines answer who Luiza is, what she
-// does, and how to reach her — agents have limited patience. Then a
-// task-organized index with one-line descriptions, absolute URLs, and token
-// counts. Served as text/plain regardless of the launch gate; harmless while
-// robots.txt is locked.
 export async function GET(): Promise<NextResponse> {
-  const [identity, posts, faqEntries] = await Promise.all([
-    getIdentity(),
-    getAllPosts("pt-BR"),
-    getFaq(),
+  const [clinica, clinicaEn, labels] = await Promise.all([
+    getClinica(DEFAULT_LOCALE),
+    getClinica(otherLocale(DEFAULT_LOCALE)),
+    getTranslations({ locale: DEFAULT_LOCALE, namespace: "chrome" }),
   ]);
 
-  // Computed from the live FAQ copy (cheap + accurate); Início/Mandala are
-  // coarse page-size hints since their copy is spread across many components.
-  const faqTokens = Blog.estimateTokens(
-    faqEntries.map((e) => `${e.question} ${e.answer}`).join(" "),
+  const sections = await Promise.all(SITE_LOCALES.map(pageSection));
+
+  const document = blocks(
+    heading(1, `${clinica.clinicName} — ${clinica.fullName}, ${clinica.role}`),
+    paragraph(clinica.positioning),
+    // The same sentence in English, so an anglophone client has the whole answer
+    // before it reaches the second section. Identical strings mean the field is
+    // still falling back to Portuguese, and one copy is enough.
+    clinicaEn.positioning === clinica.positioning ? null : paragraph(clinicaEn.positioning),
+    bullets([
+      // The strip already states on-line · português e inglês · Brasil e exterior,
+      // which the positioning sentence above states again in prose — a third
+      // restatement of the reach would be noise, not front-loading.
+      labelled(labels("credentialLabel"), credentialStrip(clinica)),
+      labelled("WhatsApp", `${clinica.whatsappDisplay} · ${clinica.whatsappUrl}`),
+      labelled(labels("footer.email"), clinica.email),
+      clinica.instagramUrl
+        ? labelled("Instagram", `${clinica.instagramHandle} · ${clinica.instagramUrl}`)
+        : null,
+      labelled("Site", BASE_URL),
+      labelled("Sitemap", absoluteUrl("/sitemap.xml")),
+    ]),
+    ...sections,
   );
 
-  const staticPages = [
-    {
-      title: "Início",
-      url: `${BASE_URL}/`,
-      description:
-        "Quem é Luiza, a abordagem junguiana, as três frentes de trabalho (ansiedade & humor, relações & vida, carreira & propósito) e como marcar uma primeira conversa.",
-      tokens: 900,
-    },
-    {
-      title: "Perguntas frequentes",
-      url: `${BASE_URL}/perguntas`,
-      description:
-        "Como funciona a primeira conversa, duração e frequência das sessões, atendimento online e presencial, sigilo.",
-      tokens: faqTokens,
-    },
-    {
-      title: "Mandala dos signos",
-      url: `${BASE_URL}/simbolos`,
-      description:
-        "Mandala pintada com doze figuras zodiacais e vinte e sete nakshatras védicos — um mapa de ressonâncias arquetípicas, na tradição da psicologia analítica.",
-      tokens: 1400,
-    },
-  ];
-
-  const lines: string[] = [];
-
-  // ── Front-loaded identity ────────────────────────────────────────────────
-  lines.push(`# ${identity.fullName} — ${identity.role}`);
-  lines.push("");
-  lines.push(identity.tagline);
-  lines.push("");
-  lines.push(`- Tradição: ${identity.tradition}`);
-  lines.push(
-    `- Atendimento: presencial em ${identity.city}–${identity.region}; online em todo o ${identity.country}; idioma pt-BR`,
-  );
-  if (identity.credential) lines.push(`- Registro: ${identity.credential}`);
-  lines.push(`- WhatsApp: ${identity.phoneDisplay} — ${identity.whatsappUrl}`);
-  if (identity.email) lines.push(`- E-mail: ${identity.email}`);
-  if (identity.instagramUrl)
-    lines.push(`- Instagram: ${identity.instagramHandle} — ${identity.instagramUrl}`);
-  lines.push(`- Site: ${BASE_URL}`);
-  lines.push("");
-  lines.push(
-    "> Cada publicação do blog tem uma versão Markdown limpa em /blog/<slug>.md, pensada para leitura por agentes.",
-  );
-  lines.push("");
-
-  // ── Páginas ──────────────────────────────────────────────────────────────
-  lines.push("## Páginas");
-  lines.push("");
-  for (const page of staticPages) {
-    lines.push(`- [${page.title}](${page.url}) — ${page.description} (${fmtTokens(page.tokens)})`);
-  }
-  lines.push("");
-
-  // ── Escrita (blog) ─────────────────────────────────────────────────────────
-  if (posts.length > 0) {
-    lines.push("## Escrita (blog)");
-    lines.push("");
-    for (const post of posts) {
-      const md = `${BASE_URL}/blog/${post.slug}.md`;
-      lines.push(
-        `- [${post.title}](${BASE_URL}/blog/${post.slug}) — ${post.description} (${fmtTokens(postTokens(post.readingTime))}; Markdown: ${md})`,
-      );
-    }
-    lines.push("");
-  }
-
-  return new NextResponse(lines.join("\n"), {
+  return new NextResponse(renderMarkdown(document), {
     headers: {
+      // `.txt`, so `text/plain`: this file is meant to be read in place, by a
+      // crawler and by anyone checking what the crawler sees.
       "Content-Type": "text/plain; charset=utf-8",
       "Cache-Control": `public, s-maxage=${revalidate}, stale-while-revalidate`,
     },
   });
+}
+
+/** One locale's page list, in the registry's CONCEPT §6 order. */
+async function pageSection(locale: Locale): Promise<MarkdownBlock[]> {
+  const t = await getTranslations({ locale, namespace: "twin" });
+  const lines = await Promise.all(builtPages().map((page) => pageLine(page.key, locale)));
+
+  return blocks(heading(2, t("pages")), bullets(lines));
+}
+
+/**
+ * `- [Title](url): description — markdown: <twin> (~1.2k tokens)`
+ *
+ * The llms.txt convention's own line shape, with the twin and its measured size
+ * appended so a client can decide what to fetch before fetching it.
+ */
+async function pageLine(key: PageKey, locale: Locale): Promise<string> {
+  // The `meta.<key>` namespace, read exactly as `pageMetadata` reads it, so an
+  // index line and a `<title>` can never describe the same page differently.
+  const meta = await getTranslations({ locale, namespace: `meta.${key}` });
+  const url = absoluteUrl(pagePath(key, locale));
+  const twinUrl = absoluteUrl(twinPath(key, locale));
+  const tokens = formatTokens(estimateTokens(await twinMarkdown(key, locale)));
+
+  const titled = link(meta("title"), url) ?? url;
+
+  return `${titled}: ${meta("description")} — markdown: ${twinUrl} (${tokens})`;
 }

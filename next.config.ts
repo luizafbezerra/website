@@ -1,24 +1,33 @@
 import { withPayload } from "@payloadcms/next/withPayload";
+import createNextIntlPlugin from "next-intl/plugin";
 import type { NextConfig } from "next";
+
+const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
+
+/**
+ * The blog and the standalone `/simbolos` page were removed with the CONCEPT v3
+ * rebuild. Nothing is live yet (ASSUMPTION-001), so these cover the handful of
+ * links that may already have been shared rather than any SEO equity —
+ * permanent so crawlers and agents stop asking. `/simbolos` points at the page
+ * that inherits the painted wheel; `/analise` itself is built in Phase 6.
+ */
+const REMOVED_PAGE_REDIRECTS = [
+  { source: "/blog/:path*", destination: "/", permanent: true },
+  { source: "/simbolos", destination: "/analise", permanent: true },
+];
 
 const nextConfig: NextConfig = {
   images: {
     formats: ["image/avif", "image/webp"],
     remotePatterns: [{ protocol: "https", hostname: "*.public.blob.vercel-storage.com" }],
   },
-  // Serve the clean per-post Markdown at /blog/<slug>.md. A suffixed dynamic
-  // segment ([slug].md) is not reliably registered by Next 16's router (the
-  // [slug] page swallows "<slug>.md"), so we rewrite the public .md URL to a
-  // plain nested route handler. `beforeFiles` runs before filesystem route
-  // matching, so the rewrite wins over the [slug] page.
-  async rewrites() {
-    return {
-      beforeFiles: [{ source: "/blog/:slug.md", destination: "/blog/:slug/md" }],
-      afterFiles: [],
-      fallback: [],
-    };
+  async redirects() {
+    return REMOVED_PAGE_REDIRECTS;
   },
 };
 
+// Nested inner-to-outer: next-intl registers its Turbopack `resolveAlias` first,
+// and withPayload spreads the incoming `turbopack` block through rather than
+// replacing it, so both plugins' aliases survive.
 // @ts-ignore
-export default withPayload(nextConfig);
+export default withPayload(withNextIntl(nextConfig));

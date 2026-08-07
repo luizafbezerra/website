@@ -1,0 +1,53 @@
+# Automated checks only (REQ-013): types, lint, formatting, unit tests.
+#
+# Deliberately no architecture-enforcement step — layer boundaries are held by
+# the `frontend:layered-frontend-architecture` review checklist and the domain
+# tests, not by a script (ALT-008). Build validation belongs to the Vercel
+# preview, which has the database and environment this workflow does not.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    name: Checks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      # oxlint exits 0 even when its linter worker dies ("Linter process
+      # terminated abnormally"), which would report a green lint step that
+      # actually checked nothing. Fail on that line explicitly.
+      - name: Lint
+        run: |
+          set -o pipefail
+          pnpm lint 2>&1 | tee lint.log
+          if grep -q "terminated abnormally" lint.log; then
+            echo "::error::oxlint did not complete — the linter process died."
+            exit 1
+          fi
+
+      - name: Format
+        run: pnpm format:check
+
+      - name: Unit tests
+        run: pnpm test

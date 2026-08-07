@@ -1,0 +1,264 @@
+{
+  "nav": {
+    "inicio": "Home",
+    "analise": "Analysis",
+    "orientacaoProfissional": "Career guidance",
+    "sobre": "About",
+    "primeiraConversa": "First conversation",
+    "perguntas": "Questions",
+    "internacional": "Brazil and abroad",
+    "privacidade": "Privacy"
+  },
+  "meta": {
+    "inicio": {
+      "title": "Símbolos do Self · online analytical psychology (Jung), by Luiza Fernandes Bezerra",
+      "description": "An online analytical-psychology (Jung) practice for Brazil and abroad. Jungian-oriented psychotherapy and career guidance with psychologist Luiza Fernandes Bezerra."
+    },
+    "perguntas": {
+      "title": "Frequently asked questions",
+      "description": "Questions about Jungian analysis and career guidance online: the first conversation, duration, frequency, fees, confidentiality, time zones, Brazil and abroad."
+    },
+    "privacidade": {
+      "title": "Privacy",
+      "description": "What this site keeps — your choice of language, in your own browser, and anonymous aggregate visit statistics — and what it never does: identify, follow or personalise for the visitor."
+    },
+    "primeiraConversa": {
+      "title": "The first conversation",
+      "description": "What happens when you write: a conversation of about fifty minutes, by video, in English or Portuguese, in your own time zone — from Brazil or anywhere abroad. The steps, the fees, and a note already written for you to send."
+    },
+    "sobre": {
+      "title": "About Luiza Fernandes Bezerra",
+      "description": "Luiza Fernandes Bezerra, a clinical psychologist working in the Jungian tradition: degree and advanced training at PUC-SP, postgraduate study at Instituto Numen, in clinical practice since 2014. Jungian-oriented psychotherapy and career guidance, online, in Portuguese and English, for Brazil and anywhere abroad."
+    },
+    "internacional": {
+      "title": "Brazil and abroad",
+      "description": "A Brazilian clinical psychologist working in the Jungian tradition, entirely online: Jungian-oriented psychotherapy and career guidance in English or Portuguese, in your own time zone, wherever in the world you live. Fees in dollars or euros."
+    },
+    "orientacaoProfissional": {
+      "title": "Career guidance",
+      "description": "Online career and vocational guidance with a clinical psychologist working in the Jungian tradition, trained in career guidance at PUC-SP: up to twelve weekly meetings with psychological tests, conversations and proposed activities, to reach the profession that makes the most sense in your life right now. A first choice, a career change or a fresh start — in English or Portuguese, from Brazil and abroad."
+    },
+    "analise": {
+      "title": "Jungian analysis online",
+      "description": "Online Jungian-oriented psychotherapy with Luiza Fernandes Bezerra, a clinical psychologist working in the Jungian tradition: weekly sessions in Portuguese or English, for anywhere in Brazil or abroad. Anxiety, grief, dreams, relationships, career and purpose."
+    }
+  },
+  "seo": {
+    "services": {
+      "analise": {
+        "name": "Jungian-oriented psychotherapy",
+        "description": "Weekly online psychotherapy in the Jungian tradition, in Portuguese and English, for Brazil and anywhere in the world."
+      },
+      "orientacaoProfissional": {
+        "name": "Career guidance",
+        "description": "An online programme of up to twelve weekly meetings — psychological tests, conversations and activities — to choose or rethink a profession."
+      }
+    },
+    "knowsAbout": [
+      "Analytical psychology",
+      "Jungian psychotherapy",
+      "Online psychotherapy",
+      "Dreams",
+      "Individuation",
+      "Anxiety",
+      "Career guidance"
+    ]
+  },
+  "twin": {
+    "pages": "Pages",
+    "page": "Page",
+    "alternate": "Em português",
+    "index": "Index of every page"
+  },
+  "chrome": {
+    "skipToContent": "Skip to content",
+    "headerByline": "psychologist · Jungian tradition",
+    "whoLine": "With psychologist {name}",
+    "footerByline": "clinical psychologist",
+    "lockupBy": "by",
+    "homeAria": "{name} — home",
+    "nav": {
+      "primary": "Main",
+      "footer": "Footer",
+      "title": "Navigation",
+      "open": "Open navigation",
+      "close": "Close navigation"
+    },
+    "language": {
+      "label": "Language",
+      "pt": "PT",
+      "en": "EN",
+      "switchToPt": "Ler em português",
+      "switchToEn": "Read in English"
+    },
+    "footer": {
+      "clinica": "The clinic",
+      "comecar": "Getting started",
+      "mundo": "The world",
+      "email": "Email",
+      "reach": "Portuguese and English · Brazil and abroad"
+    },
+    "colophon": {
+      "binding": "{clinic} is the online analytical-psychology practice of {name}.",
+      "rights": "© {year} {name}",
+      "moon": "under the {phase} of {month}"
+    },
+    "moonPhase": {
+      "new": "new moon",
+      "waxingCrescent": "waxing crescent",
+      "firstQuarter": "first quarter",
+      "waxingGibbous": "waxing gibbous",
+      "full": "full moon",
+      "waningGibbous": "waning gibbous",
+      "lastQuarter": "last quarter",
+      "waningCrescent": "waning crescent"
+    },
+    "whatsapp": {
+      "label": "Talk on WhatsApp",
+      "aria": "Start a WhatsApp conversation on {phone}"
+    },
+    "availability": {
+      "label": "Openings",
+      "open": "Currently taking new clients.",
+      "waitlist": "A short waiting list.",
+      "closed": "No new clients at the moment — write and I will let you know."
+    },
+    "cosmosRestore": "Reopen the cosmic overture ↻",
+    "credentialLabel": "Credentials"
+  },
+  "placeholder": {
+    "pending": "In preparation",
+    "aria": "Placeholder: {description}",
+    "slots": {
+      "portrait": "Luiza's portrait — natural light, a calm background.",
+      "portraitNote": "The real photograph goes here as soon as the session happens."
+    }
+  },
+  "notFound": {
+    "metaTitle": "Page not found",
+    "eyebrow": "Error 404",
+    "title": "This page <em>lost its way</em>.",
+    "body": "The address you are looking for does not exist, or it has moved — it happens. Go back to the beginning, or write to me on WhatsApp if you would rather talk.",
+    "backHome": "Back to the beginning",
+    "whatsapp": "Talk on WhatsApp"
+  },
+  "error": {
+    "eyebrow": "Something slipped out of place",
+    "title": "Something <em>unexpected</em> happened.",
+    "body": "This page could not be loaded right now. Try again in a moment; if it keeps happening, write to me on WhatsApp and I will sort it out.",
+    "retry": "Try again",
+    "backHome": "Back to the beginning",
+    "whatsapp": "Talk on WhatsApp"
+  },
+  "loading": {
+    "label": "Loading…"
+  },
+  "inicio": {
+    "hero": {
+      "by": "by {name}",
+      "portraitAlt": "Portrait of {name}",
+      "portraitCaption": "The person who receives you."
+    },
+    "instagram": {
+      "tileAction": "Bring the post to the center: {work}",
+      "tileCurrent": "Featured post: {work}",
+      "tileFallbackLabel": "post {number}",
+      "seePost": "see it on Instagram",
+      "follow": "follow at {handle}"
+    },
+    "lamina": {
+      "fallbackHeading": "One painting, up close",
+      "platePlaceholder": "A high-resolution canvas, travelled from top to bottom.",
+      "platePlaceholderNote": "The chosen painting arrives through the admin panel."
+    },
+    "brasilExterior": {
+      "horasAria": "Local times right now",
+      "cities": {
+        "brasilia": "Brasília",
+        "lisboa": "Lisbon",
+        "londres": "London",
+        "novaYork": "New York"
+      }
+    },
+    "contato": {
+      "orByEmail": "or by email —",
+      "faqLink": "questions people ask before writing"
+    }
+  },
+  "pratico": {
+    "fee": "Fee",
+    "feeAnalysis": "Fee · analysis",
+    "feeCareerGuidance": "Fee · career guidance",
+    "feeToDiscuss": "Discussed in the first conversation."
+  },
+  "primeiraConversa": {
+    "skipToBilhete": "go straight to the note",
+    "plate": {
+      "placeholder": "A painting for this page's pause.",
+      "placeholderNote": "The chosen work arrives here through the admin, with painter, title and year."
+    },
+    "bilhete": {
+      "send": "send on WhatsApp",
+      "noteAria": "Send the {door} note on WhatsApp",
+      "doors": {
+        "analysis": "for analysis",
+        "careerGuidance": "for career guidance",
+        "unsure": "not sure yet",
+        "english": "in English"
+      }
+    }
+  },
+  "sobre": {
+    "quemE": {
+      "portraitAlt": "Portrait of {name}"
+    }
+  },
+  "perguntas": {
+    "plate": {
+      "placeholder": "A painting to close the page, after the last answer.",
+      "placeholderNote": "The chosen work arrives here through the admin, with painter, title and year."
+    }
+  },
+  "internacional": {
+    "plate": {
+      "placeholder": "A painting of the sea, a voyage or a harbour — distance as a landscape.",
+      "placeholderNote": "The chosen work arrives here through the admin, with painter, title and year."
+    }
+  },
+  "orientacaoProfissional": {
+    "plate": {
+      "placeholder": "A painted crossroads or labyrinth — this page's only image.",
+      "placeholderNote": "The chosen work arrives here through the admin, with painter, title and year."
+    }
+  },
+  "privacidade": {
+    "responsible": "Data controller",
+    "contact": "Contact"
+  },
+  "analise": {
+    "plate": {
+      "placeholder": "A painting set beside the idea of individuation.",
+      "placeholderNote": "The chosen work arrives here through the admin, with painter, title and year."
+    },
+    "mandala": {
+      "wheelAlt": "A painted mandala with twelve zodiacal figures, twenty-seven Vedic lunar mansions and the Earth at its centre",
+      "tablistLabel": "The wheel's twelve figures",
+      "panelLabel": "Details of the chosen figure",
+      "signAria": "{sign}, {dates}",
+      "hint": "Hover — or use the arrow keys — over one of the twelve figures. Tap to bring it to the top.",
+      "hintVedic": "Beside each figure's portrait a second, Vedic chapter opens: the three lunar mansions its arc crosses.",
+      "fields": {
+        "element": "Element",
+        "modality": "Modality",
+        "ruler": "Ruler",
+        "body": "Body",
+        "archetype": "Archetype"
+      },
+      "vedic": "Vedic tradition",
+      "vedicSub": "Three lunar mansions"
+    },
+    "sonho": {
+      "parallelPlaceholder": "The painting detail for this parallel."
+    }
+  }
+}

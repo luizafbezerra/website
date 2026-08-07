@@ -81,6 +81,12 @@
     color-scheme: light;
     scroll-behavior: smooth;
     scroll-padding-top: 5.5rem;
+    /* Lets a height transition end on `auto` instead of a measured pixel value,
+       which is what makes /perguntas' disclosures open smoothly without
+       JavaScript measuring anything. Off by default for backwards
+       compatibility; opting in changes nothing until a transition asks for a
+       keyword. */
+    interpolate-size: allow-keywords;
     font-size: 100%;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
@@ -230,22 +236,14 @@
     font-feature-settings: "smcp" 1;
   }
 
+  /* Sticky and never hiding (CONCEPT §6, DESIGN §6): no hide-on-scroll
+     transform, which also means the header is not a containing block for the
+     mobile drawer's `position: fixed` overlay. */
   .sticky-header {
     position: fixed;
     inset-inline: 0;
     top: 0;
     z-index: 30;
-    transform: translateY(0);
-    transition: transform 380ms cubic-bezier(0.4, 0, 0.2, 1);
-    will-change: transform;
-  }
-  .sticky-header[data-hidden="true"] {
-    transform: translateY(-105%);
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .sticky-header {
-      transition: none;
-    }
   }
 
   .body-prose p {
@@ -260,6 +258,288 @@
   .body-prose i {
     font-style: italic;
     color: var(--color-ink-soft);
+  }
+
+  /* ---------------------------------------------------------------------- */
+  /* O selo — the wax seal pressed into a chosen bilhete (CONCEPT §9.7).     */
+  /*                                                                         */
+  /* Fires on tap and never gates the handoff: the anchor has already opened  */
+  /* WhatsApp in another tab by the time the first frame paints, so this is   */
+  /* decoration on a note the visitor has finished with, not a transition     */
+  /* they are waiting through. Total 520ms, inside the <600ms budget.         */
+  /* ---------------------------------------------------------------------- */
+  .bilhete-note {
+    transform-origin: top center;
+  }
+
+  .bilhete-note[data-sealed="true"] {
+    animation: bilhete-crease 520ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
+
+  /* The mark is a real painted asset, cropped round — the same crop the header
+     wears. A drawn circle here would be the generated ornament DESIGN bans. */
+  .bilhete-seal {
+    opacity: 0;
+    transform: scale(1.6) rotate(-18deg);
+  }
+
+  .bilhete-note[data-sealed="true"] .bilhete-seal {
+    animation: bilhete-press 420ms cubic-bezier(0.34, 1.3, 0.64, 1) 100ms forwards;
+  }
+
+  @keyframes bilhete-crease {
+    40% {
+      transform: scaleY(0.965);
+    }
+    100% {
+      transform: scaleY(1);
+    }
+  }
+
+  @keyframes bilhete-press {
+    100% {
+      opacity: 1;
+      transform: scale(1) rotate(0deg);
+    }
+  }
+
+  /* The seal still arrives, it just does not travel: the visitor who asked not
+     to be moved still sees the note was signed (CON-007). */
+  @media (prefers-reduced-motion: reduce) {
+    .bilhete-note[data-sealed="true"] {
+      animation: none;
+    }
+
+    .bilhete-seal {
+      transform: none;
+    }
+
+    .bilhete-note[data-sealed="true"] .bilhete-seal {
+      animation: none;
+      opacity: 1;
+    }
+  }
+
+  /* ---------------------------------------------------------------------- */
+  /* A mandala que respira — the mark beside the bio digest (CONCEPT §9.11). */
+  /*                                                                         */
+  /* ±2% on a slow six-second cycle: an ornament with a pulse, subtle enough  */
+  /* to be felt rather than watched. Never labelled a breathing exercise —    */
+  /* no instructions, no timer — and perfectly still under reduced motion.    */
+  /* ---------------------------------------------------------------------- */
+  @media (prefers-reduced-motion: no-preference) {
+    .mandala-respira {
+      animation: mandala-respira 6s ease-in-out infinite;
+    }
+
+    @keyframes mandala-respira {
+      50% {
+        scale: 1.02;
+      }
+    }
+  }
+
+  /* ---------------------------------------------------------------------- */
+  /* Como é começar — the beats ink in, one after the other (home §8).       */
+  /*                                                                         */
+  /* Scroll-scrubbed, not time-fired: the stagger is the I→II→III sequence    */
+  /* made visible. Progressive enhancement only — browsers without            */
+  /* scroll-driven animations, and readers who prefer reduced motion, get     */
+  /* the beats already on the page (the keyframe animates *from* hidden, so   */
+  /* without a timeline nothing is ever hidden).                              */
+  /* ---------------------------------------------------------------------- */
+  @media (prefers-reduced-motion: no-preference) {
+    @supports ((animation-timeline: view()) and (animation-range: entry)) {
+      .beat-reveal {
+        animation: beat-ink auto ease-out backwards;
+        animation-timeline: view();
+        animation-range: entry 10% entry 55%;
+      }
+
+      .beat-reveal:nth-child(2) {
+        animation-range: entry 25% entry 70%;
+      }
+
+      .beat-reveal:nth-child(3) {
+        animation-range: entry 40% entry 85%;
+      }
+
+      @keyframes beat-ink {
+        from {
+          opacity: 0;
+          translate: 0 0.75rem;
+        }
+      }
+    }
+  }
+
+  /* ---------------------------------------------------------------------- */
+  /* Instagram bridge — the floating prints (home §3).                       */
+  /*                                                                         */
+  /* The latest posts hang like small framed prints around the one on the    */
+  /* desk; choosing another sends it to the center. Movement is plain CSS    */
+  /* transitions on the slot coordinates — View Transitions would freeze     */
+  /* the idle drift mid-swap, because they animate between snapshots.        */
+  /* ---------------------------------------------------------------------- */
+
+  /* One constellation, two geometries: each print carries its slot for both
+     breakpoints as custom properties, and the media query decides which set
+     positions it. Phones get the tight cluster, desktops the wide one. */
+  .instagram-print {
+    left: var(--print-x-sm);
+    top: var(--print-y-sm);
+    width: var(--print-w-sm);
+    transition:
+      left 640ms cubic-bezier(0.3, 0, 0.18, 1),
+      top 640ms cubic-bezier(0.3, 0, 0.18, 1),
+      width 640ms cubic-bezier(0.3, 0, 0.18, 1);
+  }
+
+  @media (min-width: 64rem) {
+    .instagram-print {
+      left: var(--print-x-lg);
+      top: var(--print-y-lg);
+      width: var(--print-w-lg);
+    }
+  }
+
+  /* Idle float: one axis per element, each a simple back-and-forth on its own
+     period. Two coprime periods trace a slow open path (a Lissajous figure)
+     that never visibly repeats, and because the axes reach their extremes at
+     different moments the print is always travelling on one of them — a single
+     multi-waypoint animation would stop dead at every waypoint, which reads as
+     a jiggle rather than a float. A few pixels, deliberately below what anyone
+     would call motion: the section must never feel restless. */
+  .instagram-float-x {
+    animation: instagram-float-x var(--instagram-float-x-duration, 9s) ease-in-out
+      var(--instagram-float-x-delay, 0s) infinite alternate;
+  }
+
+  .instagram-float-y {
+    animation: instagram-float-y var(--instagram-float-y-duration, 13s) ease-in-out
+      var(--instagram-float-y-delay, 0s) infinite alternate;
+  }
+
+  /* Cursor gravity writes `translate` on this wrapper from the bridge's
+     pointer loop — a separate element so the pull, each float axis, and the
+     slot transition own one transform apiece and never fight. */
+  .instagram-gravity {
+    will-change: translate;
+  }
+
+  /* The amplitude scales with `--instagram-float-scale`, which the canvas sets
+     per breakpoint — the phone cluster is tighter, so its prints sway less. */
+  @keyframes instagram-float-x {
+    from {
+      transform: translateX(calc(var(--instagram-float-scale, 1) * -0.85rem));
+    }
+    to {
+      transform: translateX(calc(var(--instagram-float-scale, 1) * 0.85rem));
+    }
+  }
+
+  @keyframes instagram-float-y {
+    from {
+      transform: translateY(calc(var(--instagram-float-scale, 1) * -0.7rem));
+    }
+    to {
+      transform: translateY(calc(var(--instagram-float-scale, 1) * 0.7rem));
+    }
+  }
+
+  /* The reading column re-sets itself when another print reaches the desk.
+     Its parts arrive in reading order rather than as one block: the date, then
+     the line she opened with, then the rest, then the link. Each carries its
+     own `--stagger` index, and `backwards` holds it hidden through the delay
+     so nothing flashes at its final position first. */
+  .instagram-caption-swap > * {
+    animation: instagram-fade-rise 560ms cubic-bezier(0.16, 1, 0.3, 1) backwards;
+    animation-delay: calc(var(--stagger, 0) * 80ms);
+  }
+
+  @keyframes instagram-fade-rise {
+    from {
+      opacity: 0;
+      transform: translateY(0.5rem);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .instagram-print {
+      transition: none;
+    }
+
+    .instagram-float-x,
+    .instagram-float-y {
+      animation: none;
+    }
+
+    .instagram-caption-swap > * {
+      animation: none;
+    }
+  }
+
+  /* ---------------------------------------------------------------------- */
+  /* Perguntas — each question a disclosure that opens onto its answer.      */
+  /*                                                                         */
+  /* Native <details>, and the reason is not convenience. The answers stay    */
+  /* in the document: find-in-page reveals the match and opens the question   */
+  /* around it, a fragment link opens its own question on arrival, and a      */
+  /* crawler reads all sixteen answers without running anything. A            */
+  /* JavaScript accordion built on conditional rendering gives up all three.  */
+  /*                                                                         */
+  /* The height transition is CSS alone — no measuring, no client component.  */
+  /* `interpolate-size` on the root (see @layer base) is what lets            */
+  /* `block-size` land on `auto`, and `content-visibility` is transitioned    */
+  /* with `allow-discrete` so the content stays rendered for the length of    */
+  /* the close instead of vanishing on the first frame. Browsers without      */
+  /* ::details-content discard these two rules entirely and toggle instantly: */
+  /* the correct fallback, since nothing is hidden — only the easing is.      */
+  /* ---------------------------------------------------------------------- */
+  .pergunta-summary {
+    list-style: none;
+    cursor: pointer;
+  }
+
+  .pergunta-summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .pergunta::details-content {
+    block-size: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition:
+      block-size 300ms cubic-bezier(0.22, 1, 0.36, 1),
+      opacity 200ms ease-out,
+      content-visibility 300ms allow-discrete;
+  }
+
+  .pergunta[open]::details-content {
+    block-size: auto;
+    opacity: 1;
+  }
+
+  /* The scribe's mark. Closed it is a hairline cross; opening turns the stem
+     down onto the bar, so an open question is marked by a single stroke drawn
+     by the same hand. One moving part, no icon swap. */
+  .pergunta-mark-stem {
+    transform-box: view-box;
+    transform-origin: 50% 50%;
+    transition: rotate 300ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .pergunta[open] .pergunta-mark-stem {
+    rotate: 90deg;
+  }
+
+  /* The answer still arrives and the mark still turns — they just do not
+     travel (CON-007). */
+  @media (prefers-reduced-motion: reduce) {
+    .pergunta::details-content,
+    .pergunta-mark-stem {
+      transition: none;
+    }
   }
 
   /* ---------------------------------------------------------------------- */
@@ -835,9 +1115,63 @@
 }
 
 @layer utilities {
+  /* Feather a photograph or painted asset into the parchment, so it reads as an
+     image tipped into the page rather than a rectangle pasted onto it.
+
+     **Why this is three masks and not one.** A single radial gradient cannot do
+     this job. Sized the default way (`farthest-corner`) it puts 100% of its ramp
+     at the _corner_, so the middle of each side sits at only 1/√2 ≈ 71% along it
+     and stays largely opaque — the corners dissolve, the edges get cut square, and
+     the result is the rectangle-with-rounded-corners this used to be. Sized
+     `closest-side` it fixes the edges but must then surrender the corners
+     completely, which turns every image into an oval cameo. Both failures are
+     geometry, not tuning: one ellipse cannot both reach zero on the mid-edges and
+     keep the corners.
+
+     So the shape is composed instead — a squircle. Two linear feathers, one per
+     axis, take the four sides down to nothing; a lazy radial takes only the
+     corners. `mask-composite: intersect` multiplies them, so a pixel survives only
+     where all three agree. Mid-edges keep straight, unhurried falloff; corners get
+     hit by all three at once and vanish. Between a rectangle and an oval, which is
+     where this wants to sit.
+
+     **The ramps are eased, not linear.** `black → transparent` changes slope
+     abruptly at both ends and the eye reads those two discontinuities as rings
+     (Mach bands). Intersecting three smooth ramps multiplies into a curve with no
+     such corner, and the intermediate stops keep 8-bit alpha from banding along
+     the long shallow stretches.
+
+     **The dial** is `--vignette-feather` with the radial's first stop. Larger
+     feather + earlier radial = rounder; smaller + later = boxier. Support: masks
+     are Baseline (Dec 2023). A browser with `mask-image` but no `mask-composite`
+     would union the layers and simply render no feather — a clean degradation. */
   .vignette {
-    -webkit-mask-image: radial-gradient(ellipse at center, black 60%, transparent 92%);
-    mask-image: radial-gradient(ellipse at center, black 60%, transparent 92%);
+    --vignette-feather: 13%;
+    --vignette-x: linear-gradient(
+      to right,
+      transparent 0,
+      rgb(0 0 0) var(--vignette-feather),
+      rgb(0 0 0) calc(100% - var(--vignette-feather)),
+      transparent 100%
+    );
+    --vignette-y: linear-gradient(
+      to bottom,
+      transparent 0,
+      rgb(0 0 0) var(--vignette-feather),
+      rgb(0 0 0) calc(100% - var(--vignette-feather)),
+      transparent 100%
+    );
+    --vignette-corners: radial-gradient(
+      ellipse farthest-corner at center,
+      rgb(0 0 0) 55%,
+      rgb(0 0 0 / 72%) 74%,
+      rgb(0 0 0 / 30%) 90%,
+      transparent 100%
+    );
+    -webkit-mask-image: var(--vignette-x), var(--vignette-y), var(--vignette-corners);
+    -webkit-mask-composite: source-in;
+    mask-image: var(--vignette-x), var(--vignette-y), var(--vignette-corners);
+    mask-composite: intersect;
   }
 
   .parchment-grain {

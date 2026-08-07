@@ -85,60 +85,21 @@ export async function seedFaq(payload: Payload): Promise<void> {
 }
 
 /**
- * The English FAQ, matched to `FAQ_DEFAULTS` by index.
+ * The English FAQ, matched to `FAQ_DEFAULTS` by index — four placeholders, one per
+ * section, because that is the whole Portuguese array too. Her six translated
+ * answers went with the Portuguese originals; recover them from
+ * `git show 6d508ba:src/payload/seed/faq.ts` if she signs one off unchanged.
  *
- * Six answers are **hers**, carried from the old single-page site's own FAQ, and
- * translated rather than paraphrased — including the sentence this site kept
- * because it answers the doubt under the question ("through a screen, the work is
- * no less what it is").
- *
- * Four are **placeholders**, and they stay placeholders. `FAQ_PLACEHOLDER_MARK`
- * is deliberately not translated: the mark exists so the row is unmistakable on
- * the page, in the Markdown twin and in the FAQPage structured data, and a
- * translated mark would be one more string to grep for before a deploy. Only her
- * answers retire these rows (CON-008), and none of them may ever reach production.
+ * `FAQ_PLACEHOLDER_MARK` is deliberately **not** translated: the mark exists so the
+ * row is unmistakable on the page, in the Markdown twin and in the FAQPage
+ * structured data, and a translated mark would be one more string to grep for
+ * before a deploy. Only her answers retire these rows, and none may reach
+ * production.
  */
 const FAQ_EN: Array<{ question: string; answer: string }> = [
-  // ── About analysis ───────────────────────────────────────────────────────
-  {
-    question: "How long does an analysis last?",
-    answer:
-      "There is no fixed term. Some people come to analysis to get through a particular moment, a grief or a hard decision, and stay a few months. Others continue for years, because the work of individuation is long by nature. The pace is built together.",
-  },
-  {
-    question: "Do you see adolescents or children?",
-    answer:
-      "No. The clinic sees adults. For children and adolescents, I can recommend colleagues I trust.",
-  },
   placeholderEn("analysis"),
-
-  // ── About career guidance ────────────────────────────────────────────────
   placeholderEn("career guidance"),
-
-  // ── Practical ────────────────────────────────────────────────────────────
-  {
-    question: "What happens in a first conversation?",
-    answer:
-      "A conversation of about fifty minutes, by video call. You tell me what is happening and what brought you here, without having to organise anything beforehand. I listen, ask some questions, and at the end we decide together whether it is worth arranging a next session.",
-  },
-  {
-    question: "How often are the sessions?",
-    answer:
-      "Usually once a week. At more intense moments there may be two. We set the frequency according to what the work asks for and what fits into your week.",
-  },
-  {
-    question: "How do the online sessions work?",
-    answer:
-      "By video call, at the agreed time, from wherever you are — anywhere in Brazil or abroad. The structure is always the same: about fifty minutes, once a week, with the same confidentiality. Through a screen, the work is no less what it is.",
-  },
-  {
-    question: "What about fees?",
-    answer:
-      "We agree the fee before the first session, according to the frequency. To find out the current amount, just write to me on WhatsApp; I reply within one working day.",
-  },
   placeholderEn("the practical side"),
-
-  // ── International ────────────────────────────────────────────────────────
   placeholderEn("sessions from abroad"),
 ];
 
@@ -146,7 +107,7 @@ const FAQ_EN: Array<{ question: string; answer: string }> = [
 function placeholderEn(subject: string): { question: string; answer: string } {
   return {
     question: `${FAQ_PLACEHOLDER_MARK} question about ${subject}`,
-    answer: `${FAQ_PLACEHOLDER_MARK} this answer does not exist yet. The text of this section is Luiza's — until she writes it, this line stands in for it, and it does not go live.`,
+    answer: `${FAQ_PLACEHOLDER_MARK} this answer does not exist yet. The text of this section is Luiza's. Until she writes it, this line stands in for it, and it does not go live.`,
   };
 }
 

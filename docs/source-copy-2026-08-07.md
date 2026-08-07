@@ -352,6 +352,47 @@ Nos dois casos, chegar a três exigiria reescrever uma frase sua ou apagar um fa
 fixa. O orçamento perde. Está registrado em teste, com o motivo, e o teste falha se o número subir
 **ou** se um dia deixar de ser necessário.
 
+## O site em inglês (Fase 5)
+
+Até agora só duas páginas tinham texto em inglês; as outras seis mostravam português a quem lia em
+inglês. As oito páginas agora têm as duas línguas.
+
+**O inglês é provisório e precisa da sua leitura.** A sua voz é portuguesa, e uma voz traduzida
+perde registro por mais cuidadosa que seja a tradução. Os seus parágrafos foram **traduzidos, não
+reescritos**: a sua repetição de "orientação profissional e orientação de carreira" continua
+repetida, o seu ponto de exclamação continua lá, as aspas curvas continuam curvas e o travessão da
+frase sobre Individuação continua travessão.
+
+Duas regras de forma foram seguidas sem exceção:
+
+- **Em inglês você nunca é "Jungian analyst"** — é título profissional protegido. Você é _clinical
+  psychologist working in the Jungian tradition_, e o que você pratica é _Jungian-oriented
+  psychotherapy_ ou _analytical psychology_.
+- **Individuação continua descrita, nunca prometida**, com a mesma frase de salvaguarda no fim.
+
+Uma seção continua deliberadamente **sem tradução**: o bloco "In English" de `/internacional`. Ele
+é escrito em inglês uma vez e lido na página **portuguesa**, para quem cai lá sem falar português.
+Na versão inglesa da página ele desaparece, porque diria em três linhas o que o leitor acabou de ler
+em cinco seções.
+
+As quatro perguntas `[A DEFINIR]` foram traduzidas como marcadores, mantendo a marca `[A DEFINIR]`
+em inglês também — ela existe justamente para ser inconfundível, e traduzi-la seria criar mais uma
+coisa para procurar antes de publicar.
+
+### Uma coisa encontrada no caminho, que precisa da sua decisão
+
+Ao ler as páginas em inglês apareceu um problema que não é de tradução: **o banco tem 20 perguntas
+frequentes, e só 10 deveriam existir.** As outras 10 são rascunhos que escrevemos, que foram
+retirados do código em agosto justamente porque "pareciam texto acabado e faziam a página parecer
+respondida quando metade não era sua" — mas continuam gravadas no banco, e por isso continuam
+aparecendo na página. São perguntas como "Preciso lembrar dos meus sonhos para fazer análise
+junguiana?", "Que testes são usados, e eles decidem por mim?" e "Como faço para pagar de fora do
+Brasil?".
+
+Ninguém as apagou porque o script que grava as perguntas só cria e atualiza, nunca remove. Apagá-las
+é uma operação destrutiva no conteúdo publicado, então fica para a sua decisão — está registrada
+como o primeiro item da Fase 6.
+
 ## Os textos que os buscadores leem (Fase 4)
 
 Cada página tem, além do texto visível, uma descrição curta que aparece no Google e nas prévias de

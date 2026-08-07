@@ -65,7 +65,7 @@ export const PRIMEIRA_CONVERSA_DEFAULTS: PrimeiraConversa = {
     // The page's complete answer, in the first screen (REQ-006): what happens,
     // how long, in which languages, from where, and at what commitment.
     lead: richText([
-      "Uma conversa de cerca de cinquenta minutos, por chamada de vídeo, em português ou em inglês, de onde você estiver — Brasil ou exterior.",
+      "Uma conversa de cerca de cinquenta minutos, por chamada de vídeo, em português ou em inglês, de onde você estiver, no Brasil ou no exterior.",
       "Ela serve para nos conhecermos: você conta o que está acontecendo, eu escuto e, no fim, a decisão de seguir é sua.",
     ]),
   },
@@ -92,7 +92,7 @@ export const PRIMEIRA_CONVERSA_DEFAULTS: PrimeiraConversa = {
       {
         numeral: "IV",
         title: "Você decide depois",
-        text: "Se fizer sentido para nós dois, marcamos o encontro semanal. Se quiser pensar, me responda outro dia — não há nada a assinar.",
+        text: "Se fizer sentido para nós dois, marcamos o encontro semanal. Se quiser pensar, me responda outro dia. Não há nada a assinar.",
       },
     ],
     // CONCEPT §6's three lines, almost verbatim. They close the band: the steps
@@ -129,7 +129,7 @@ export const PRIMEIRA_CONVERSA_DEFAULTS: PrimeiraConversa = {
       {
         question: "Você atende quem mora fora do Brasil?",
         answer:
-          "Sim. Já acompanhei pessoas em Portugal, na Inglaterra e nos Estados Unidos — acertamos o fuso e seguimos em português ou em inglês.",
+          "Sim. Já acompanhei pessoas em Portugal, na Inglaterra e nos Estados Unidos. Acertamos o fuso e seguimos em português ou em inglês.",
       },
       {
         question: "Em quanto tempo você responde?",
@@ -142,7 +142,7 @@ export const PRIMEIRA_CONVERSA_DEFAULTS: PrimeiraConversa = {
   bilhete: {
     heading: "O bilhete",
     intro: richText([
-      "Escrever a primeira mensagem costuma ser a parte mais difícil. Então ela já está escrita: escolha a que mais se parece com o seu caso e ela abre no meu WhatsApp — você ainda pode mudar o texto antes de enviar.",
+      "Escrever a primeira mensagem costuma ser a parte mais difícil. Então ela já está escrita: escolha a que mais se parece com o seu caso e ela abre no meu WhatsApp. Você ainda pode mudar o texto antes de enviar.",
     ]),
     chooseLabel: "escolha por onde começar",
   },

@@ -124,7 +124,7 @@ export const ORIENTACAO_PROFISSIONAL_DEFAULTS: OrientacaoProfissional = {
     // CONCEPT §6's four situations, one line each — recognition, not features.
     // Written so a 24-year-old and a 45-year-old each find themselves in one.
     cases: [
-      "Escolher o primeiro curso ou a primeira profissão — sem decidir por eliminação.",
+      "Escolher o primeiro curso ou a primeira profissão, sem decidir por eliminação.",
       "Mudar de área, quando a pergunta não é se dá para mudar, e sim para onde.",
       "Entender o que houve quando o trabalho de sempre perdeu o sentido.",
       "Recomeçar depois de uma demissão, de uma pausa, de anos dedicados a outra coisa.",
@@ -133,7 +133,7 @@ export const ORIENTACAO_PROFISSIONAL_DEFAULTS: OrientacaoProfissional = {
   oPercurso: {
     heading: "O percurso",
     body: richText([
-      "O caminho passa por quatro movimentos. Quantos encontros cada um leva depende de você — doze é o teto, não a meta.",
+      "O caminho passa por quatro movimentos. Quantos encontros cada um leva depende de você. Doze é o teto, não a meta.",
     ]),
     // Ordered, and therefore numbered (DESIGN reserves `.roman-numeral` for
     // sequences that genuinely are ordered). These are the movements of a bounded
@@ -195,7 +195,7 @@ export const ORIENTACAO_PROFISSIONAL_DEFAULTS: OrientacaoProfissional = {
     // The bridge for somebody who came through the wrong door, folded in as this
     // section's close. It has to read as "that's fine", never as an upsell.
     bridge: {
-      body: "Às vezes o percurso começa e a pergunta se revela outra — não qual profissão, mas por que nada parece suficiente, ou um cansaço que já estava aí antes. Quando é isso, eu digo, e a análise é o caminho mais indicado.",
+      body: "Às vezes o percurso começa e a pergunta se revela outra: não qual profissão, mas por que nada parece suficiente, ou um cansaço que já estava aí antes. Quando é isso, eu digo, e a análise é o caminho mais indicado.",
       linkLabel: "conhecer a análise",
     },
     plate: EMPTY_PAGE_PLATE,

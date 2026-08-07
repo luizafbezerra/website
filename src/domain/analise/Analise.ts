@@ -243,7 +243,7 @@ export const ANALISE_DEFAULTS: Analise = {
     // "na tradição junguiana" removed: the h1 and the abertura both name it, and
     // Jung is named in this same sentence anyway (GUD-001).
     intro:
-      "Amplificação é o nome desse gesto. Quando uma imagem insiste, ela não é traduzida de fora: é posta ao lado das suas parentes — na pintura, no mito, na obra de Jung — até que o próprio sonhador reconheça o que ela pede.",
+      "Amplificação é o nome desse gesto. Quando uma imagem insiste, ela não é traduzida de fora: é posta ao lado das suas parentes na pintura, no mito, na obra de Jung, até que o próprio sonhador reconheça o que ela pede.",
     // Null until her curation exists: the section is gated on the motif, and a
     // dream quote beside empty parallel labels is scaffolding a visitor has to
     // look at. Prod already stores it cleared; the default now agrees.
@@ -291,7 +291,7 @@ export const ANALISE_DEFAULTS: Analise = {
   mandala: {
     heading: "A mandala dos signos",
     intro:
-      "Doze figuras pintadas, vinte e sete mansões lunares, a Terra ao centro. Aqui os signos são vocabulário — imagens para nomear o que se vive, nunca uma previsão nem uma leitura sobre quem você é.",
+      "Doze figuras pintadas, vinte e sete mansões lunares, a Terra ao centro. Aqui os signos são vocabulário: imagens para nomear o que se vive, nunca uma previsão nem uma leitura sobre quem você é.",
     // REQ-007: hers alone, and empty until she writes them.
     readings: EMPTY_SIGN_READINGS,
   },

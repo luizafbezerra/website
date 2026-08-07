@@ -19,11 +19,13 @@ import { cn } from "@/view/styling/cn";
  * honest; a wrong hour is not. The fade-in keeps the swap from popping.
  */
 
+// West to east, so the row reads as a single sweep across the clock rather than as
+// Brasília plus a list of elsewheres.
 const CITIES = [
-  { key: "brasilia", timeZone: "America/Sao_Paulo" },
-  { key: "lisboa", timeZone: "Europe/Lisbon" },
-  { key: "londres", timeZone: "Europe/London" },
   { key: "novaYork", timeZone: "America/New_York" },
+  { key: "brasilia", timeZone: "America/Sao_Paulo" },
+  { key: "londres", timeZone: "Europe/London" },
+  { key: "lisboa", timeZone: "Europe/Lisbon" },
 ] as const;
 
 function localTime(now: Date, timeZone: string, locale: string): string {

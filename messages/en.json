@@ -24,7 +24,7 @@
     },
     "primeiraConversa": {
       "title": "The first conversation",
-      "description": "What happens when you write: a conversation of about fifty minutes, by video, in English or Portuguese, in your own time zone — from Brazil or anywhere abroad. The steps, the fees, and a note already written for you to send."
+      "description": "What happens when you write: a conversation of about fifty minutes, by video, in English or Portuguese, in your own time zone, from Brazil or anywhere abroad. The steps, the fees, and a note already written for you to send."
     },
     "sobre": {
       "title": "About Luiza Fernandes Bezerra",
@@ -36,7 +36,7 @@
     },
     "orientacaoProfissional": {
       "title": "Career guidance",
-      "description": "Online career and vocational guidance with a clinical psychologist working in the Jungian tradition, trained in career guidance at PUC-SP: up to twelve weekly meetings with psychological tests, conversations and proposed activities, to reach the profession that makes the most sense in your life right now. A first choice, a career change or a fresh start — in English or Portuguese, from Brazil and abroad."
+      "description": "Online career and vocational guidance with a clinical psychologist working in the Jungian tradition, trained in career guidance at PUC-SP: up to twelve weekly meetings with psychological tests, conversations and proposed activities, to reach the profession that makes the most sense in your life right now. A first choice, a career change or a fresh start, in English or Portuguese, from Brazil and abroad."
     },
     "analise": {
       "title": "Jungian analysis online",
@@ -51,7 +51,7 @@
       },
       "orientacaoProfissional": {
         "name": "Career guidance",
-        "description": "An online programme of up to twelve weekly meetings — psychological tests, conversations and activities — to choose or rethink a profession."
+        "description": "An online programme of up to twelve weekly meetings, with psychological tests, conversations and activities, to choose or rethink a profession."
       }
     },
     "knowsAbout": [
@@ -76,7 +76,7 @@
     "whoLine": "With psychologist {name}",
     "footerByline": "clinical psychologist",
     "lockupBy": "by",
-    "homeAria": "{name} — home",
+    "homeAria": "{name}: home",
     "nav": {
       "primary": "Main",
       "footer": "Footer",
@@ -121,7 +121,7 @@
       "label": "Openings",
       "open": "Currently taking new clients.",
       "waitlist": "A short waiting list.",
-      "closed": "No new clients at the moment — write and I will let you know."
+      "closed": "No new clients at the moment. Write and I will let you know."
     },
     "cosmosRestore": "Reopen the cosmic overture ↻",
     "credentialLabel": "Credentials"
@@ -130,7 +130,7 @@
     "pending": "In preparation",
     "aria": "Placeholder: {description}",
     "slots": {
-      "portrait": "Luiza's portrait — natural light, a calm background.",
+      "portrait": "Luiza's portrait: natural light, a calm background.",
       "portraitNote": "The real photograph goes here as soon as the session happens."
     }
   },
@@ -138,7 +138,7 @@
     "metaTitle": "Page not found",
     "eyebrow": "Error 404",
     "title": "This page <em>lost its way</em>.",
-    "body": "The address you are looking for does not exist, or it has moved — it happens. Go back to the beginning, or write to me on WhatsApp if you would rather talk.",
+    "body": "The address you are looking for does not exist, or it has moved, which happens. Go back to the beginning, or write to me on WhatsApp if you would rather talk.",
     "backHome": "Back to the beginning",
     "whatsapp": "Talk on WhatsApp"
   },
@@ -182,7 +182,7 @@
       }
     },
     "contato": {
-      "orByEmail": "or by email —",
+      "orByEmail": "or by email:",
       "faqLink": "questions people ask before writing"
     }
   },
@@ -222,13 +222,13 @@
   },
   "internacional": {
     "plate": {
-      "placeholder": "A painting of the sea, a voyage or a harbour — distance as a landscape.",
+      "placeholder": "A painting of the sea, a voyage or a harbour: distance as a landscape.",
       "placeholderNote": "The chosen work arrives here through the admin, with painter, title and year."
     }
   },
   "orientacaoProfissional": {
     "plate": {
-      "placeholder": "A painted crossroads or labyrinth — this page's only image.",
+      "placeholder": "A painted crossroads or labyrinth: this page's only image.",
       "placeholderNote": "The chosen work arrives here through the admin, with painter, title and year."
     }
   },
@@ -246,7 +246,7 @@
       "tablistLabel": "The wheel's twelve figures",
       "panelLabel": "Details of the chosen figure",
       "signAria": "{sign}, {dates}",
-      "hint": "Hover — or use the arrow keys — over one of the twelve figures. Tap to bring it to the top.",
+      "hint": "Hover over one of the twelve figures, or use the arrow keys. Tap to bring it to the top.",
       "hintVedic": "Beside each figure's portrait a second, Vedic chapter opens: the three lunar mansions its arc crosses.",
       "fields": {
         "element": "Element",

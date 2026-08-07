@@ -55,7 +55,7 @@ export const PERGUNTAS_DEFAULTS: Perguntas = {
     // somebody may be reading. It carries this alone — the page prints no
     // credential strip, and the questions under it are closed until asked.
     intro:
-      "As dúvidas que mais chegam antes de uma primeira conversa — sobre a análise junguiana, sobre a orientação profissional e de carreira, e sobre como o atendimento funciona: on-line, uma vez por semana, em português ou em inglês, para todo o Brasil e para quem mora no exterior.",
+      "As dúvidas que mais chegam antes de uma primeira conversa: sobre a análise junguiana, sobre a orientação profissional e de carreira, e sobre como o atendimento funciona. Ele é on-line, uma vez por semana, em português ou em inglês, para todo o Brasil e para quem mora no exterior.",
   },
   // CONCEPT §6's four section names, verbatim. No intros: four framing lines
   // before the first answer would delay exactly what the visitor came for, so the

@@ -24,7 +24,7 @@
     },
     "primeiraConversa": {
       "title": "A primeira conversa",
-      "description": "O que acontece quando você escreve: uma conversa de cerca de cinquenta minutos, por vídeo, em português ou inglês, no seu fuso — do Brasil ou do exterior. Passo a passo, valores e o bilhete já escrito para começar."
+      "description": "O que acontece quando você escreve: uma conversa de cerca de cinquenta minutos, por vídeo, em português ou inglês, no seu fuso, do Brasil ou do exterior. Passo a passo, valores e o bilhete já escrito para começar."
     },
     "sobre": {
       "title": "Sobre Luiza Fernandes Bezerra",
@@ -36,7 +36,7 @@
     },
     "orientacaoProfissional": {
       "title": "Orientação profissional e de carreira",
-      "description": "Orientação profissional e de carreira on-line com psicóloga especializada pela PUC-SP: até doze encontros semanais com testes psicológicos, conversas e atividades, para chegar à profissão que faz mais sentido no momento atual da sua vida. Primeira escolha, transição de carreira ou recomeço — em português ou inglês, no Brasil e no exterior."
+      "description": "Orientação profissional e de carreira on-line com psicóloga especializada pela PUC-SP: até doze encontros semanais com testes psicológicos, conversas e atividades, para chegar à profissão que faz mais sentido no momento atual da sua vida. Primeira escolha, transição de carreira ou recomeço, em português ou inglês, no Brasil e no exterior."
     },
     "analise": {
       "title": "Análise junguiana on-line",
@@ -51,7 +51,7 @@
       },
       "orientacaoProfissional": {
         "name": "Orientação profissional e de carreira",
-        "description": "Programa on-line de até doze encontros semanais — testes psicológicos, conversas e atividades — para escolher ou reorientar a profissão."
+        "description": "Programa on-line de até doze encontros semanais, com testes psicológicos, conversas e atividades, para escolher ou reorientar a profissão."
       }
     },
     "knowsAbout": [
@@ -76,7 +76,7 @@
     "whoLine": "Com a psicóloga {name}",
     "footerByline": "psicóloga clínica",
     "lockupBy": "por",
-    "homeAria": "{name} — início",
+    "homeAria": "{name}: início",
     "nav": {
       "primary": "Principal",
       "footer": "Rodapé",
@@ -121,7 +121,7 @@
       "label": "Agenda",
       "open": "Com horários disponíveis.",
       "waitlist": "Lista de espera curta.",
-      "closed": "Sem novos atendimentos no momento — escreva e eu aviso."
+      "closed": "Sem novos atendimentos no momento. Escreva e eu aviso."
     },
     "cosmosRestore": "Reabrir a abertura cósmica ↻",
     "credentialLabel": "Credenciais"
@@ -130,7 +130,7 @@
     "pending": "Em preparação",
     "aria": "Espaço reservado: {description}",
     "slots": {
-      "portrait": "O retrato de Luiza — luz natural, fundo calmo.",
+      "portrait": "O retrato de Luiza: luz natural, fundo calmo.",
       "portraitNote": "A foto definitiva entra aqui assim que a sessão acontecer."
     }
   },
@@ -138,7 +138,7 @@
     "metaTitle": "Página não encontrada",
     "eyebrow": "Erro 404",
     "title": "Esta página <em>se perdeu</em> pelo caminho.",
-    "body": "O endereço que você procura não existe ou foi movido — acontece. Volte ao início ou, se preferir falar comigo, o WhatsApp está sempre por perto.",
+    "body": "O endereço que você procura não existe ou foi movido, o que acontece. Volte ao início ou, se preferir falar comigo, o WhatsApp está sempre por perto.",
     "backHome": "Voltar ao início",
     "whatsapp": "Conversar pelo WhatsApp"
   },
@@ -182,7 +182,7 @@
       }
     },
     "contato": {
-      "orByEmail": "ou por e-mail —",
+      "orByEmail": "ou por e-mail:",
       "faqLink": "perguntas frequentes antes de escrever"
     }
   },
@@ -222,13 +222,13 @@
   },
   "internacional": {
     "plate": {
-      "placeholder": "Uma pintura de mar, viagem ou porto — a distância como paisagem.",
+      "placeholder": "Uma pintura de mar, viagem ou porto: a distância como paisagem.",
       "placeholderNote": "A obra escolhida entra aqui pelo painel, com pintor, título e ano."
     }
   },
   "orientacaoProfissional": {
     "plate": {
-      "placeholder": "Uma encruzilhada ou um labirinto pintado — a única imagem desta página.",
+      "placeholder": "Uma encruzilhada ou um labirinto pintado: a única imagem desta página.",
       "placeholderNote": "A obra escolhida entra aqui pelo painel, com pintor, título e ano."
     }
   },
@@ -246,7 +246,7 @@
       "tablistLabel": "As doze figuras da roda",
       "panelLabel": "Detalhes da figura escolhida",
       "signAria": "{sign}, {dates}",
-      "hint": "Passe o cursor — ou navegue com as setas do teclado — por uma das doze figuras. Toque para trazê-la ao alto.",
+      "hint": "Passe o cursor por uma das doze figuras, ou navegue com as setas do teclado. Toque para trazê-la ao alto.",
       "hintVedic": "Cada figura abre, ao lado do seu retrato, um segundo capítulo védico: as três mansões lunares que a sua faixa atravessa.",
       "fields": {
         "element": "Elemento",

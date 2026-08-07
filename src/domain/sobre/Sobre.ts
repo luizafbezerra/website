@@ -84,7 +84,7 @@ export const SOBRE_DEFAULTS: Sobre = {
     // The AEO front-load (REQ-012), in her first person: who, what, for whom,
     // in which languages, from where — before any section begins.
     lead: richText([
-      "Sou psicóloga clínica e trabalho na tradição da psicologia analítica de Jung. Atendo adultos em análise e em orientação profissional e de carreira, sempre on-line, em português ou em inglês, em qualquer lugar do Brasil ou do exterior.",
+      "Sou psicóloga clínica e trabalho na tradição da psicologia analítica de Jung. Atendo pessoas em análise e em orientação profissional e de carreira, sempre on-line, em português ou em inglês, em qualquer lugar do Brasil ou do exterior.",
       "Esta página é para você me conhecer antes de escrever: quem eu sou, onde me formei e como esta clínica nasceu.",
     ]),
   },
@@ -92,7 +92,7 @@ export const SOBRE_DEFAULTS: Sobre = {
     // Hers, verbatim — the heading and bio of the old home's "sobre" section.
     heading: "Uma escuta cuidadosa, na tradição junguiana.",
     body: richText([
-      "Sou psicóloga clínica. Atendo adultos que atravessam ansiedade, lutos, transições de carreira ou sofrimento nos vínculos.",
+      "Sou psicóloga clínica. Atendo pessoas que atravessam ansiedade, lutos, transições de carreira ou sofrimento nos vínculos.",
       // Hers, verbatim (SRC-E.1 + SRC-E.2), replacing the draft that stated the
       // same two facts in our words. `22` is spelled out under GUD-002, ledger
       // row 8 — which is also what the draft it replaced already said. The year
@@ -174,7 +174,7 @@ export const SOBRE_DEFAULTS: Sobre = {
     heading: "De uma página a uma clínica",
     body: richText([
       "Símbolos do Self nasceu como uma página: pinturas clássicas e frases de Jung, uma a uma, para mais de quarenta e cinco mil pessoas. O nome passou da página para a clínica.",
-      "Símbolos do Self é o lugar; eu sou quem recebe você nele. Na página, as imagens ficam por si; na clínica, elas viram trabalho — entre duas pessoas, no tempo de quem chega.",
+      "Símbolos do Self é o lugar; eu sou quem recebe você nele. Na página, as imagens ficam por si; na clínica, elas viram trabalho entre duas pessoas, no tempo de quem chega.",
       // "on-line" is in the page's lead and in the credential strip above; a third
       // and fourth occurrence on one page is a defect (GUD-001).
       "O atendimento é em português ou em inglês, para todo o Brasil e para quem mora fora.",

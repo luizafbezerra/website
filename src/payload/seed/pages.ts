@@ -666,7 +666,7 @@ const INICIO_EN = {
     lead: richText([
       [
         {
-          text: "I work with adults at moments when everyday life no longer accounts for what is happening: an ",
+          text: "I work with people at moments when everyday life no longer accounts for what is happening: an ",
         },
         { text: "anxiety", italic: true },
         { text: " that will not pass, a recent " },
@@ -704,7 +704,7 @@ const INICIO_EN = {
   oSintoma: {
     heading: "The symptom as a call",
     body: richText([
-      "What insists — the anxiety that returns, the dream that repeats, the tiredness that rest does not touch — is rarely just a fault to correct. It is a way the psyche has of saying something that has not yet fitted into words.",
+      "Some things insist: the anxiety that returns, the dream that repeats, the tiredness that rest does not touch. They are rarely just a fault to correct. They are a way the psyche has of saying something that has not yet fitted into words.",
       "The work is to listen to that call until you understand what it is about, rather than to silence it.",
     ]),
     linkLabel: "how I work",
@@ -713,14 +713,14 @@ const INICIO_EN = {
     heading: "Who receives you",
     // Hers, verbatim in Portuguese.
     body: richText([
-      "I am a clinical psychologist. I work with adults going through anxiety, grief, career transitions or suffering in their relationships.",
+      "I am a clinical psychologist. I work with people going through anxiety, grief, career transitions or suffering in their relationships.",
       "The pace matters as much as the content. Nothing that usually brings someone to analysis is understood in a hurry.",
     ]),
     linkLabel: "about Luiza",
   },
   brasilExterior: {
     heading: "Brazil and abroad",
-    body: "Sessions are in Portuguese or in English, in your own time zone. I have worked with people in Portugal, England and the United States — living abroad does not interrupt an analysis.",
+    body: "Sessions are in Portuguese or in English, in your own time zone. I have worked with people in Portugal, England and the United States. Living abroad does not interrupt an analysis.",
     linkLabel: "if you live abroad",
   },
   comoComecar: {
@@ -728,7 +728,7 @@ const INICIO_EN = {
     beats: [
       {
         numeral: "I",
-        text: "You write to me on WhatsApp. A short message is enough — you do not have to tell everything at once.",
+        text: "You write to me on WhatsApp. A short message is enough. You do not have to tell everything at once.",
       },
       {
         numeral: "II",
@@ -870,7 +870,7 @@ const ORIENTACAO_PROFISSIONAL_EN = {
   paraQuem: {
     heading: "Who it is for",
     cases: [
-      "Choosing a first course or a first profession — without deciding by elimination.",
+      "Choosing a first course or a first profession, without deciding by elimination.",
       "Changing field, when the question is not whether you can, but where to.",
       "Understanding what happened when the work you always did lost its meaning.",
       "Starting again after a dismissal, after a pause, after years given to something else.",
@@ -879,7 +879,7 @@ const ORIENTACAO_PROFISSIONAL_EN = {
   oPercurso: {
     heading: "The path",
     body: richText([
-      "The path moves through four movements. How many meetings each one takes depends on you — twelve is the ceiling, not the goal.",
+      "The path moves through four movements. How many meetings each one takes depends on you. Twelve is the ceiling, not the goal.",
     ]),
     steps: [
       {
@@ -931,7 +931,7 @@ const ORIENTACAO_PROFISSIONAL_EN = {
     anchor:
       "In the Jungian tradition, a vocation is not a label waiting to be discovered. It forms along with the person, in the process Jung called individuation.",
     bridge: {
-      body: "Sometimes the path begins and the question turns out to be a different one — not which profession, but why nothing feels like enough, or a tiredness that was already there beforehand. When that is what it is, I say so, and analysis is the better path.",
+      body: "Sometimes the path begins and the question turns out to be a different one: not which profession, but why nothing feels like enough, or a tiredness that was already there beforehand. When that is what it is, I say so, and analysis is the better path.",
       linkLabel: "read about analysis",
     },
   },
@@ -960,7 +960,7 @@ const SOBRE_EN = {
     // graph gives the Person node.
     heading: "Luiza Fernandes Bezerra",
     lead: richText([
-      "I am a clinical psychologist and I work in the tradition of Jung's analytical psychology. I see adults in analysis and in career and vocational guidance, always online, in Portuguese or in English, anywhere in Brazil or abroad.",
+      "I am a clinical psychologist and I work in the tradition of Jung's analytical psychology. I see people in analysis and in career and vocational guidance, always online, in Portuguese or in English, anywhere in Brazil or abroad.",
       "This page is for you to know me before you write: who I am, where I trained, and how this clinic came about.",
     ]),
   },
@@ -968,7 +968,7 @@ const SOBRE_EN = {
     // Hers, verbatim in Portuguese.
     heading: "A careful listening, in the Jungian tradition.",
     body: richText([
-      "I am a clinical psychologist. I work with adults going through anxiety, grief, career transitions or suffering in their relationships.",
+      "I am a clinical psychologist. I work with people going through anxiety, grief, career transitions or suffering in their relationships.",
       // Hers (SRC-E.1 + SRC-E.2).
       "My journey in psychology now spans twenty-two years, with direct clinical practice since 2014. My aim is to offer a safe space for listening, reflection and change, for anyone seeking to know themselves authentically and deeply.",
       // Hers (SRC-E.3), exclamation mark and all. The italic run falls on the
@@ -1019,7 +1019,7 @@ const PRIMEIRA_CONVERSA_EN = {
   abertura: {
     heading: "The first conversation",
     lead: richText([
-      "A conversation of about fifty minutes, by video call, in Portuguese or in English, from wherever you are — Brazil or abroad.",
+      "A conversation of about fifty minutes, by video call, in Portuguese or in English, from wherever you are, in Brazil or abroad.",
       "It is for us to get to know each other: you say what is happening, I listen, and at the end the decision to continue is yours.",
     ]),
   },
@@ -1044,7 +1044,7 @@ const PRIMEIRA_CONVERSA_EN = {
       {
         numeral: "IV",
         title: "You decide afterwards",
-        text: "If it makes sense for us both, we set the weekly meeting. If you want to think it over, write back another day — there is nothing to sign.",
+        text: "If it makes sense for us both, we set the weekly meeting. If you want to think it over, write back another day. There is nothing to sign.",
       },
     ],
     // CONCEPT §6's three lines (CON-005 on the Portuguese side). They are the
@@ -1077,7 +1077,7 @@ const PRIMEIRA_CONVERSA_EN = {
       {
         question: "Do you work with people living outside Brazil?",
         answer:
-          "Yes. I have worked with people in Portugal, England and the United States — we settle the time zone and continue in Portuguese or in English.",
+          "Yes. I have worked with people in Portugal, England and the United States. We settle the time zone and continue in Portuguese or in English.",
       },
       {
         question: "How long do you take to reply?",
@@ -1090,7 +1090,7 @@ const PRIMEIRA_CONVERSA_EN = {
   bilhete: {
     heading: "The note",
     intro: richText([
-      "Writing the first message is usually the hardest part. So it is already written: choose the one closest to your own case and it opens in my WhatsApp — you can still change the text before you send it.",
+      "Writing the first message is usually the hardest part. So it is already written: choose the one closest to your own case and it opens in my WhatsApp. You can still change the text before you send it.",
     ]),
     chooseLabel: "choose where to begin",
   },
@@ -1100,7 +1100,7 @@ const PERGUNTAS_EN = {
   abertura: {
     heading: "Frequently asked questions",
     intro:
-      "The doubts that come up most before a first conversation — about Jungian analysis, about career and vocational guidance, and about how the sessions work: online, once a week, in Portuguese or in English, for anywhere in Brazil and for people living abroad.",
+      "The doubts that come up most before a first conversation: about Jungian analysis, about career and vocational guidance, and about how the sessions work. They are online, once a week, in Portuguese or in English, for anywhere in Brazil and for people living abroad.",
   },
   // CONCEPT §6's four section names. The four intros stay null in both locales.
   sections: {
@@ -1148,7 +1148,7 @@ const INTERNACIONAL_EN = {
     cities: [
       {
         city: "Lisbon",
-        note: "Three or four hours ahead of Brasília, depending on European daylight saving time — late afternoon there is mid-afternoon here.",
+        note: "Three or four hours ahead of Brasília, depending on European daylight saving time. Late afternoon there is mid-afternoon here.",
       },
       {
         city: "London",
@@ -1156,7 +1156,7 @@ const INTERNACIONAL_EN = {
       },
       {
         city: "New York",
-        note: "One or two hours behind Brasília, depending on US daylight saving time — late afternoon in New York is early evening here.",
+        note: "One or two hours behind Brasília, depending on US daylight saving time. Late afternoon in New York is early evening here.",
       },
     ],
   },
@@ -1184,7 +1184,7 @@ const INTERNACIONAL_EN = {
   },
   comecar: {
     heading: "Begin from where you are",
-    body: "Write and tell me where you are writing from — that already settles half of what we need to arrange. We sort out the rest in the conversation.",
+    body: "Write and tell me where you are writing from. That already settles half of what we need to arrange. We sort out the rest in the conversation.",
     linkLabel: "see how the first conversation works",
   },
 };

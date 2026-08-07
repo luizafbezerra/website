@@ -103,7 +103,7 @@ export const INICIO_DEFAULTS: Inicio = {
     lead: richText([
       [
         {
-          text: "Atendo adultos em momentos em que a vida cotidiana já não dá conta do que está acontecendo: uma ",
+          text: "Atendo pessoas em momentos em que a vida cotidiana já não dá conta do que está acontecendo: uma ",
         },
         { text: "ansiedade", italic: true },
         { text: " que não passa, um " },
@@ -147,7 +147,7 @@ export const INICIO_DEFAULTS: Inicio = {
     body: richText([
       // The tradition is named in the hero positioning and in the Análise door
       // above; naming it a third time here put the page over budget (GUD-001).
-      "O que insiste — a ansiedade que volta, o sonho que se repete, o cansaço que não passa com descanso — raramente é apenas um defeito a corrigir. É uma forma de a psique dizer algo que ainda não coube em palavras.",
+      "Há coisas que insistem: a ansiedade que volta, o sonho que se repete, o cansaço que não passa com descanso. Raramente são apenas um defeito a corrigir. São uma forma de a psique dizer algo que ainda não coube em palavras.",
       "O trabalho é escutar esse chamado até entender do que ele trata, em vez de silenciá-lo.",
     ]),
     linkLabel: "como eu trabalho",
@@ -159,7 +159,7 @@ export const INICIO_DEFAULTS: Inicio = {
     heading: "Quem recebe você",
     // Hers, verbatim — the opening of the bio she wrote for the old home.
     body: richText([
-      "Sou psicóloga clínica. Atendo adultos que atravessam ansiedade, lutos, transições de carreira ou sofrimento nos vínculos.",
+      "Sou psicóloga clínica. Atendo pessoas que atravessam ansiedade, lutos, transições de carreira ou sofrimento nos vínculos.",
       "O ritmo importa tanto quanto o conteúdo. Nada do que costuma trazer alguém à análise se entende com pressa.",
     ]),
     linkLabel: "sobre a Luiza",
@@ -169,7 +169,7 @@ export const INICIO_DEFAULTS: Inicio = {
     // "on-line" is deliberately absent: the hero's positioning sentence and the
     // credential strip both say it before a reader reaches this section, and a
     // fourth occurrence on one page is a defect rather than emphasis (GUD-001).
-    body: "O atendimento é em português ou em inglês, no seu fuso. Já acompanhei pessoas em Portugal, na Inglaterra e nos Estados Unidos — morar fora não interrompe uma análise.",
+    body: "O atendimento é em português ou em inglês, no seu fuso. Já acompanhei pessoas em Portugal, na Inglaterra e nos Estados Unidos. Morar fora não interrompe uma análise.",
     linkLabel: "quem mora fora",
   },
   comoComecar: {
@@ -177,7 +177,7 @@ export const INICIO_DEFAULTS: Inicio = {
     beats: [
       {
         numeral: "I",
-        text: "Você me escreve pelo WhatsApp. Uma mensagem curta basta — não precisa contar tudo de uma vez.",
+        text: "Você me escreve pelo WhatsApp. Uma mensagem curta basta. Não precisa contar tudo de uma vez.",
       },
       {
         numeral: "II",

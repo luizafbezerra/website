@@ -210,7 +210,7 @@ export namespace Cosmos {
     line: "Quem olha para fora, sonha. Quem olha para dentro, desperta.",
     attribution: "Carl Gustav Jung",
   } as const;
-  export const sectionAriaLabel = "Atlas celeste — evocação simbólica, sem análise astrológica";
+  export const sectionAriaLabel = "Atlas celeste: evocação simbólica, sem análise astrológica";
   export const sigilAriaLabel = (signName: string) => `Constelação de ${signName}`;
 
   // v1 scroll-cinema phase boundaries (preserved for backwards-compat with the

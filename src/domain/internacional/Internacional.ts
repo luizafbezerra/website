@@ -121,7 +121,7 @@ export const INTERNACIONAL_DEFAULTS: Internacional = {
     cities: [
       {
         city: "Lisboa",
-        note: "Três ou quatro horas à frente de Brasília, conforme o horário de verão europeu — o fim da tarde aí é o meio da tarde aqui.",
+        note: "Três ou quatro horas à frente de Brasília, conforme o horário de verão europeu. O fim da tarde aí é o meio da tarde aqui.",
       },
       {
         city: "Londres",
@@ -129,7 +129,7 @@ export const INTERNACIONAL_DEFAULTS: Internacional = {
       },
       {
         city: "Nova York",
-        note: "Uma ou duas horas atrás de Brasília, conforme o horário de verão americano — o fim da tarde em Nova York é o começo da noite aqui.",
+        note: "Uma ou duas horas atrás de Brasília, conforme o horário de verão americano. O fim da tarde em Nova York é o começo da noite aqui.",
       },
     ],
     plate: EMPTY_PAGE_PLATE,
@@ -139,7 +139,7 @@ export const INTERNACIONAL_DEFAULTS: Internacional = {
   // Jungian tradition", never "Jungian analyst", which is a protected title.
   inEnglish: {
     heading: "In English",
-    body: "I am a Brazilian clinical psychologist working in the Jungian tradition, entirely online. Jungian-oriented psychotherapy and career guidance are available in English, by video call, wherever you live — we settle the time zone in the first conversation. Sessions follow Brazilian telepsychology regulation.",
+    body: "I am a Brazilian clinical psychologist working in the Jungian tradition, entirely online. Jungian-oriented psychotherapy and career guidance are available in English, by video call, wherever you live. We settle the time zone in the first conversation. Sessions follow Brazilian telepsychology regulation.",
     linkLabel: "the whole site in English",
   },
   pratico: {
@@ -176,7 +176,7 @@ export const INTERNACIONAL_DEFAULTS: Internacional = {
   },
   comecar: {
     heading: "Começar de onde você está",
-    body: "Me escreva contando de onde você fala — isso já resolve metade do que a gente precisa combinar. O resto acertamos na conversa.",
+    body: "Me escreva contando de onde você fala. Isso já resolve metade do que a gente precisa combinar. O resto acertamos na conversa.",
     linkLabel: "conhecer a primeira conversa",
   },
 };

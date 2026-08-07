@@ -112,7 +112,7 @@ export const CLINICA_DEFAULTS: Clinica = {
     analysis: feeFrom(null),
     careerGuidance: feeFrom(null),
     internationalNote:
-      "Para quem mora fora do Brasil, os valores são em dólar ou em euro — combinamos na primeira conversa. O site não converte moeda.",
+      "Para quem mora fora do Brasil, os valores são em dólar ou em euro, e combinamos na primeira conversa. O site não converte moeda.",
   },
   // Drafts, awaiting her sign-off (owner decision 2026-08-05, recorded in
   // plan/feature-page-primeira-conversa-1.md). Unlike everything else on the site
@@ -130,7 +130,7 @@ export const CLINICA_DEFAULTS: Clinica = {
       "Oi, Luiza. Encontrei o seu site e queria conversar, mas ainda não sei qual caminho é o meu.",
     english: "Hi Luiza. I found your website and I'd like to know about sessions in English.",
     international:
-      "Oi, Luiza. Encontrei o seu site e queria conversar — moro fora do Brasil e gostaria de saber como funciona daqui.",
+      "Oi, Luiza. Encontrei o seu site e queria conversar. Moro fora do Brasil e gostaria de saber como funciona daqui.",
   },
   jungPassages: [],
   privacyLine: null,

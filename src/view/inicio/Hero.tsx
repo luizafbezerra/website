@@ -75,9 +75,9 @@ export function Hero({ clinica, content }: { clinica: Clinica; content: Inicio["
           </div>
         </div>
 
-        {/* Until the shoot happens the slot holds a labeled frame (REQ-005): the
-            casual selfie re-created the amateur register the site exists to
-            leave, so it comes down rather than standing in. */}
+        {/* Her own photograph, not a shoot (2026-08): she has none, and would
+            rather have none than a generated one. The slot still falls back to a
+            labeled frame (REQ-005) if it is ever cleared. */}
         <figure className="w-[min(15rem,60%)] lg:col-start-2 lg:w-full lg:max-w-[22rem] lg:self-start">
           {content.portrait ? (
             <Image

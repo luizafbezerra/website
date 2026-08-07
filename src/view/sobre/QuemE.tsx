@@ -21,10 +21,12 @@ const PORTRAIT_ASPECT = "4 / 5";
  * so the body below keeps its 60–72ch measure instead of being squeezed into a
  * side-by-side grid.
  *
- * Until the shoot happens the slot is a labeled frame (REQ-005) reusing the
- * site's own portrait strings — the same words Início's hero slot uses, because
- * it is the same missing asset and two different descriptions of one photograph
- * would read as two photographs. The casual selfie does not stand in.
+ * A *different* photograph from the hero's, which the CMS field asks for in so
+ * many words ("o mesmo retrato do início, ou um segundo quadro da mesma sessão").
+ * The hero needs a face meeting yours, so it takes the close portrait; this
+ * section is about who she is rather than who is receiving you, so it takes the
+ * one where she is a whole person sitting in a room. Cleared, the slot falls back
+ * to the labeled frame (REQ-005) on the site's shared portrait strings.
  *
  * No caption. Início's hero captions the portrait "quem recebe você"; here the
  * heading, the prose and the page itself already say it, and a caption repeating

@@ -1,8 +1,15 @@
 "use client";
 
-import { useTranslations } from "next-intl";
-import { type KeyboardEvent as ReactKeyboardEvent, useEffect, useRef, useState } from "react";
+import { useLocale, useTranslations } from "next-intl";
+import {
+  type KeyboardEvent as ReactKeyboardEvent,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import type { SignReading } from "@/domain/analise/Analise";
+import type { Locale } from "@/domain/site/Locale";
 import {
   shortestRotationDelta,
   signRotationDeg,
@@ -10,7 +17,8 @@ import {
   WHEEL_VIEWBOX,
   WHEEL_ZODIAC,
 } from "@/domain/wheel/wheelGeometry";
-import { VEDIC_CONTENT, ZODIAC_CONTENT, type ZodiacSignId } from "@/domain/zodiac/zodiacContent";
+import type { ZodiacSignId } from "@/domain/zodiac/zodiacContent";
+import { vedicContentIn, wheelSignIn, zodiacContentIn } from "@/domain/zodiac/zodiacEnglish";
 import { useMotionAllowed } from "@/view/general/useMotionAllowed";
 
 // ---------------------------------------------------------------------------
@@ -61,11 +69,21 @@ const PANEL_REVEAL_MIN_PX = 200;
  */
 const SECTORS = WHEEL_ZODIAC.map((sign) => ({
   id: sign.id as ZodiacSignId,
-  label: sign.label,
-  dateRange: sign.dateRange,
+  sign,
   path: WHEEL_SECTOR_PATHS[sign.id],
   rotation: signRotationDeg(sign),
 }));
+
+/**
+ * The sectors with their names resolved for the reader's language.
+ *
+ * Geometry is locale-independent and stays in `SECTORS` at module load; only the
+ * label and the date span move, so they are resolved per render instead. Before
+ * this, `/en` showed "Peixes · 19 fev – 20 mar" under an English heading.
+ */
+function sectorsIn(locale: Locale) {
+  return SECTORS.map((sector) => ({ ...sector, ...wheelSignIn(locale, sector.sign) }));
+}
 
 const FIRST_SECTOR_ID = SECTORS[0]?.id ?? "aries";
 
@@ -78,6 +96,8 @@ function step(id: ZodiacSignId, delta: number): ZodiacSignId {
 
 export function MandalaWheel({ readings }: { readings: Record<ZodiacSignId, SignReading> }) {
   const t = useTranslations("analise.mandala");
+  const locale = useLocale() as Locale;
+  const sectors = useMemo(() => sectorsIn(locale), [locale]);
   const motionAllowed = useMotionAllowed();
 
   // Which sign the panel is showing. Hover, focus, arrow keys and taps all set it.
@@ -201,10 +221,17 @@ export function MandalaWheel({ readings }: { readings: Record<ZodiacSignId, Sign
   // it. Twelve tab stops in the middle of a reading page is a keyboard trap in
   // everything but name.
   const tabbableId = activeId ?? FIRST_SECTOR_ID;
-  const active = activeId ? SECTORS.find((sector) => sector.id === activeId) : undefined;
+  const active = activeId ? sectors.find((sector) => sector.id === activeId) : undefined;
 
   return (
-    <div className="mt-14 grid items-start gap-12 lg:mt-20 lg:grid-cols-[minmax(0,22rem)_1fr] lg:gap-16">
+    // The wheel is this page's one wow, and the old fixed 22rem column left it
+    // at a third of the block. The panel is now bounded by its own measure and
+    // the painting takes every pixel left over — inside `max-w-5xl` that is
+    // ~490px, up from 352. 46ch rather than 52ch for the panel: the longest line
+    // it ever holds is a mansion's `deity · ruler · symbol`, and the prose fields
+    // carry their own `max-w-[52ch]`, so the wider measure was buying nothing
+    // here while costing the wheel sixty pixels.
+    <div className="mt-14 grid items-start gap-12 lg:mt-20 lg:grid-cols-[1fr_minmax(0,46ch)] lg:gap-16">
       <div ref={wheelRef} className="mx-auto w-[min(24rem,86vw)] lg:mx-0 lg:w-full">
         <div
           className="relative aspect-square w-full transition-transform duration-[600ms] ease-[cubic-bezier(0.3,0,0.2,1)] motion-reduce:transition-none"
@@ -229,7 +256,7 @@ export function MandalaWheel({ readings }: { readings: Record<ZodiacSignId, Sign
                   <feFuncB type="linear" slope="0.95" />
                 </feComponentTransfer>
               </filter>
-              {SECTORS.map((sector) => (
+              {sectors.map((sector) => (
                 <clipPath key={sector.id} id={`wheel-clip-${sector.id}`}>
                   <path d={sector.path} />
                 </clipPath>
@@ -267,7 +294,7 @@ export function MandalaWheel({ readings }: { readings: Record<ZodiacSignId, Sign
               aria-label={t("tablistLabel")}
               aria-orientation="horizontal"
             >
-              {SECTORS.map((sector) => (
+              {sectors.map((sector) => (
                 <path
                   key={sector.id}
                   id={tabId(sector.id)}
@@ -338,9 +365,9 @@ export function MandalaWheel({ readings }: { readings: Record<ZodiacSignId, Sign
  * has written one, its three lunar mansions, and her Vedic reading if she has
  * written that.
  *
- * The nomenclature stays Portuguese in both locales — it is source-language
- * scholarly vocabulary, and the labels reach it through `messages` so translating
- * it later is a message-catalogue edit rather than a code change.
+ * The nomenclature is translated: the labels come from `messages`, the values
+ * from `zodiacEnglish.ts`, which looks each Portuguese term up in a closed
+ * vocabulary table rather than mirroring the whole source record.
  */
 function SignDetail({
   id,
@@ -354,8 +381,9 @@ function SignDetail({
   reading: SignReading;
 }) {
   const t = useTranslations("analise.mandala");
-  const content = ZODIAC_CONTENT[id];
-  const { nakshatras } = VEDIC_CONTENT[id];
+  const locale = useLocale() as Locale;
+  const content = zodiacContentIn(locale, id);
+  const { nakshatras } = vedicContentIn(locale, id);
 
   const rows: [string, string][] = [
     [t("fields.element"), content.element],
@@ -374,7 +402,12 @@ function SignDetail({
 
       <dl className="mt-6 grid grid-cols-[auto_1fr] gap-x-6 gap-y-2">
         {rows.map(([term, value]) => (
-          <div key={term} className="col-span-2 grid grid-cols-subgrid">
+          // `items-baseline`, not the grid default: the label is tracked small
+          // caps and the value is a larger serif italic, so aligning the two
+          // cells by their box tops sets their baselines a few pixels apart and
+          // every row reads as slightly crooked. The baseline is the line the
+          // eye actually follows down the column.
+          <div key={term} className="col-span-2 grid grid-cols-subgrid items-baseline">
             <dt className="tracked-ink">{term}</dt>
             <dd className="display-italic">{value}</dd>
           </div>

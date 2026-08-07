@@ -8,9 +8,16 @@ import { SectionHeading } from "@/view/general/SectionHeading";
  *
  * This is the coldest section on the site, and deliberately so: it is the one a
  * sceptical reader scrolled here for, and the fastest way to lose them is to
- * decorate it. So there is no intro, no numerals, no ornament, no adjective — a
- * one-word heading and then the rows. The warmth on this page lives in the two
- * sections around it; here, restraint *is* the argument.
+ * decorate it. So there are no numerals, no ornament, no adjective — a one-word
+ * heading and then the rows. The warmth on this page lives in the two sections
+ * around it; here, restraint *is* the argument.
+ *
+ * `intro` is the single exception, and it exists because she wrote it: one
+ * sentence of hers about why the record is long, which says something the rows
+ * cannot say for themselves. It is optional and prints nothing when empty, so
+ * the cold version of this section is still one cleared field away — and no
+ * drafted sentence may ever take its place, because the exception is granted to
+ * her voice, not to the slot.
  *
  * Rows are a list, not a `<dl>`: an institution is not a term the course defines,
  * so a description list would be the wrong semantics for what is really one
@@ -36,6 +43,8 @@ export function Formacao({ content }: { content: Sobre["formacao"] }) {
   return (
     <PageSection labelledBy="formacao-heading" pace="beat">
       <SectionHeading id="formacao-heading">{content.heading}</SectionHeading>
+
+      {content.intro && <p className="body-prose text-ink mt-8 max-w-[62ch]">{content.intro}</p>}
 
       <ul className="border-rule-soft mt-12 border-t">
         {content.items.map((item) => (

@@ -55,7 +55,7 @@ export const PERGUNTAS_DEFAULTS: Perguntas = {
     // somebody may be reading. It carries this alone — the page prints no
     // credential strip, and the questions under it are closed until asked.
     intro:
-      "As dúvidas que mais chegam antes de uma primeira conversa — sobre a análise junguiana, sobre a orientação profissional e de carreira, e sobre como o atendimento funciona: on-line, uma vez por semana, em português ou em inglês, para todo o Brasil e para quem mora no exterior.",
+      "As dúvidas que mais chegam antes de uma primeira conversa: sobre a análise junguiana, sobre a orientação profissional e de carreira, e sobre como o atendimento funciona. Ele é on-line, uma vez por semana, em português ou em inglês, para todo o Brasil e para quem mora no exterior.",
   },
   // CONCEPT §6's four section names, verbatim. No intros: four framing lines
   // before the first answer would delay exactly what the visitor came for, so the
@@ -69,7 +69,7 @@ export const PERGUNTAS_DEFAULTS: Perguntas = {
   plate: EMPTY_PAGE_PLATE,
   fecho: {
     heading: "Ficou uma pergunta de fora?",
-    body: "Escreva mesmo assim. Nenhuma pergunta é pequena demais para uma mensagem, e o que esta página não resolve a gente resolve conversando.",
+    body: "Escreva mesmo assim. O que esta página não responde, eu respondo por mensagem.",
     whatsappLabel: "escrever no WhatsApp",
     linkLabel: "o que acontece na primeira conversa",
   },

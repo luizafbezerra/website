@@ -1,5 +1,5 @@
 import type { GlobalConfig } from "payload";
-import { localizedRichText, localizedText } from "../../fields/copyFields";
+import { localizedRichText, localizedText, localizedTextarea } from "../../fields/copyFields";
 import { mediaSlot } from "../../fields/mediaSlot";
 import { PAGES_GROUP, pageAccess, revalidatePageHook } from "./shared";
 
@@ -64,6 +64,12 @@ export const PageSobre: GlobalConfig = {
             "O registro acadêmico por inteiro, sem adjetivos: graduação, pós, aprimoramentos, extensões. Uma linha por item.",
           fields: [
             localizedText({ name: "heading", label: "Título" }),
+            localizedTextarea({
+              name: "intro",
+              label: "Abertura",
+              description:
+                "Opcional. Uma frase antes da lista, sobre por que o estudo continua. Em branco, a seção começa direto pelos itens.",
+            }),
             {
               name: "items",
               type: "array",

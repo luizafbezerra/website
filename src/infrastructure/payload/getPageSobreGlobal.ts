@@ -32,6 +32,7 @@ export type PayloadPageSobre = {
   } | null;
   formacao?: {
     heading?: string | null;
+    intro?: string | null;
     items?: PayloadArrayRow<{
       title?: string | null;
       institution?: string | null;

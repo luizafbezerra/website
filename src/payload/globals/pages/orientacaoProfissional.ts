@@ -104,7 +104,7 @@ export const PageOrientacaoProfissional: GlobalConfig = {
               name: "deliverable",
               label: "O que a pessoa leva",
               description:
-                "A clareza sobre a profissão que faz mais sentido no momento de vida dela. Esta é a frase que a página inteira promete, e ela aparece destacada no fim da seção.",
+                "O que a pessoa leva além da resposta: entender como chegou até ela. A clareza sobre a profissão já é prometida na abertura da página, então aqui não se repete. Aparece destacado no fim da seção.",
             }),
           ],
         },

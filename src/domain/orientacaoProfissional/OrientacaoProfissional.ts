@@ -14,27 +14,43 @@ import { richText } from "@/domain/richText/richText";
 // ORIENTACAO_PROFISSIONAL_DEFAULTS is what renders when Payload is off or a field
 // is blank, and it is also what `seed/pages.ts` writes on a fresh database.
 //
-// **On the copy in these defaults.** All of it is a *draft*. This page has never
-// existed — not on the old Google Sites page, not in the pre-CONCEPT site — so
-// nothing of hers survives for it. Every draft states only facts CONCEPT §4/§6
-// and PRODUCT already fix: the bounded programme (up to twelve weekly online
-// meetings), her PUC-SP training in orientação profissional, psychological tests
-// + conversations + proposed activities, the deliverable, the four situations
-// that bring someone here, the boundary with análise, and the reach and
-// languages. Drafts state facts plainly; TASK-052 owns the review.
+// **On the copy in these defaults.** One block is *hers, verbatim* —
+// `abertura.body`, from her 2026-08-07 text (SRC-B), pinned by
+// `src/domain/sourceCopy.test.ts`. Until it arrived, nothing on this page was
+// hers: the page had never existed, not on the old Google Sites page and not in
+// the pre-CONCEPT site.
+//
+// Everything else is a *draft* stating only facts CONCEPT §4/§6 and PRODUCT
+// already fix: the bounded programme (up to twelve weekly online meetings), her
+// PUC-SP training in orientação profissional, psychological tests +
+// conversations + proposed activities, the deliverable, the four situations that
+// bring someone here, the boundary with análise, and the reach and languages.
+// Drafts state facts plainly; TASK-052 owns the review.
 //
 // Two things are deliberately *not* drafted anywhere here, because inventing them
 // would be inventing product: **a price** (it lives in A Clínica and prints "a
-// combinar" until she sets it) and **any test instrument named**. The drafts say
-// "testes psicológicos" and nothing more specific.
+// combinar" until she sets it) and **any test instrument named**. Her own
+// sentence says "testes psicológicos" and nothing more specific, and neither
+// does anything drafted around it.
 //
-// Two drafts are claims rather than descriptions and need her confirmation
-// specifically (both flagged for TASK-052):
-//   1. that psychological tests may only be administered and interpreted by a
-//      psychologist — true of Brazilian practice, but a claim in her name;
-//   2. the word for her PUC-SP training: PRODUCT's evidence list records it as
-//      an *aprimoramento*, the narrower and better-documented term. She upgrades
-//      it if the diploma says otherwise.
+// **The two questions this file used to hold open are answered, both by her own
+// words** (plan REQ-003; ledger OPEN-A and OPEN-H):
+//
+//   1. *The word for her PUC-SP training.* Her prose says she is
+//      **especializada**; her academic record says **Aprimoramento em Psicologia
+//      Clínica Junguiana / em Orientação Profissional e de Carreira**. Both are
+//      hers, and both ship: the prose describes what she does, the record names
+//      the certificate. `abertura.body` and `SOBRE_DEFAULTS.formacao.items`
+//      therefore differ on purpose, and making them agree would be overruling
+//      one of her two sentences with the other.
+//   2. *Whether she administers psychological tests.* She says she does —
+//      "Através de testes psicológicos, conversas e atividades propostas". The
+//      claim is hers now, not a draft inference.
+//
+// Still **unconfirmed**, and still ours: the stronger sentence in
+// `nemCoaching.distinctions[1]` that psychological tests may only be
+// administered and interpreted by a psychologist. True of Brazilian practice,
+// but a regulatory claim made in her name, and her text does not make it.
 //
 // The orientação opener the folded ask sends is NOT here: the openers are
 // cross-page facts and live in A Clínica (`clinica.notes.careerGuidance`).
@@ -84,13 +100,23 @@ export type OrientacaoProfissional = {
 export const ORIENTACAO_PROFISSIONAL_DEFAULTS: OrientacaoProfissional = {
   abertura: {
     heading: "Orientação profissional e de carreira",
-    // The page's complete answer, in the first screen (REQ-012): what it is, who
-    // conducts it, how many meetings, in what format, in which languages, from
-    // where, and what you leave with. The comparing reader gets "what do I get and
-    // how long does it take" before the page says anything symbolic.
+    // **Hers, verbatim** (SRC-B), split at her own sentence boundaries into the
+    // two paragraphs this field already rendered. It replaced a draft that said
+    // the same things in the third person, and it says them better: her first
+    // person is what a comparing reader is looking for on this page.
+    //
+    // It also happens to be a complete AEO front-load (REQ-012) on its own —
+    // what it is, who conducts it, what it uses, what you leave with, how many
+    // meetings, in what format. The one fact her sentences do not carry is the
+    // languages, so the drafted clause that did survives at the end of paragraph
+    // two.
+    //
+    // Two corrected spellings, rows 3 and 6 of the ledger: `PUC - SP` → `PUC-SP`
+    // and `12` → `doze` (GUD-002). Her doubled "orientação profissional e
+    // orientação de carreira" stays doubled.
     body: richText([
-      "Um percurso com começo, meio e fim, conduzido por psicóloga com aprimoramento em orientação profissional pela PUC-SP: até doze encontros semanais, por chamada de vídeo, reunindo testes psicológicos, conversas e atividades propostas entre um encontro e outro.",
-      "No fim, você sai sabendo qual caminho profissional faz mais sentido para você agora. Em português ou em inglês, de qualquer lugar do Brasil ou do exterior.",
+      "Sou especializada em orientação profissional e orientação de carreira pela PUC-SP. Através de testes psicológicos, conversas e atividades propostas, posso te ajudar a descobrir a profissão que faz mais sentido no momento atual da sua vida.",
+      "São feitos até doze encontros semanais, on-line. Em português ou em inglês, de qualquer lugar do Brasil ou do exterior.",
     ]),
   },
   paraQuem: {
@@ -98,7 +124,7 @@ export const ORIENTACAO_PROFISSIONAL_DEFAULTS: OrientacaoProfissional = {
     // CONCEPT §6's four situations, one line each — recognition, not features.
     // Written so a 24-year-old and a 45-year-old each find themselves in one.
     cases: [
-      "Escolher o primeiro curso ou a primeira profissão — sem decidir por eliminação.",
+      "Escolher o primeiro curso ou a primeira profissão, sem decidir por eliminação.",
       "Mudar de área, quando a pergunta não é se dá para mudar, e sim para onde.",
       "Entender o que houve quando o trabalho de sempre perdeu o sentido.",
       "Recomeçar depois de uma demissão, de uma pausa, de anos dedicados a outra coisa.",
@@ -107,7 +133,7 @@ export const ORIENTACAO_PROFISSIONAL_DEFAULTS: OrientacaoProfissional = {
   oPercurso: {
     heading: "O percurso",
     body: richText([
-      "O caminho passa por quatro movimentos. Quantos encontros cada um leva depende de você — doze é o teto, não a meta.",
+      "O caminho passa por quatro movimentos. Quantos encontros cada um leva depende de você. Doze é o teto, não a meta.",
     ]),
     // Ordered, and therefore numbered (DESIGN reserves `.roman-numeral` for
     // sequences that genuinely are ordered). These are the movements of a bounded
@@ -134,10 +160,14 @@ export const ORIENTACAO_PROFISSIONAL_DEFAULTS: OrientacaoProfissional = {
         text: "Reunimos o que apareceu e conversamos sobre o que ficou claro. Não é um laudo com uma resposta única: é uma leitura que você entende porque construiu comigo.",
       },
     ],
-    // CONCEPT §4's own words for what the programme delivers, kept verbatim and
-    // used exactly once on the page: this band is where the buyer reads them.
+    // CONCEPT §4's promise — clarity about "a profissão que faz mais sentido no
+    // momento atual da sua vida" — is now made in `abertura.body`, in her own
+    // words, on the first screen. Repeating it here would say the same sentence
+    // twice on one page (GUD-001), so this band keeps only what it alone adds:
+    // that she leaves understanding *how* she got there, which is what makes the
+    // choice repeatable later.
     deliverable:
-      "Você sai com clareza sobre a profissão que faz mais sentido no momento atual da sua vida — e entendendo como chegou até ela, o que permite escolher de novo se a sua vida mudar.",
+      "O que você leva não é só a resposta: é entender como chegou até ela. É isso que permite escolher de novo, se daqui a alguns anos a sua vida pedir outra coisa.",
   },
   nemCoaching: {
     // CONCEPT §6's own name for the section, kept because it is also the question
@@ -161,11 +191,11 @@ export const ORIENTACAO_PROFISSIONAL_DEFAULTS: OrientacaoProfissional = {
       },
     ],
     anchor:
-      "Na tradição junguiana, a vocação não é uma etiqueta que se descobre: é uma das portas por onde passa a individuação — o trabalho de tornar-se quem você já é.",
+      "Na tradição junguiana, uma vocação não é uma etiqueta à espera de ser descoberta. Ela se forma junto com a pessoa, no processo que Jung chamou de individuação.",
     // The bridge for somebody who came through the wrong door, folded in as this
     // section's close. It has to read as "that's fine", never as an upsell.
     bridge: {
-      body: "Às vezes o percurso começa e a pergunta se revela outra — não qual profissão, mas por que nada parece suficiente, ou um cansaço que já estava aí antes. Quando é isso, eu digo, e a análise é o caminho mais indicado.",
+      body: "Às vezes o percurso começa e a pergunta se revela outra: não qual profissão, mas por que nada parece suficiente, ou um cansaço que já estava aí antes. Quando é isso, eu digo, e a análise é o caminho mais indicado.",
       linkLabel: "conhecer a análise",
     },
     plate: EMPTY_PAGE_PLATE,

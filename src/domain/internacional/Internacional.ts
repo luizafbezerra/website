@@ -11,15 +11,20 @@ import { richText } from "@/domain/richText/richText";
 // INTERNACIONAL_DEFAULTS is what renders when Payload is off or a field is blank,
 // and it is also what the seed writes on a fresh database.
 //
-// **On the copy in these defaults.** All of it is a *draft*. This page did not
-// exist before CONCEPT v3 and she has supplied no text for it, so every string
-// here states only facts CONCEPT and PRODUCT already fix: the three real client
-// countries (§3, §6), Brazilian telepsychology regulation as a trust signal (§6),
-// sessions in pt/en (§2), the horário de Brasília anchor and the USD/EUR framing
-// with no automatic conversion (§8.9), and "combinamos na primeira conversa" as
-// the mechanism for anything undecided (§14.1). Nothing here is her voice until
-// she says it is, every field is editable in the admin, and TASK-052 of the master
-// plan owns the review.
+// **On the copy in these defaults.** One sentence is *hers, verbatim* — the first
+// paragraph of `abertura.body` (SRC-G.1 of her 2026-08-07 text, pinned by
+// `src/domain/sourceCopy.test.ts`). It is the only thing she has written for this
+// page, and it is the one thing the page most needed: the reason the format is
+// online at all.
+//
+// Everything else is a *draft*. This page did not exist before CONCEPT v3, so
+// every other string here states only facts CONCEPT and PRODUCT already fix: the
+// three real client countries (§3, §6), Brazilian telepsychology regulation as a
+// trust signal (§6), sessions in pt/en (§2), the horário de Brasília anchor and
+// the USD/EUR framing with no automatic conversion (§8.9), and "combinamos na
+// primeira conversa" as the mechanism for anything undecided (§14.1). Nothing
+// drafted here is her voice until she says it is, every field is editable in the
+// admin, and TASK-052 of the master plan owns the review.
 //
 // Two things are deliberately *not* claimed anywhere in this file: any licence,
 // registration or right to practise in another country (she is a Brazilian
@@ -79,15 +84,23 @@ export const INTERNACIONAL_DEFAULTS: Internacional = {
     // "psicóloga brasileira online exterior". The nav and the page title keep
     // CONCEPT's own name for the page; the h1 answers the visitor's question.
     heading: "Psicóloga brasileira on-line, para quem mora fora",
-    // The page's whole answer in the first screen (REQ-012): who she attends,
-    // in which languages, how, and the real client history that makes it
-    // credible rather than a market claim.
+    // The page's whole answer in the first screen (REQ-012): why the format is
+    // what it is, who she attends, in which languages, how, and the real client
+    // history that makes it credible rather than a market claim.
+    //
+    // Paragraph 1 is **hers, verbatim** (SRC-G.1), corrected to the house spelling
+    // `on-line` — the form she herself uses in SRC-A and SRC-B (ledger row 7).
+    // It earns the opening because it gives the reason before the fact: the page
+    // is about distance not being an obstacle, and she says so first.
     body: richText([
-      "Atendo on-line pessoas que moram fora do Brasil e pessoas de outros países, em português ou em inglês, por chamada de vídeo. Já acompanhei brasileiros em Portugal, na Inglaterra e nos Estados Unidos.",
+      "Para garantir que a distância não seja um obstáculo para o seu processo de autoconhecimento, os meus atendimentos acontecem no formato on-line.",
+      "Atendo pessoas que moram fora do Brasil e pessoas de outros países, em português ou em inglês, por chamada de vídeo. Já acompanhei brasileiros em Portugal, na Inglaterra e nos Estados Unidos.",
       "Análise junguiana e orientação profissional e de carreira, em encontros semanais. Na primeira conversa acertamos o fuso, o idioma e o pagamento.",
     ]),
+    // The appositive ", on-line," is gone: the h1, her opening sentence and the
+    // credential strip all say it above this line (GUD-001).
     trustLine:
-      "O atendimento segue a regulamentação brasileira de telepsicologia: é assim que uma psicóloga brasileira atende, on-line, quem vive em outro país.",
+      "O atendimento segue a regulamentação brasileira de telepsicologia: é assim que uma psicóloga brasileira atende quem vive em outro país.",
   },
   brasileirosFora: {
     heading: "Para brasileiros fora do Brasil",
@@ -108,7 +121,7 @@ export const INTERNACIONAL_DEFAULTS: Internacional = {
     cities: [
       {
         city: "Lisboa",
-        note: "Três ou quatro horas à frente de Brasília, conforme o horário de verão europeu — o fim da tarde aí é o meio da tarde aqui.",
+        note: "Três ou quatro horas à frente de Brasília, conforme o horário de verão europeu. O fim da tarde aí é o meio da tarde aqui.",
       },
       {
         city: "Londres",
@@ -116,7 +129,7 @@ export const INTERNACIONAL_DEFAULTS: Internacional = {
       },
       {
         city: "Nova York",
-        note: "Uma ou duas horas atrás de Brasília, conforme o horário de verão americano — o fim da tarde em Nova York é o começo da noite aqui.",
+        note: "Uma ou duas horas atrás de Brasília, conforme o horário de verão americano. O fim da tarde em Nova York é o começo da noite aqui.",
       },
     ],
     plate: EMPTY_PAGE_PLATE,
@@ -126,7 +139,7 @@ export const INTERNACIONAL_DEFAULTS: Internacional = {
   // Jungian tradition", never "Jungian analyst", which is a protected title.
   inEnglish: {
     heading: "In English",
-    body: "I am a Brazilian clinical psychologist working in the Jungian tradition, entirely online. Jungian-oriented psychotherapy and career guidance are available in English, by video call, wherever you live — we settle the time zone in the first conversation. Sessions follow Brazilian telepsychology regulation.",
+    body: "I am a Brazilian clinical psychologist working in the Jungian tradition, entirely online. Jungian-oriented psychotherapy and career guidance are available in English, by video call, wherever you live. We settle the time zone in the first conversation. Sessions follow Brazilian telepsychology regulation.",
     linkLabel: "the whole site in English",
   },
   pratico: {
@@ -163,7 +176,7 @@ export const INTERNACIONAL_DEFAULTS: Internacional = {
   },
   comecar: {
     heading: "Começar de onde você está",
-    body: "Me escreva contando de onde você fala — isso já resolve metade do que a gente precisa combinar. O resto acertamos na conversa.",
+    body: "Me escreva contando de onde você fala. Isso já resolve metade do que a gente precisa combinar. O resto acertamos na conversa.",
     linkLabel: "conhecer a primeira conversa",
   },
 };

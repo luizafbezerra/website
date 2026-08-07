@@ -26,7 +26,7 @@ const ENGLISH = {
   positioning:
     "An online analytical psychology (Jung) practice, for Brazil and anywhere in the world.",
   internationalNote:
-    "For people living outside Brazil, fees are in dollars or euros — we agree on the amount in the first conversation. The site never converts currency.",
+    "For people living outside Brazil, fees are in dollars or euros, and we agree on the amount in the first conversation. The site never converts currency.",
   credentials: [
     "PUC-SP",
     "in practice since 2014",
@@ -42,7 +42,7 @@ const ENGLISH = {
     unsure:
       "Hi Luiza. I found your website and I'd like to talk, but I'm not sure which path is mine.",
     international:
-      "Hi Luiza. I found your website and I'd like to talk — I live outside Brazil and I'd like to know how that works.",
+      "Hi Luiza. I found your website and I'd like to talk. I live outside Brazil and I'd like to know how that works.",
   },
 };
 

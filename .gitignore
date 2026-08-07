@@ -20,12 +20,14 @@ src/payload-types.ts
 .neon
 next-env.d.ts
 tsconfig.tsbuildinfo
-# Scratch notes live here untracked; the pre-teardown content export is the one
-# document the rebuild depends on (plan TASK-001), so it is checked in.
+# Scratch notes live here untracked; two documents the rebuild depends on are
+# checked in: the pre-teardown content export (plan TASK-001) and the ledger of
+# her supplied source copy, which is what her sign-off is given against.
 # `docs/*` rather than `docs/`: git does not descend into an ignored directory,
-# so a whole-directory pattern makes the negation below unreachable.
+# so a whole-directory pattern makes the negations below unreachable.
 docs/*
 !docs/content-export-2026-08.md
+!docs/source-copy-2026-08-07.md
 
 # AI-generated prelude source PNGs. Staged into references/cosmos-sources/prelude/
 # for the bake (that dir has its own .gitignore blocking PNGs). Only the baked

@@ -18,7 +18,8 @@ import { absoluteUrl, BASE_URL } from "@/infrastructure/env/baseUrl";
  * address** — a `LocalBusiness` or `MedicalBusiness` describes a place a patient
  * walks into, and claiming one in structured data is the same false claim as
  * printing a street on the page (CON-001). And the person is never called a
- * "Jungian analyst" in English, a formally protected title (CON-002); her
+ * "Jungian analyst" in English, a formally protected title (CON-002) — in
+ * English she works "in the analytical-psychology tradition"; her
  * `jobTitle` comes from the CMS, where that register rule is written down.
  *
  * The page-specific types stay separate: `FaqJsonLd` belongs to /perguntas,

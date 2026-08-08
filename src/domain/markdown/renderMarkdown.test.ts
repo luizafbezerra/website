@@ -5,7 +5,7 @@ import { renderMarkdown } from "./renderMarkdown";
 describe("renderMarkdown", () => {
   it("renders each kind and separates blocks with one blank line", () => {
     const document: MarkdownBlock[] = [
-      { kind: "heading", level: 1, text: "A análise junguiana" },
+      { kind: "heading", level: 1, text: "A análise" },
       { kind: "paragraph", text: "Um espaço seguro de escuta." },
       { kind: "heading", level: 2, text: "Na prática" },
       { kind: "bullets", items: ["**Valor** — A combinar.", "**Idiomas** — Português ou inglês."] },
@@ -16,7 +16,7 @@ describe("renderMarkdown", () => {
 
     expect(renderMarkdown(document)).toBe(
       [
-        "# A análise junguiana",
+        "# A análise",
         "",
         "Um espaço seguro de escuta.",
         "",

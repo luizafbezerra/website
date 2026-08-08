@@ -83,7 +83,7 @@ export type OrientacaoProfissional = {
     heading: string;
     body: RichTextContent;
     distinctions: Distinction[];
-    /** The page's one Jungian sentence. Absent rather than invented. */
+    /** The page's one analytical-psychology sentence. Absent rather than invented. */
     anchor: string | null;
     /** The bridge to análise, folded in as the section's closing paragraph. */
     bridge: { body: string; linkLabel: string };
@@ -191,7 +191,7 @@ export const ORIENTACAO_PROFISSIONAL_DEFAULTS: OrientacaoProfissional = {
       },
     ],
     anchor:
-      "Na tradição junguiana, uma vocação não é uma etiqueta à espera de ser descoberta. Ela se forma junto com a pessoa, no processo que Jung chamou de individuação.",
+      "Na tradição da psicologia analítica, uma vocação não é uma etiqueta à espera de ser descoberta. Ela se forma junto com a pessoa, no processo que Jung chamou de individuação.",
     // The bridge for somebody who came through the wrong door, folded in as this
     // section's close. It has to read as "that's fine", never as an upsell.
     bridge: {

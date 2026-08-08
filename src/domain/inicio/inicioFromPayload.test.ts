@@ -35,14 +35,14 @@ describe("inicioFromPayload", () => {
   it("keeps her wording section by section when she has written it", () => {
     const doc: PayloadPageInicio = {
       doisCaminhos: {
-        analysis: { title: "Análise junguiana" },
+        analysis: { title: "Análise (psicologia analítica)" },
         boundary: "Qual profissão → orientação.",
       },
     };
 
     const inicio = inicioFromPayload(doc);
 
-    expect(inicio.doisCaminhos.analysis.title).toBe("Análise junguiana");
+    expect(inicio.doisCaminhos.analysis.title).toBe("Análise (psicologia analítica)");
     // The two fields she did not touch still carry their drafts.
     expect(inicio.doisCaminhos.analysis.body).toBe(INICIO_DEFAULTS.doisCaminhos.analysis.body);
     expect(inicio.doisCaminhos.boundary).toBe("Qual profissão → orientação.");

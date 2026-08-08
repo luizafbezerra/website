@@ -134,7 +134,7 @@ export const PageOrientacaoProfissional: GlobalConfig = {
               name: "anchor",
               label: "A frase sobre vocação",
               description:
-                "A única frase junguiana da página: a vocação como uma das portas da individuação. Uma ou duas linhas. Em branco, não aparece.",
+                "A única frase de psicologia analítica da página: a vocação como uma das portas da individuação. Uma ou duas linhas. Em branco, não aparece.",
             }),
             {
               name: "bridge",

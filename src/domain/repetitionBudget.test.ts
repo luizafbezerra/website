@@ -14,7 +14,7 @@ import { SOBRE_DEFAULTS } from "@/domain/sobre/Sobre";
 // The repetition budget (plan GUD-001), mechanised.
 //
 // Seven phrases carry this site's whole positioning, which is exactly why they
-// creep: every page wants to say it is online, bilingual, Jungian and available
+// creep: every page wants to say it is online, bilingual, analytical and available
 // from anywhere, and each page says it truthfully. Read one page and it reads as
 // emphasis. Read three and it reads as a template.
 //

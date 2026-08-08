@@ -18,11 +18,12 @@ import { CLINICA_DEFAULTS } from "@/domain/clinica/Clinica";
  */
 
 /**
- * CON-002: in English she is a "clinical psychologist working in the Jungian
- * tradition" — never a "Jungian analyst", which is a formally protected title.
+ * CON-002: in English she is a "clinical psychologist working in the
+ * analytical-psychology tradition" — never a "Jungian analyst", which is a
+ * formally protected title.
  */
 const ENGLISH = {
-  role: "Clinical psychologist working in the Jungian tradition",
+  role: "Clinical psychologist working in the analytical-psychology tradition",
   positioning:
     "An online analytical psychology (Jung) practice, for Brazil and anywhere in the world.",
   internationalNote:

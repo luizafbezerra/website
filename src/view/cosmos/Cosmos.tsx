@@ -362,7 +362,7 @@ function CosmosBody({ onDismissForever, sky }: CosmosProps & { onDismissForever:
           {/* Epigraph for the descent beat. Hidden through the orbit phase,
               fades in alongside the FBM cloud planes inside the canvas
               (same --cosmos-descent-opacity window). Bottom-left of the
-              sticky frame; closes the section with a single Jungian line
+              sticky frame; closes the section with a single analytical-psychology line
               under the dense constellation network. Copy is a placeholder
               for Luiza's review before publish. */}
           {revealed ? (

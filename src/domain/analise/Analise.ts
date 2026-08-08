@@ -167,9 +167,11 @@ const PILLARS: Pillar[] = [
 
 export const ANALISE_DEFAULTS: Analise = {
   abertura: {
-    // The h1 carries the search term the page targets ("análise junguiana") and
-    // still reads as the page's own name — CONCEPT §10 puts this cluster here.
-    heading: "A análise junguiana",
+    // The h1 is the page's own name. It used to carry "junguiana" as the search
+    // term; the tradition is named "psicologia analítica" throughout now — the
+    // name Jung himself chose — and the term the page targets lives in the meta
+    // title and in paragraph 1 below.
+    heading: "A análise",
     // Paragraph 1 is the AEO front-load (REQ-012): what it is, how often, in
     // which languages, from where. The who-line rendered under it comes from A
     // Clínica. Paragraph 2 is **hers, verbatim** (SRC-F.1) — it says what the
@@ -180,7 +182,7 @@ export const ANALISE_DEFAULTS: Analise = {
     // spends the GUD-001 budget on nothing; that omission is OPEN-D in the
     // ledger and it is hers to overrule.
     body: richText([
-      "A análise é um espaço seguro de escuta, reflexão e transformação: psicoterapia de orientação junguiana, on-line, em encontros semanais, em português ou em inglês, de qualquer lugar do Brasil ou do exterior.",
+      "A análise é um espaço seguro de escuta, reflexão e transformação: psicoterapia de orientação analítica, on-line, em encontros semanais, em português ou em inglês, de qualquer lugar do Brasil ou do exterior.",
       "Diferente de abordagens que focam apenas em calar um sintoma (como a ansiedade ou a angústia), a clínica da psicologia profunda entende que o sintoma tem um propósito: ele é um chamado do nosso inconsciente pedindo atenção.",
     ]),
   },
@@ -240,7 +242,7 @@ export const ANALISE_DEFAULTS: Analise = {
     heading: "Sonho ampliado",
     // A fact about her method, which CONCEPT §5 fixes: amplificação is her craft,
     // "setting a symbol beside its parallels".
-    // "na tradição junguiana" removed: the h1 and the abertura both name it, and
+    // "na tradição da psicologia analítica" removed: the abertura names it, and
     // Jung is named in this same sentence anyway (GUD-001).
     intro:
       "Amplificação é o nome desse gesto. Quando uma imagem insiste, ela não é traduzida de fora: é posta ao lado das suas parentes na pintura, no mito, na obra de Jung, até que o próprio sonhador reconheça o que ela pede.",

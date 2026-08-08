@@ -114,7 +114,7 @@ export const PageInternacional: GlobalConfig = {
               label: "Texto (em inglês)",
               admin: {
                 description:
-                  'Em inglês ela é "a clinical psychologist working in the Jungian tradition" — nunca "Jungian analyst", que é título protegido.',
+                  'Em inglês ela é "a clinical psychologist working in the analytical-psychology tradition" — nunca "Jungian analyst", que é título protegido.',
               },
             },
             { name: "linkLabel", type: "text", label: "Rótulo do link (em inglês)" },

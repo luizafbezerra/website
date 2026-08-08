@@ -18,7 +18,7 @@ For Payload admin: `pnpm payload` to create the first user. For Neon dev branch:
 
 ## Design Context
 
-**Símbolos do Self** — the online analytical-psychology clinic of psychologist **Luiza Fernandes Bezerra** (Jungian tradition). Site language: **pt-BR**. Her canonical positioning sentence, verbatim, wherever positioning lives: _"Clínica de psicologia analítica (Jung) on-line para todo o Brasil e exterior."_
+**Símbolos do Self** — the online analytical-psychology clinic of psychologist **Luiza Fernandes Bezerra** (the tradition Jung named _analytical psychology_ — never "psicologia junguiana"; the adjective "Jungian"/"junguiano" is reserved for Jung himself, his work and his vocabulary). Site language: **pt-BR**. Her canonical positioning sentence, verbatim, wherever positioning lives: _"Clínica de psicologia analítica (Jung) on-line para todo o Brasil e exterior."_
 
 Source-of-truth documents — read before any product or design work:
 

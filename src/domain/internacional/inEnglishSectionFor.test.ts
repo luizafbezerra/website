@@ -4,7 +4,7 @@ import { INTERNACIONAL_DEFAULTS, type InEnglishSection } from "./Internacional";
 
 const SECTION: InEnglishSection = {
   heading: "In English",
-  body: "I am a Brazilian clinical psychologist working in the Jungian tradition.",
+  body: "I am a Brazilian clinical psychologist working in the analytical-psychology tradition.",
   linkLabel: "the whole site in English",
 };
 
@@ -27,7 +27,9 @@ describe("inEnglishSectionFor", () => {
   it("carries the drafted default without the protected title", () => {
     const drafted = inEnglishSectionFor(INTERNACIONAL_DEFAULTS.inEnglish, "pt");
 
-    expect(drafted?.body).toContain("clinical psychologist working in the Jungian tradition");
+    expect(drafted?.body).toContain(
+      "clinical psychologist working in the analytical-psychology tradition",
+    );
     expect(drafted?.body).not.toContain("Jungian analyst");
   });
 });

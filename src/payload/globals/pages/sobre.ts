@@ -38,7 +38,7 @@ export const PageSobre: GlobalConfig = {
               name: "lead",
               label: "Primeiras linhas",
               description:
-                "Duas ou três frases: psicóloga clínica, a tradição junguiana, os dois atendimentos, on-line, em português e inglês, Brasil e exterior.",
+                "Duas ou três frases: psicóloga clínica, a tradição da psicologia analítica, os dois atendimentos, on-line, em português e inglês, Brasil e exterior.",
             }),
           ],
         },

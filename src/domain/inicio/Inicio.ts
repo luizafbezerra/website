@@ -130,7 +130,7 @@ export const INICIO_DEFAULTS: Inicio = {
     intro: null,
     analysis: {
       title: "Análise",
-      body: "Psicoterapia junguiana, semanal e sem prazo marcado. Para quem chega com ansiedade, com um luto, com relações que pesam, ou com a sensação de que o trabalho perdeu o sentido.",
+      body: "Psicoterapia de orientação analítica, semanal e sem prazo marcado. Para quem chega com ansiedade, com um luto, com relações que pesam, ou com a sensação de que o trabalho perdeu o sentido.",
       linkLabel: "conhecer a análise",
     },
     careerGuidance: {

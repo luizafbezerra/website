@@ -275,6 +275,6 @@ On /primeira-conversa: pre-written WhatsApp openers, tap to choose — análise 
 - **Don't** use pure white backgrounds or `#000` ink — it's vellum and iron-gall ink, always warm.
 - **Don't** add sticky CTAs, floating WhatsApp bubbles, countdown timers, or "limited spots." Trust, not urgency. The header is sticky; the CTA is not.
 - **Don't** hide the header on scroll — it is sticky and never disappears.
-- **Don't** ship astrological/predictive language anywhere — the zodiac is Jungian _vocabulary_; symbols index content, never the visitor. No zodiac imagery at all on /orientacao-profissional.
+- **Don't** ship astrological/predictive language anywhere — the zodiac is _vocabulary_ from analytical psychology; symbols index content, never the visitor. No zodiac imagery at all on /orientacao-profissional.
 - **Don't** place English outside its named places (the glosa lines, /internacional's In-English section, /en) — and never a flag icon or language dropdown.
 - **Don't** render testimonials without recorded consent, and never with star ratings.

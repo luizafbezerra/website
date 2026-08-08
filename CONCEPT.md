@@ -57,7 +57,7 @@ Ranked by warmth × volume:
    Portugal is normal here.
 5. **English-speaking foreigners** — smallest, hardest segment. Served by the full English
    mirror at /en — every page, translated. (In English she is a _"clinical
-   psychologist working in the Jungian tradition"_ — never "Jungian analyst", a formally
+   psychologist working in the analytical-psychology tradition"_ — never "Jungian analyst", a formally
    protected title.)
 6. **AI agents / LLM search** — co-equal machine audience; every page front-loads who/what/
    how-to-reach in its first screen of content.
@@ -66,7 +66,7 @@ Ranked by warmth × volume:
 
 The practice sells **two distinct services**, and the site is organised around that:
 
-- **Porta A — Análise (psicoterapia junguiana).** Open-ended, weekly, the core practice.
+- **Porta A — Análise (psicoterapia de orientação analítica).** Open-ended, weekly, the core practice.
   Her three pillars live inside this door as its themes: _I ansiedade & humor · II relações
   & vida · III carreira & propósito_.
 - **Porta B — Orientação profissional e de carreira.** A **bounded program**: PUC-SP
@@ -138,7 +138,7 @@ list so they can never disagree.
 
 /analise                A ANÁLISE      (the approach page — for análise, the
 │                       approach IS the product; condensed to five bands, 2026-08)
-│  job: understand what Jungian analysis with her is and how it works, enough to begin
+│  job: understand what analysis with her is and how it works, enough to begin
 ├── 1  Abertura         espaço seguro de escuta, reflexão e transformação; the
 │                       symptom has a purpose — a call from the unconscious;
 │                       who-line (name · CRP, from A Clínica) under the h1
@@ -168,7 +168,7 @@ list so they can never disagree.
 │                       activities; what you leave with
 ├── 4  Nem coaching,    the honest comparison: a licensed psychologist, tests
 │      nem teste solto  inside a guided psychological process, vocation read in
-│                       depth (the page's one Jungian anchor: vocation as a door
+│                       depth (the page's one analytical anchor: vocation as a door
 │                       of individuação) — closing on the bridge to análise
 │                       ("quando a pergunta é mais funda" → /analise)
 └── 5  Na prática       duration · online · pt/en · fee (TBD — her decision) —
@@ -227,7 +227,7 @@ list so they can never disagree.
 │                       trust signal, not a disclaimer)
 ├── 2  Para brasileiros terapia em português, no seu fuso — with city examples
 │      fora do Brasil   (Lisboa, Londres, Nova York)
-├── 3  In English       one short English section: Jungian-oriented psychotherapy
+├── 3  In English       one short English section: analytically-oriented psychotherapy
 │                       and career guidance, online, in English (links to /en)
 ├── 4  Prático          time zones · international payment · video platform
 └── 5  Começar          → /primeira-conversa (international/English opener)
@@ -263,12 +263,12 @@ FOOTER (all pages)      three columns — A clínica (pages) · Começar (primei
   and the site remembers the choice in the visitor's own browser — nothing stored
   server-side, consistent with /privacidade. Never flags, never a modal asking you to choose.
 - English copy is translated from her Portuguese source and polished over time; the §3
-  register rule ("clinical psychologist working in the Jungian tradition") binds every
+  register rule ("clinical psychologist working in the analytical-psychology tradition") binds every
   English page.
 
 **Reserved for the future (URL decided now, zero cost):**
 
-- **/vocabulario** — Jungian terms in her own words; no route until the words exist.
+- **/vocabulario** — the vocabulary of analytical psychology in her own words; no route until the words exist.
 
 ## 7. Art direction
 
@@ -436,7 +436,7 @@ a vector stand-in inverts any of them into banned generated ornament.
 10. **O fio — Ariadne's red thread.** On the two longest reads, a hand-drawn terracotta
     thread runs the margin connecting the rubricated key sentences, ending at the CTA —
     wayfinding disguised as rubrication, named in one marginal note (the labyrinth is fair
-    Jungian vocabulary). Survives only if genuinely irregular and drawn. _(medium)_
+    vocabulary from analytical psychology). Survives only if genuinely irregular and drawn. _(medium)_
 11. **A mandala que respira** — between home sections, the mark scales ±2% on a slow
     six-second cycle beside one Jung line on mandalas as centering. Never labelled a
     breathing exercise; no instructions, no timer. One step from a meditation-app cliché —
@@ -462,8 +462,11 @@ a vector stand-in inverts any of them into banned generated ornament.
   will ever have. Every WhatsApp share of her link renders this card.
 - **Search reality, stated honestly:** with no blog, organic reach = brand-name queries +
   commercial-intent pages. The strongest non-brand asset is **/orientacao-profissional**
-  ("orientação profissional online" is a real commercial vertical almost no Jungian
-  occupies); /analise targets the "análise junguiana / terapia junguiana online" cluster;
+  ("orientação profissional online" is a real commercial vertical almost no analyst
+  occupies); /analise targets the "psicologia analítica / análise on-line" cluster —
+  the "junguiana" spelling is what many people type, but the site names the field the
+  way Jung named it, and the search term is carried by meta titles and body prose
+  rather than by headings;
   /internacional targets the expat queries ("psicóloga brasileira online exterior") in the
   words expats actually type. /vocabulario is the future long-tail unlock.
 - **AEO:** every page front-loads its complete answer (what · for whom · format · languages ·

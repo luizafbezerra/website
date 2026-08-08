@@ -79,7 +79,7 @@ export const Clinica: GlobalConfig = {
               name: "role",
               label: "Profissão",
               description:
-                'Em português: "Psicóloga clínica". Em inglês: "clinical psychologist working in the Jungian tradition" — "Jungian analyst" é título protegido e não pode ser usado.',
+                'Em português: "Psicóloga clínica". Em inglês: "clinical psychologist working in the analytical-psychology tradition" — "Jungian analyst" é título protegido e não pode ser usado.',
             }),
             {
               name: "credential",

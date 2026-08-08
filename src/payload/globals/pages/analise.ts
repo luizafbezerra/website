@@ -66,8 +66,7 @@ export const PageAnalise: GlobalConfig = {
   label: "A Análise",
   admin: {
     group: PAGES_GROUP,
-    description:
-      "A página da análise junguiana: o que é, como funciona, e o que as pessoas trazem.",
+    description: "A página da análise: o que é, como funciona, e o que as pessoas trazem.",
   },
   access: pageAccess,
   hooks: { afterChange: revalidatePageHook("analise") },

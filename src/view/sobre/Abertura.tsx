@@ -14,7 +14,7 @@ import { RichTextProse } from "@/view/general/RichTextProse";
  * A Clínica, so the two are never asked to agree about a fact.
  *
  * The lead is the whole AEO front-load (REQ-012), in her first person: clinical
- * psychologist, the Jungian tradition, the two doors, online, in which languages,
+ * psychologist, the analytical-psychology tradition, the two doors, online, in which languages,
  * from where. It also says what the rest of the page holds, which is what a
  * sceptical reader — and an assistant summarizing the page — wants next.
  *

@@ -95,7 +95,7 @@ export const INTERNACIONAL_DEFAULTS: Internacional = {
     body: richText([
       "Para garantir que a distância não seja um obstáculo para o seu processo de autoconhecimento, os meus atendimentos acontecem no formato on-line.",
       "Atendo pessoas que moram fora do Brasil e pessoas de outros países, em português ou em inglês, por chamada de vídeo. Já acompanhei brasileiros em Portugal, na Inglaterra e nos Estados Unidos.",
-      "Análise junguiana e orientação profissional e de carreira, em encontros semanais. Na primeira conversa acertamos o fuso, o idioma e o pagamento.",
+      "Análise e orientação profissional e de carreira, em encontros semanais. Na primeira conversa acertamos o fuso, o idioma e o pagamento.",
     ]),
     // The appositive ", on-line," is gone: the h1, her opening sentence and the
     // credential strip all say it above this line (GUD-001).
@@ -136,10 +136,11 @@ export const INTERNACIONAL_DEFAULTS: Internacional = {
   },
   // Written in English, not translated: this is the section an anglophone reads
   // on the Portuguese page. CON-002 — "clinical psychologist working in the
-  // Jungian tradition", never "Jungian analyst", which is a protected title.
+  // analytical-psychology tradition", never "Jungian analyst", which is a
+  // protected title.
   inEnglish: {
     heading: "In English",
-    body: "I am a Brazilian clinical psychologist working in the Jungian tradition, entirely online. Jungian-oriented psychotherapy and career guidance are available in English, by video call, wherever you live. We settle the time zone in the first conversation. Sessions follow Brazilian telepsychology regulation.",
+    body: "I am a Brazilian clinical psychologist working in the analytical-psychology tradition, entirely online. Analytically-oriented psychotherapy and career guidance are available in English, by video call, wherever you live. We settle the time zone in the first conversation. Sessions follow Brazilian telepsychology regulation.",
     linkLabel: "the whole site in English",
   },
   pratico: {

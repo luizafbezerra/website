@@ -16,7 +16,7 @@
     },
     "perguntas": {
       "title": "Perguntas frequentes",
-      "description": "Dúvidas sobre a análise junguiana e a orientação profissional on-line: primeira conversa, duração, frequência, valores, sigilo, fuso horário, Brasil e exterior."
+      "description": "Dúvidas sobre a psicologia analítica e a orientação profissional on-line: primeira conversa, duração, frequência, valores, sigilo, fuso horário, Brasil e exterior."
     },
     "privacidade": {
       "title": "Privacidade",
@@ -32,22 +32,22 @@
     },
     "internacional": {
       "title": "Brasil e exterior",
-      "description": "Psicóloga brasileira on-line para quem mora fora do Brasil: análise junguiana e orientação profissional em português ou em inglês, no seu fuso, com o horário de Brasília como referência. Já acompanhei pessoas em Portugal, na Inglaterra e nos Estados Unidos; valores em dólar ou em euro."
+      "description": "Psicóloga brasileira on-line para quem mora fora do Brasil: análise e orientação profissional em português ou em inglês, no seu fuso, com o horário de Brasília como referência. Já acompanhei pessoas em Portugal, na Inglaterra e nos Estados Unidos; valores em dólar ou em euro."
     },
     "orientacaoProfissional": {
       "title": "Orientação profissional e de carreira",
       "description": "Orientação profissional e de carreira on-line com psicóloga especializada pela PUC-SP: até doze encontros semanais com testes psicológicos, conversas e atividades, para chegar à profissão que faz mais sentido no momento atual da sua vida. Primeira escolha, transição de carreira ou recomeço, em português ou inglês, no Brasil e no exterior."
     },
     "analise": {
-      "title": "Análise junguiana on-line",
-      "description": "Psicoterapia de orientação junguiana on-line com Luiza Fernandes Bezerra, psicóloga: encontros semanais, em português ou inglês, para todo o Brasil e o exterior. Ansiedade, lutos, sonhos, relações, carreira e propósito."
+      "title": "Análise on-line · psicologia analítica",
+      "description": "Psicoterapia de orientação analítica on-line com Luiza Fernandes Bezerra, psicóloga: encontros semanais, em português ou inglês, para todo o Brasil e o exterior. Ansiedade, lutos, sonhos, relações, carreira e propósito."
     }
   },
   "seo": {
     "services": {
       "analise": {
-        "name": "Análise junguiana (psicoterapia)",
-        "description": "Psicoterapia de orientação junguiana, on-line e semanal, em português e inglês, para todo o Brasil e o exterior."
+        "name": "Análise (psicoterapia de orientação analítica)",
+        "description": "Psicoterapia de orientação analítica, on-line e semanal, em português e inglês, para todo o Brasil e o exterior."
       },
       "orientacaoProfissional": {
         "name": "Orientação profissional e de carreira",
@@ -56,7 +56,7 @@
     },
     "knowsAbout": [
       "Psicologia analítica",
-      "Análise junguiana",
+      "Psicoterapia de orientação analítica",
       "Psicoterapia on-line",
       "Sonhos",
       "Individuação",
@@ -72,7 +72,7 @@
   },
   "chrome": {
     "skipToContent": "Pular para o conteúdo",
-    "headerByline": "psicóloga · análise junguiana",
+    "headerByline": "psicóloga · psicologia analítica",
     "whoLine": "Com a psicóloga {name}",
     "footerByline": "psicóloga clínica",
     "lockupBy": "por",

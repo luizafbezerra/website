@@ -640,8 +640,12 @@ export async function seedPages(payload: Payload): Promise<void> {
 //
 //   1. **CON-002 — she is never a "Jungian analyst" in English.** That is a
 //      formally protected title. She is a *clinical psychologist working in the
-//      Jungian tradition*, and what she practises is *Jungian-oriented
-//      psychotherapy* or *analytical psychology*.
+//      analytical-psychology tradition*, and what she practises is
+//      *analytically-oriented psychotherapy* or *analytical psychology*. The
+//      adjective "Jungian" is reserved for Jung himself — his work, his
+//      vocabulary — because *analytical psychology* is the name he chose. The
+//      two exceptions are her own /sobre heading and the PUC-SP course title
+//      below, which are hers and factual respectively.
 //   2. **Her paragraphs are translated, not paraphrased.** An English reader
 //      should meet the same person: her doubled "orientação profissional e
 //      orientação de carreira" stays doubled, her exclamation mark stays, her
@@ -688,7 +692,7 @@ const INICIO_EN = {
     heading: "Two paths",
     analysis: {
       title: "Analysis",
-      body: "Jungian psychotherapy, weekly and with no set end. For people who arrive with anxiety, with a grief, with relationships that weigh, or with the sense that work has lost its meaning.",
+      body: "Analytically-oriented psychotherapy, weekly and with no set end. For people who arrive with anxiety, with a grief, with relationships that weigh, or with the sense that work has lost its meaning.",
       linkLabel: "read about analysis",
     },
     careerGuidance: {
@@ -756,10 +760,11 @@ const INICIO_EN = {
 
 const ANALISE_EN = {
   abertura: {
-    // The page's search term in English, and still the page's own name.
-    heading: "Jungian analysis",
+    // The page's own name. It used to read "Jungian analysis" to carry that
+    // search term; the tradition is named "analytical psychology" throughout now.
+    heading: "Analysis",
     body: richText([
-      "Analysis is a safe space for listening, reflection and change: Jungian-oriented psychotherapy, online, in weekly meetings, in Portuguese or in English, from anywhere in Brazil or abroad.",
+      "Analysis is a safe space for listening, reflection and change: analytically-oriented psychotherapy, online, in weekly meetings, in Portuguese or in English, from anywhere in Brazil or abroad.",
       // Hers (SRC-F.1).
       "Unlike approaches that focus only on silencing a symptom (anxiety or distress, say), the clinic of depth psychology understands that the symptom has a purpose: it is a call from our unconscious asking for attention.",
     ]),
@@ -929,7 +934,7 @@ const ORIENTACAO_PROFISSIONAL_EN = {
       },
     ],
     anchor:
-      "In the Jungian tradition, a vocation is not a label waiting to be discovered. It forms along with the person, in the process Jung called individuation.",
+      "In the tradition of analytical psychology, a vocation is not a label waiting to be discovered. It forms along with the person, in the process Jung called individuation.",
     bridge: {
       body: "Sometimes the path begins and the question turns out to be a different one: not which profession, but why nothing feels like enough, or a tiredness that was already there beforehand. When that is what it is, I say so, and analysis is the better path.",
       linkLabel: "read about analysis",
@@ -1100,7 +1105,7 @@ const PERGUNTAS_EN = {
   abertura: {
     heading: "Frequently asked questions",
     intro:
-      "The doubts that come up most before a first conversation: about Jungian analysis, about career and vocational guidance, and about how the sessions work. They are online, once a week, in Portuguese or in English, for anywhere in Brazil and for people living abroad.",
+      "The doubts that come up most before a first conversation: about analytical psychology, about career and vocational guidance, and about how the sessions work. They are online, once a week, in Portuguese or in English, for anywhere in Brazil and for people living abroad.",
   },
   // CONCEPT §6's four section names. The four intros stay null in both locales.
   sections: {
@@ -1131,7 +1136,7 @@ const INTERNACIONAL_EN = {
     body: richText([
       "So that distance is never an obstacle to your process of self-knowledge, my sessions happen online.",
       "I work with Brazilians living abroad and with people from other countries, in Portuguese or in English, by video call. I have worked with Brazilians in Portugal, England and the United States.",
-      "Jungian-oriented psychotherapy and career guidance, in weekly meetings. We settle the time zone, the language and the payment in the first conversation.",
+      "Analytically-oriented psychotherapy and career guidance, in weekly meetings. We settle the time zone, the language and the payment in the first conversation.",
     ]),
     trustLine:
       "Sessions follow Brazilian telepsychology regulation: that is how a Brazilian psychologist works with people living in another country.",

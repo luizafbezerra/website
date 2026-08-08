@@ -888,7 +888,7 @@ export namespace Cosmos {
   // across the first half of the descent (0.85 → 0.95) and holds at full
   // opacity through scroll end. Consumed by the FBM cloud planes inside the
   // canvas AND the DOM overlay epigraph so cloud drift and the closing
-  // Jungian line appear together. (Earlier named `horizonFadeOpacity` when
+  // analytical-psychology line appear together. (Earlier named `horizonFadeOpacity` when
   // the beat was a painted horizon plane; the horizon was dropped in
   // favour of a sky-dominant beat.)
   export const descentBeatOpacity = (p: number): number =>

@@ -104,7 +104,7 @@ const PT: Privacidade = {
       },
       {
         title: "Não personaliza nada para você.",
-        text: "Todas as pessoas leem exatamente a mesma página; nada aqui muda de acordo com quem está lendo. Os símbolos deste site indexam conteúdo, nunca quem visita: em lugar nenhum você vai encontrar pedido de data de nascimento, o seu signo, ou uma leitura feita para você. A roda de A Análise é vocabulário junguiano, não um retrato seu.",
+        text: "Todas as pessoas leem exatamente a mesma página; nada aqui muda de acordo com quem está lendo. Os símbolos deste site indexam conteúdo, nunca quem visita: em lugar nenhum você vai encontrar pedido de data de nascimento, o seu signo, ou uma leitura feita para você. A roda de A Análise é vocabulário da psicologia analítica, não um retrato seu.",
       },
       {
         title: "Não vende nem compartilha nada.",
@@ -137,7 +137,7 @@ const PT: Privacidade = {
 /**
  * The English page, written rather than fallen back to (see the note above).
  * CON-002's register binds here as everywhere: she is a clinical psychologist
- * working in the Jungian tradition, never a "Jungian analyst".
+ * working in the analytical-psychology tradition, never a "Jungian analyst".
  */
 const EN: Privacidade = {
   abertura: {
@@ -177,7 +177,7 @@ const EN: Privacidade = {
       },
       {
         title: "It does not personalise anything for you.",
-        text: "Everyone reads exactly the same page; nothing here changes according to who is reading. The symbols on this site index content, never the visitor: nowhere will you be asked for a date of birth, or for your sign, or offered a reading made for you. The wheel on Analysis is Jungian vocabulary, not a portrait of you.",
+        text: "Everyone reads exactly the same page; nothing here changes according to who is reading. The symbols on this site index content, never the visitor: nowhere will you be asked for a date of birth, or for your sign, or offered a reading made for you. The wheel on Analysis is vocabulary from analytical psychology, not a portrait of you.",
       },
       {
         title: "It does not sell or share anything.",

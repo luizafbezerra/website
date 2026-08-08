@@ -12,7 +12,7 @@ const PLATE_ASPECT = "3 / 2";
  * Section 4 of CONCEPT §6 — the honest comparison, and the section on which this
  * page is actually decided: a licensed psychologist bound by a professional code,
  * tests *inside* a guided psychological process rather than a result mailed to you,
- * and vocation read in depth. It is also the page's one Jungian anchor.
+ * and vocation read in depth. It is also the page's one analytical-psychology anchor.
  *
  * **It is not a comparison table, and that is a design decision rather than an
  * omission.** A competitor column with checkmarks is the SaaS pattern DESIGN bans
@@ -37,8 +37,8 @@ const PLATE_ASPECT = "3 / 2";
  * marks the decisive section instead, and DESIGN allows exactly two per page.
  *
  * **The plate closes the section.** CONCEPT §12 suggests a painted crossroads or
- * labyrinth, and the labyrinth is fair Jungian vocabulary (§9.10) — so the page's
- * one painting sits beside its one Jungian sentence, which is amplificação doing its
+ * labyrinth, and the labyrinth is fair analytical-psychology vocabulary (§9.10) — so the page's
+ * one painting sits beside its one analytical-psychology sentence, which is amplificação doing its
  * actual job. It lands here rather than earlier because a full editorial painting
  * between "is this me?" and "what do I get?" would delay exactly the answer this
  * page's reader came for. Until her painting is chosen and its provenance verified

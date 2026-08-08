@@ -24,7 +24,7 @@ import type { FormacaoItem, Sobre } from "@/domain/sobre/Sobre";
  * images the page hangs beside it.
  *
  * CON-002 binds the English twin as it binds the page: she is a clinical
- * psychologist working in the Jungian tradition, never a "Jungian analyst" — and
+ * psychologist working in the analytical-psychology tradition, never a "Jungian analyst" — and
  * because every string here comes from the CMS, the register is hers to keep
  * rather than this file's to enforce.
  */

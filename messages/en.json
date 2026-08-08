@@ -12,11 +12,11 @@
   "meta": {
     "inicio": {
       "title": "Símbolos do Self · online analytical psychology (Jung), by Luiza Fernandes Bezerra",
-      "description": "An online analytical-psychology (Jung) practice for Brazil and abroad. Jungian-oriented psychotherapy and career guidance with psychologist Luiza Fernandes Bezerra."
+      "description": "An online analytical-psychology (Jung) practice for Brazil and abroad. Analytically-oriented psychotherapy and career guidance with psychologist Luiza Fernandes Bezerra."
     },
     "perguntas": {
       "title": "Frequently asked questions",
-      "description": "Questions about Jungian analysis and career guidance online: the first conversation, duration, frequency, fees, confidentiality, time zones, Brazil and abroad."
+      "description": "Questions about analytical psychology and career guidance online: the first conversation, duration, frequency, fees, confidentiality, time zones, Brazil and abroad."
     },
     "privacidade": {
       "title": "Privacy",
@@ -28,26 +28,26 @@
     },
     "sobre": {
       "title": "About Luiza Fernandes Bezerra",
-      "description": "Luiza Fernandes Bezerra, a clinical psychologist working in the Jungian tradition: degree and advanced training at PUC-SP, postgraduate study at Instituto Numen, in clinical practice since 2014. Jungian-oriented psychotherapy and career guidance, online, in Portuguese and English, for Brazil and anywhere abroad."
+      "description": "Luiza Fernandes Bezerra, a clinical psychologist working in the analytical-psychology tradition: degree and advanced training at PUC-SP, postgraduate study at Instituto Numen, in clinical practice since 2014. Analytically-oriented psychotherapy and career guidance, online, in Portuguese and English, for Brazil and anywhere abroad."
     },
     "internacional": {
       "title": "Brazil and abroad",
-      "description": "A Brazilian clinical psychologist working in the Jungian tradition, entirely online: Jungian-oriented psychotherapy and career guidance in English or Portuguese, in your own time zone, wherever in the world you live. Fees in dollars or euros."
+      "description": "A Brazilian clinical psychologist working in the analytical-psychology tradition, entirely online: analytically-oriented psychotherapy and career guidance in English or Portuguese, in your own time zone, wherever in the world you live. Fees in dollars or euros."
     },
     "orientacaoProfissional": {
       "title": "Career guidance",
-      "description": "Online career and vocational guidance with a clinical psychologist working in the Jungian tradition, trained in career guidance at PUC-SP: up to twelve weekly meetings with psychological tests, conversations and proposed activities, to reach the profession that makes the most sense in your life right now. A first choice, a career change or a fresh start, in English or Portuguese, from Brazil and abroad."
+      "description": "Online career and vocational guidance with a clinical psychologist working in the analytical-psychology tradition, trained in career guidance at PUC-SP: up to twelve weekly meetings with psychological tests, conversations and proposed activities, to reach the profession that makes the most sense in your life right now. A first choice, a career change or a fresh start, in English or Portuguese, from Brazil and abroad."
     },
     "analise": {
-      "title": "Jungian analysis online",
-      "description": "Online Jungian-oriented psychotherapy with Luiza Fernandes Bezerra, a clinical psychologist working in the Jungian tradition: weekly sessions in Portuguese or English, for anywhere in Brazil or abroad. Anxiety, grief, dreams, relationships, career and purpose."
+      "title": "Analysis online · analytical psychology",
+      "description": "Online analytically-oriented psychotherapy with Luiza Fernandes Bezerra, a clinical psychologist working in the analytical-psychology tradition: weekly sessions in Portuguese or English, for anywhere in Brazil or abroad. Anxiety, grief, dreams, relationships, career and purpose."
     }
   },
   "seo": {
     "services": {
       "analise": {
-        "name": "Jungian-oriented psychotherapy",
-        "description": "Weekly online psychotherapy in the Jungian tradition, in Portuguese and English, for Brazil and anywhere in the world."
+        "name": "Analysis (analytically-oriented psychotherapy)",
+        "description": "Weekly online psychotherapy in the analytical-psychology tradition, in Portuguese and English, for Brazil and anywhere in the world."
       },
       "orientacaoProfissional": {
         "name": "Career guidance",
@@ -56,7 +56,7 @@
     },
     "knowsAbout": [
       "Analytical psychology",
-      "Jungian psychotherapy",
+      "Analytically-oriented psychotherapy",
       "Online psychotherapy",
       "Dreams",
       "Individuation",
@@ -72,7 +72,7 @@
   },
   "chrome": {
     "skipToContent": "Skip to content",
-    "headerByline": "psychologist · Jungian tradition",
+    "headerByline": "psychologist · analytical psychology",
     "whoLine": "With psychologist {name}",
     "footerByline": "clinical psychologist",
     "lockupBy": "by",

@@ -18,9 +18,10 @@ import { WhoLine } from "@/view/general/WhoLine";
  * page speaks in first person, so the opening names who is speaking, composed
  * from A Clínica exactly as the strip was.
  *
- * The `h1` carries "análise junguiana" because this page is the site's entry for
- * that search cluster (CONCEPT §10) — the term is what people type, and it is
- * also simply the page's name.
+ * The `h1` is simply the page's name. It used to read "a análise junguiana" to
+ * carry that search cluster (CONCEPT §10); the site now names the tradition
+ * "psicologia analítica" — Jung's own name for it — and the search term sits in
+ * the meta title and the lead's first sentence instead.
  *
  * No portrait and no CTA. `/sobre` is the page whose subject is the person, and
  * this page's whole argument is the approach; a terracotta block in the first

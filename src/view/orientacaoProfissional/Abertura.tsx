@@ -13,7 +13,7 @@ import { WhoLine } from "@/view/general/WhoLine";
  * the whole front-load (REQ-012) in the order that reader asks for it: what it is,
  * who conducts it, how many meetings, in what format, in which languages, from
  * where, and what they leave with. The page says nothing symbolic until the lead
- * has answered "what do I get and how long does it take". Its one Jungian sentence
+ * has answered "what do I get and how long does it take". Its one analytical-psychology sentence
  * waits three sections, in "nem coaching".
  *
  * The who-line replaced the credential band here (2026-08 condensation); the

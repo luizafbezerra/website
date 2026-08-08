@@ -360,6 +360,20 @@ const PRELUDE_ASSET_TOP_FADE: Partial<Record<Cosmos.PreludeAssetId, number>> = {
 // (~hundreds of KB rather than megabytes).
 const PRELUDE_MAX_DIM = 2048;
 
+// WebP settings for the painted prelude. These nine assets are the home page's
+// single largest download — 1.33 MB warmed into the HTTP cache on desktop while
+// the visitor is still reading the first screens — so what they cost matters as
+// much as how they look.
+//
+// Quality 75 rather than 85 is the knee of the curve, measured against the q85
+// bake across all nine: 22–24% off the heavy ones (land, both cloud plates) for
+// a mean difference of ~2/255, under 1%. Dropping further to 68 buys another 3%
+// and is not worth spending on a scene the eye never sees at rest — these are
+// soft painted cut-outs, alpha-composited, blurred by depth of field and moving
+// past the camera. Effort 6 is the encoder's slowest setting: it costs bake time
+// only, and gives ~6% for nothing at runtime.
+const PRELUDE_WEBP = { quality: 75, effort: 6 } as const;
+
 async function buildPreludeAsset(assetId: Cosmos.PreludeAssetId): Promise<string | null> {
   const filename = PRELUDE_ASSET_SOURCES[assetId];
   const src = `${PRELUDE_SOURCE_DIR}/${filename}`;
@@ -411,13 +425,13 @@ async function buildPreludeAsset(assetId: Cosmos.PreludeAssetId): Promise<string
       </svg>`;
       await sharp(resized)
         .composite([{ input: Buffer.from(fadeSvg), blend: "dest-in" }])
-        .webp({ quality: 85, effort: 5 })
+        .webp(PRELUDE_WEBP)
         .toFile(dst);
       return dst;
     }
   }
 
-  await sharp(resized).webp({ quality: 85, effort: 5 }).toFile(dst);
+  await sharp(resized).webp(PRELUDE_WEBP).toFile(dst);
   return dst;
 }
 

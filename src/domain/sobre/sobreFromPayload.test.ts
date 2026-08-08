@@ -122,6 +122,7 @@ describe("sobreFromPayload", () => {
       alt: "Luiza sentada, luz de janela",
       width: 1200,
       height: 1500,
+      blurDataURL: null,
     });
   });
 

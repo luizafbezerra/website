@@ -115,7 +115,13 @@ describe("internacionalFromPayload", () => {
     });
 
     expect(page.brasileirosFora.plate).toEqual({
-      image: { src: "/media/porto.jpg", alt: "um porto ao anoitecer", width: 1400, height: 1000 },
+      image: {
+        src: "/media/porto.jpg",
+        alt: "um porto ao anoitecer",
+        width: 1400,
+        height: 1000,
+        blurDataURL: null,
+      },
       painter: "Caspar David Friedrich",
       workTitle: "As idades da vida",
       year: "1834",

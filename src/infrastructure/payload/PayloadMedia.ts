@@ -14,6 +14,8 @@ export type PayloadMedia = {
   alt?: string | null;
   width?: number | null;
   height?: number | null;
+  /** Inline LQIP data URI, written at upload by the Media collection's hook. */
+  blurDataURL?: string | null;
 };
 
 /** An upload field's value: populated, a bare id, or empty. */

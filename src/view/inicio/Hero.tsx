@@ -1,7 +1,7 @@
-import Image from "next/image";
 import { useTranslations } from "next-intl";
 import type { Clinica } from "@/domain/clinica/Clinica";
 import type { Inicio } from "@/domain/inicio/Inicio";
+import { BlurUpImage } from "@/view/general/BlurUpImage";
 import { MediaPlaceholder } from "@/view/general/MediaPlaceholder";
 import { RichTextProse } from "@/view/general/RichTextProse";
 import { WhatsAppCta } from "@/view/general/WhatsAppCta";
@@ -80,11 +80,12 @@ export function Hero({ clinica, content }: { clinica: Clinica; content: Inicio["
             labeled frame (REQ-005) if it is ever cleared. */}
         <figure className="w-[min(15rem,60%)] lg:col-start-2 lg:w-full lg:max-w-[22rem] lg:self-start">
           {content.portrait ? (
-            <Image
+            <BlurUpImage
               src={content.portrait.src}
               alt={content.portrait.alt || inicio("portraitAlt", { name: clinica.fullName })}
               width={content.portrait.width}
               height={content.portrait.height}
+              blurDataURL={content.portrait.blurDataURL}
               priority
               sizes="(min-width: 1024px) 22rem, 15rem"
               className="vignette h-auto w-full select-none"

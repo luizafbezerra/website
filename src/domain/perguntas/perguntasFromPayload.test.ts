@@ -95,6 +95,7 @@ describe("perguntasFromPayload", () => {
         alt: "uma mulher lendo à luz de uma janela",
         width: 1400,
         height: 1000,
+        blurDataURL: null,
       },
       painter: "Jean-Baptiste-Siméon Chardin",
       workTitle: "A leitora",

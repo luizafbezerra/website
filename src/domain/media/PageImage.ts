@@ -13,4 +13,11 @@ export type PageImage = {
   alt: string;
   width: number;
   height: number;
+  /**
+   * The picture at postage-stamp size, inlined, to hold its own box while the
+   * full file lands. Optional where the other four are not: an image with no
+   * placeholder is complete, just plainer — a row uploaded before the field
+   * existed, or one whose LQIP failed to derive, still renders correctly.
+   */
+  blurDataURL?: string | null;
 };

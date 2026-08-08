@@ -125,6 +125,7 @@ describe("primeiraConversaFromPayload", () => {
         alt: "uma porta entreaberta",
         width: 1400,
         height: 1000,
+        blurDataURL: null,
       },
       painter: "Vilhelm Hammershøi",
       workTitle: "Interior com portas abertas",

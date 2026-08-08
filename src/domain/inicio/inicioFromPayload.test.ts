@@ -59,6 +59,7 @@ describe("inicioFromPayload", () => {
         alt: "Luiza",
         width: 1200,
         height: 900,
+        blurDataURL: null,
       });
       expect(inicioFromPayload({ hero: {} }).hero.portrait).toBeNull();
     });

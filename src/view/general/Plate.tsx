@@ -1,4 +1,4 @@
-import Image from "next/image";
+import { BlurUpImage } from "@/view/general/BlurUpImage";
 import { MediaPlaceholder } from "@/view/general/MediaPlaceholder";
 import { cn } from "@/view/styling/cn";
 
@@ -23,6 +23,7 @@ export type PlateImage = {
   alt: string;
   width: number;
   height: number;
+  blurDataURL?: string | null;
 };
 
 /** Gallery-label caption: painter in the world's voice, title and year in hers. */
@@ -59,11 +60,12 @@ export function Plate({
   return (
     <figure className={cn("mx-auto my-16 w-full max-w-[46rem] sm:my-20", className)}>
       {image ? (
-        <Image
+        <BlurUpImage
           src={image.src}
           alt={image.alt}
           width={image.width}
           height={image.height}
+          blurDataURL={image.blurDataURL}
           sizes={sizes}
           priority={priority}
           className="h-auto w-full select-none"

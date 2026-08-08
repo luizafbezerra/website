@@ -1,7 +1,7 @@
-import Image from "next/image";
 import { useTranslations } from "next-intl";
 import type { Clinica } from "@/domain/clinica/Clinica";
 import type { Sobre } from "@/domain/sobre/Sobre";
+import { BlurUpImage } from "@/view/general/BlurUpImage";
 import { MediaPlaceholder } from "@/view/general/MediaPlaceholder";
 import { PageSection } from "@/view/general/PageSection";
 import { RichTextProse } from "@/view/general/RichTextProse";
@@ -42,11 +42,12 @@ export function QuemE({ clinica, content }: { clinica: Clinica; content: Sobre["
 
       <div className="mt-12 w-[min(20rem,70%)]">
         {content.portrait ? (
-          <Image
+          <BlurUpImage
             src={content.portrait.src}
             alt={content.portrait.alt || sobre("portraitAlt", { name: clinica.fullName })}
             width={content.portrait.width}
             height={content.portrait.height}
+            blurDataURL={content.portrait.blurDataURL}
             priority
             sizes="20rem"
             className="vignette h-auto w-full select-none"

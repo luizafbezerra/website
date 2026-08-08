@@ -207,6 +207,7 @@ describe("orientacaoProfissionalFromPayload", () => {
         alt: "um caminho que se divide em dois",
         width: 1400,
         height: 1000,
+        blurDataURL: null,
       },
       painter: "Gustave Doré",
       workTitle: "A encruzilhada",

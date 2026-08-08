@@ -24,5 +24,11 @@ export function pageImageFrom(value: PayloadMediaField): PageImage | null {
   if (typeof width !== "number" || typeof height !== "number") return null;
   if (width <= 0 || height <= 0) return null;
 
-  return { src, alt: value.alt?.trim() ?? "", width, height };
+  return {
+    src,
+    alt: value.alt?.trim() ?? "",
+    width,
+    height,
+    blurDataURL: value.blurDataURL?.trim() || null,
+  };
 }

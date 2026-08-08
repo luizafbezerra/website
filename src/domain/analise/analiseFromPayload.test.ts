@@ -126,6 +126,7 @@ describe("analiseFromPayload", () => {
         alt: "uma figura ao amanhecer",
         width: 1400,
         height: 1000,
+        blurDataURL: null,
       },
       painter: "Odilon Redon",
       workTitle: "O nascimento de Vênus",

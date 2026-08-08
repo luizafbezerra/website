@@ -112,6 +112,18 @@ export function InstagramTile({
                     alt={isFocused ? post.altText : ""}
                     loading="lazy"
                     decoding="async"
+                    // Meta's originals are the only size on offer — the CDN's
+                    // `stp` transform is signed, so a resized variant 403s, and
+                    // proxying to shrink them is the thing the note above forbids.
+                    // Six of them is ~1 MB, and the constellation crests early by
+                    // design, so the bytes cannot be deferred either without the
+                    // follower meeting empty mounts.
+                    //
+                    // What is left is ordering. A satellite is scenery around the
+                    // one on the desk: marking it low lets the portrait, the
+                    // plates and the fonts take the pipe first, and costs the
+                    // constellation nothing but the tail of its own arrival.
+                    fetchPriority={isFocused ? undefined : "low"}
                     className={cn(
                       "w-full select-none",
                       isFocused

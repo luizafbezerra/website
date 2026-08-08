@@ -139,7 +139,26 @@ export default buildConfig({
   db: vercelPostgresAdapter({ pool: { connectionString: process.env.POSTGRES_URL } }),
   plugins: [
     vercelBlobStorage({
-      collections: { media: true },
+      // Serve the blob URL itself, not Payload's `/api/media/file/<name>` proxy.
+      //
+      // The proxy is the adapter's default, and it costs a serverless invocation
+      // per image: boot Payload, run the collection's read access control, fetch
+      // the bytes back out of Blob, stream them on — with no `Cache-Control`, so
+      // nothing downstream may keep the result. Measured at 0.5–2.3s locally,
+      // and `/_next/image` chains *behind* it: the optimizer cannot emit a byte
+      // until the proxy answers, so her portrait and every plate wait out two
+      // functions on a cold path that repeats because none of it caches.
+      //
+      // The collection is `read: () => true` — the files are public, and Blob's
+      // access is `'public'` — so the access-control hop was buying nothing. The
+      // blob URL is served from the edge with a one-year `Cache-Control`, and
+      // `next.config.ts` already allow-lists the hostname in `remotePatterns`,
+      // which is the leftover showing this was the intent all along.
+      //
+      // The stored `url` column still reads `/api/media/file/…`; the adapter's
+      // afterRead hook rewrites it on every read, so no data migration and no
+      // re-upload — the files are already in Blob.
+      collections: { media: { disablePayloadAccessControl: true } },
       token: process.env.BLOB_READ_WRITE_TOKEN ?? "",
     }),
   ],

@@ -1,4 +1,6 @@
+import type { CSSProperties } from "react";
 import type { OrientacaoProfissional } from "@/domain/orientacaoProfissional/OrientacaoProfissional";
+import { CascadeReveal } from "@/view/general/CascadeReveal";
 import { PageSection } from "@/view/general/PageSection";
 import { RichTextProse } from "@/view/general/RichTextProse";
 import { SectionHeading } from "@/view/general/SectionHeading";
@@ -32,11 +34,12 @@ export function OPercurso({ content }: { content: OrientacaoProfissional["oPercu
 
       <RichTextProse data={content.body} className="body-prose text-ink mt-8 max-w-[58ch]" />
 
-      <ol className="mt-14 space-y-12">
-        {content.steps.map((step) => (
+      <CascadeReveal as="ol" className="mt-14 space-y-12">
+        {content.steps.map((step, index) => (
           <li
             key={step.numeral}
             className="grid grid-cols-[2.5rem_1fr] items-baseline gap-x-4 sm:grid-cols-[3.5rem_1fr] sm:gap-x-6"
+            style={{ "--list-i": index } as CSSProperties}
           >
             <span aria-hidden="true" className="roman-numeral">
               {step.numeral}
@@ -49,7 +52,7 @@ export function OPercurso({ content }: { content: OrientacaoProfissional["oPercu
             </div>
           </li>
         ))}
-      </ol>
+      </CascadeReveal>
 
       {content.deliverable && (
         <p className="border-rule-soft display-italic text-ink mt-16 border-y py-10 text-[clamp(1.45rem,2.4vw,1.85rem)] leading-[1.35]">

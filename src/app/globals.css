@@ -606,37 +606,40 @@
   }
 
   /* ---------------------------------------------------------------------- */
-  /* Como é começar — the beats ink in, one after the other (home §8).       */
+  /* A mão do escriba — an enumerated list writes itself in from the margin, */
+  /* row after row, the first time it comes into view (`CascadeReveal`).     */
   /*                                                                         */
-  /* Scroll-scrubbed, not time-fired: the stagger is the I→II→III sequence    */
-  /* made visible. Progressive enhancement only — browsers without            */
-  /* scroll-driven animations, and readers who prefer reduced motion, get     */
-  /* the beats already on the page (the keyframe animates *from* hidden, so   */
-  /* without a timeline nothing is ever hidden).                              */
+  /* Both attributes come from JS and never from the server: `data-armed`    */
+  /* only when the list is below the fold on a motion-friendly client,       */
+  /* `data-in` on the first intersection. So the hidden state below can only */
+  /* exist where something is guaranteed to release it — no JS, reduced      */
+  /* motion, or a list already on screen never match, and the record simply  */
+  /* renders.                                                                */
+  /*                                                                         */
+  /* Rows move, the list does not: the hairlines belong to the rows, so they */
+  /* travel with their own record rather than sliding as a stack.            */
   /* ---------------------------------------------------------------------- */
-  @media (prefers-reduced-motion: no-preference) {
-    @supports ((animation-timeline: view()) and (animation-range: entry)) {
-      .beat-reveal {
-        animation: beat-ink auto ease-out backwards;
-        animation-timeline: view();
-        animation-range: entry 10% entry 55%;
-      }
+  .cascade-reveal[data-armed="true"] > * {
+    opacity: 0;
+    translate: -1.15rem 0;
+  }
 
-      .beat-reveal:nth-child(2) {
-        animation-range: entry 25% entry 70%;
-      }
+  /* `data-armed` stays set once the cascade has played, so scope the hint to
+     the window where the rows are actually about to move. */
+  .cascade-reveal[data-armed="true"]:not([data-in="true"]) > * {
+    will-change: opacity, translate;
+  }
 
-      .beat-reveal:nth-child(3) {
-        animation-range: entry 40% entry 85%;
-      }
-
-      @keyframes beat-ink {
-        from {
-          opacity: 0;
-          translate: 0 0.75rem;
-        }
-      }
-    }
+  /* `--list-dur` and `--list-step` are per-list dials: a six-row record wants a
+     quick hand, three beats standing side by side want a slower one, because
+     three items cannot carry a cascade the way six can. */
+  .cascade-reveal[data-armed="true"][data-in="true"] > * {
+    opacity: 1;
+    translate: 0 0;
+    transition:
+      opacity var(--list-dur, 950ms) cubic-bezier(0.16, 1, 0.3, 1),
+      translate var(--list-dur, 950ms) cubic-bezier(0.16, 1, 0.3, 1);
+    transition-delay: calc(var(--list-i, 0) * var(--list-step, 125ms));
   }
 
   /* ---------------------------------------------------------------------- */
@@ -1389,7 +1392,7 @@
   /* lines need their stars before they mean anything. Scroll-scrubbed, not  */
   /* time-fired: the visitor drives dusk, and scrolling back rewinds it.     */
   /*                                                                         */
-  /* Progressive enhancement only, on the beat-reveal precedent: every       */
+  /* Progressive enhancement only, like every reveal here: each           */
   /* keyframe animates *from* hidden toward the element's own resting value, */
   /* so without a timeline (Firefox), under reduced motion, or with no JS    */
   /* at all, nothing is ever missing — the chart is simply already night.    */

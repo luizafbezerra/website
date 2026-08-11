@@ -1,4 +1,6 @@
+import type { CSSProperties } from "react";
 import type { Analise } from "@/domain/analise/Analise";
+import { CascadeReveal } from "@/view/general/CascadeReveal";
 import { PageSection } from "@/view/general/PageSection";
 import { SectionHeading } from "@/view/general/SectionHeading";
 import { SectionLink } from "@/view/general/SectionLink";
@@ -32,11 +34,12 @@ export function OQueTrazem({ content }: { content: Analise["oQueTrazem"] }) {
 
       {content.note && <p className="marginalia mt-8 max-w-[52ch]">{content.note}</p>}
 
-      <ul className="mt-14 space-y-12">
-        {content.pillars.map((pillar) => (
+      <CascadeReveal as="ul" className="mt-14 space-y-12">
+        {content.pillars.map((pillar, index) => (
           <li
             key={pillar.title}
             className="grid grid-cols-[2.5rem_1fr] items-baseline gap-x-4 sm:grid-cols-[3.5rem_1fr] sm:gap-x-6"
+            style={{ "--list-i": index } as CSSProperties}
           >
             <span aria-hidden="true" className="roman-numeral">
               {pillar.numeral}
@@ -49,7 +52,7 @@ export function OQueTrazem({ content }: { content: Analise["oQueTrazem"] }) {
             </div>
           </li>
         ))}
-      </ul>
+      </CascadeReveal>
 
       {content.boundary && (
         <p className="body-prose text-ink mt-16 max-w-[62ch]">{content.boundary}</p>

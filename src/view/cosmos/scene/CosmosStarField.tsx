@@ -5,6 +5,7 @@ import { useMemo, useRef } from "react";
 import * as THREE from "three";
 import { Cosmos } from "@/domain/cosmos/Cosmos";
 import { getStarSprite } from "./spriteTextures";
+import { useCosmosFill } from "@/view/cosmos/hooks/useCosmosFill";
 
 type Props = {
   mobile?: boolean;
@@ -21,6 +22,7 @@ export function CosmosStarField({ mobile = false }: Props) {
   const accentMaterialRef = useRef<THREE.PointsMaterial>(null);
   const groupRef = useRef<THREE.Group>(null);
   const sprite = useMemo(() => getStarSprite(), []);
+  const fill = useCosmosFill();
 
   // Split the deterministic shell into two buffer geometries: cream-warm ink
   // (common) and gilt accents (rare, slightly larger). Each uses its own
@@ -89,7 +91,7 @@ export function CosmosStarField({ mobile = false }: Props) {
           size={commonSizesAvg}
           sizeAttenuation
           transparent
-          alphaTest={0.02}
+          alphaTest={fill.alphaTest}
           opacity={0.9}
           depthWrite={false}
         />
@@ -108,7 +110,7 @@ export function CosmosStarField({ mobile = false }: Props) {
             size={accentSizesAvg}
             sizeAttenuation
             transparent
-            alphaTest={0.02}
+            alphaTest={fill.alphaTest}
             opacity={0.95}
             depthWrite={false}
           />

@@ -1,4 +1,5 @@
 import { Cosmos } from "./Cosmos";
+import { CosmosFill } from "./fillProfile";
 import { type Rgb, type SkyStar, type StarField, starFieldFrom } from "./StarField";
 
 /**
@@ -24,7 +25,14 @@ export type CosmosSky = {
   galaxyBand: StarField;
 };
 
-export type ProceduralSkyOptions = { mobile?: boolean };
+export type ProceduralSkyOptions = {
+  mobile?: boolean;
+  /**
+   * Fill profile name, thinning both counts on top of the mobile scale. Absent
+   * or unrecognised leaves the counts as designed — see `CosmosFill`.
+   */
+  fill?: string | null;
+};
 
 const MOBILE_COUNT_SCALE = 0.5;
 
@@ -60,11 +68,11 @@ const shade = (rgb: Rgb, factor: number): Rgb => [
   rgb[2] * factor,
 ];
 
-const scaledCount = (count: number, mobile: boolean) =>
-  Math.floor(count * (mobile ? MOBILE_COUNT_SCALE : 1));
+const scaledCount = (count: number, mobile: boolean, fill: string | null | undefined) =>
+  CosmosFill.scaleCount(Math.floor(count * (mobile ? MOBILE_COUNT_SCALE : 1)), fill);
 
-export function buildDeepField({ mobile = false }: ProceduralSkyOptions = {}): StarField {
-  const total = scaledCount(Cosmos.deepField.count, mobile);
+export function buildDeepField({ mobile = false, fill }: ProceduralSkyOptions = {}): StarField {
+  const total = scaledCount(Cosmos.deepField.count, mobile, fill);
   const rng = Cosmos.mulberry32(0xdeefe1d);
   const stops = paletteStops(Cosmos.deepField.palette, ["cream", "gilt", "terracotta", "coolBlue"]);
 
@@ -86,8 +94,8 @@ export function buildDeepField({ mobile = false }: ProceduralSkyOptions = {}): S
  */
 const GALAXY_BAND_ATTEMPTS_PER_STAR = 50;
 
-export function buildGalaxyBand({ mobile = false }: ProceduralSkyOptions = {}): StarField {
-  const total = scaledCount(Cosmos.galaxyBand.count, mobile);
+export function buildGalaxyBand({ mobile = false, fill }: ProceduralSkyOptions = {}): StarField {
+  const total = scaledCount(Cosmos.galaxyBand.count, mobile, fill);
   const rng = Cosmos.mulberry32(0xba9ad);
   const stops = paletteStops(Cosmos.galaxyBand.palette, ["cream", "gilt", "terracotta"]);
 

@@ -15,6 +15,7 @@ import { CosmosGalaxyBand } from "./scene/CosmosGalaxyBand";
 import { CosmosNebulae } from "./scene/CosmosNebulae";
 import { CosmosPrelude } from "./scene/CosmosPrelude";
 import { CosmosStarField } from "./scene/CosmosStarField";
+import { useCosmosFillName } from "@/view/cosmos/hooks/useCosmosFill";
 
 export type SigilScreenPosition = { x: number; y: number; visible: boolean };
 
@@ -31,6 +32,16 @@ export type SigilScreenPosition = { x: number; y: number; visible: boolean };
  *   5  constellation lines, comets, painted prelude
  */
 const BUILD_STAGES = 5;
+
+/**
+ * How long the reveal waits on an off-thread pre-link before priming anyway.
+ *
+ * Only reached on drivers that advertise KHR_parallel_shader_compile: long enough
+ * that a parallel link finishes first, short enough that nobody waits on a driver
+ * which advertises the extension and then never reports completion. The parent's
+ * multi-second backstop is for something else — a canvas that never primes at all.
+ */
+const PRIME_WAIT_MS = 700;
 
 type Props = {
   progressRef: MutableRefObject<number>;
@@ -105,7 +116,17 @@ export function CosmosCanvas({
 }: Props) {
   // Built here rather than in the leaf components so it only runs when the
   // canvas itself mounts, and so both fields come from one supplier.
-  const drawnSky = useMemo(() => sky ?? proceduralSky({ mobile }), [sky, mobile]);
+  //
+  // The fill profile only reaches the procedural sky: a `sky` handed in from
+  // outside is someone else's field ("O céu desta noite"), and thinning a real
+  // sky's star count would be a lie about what is overhead rather than a
+  // rendering trade-off. The alphaTest half of the profile still applies to it,
+  // because that is only about how each sprite is drawn.
+  const fillName = useCosmosFillName();
+  const drawnSky = useMemo(
+    () => sky ?? proceduralSky({ mobile, fill: fillName }),
+    [sky, mobile, fillName],
+  );
 
   // `onCreated` is captured once when the renderer is created, so it can't
   // close over a changing prop directly — read the latest `onPrimed` via ref.
@@ -176,32 +197,60 @@ export function CosmosCanvas({
 
     let cancelled = false;
 
-    // One more frame so the last stage's children have committed, then a final
-    // pre-link pass to catch them and anything that arrived late — the armillary's
-    // baked matcap, the prelude's textured props.
+    let waitTimer: ReturnType<typeof setTimeout> | undefined;
+
+    // One more frame so the last stage's children have committed, then the
+    // pre-link pass — which route it takes depends on the driver, and the two are
+    // not interchangeable.
     //
-    // Note what is deliberately *not* here: `compileAsync`. It is only truly
-    // asynchronous where KHR_parallel_shader_compile exists, and where it does
-    // not, three polls each material's program for readiness — reading
-    // `material.program.isReady()` on materials that have none yet, which throws
-    // inside its own timer. The promise then settles neither way and the reveal
-    // hangs until the parent's backstop fires seconds later. (Reproduced on
-    // SwiftShader, which reports the extension missing.) The synchronous
-    // `compile()` has no such path, and by now most of the work is already done
-    // stage by stage, so there is nothing left to win by going async.
+    // Where KHR_parallel_shader_compile exists, `compileAsync` genuinely links off
+    // the main thread, and that is the whole prize: the pre-link is the single
+    // most expensive thing this component does (~580 ms on a software rasteriser),
+    // so on real hardware it belongs off-thread.
+    //
+    // Where the extension is missing, `compileAsync` must not be used. Three falls
+    // back to polling each material's program for readiness, reading
+    // `material.program.isReady()` on materials that have none yet — it throws
+    // inside its own timer, so the promise settles neither way and the reveal hangs
+    // on the parent's backstop. (Reproduced on SwiftShader.) There, the synchronous
+    // `compile()` is both correct and no slower, since nothing was going to be
+    // parallel anyway.
     const raf = requestAnimationFrame(() => {
       if (cancelled || disposedRef.current) return;
-      state.gl.compile(state.scene, state.camera);
-      // Under frameloop="demand" during warm — invalidate once so the freshly
-      // linked programs draw and the baked textures upload here, off the
-      // (still-hidden) reveal frame.
-      state.invalidate();
-      onPrimedRef.current?.();
+
+      const prime = () => {
+        if (cancelled || disposedRef.current) return;
+        cancelled = true; // first of the two routes below to arrive wins
+        // Under frameloop="demand" during warm — invalidate once so the freshly
+        // linked programs draw and the baked textures upload here, off the
+        // (still-hidden) reveal frame.
+        state.invalidate();
+        onPrimedRef.current?.();
+      };
+
+      const parallel = !!state.gl.getContext().getExtension("KHR_parallel_shader_compile");
+      if (!parallel) {
+        state.gl.compile(state.scene, state.camera);
+        prime();
+        return;
+      }
+
+      // Bounded even on the supported path: a driver that advertises the extension
+      // but never reports completion should cost a beat, not the whole backstop.
+      const compiled = state.gl.compileAsync(state.scene, state.camera).then(
+        () => {},
+        () => {},
+      );
+      const bounded = new Promise<void>((resolve) => {
+        waitTimer = setTimeout(resolve, PRIME_WAIT_MS);
+      });
+      void Promise.race([compiled, bounded]).then(prime);
     });
 
     return () => {
       cancelled = true;
       cancelAnimationFrame(raf);
+      if (waitTimer !== undefined) clearTimeout(waitTimer);
     };
   }, [stage, renderer]);
 

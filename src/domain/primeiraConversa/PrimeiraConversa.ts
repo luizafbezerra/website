@@ -66,7 +66,12 @@ export const PRIMEIRA_CONVERSA_DEFAULTS: PrimeiraConversa = {
     // how long, in which languages, from where, and at what commitment.
     lead: richText([
       "Uma conversa de cerca de cinquenta minutos, por chamada de vídeo, em português ou em inglês, de onde você estiver, no Brasil ou no exterior.",
-      "Ela serve para nos conhecermos: você conta o que está acontecendo, eu escuto e, no fim, a decisão de seguir é sua.",
+      // The page's AEO front-load answers "at what commitment", and until now it
+      // answered it in a way a reader could only take one way: "sem compromisso"
+      // beside no mention of money reads as free. Her own correction: there is no
+      // commitment to *continue*, and the session itself is charged. It belongs in
+      // the first screen, next to the rest of the answer.
+      "Ela serve para nos conhecermos: você conta o que está acontecendo, eu escuto e, no fim, a decisão de seguir é sua. É uma sessão de trabalho como as outras e é cobrada. Você não assume compromisso de continuar depois dela.",
     ]),
   },
   passoAPasso: {
@@ -81,8 +86,11 @@ export const PRIMEIRA_CONVERSA_DEFAULTS: PrimeiraConversa = {
       },
       {
         numeral: "II",
-        title: "Combinamos o horário",
-        text: "Você escolhe entre os horários que eu tiver, e eu envio o link da chamada antes do dia.",
+        // The value is settled here, before the session — which is what makes the
+        // fee row's "a combinar antes da primeira sessão" a step rather than a
+        // deferral.
+        title: "Combinamos o horário e o valor",
+        text: "Você escolhe entre os horários que eu tiver, combinamos o valor da sessão, e eu envio o link da chamada antes do dia.",
       },
       {
         numeral: "III",
@@ -126,10 +134,18 @@ export const PRIMEIRA_CONVERSA_DEFAULTS: PrimeiraConversa = {
     // Only the doubts the page has not already answered above (the rest live on
     // /perguntas, one link away).
     doubts: [
+      // The site's one enumerated reach statement, and the only place a list of
+      // countries is still prose: this is a direct question with a direct answer,
+      // and it is what a machine reading the site quotes back. Everywhere else the
+      // countries are carried by the live time-difference list.
+      //
+      // Present tense, because that is how she named the set: "nos países que
+      // atendo adicionar o Canadá e Holanda" (2026-08-10). The five countries are
+      // hers; the sentence just says what she said.
       {
         question: "Você atende quem mora fora do Brasil?",
         answer:
-          "Sim. Já acompanhei pessoas em Portugal, na Inglaterra e nos Estados Unidos. Acertamos o fuso e seguimos em português ou em inglês.",
+          "Sim. Atendo pessoas em Portugal, na Inglaterra, na Holanda, nos Estados Unidos e no Canadá. Acertamos o fuso e seguimos em português ou em inglês.",
       },
       {
         question: "Em quanto tempo você responde?",

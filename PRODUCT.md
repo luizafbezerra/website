@@ -20,7 +20,7 @@ Ranked by warmth × volume (CONCEPT §3):
 
 1. **The Instagram follower** — @simbolos.do.self has **45.4K followers, verified**. Already trusts her voice; arrives via the bio link asking "is this a real practice?" Needs instant recognition (name, mark, the paintings), credentials fast, WhatsApp one tap away.
 2. **The cold pt-BR searcher in distress** — anxious, on a phone, often at night, comparing therapists. Needs: does she work with what I have, is she qualified, what happens if I write, what does it cost.
-3. **Brazilians abroad** — Portugal, UK, USA (her three real client countries). Search in Portuguese; pay in strong currencies. Need _permission and logistics_: "sim, atendo quem mora fora", time zones, paying from abroad. Served by the pt-BR site itself.
+3. **Brazilians abroad** — Portugal, UK, Netherlands, USA, Canada (her five real client countries). Search in Portuguese; pay in strong currencies. Need _permission and logistics_: "sim, atendo quem mora fora", time zones, paying from abroad. Served by the pt-BR site itself.
 4. **Portuguese natives** — same pt-BR funnel; need only explicit mention that Portugal is normal here.
 5. **English-speaking foreigners** — smallest, hardest segment. Need one complete English page proving she is real, licensed, and works in English. (In English she is a _"clinical psychologist working in the analytical-psychology tradition"_ — never "Jungian analyst", a formally protected title.)
 6. **AI agents / LLM search** — co-equal machine audience; every page front-loads who/what/how-to-reach in its first screen of content.
@@ -61,9 +61,9 @@ One boundary sentence routes between the doors: _sentido do trabalho → anális
 
 - **Online-only.** No page, image, or metadata may claim in-person practice. Weekly sessions over video; the practice follows Brazilian telepsychology regulation (stated as a trust signal, not a disclaimer).
 - **Languages:** sessions in Portuguese and English. English on the _site_ appears only in named places: the glosa margin lines, /internacional's In-English section, and (later) /en.
-- **Reach:** Brasil e exterior — real client history in Portugal, UK, USA.
+- **Reach:** Brasil e exterior — real client countries: Portugal, UK, Netherlands, USA, Canada.
 - **The funnel is WhatsApp** (`+55 11 96415-8128`), with email (`luizafbezerra@gmail.com`) at equal weight on /en. No booking system, no forms — the visitor composes a WhatsApp message in their own browser.
-- **Time & currency policy:** all times anchored to horário de Brasília with city examples abroad. pt-BR pages quote BRL (or "a combinar"); /internacional and /en quote USD/EUR on their own terms; never automatic side-by-side conversion.
+- **Time & currency policy:** all times anchored to horário de Brasília; the difference to each country is computed live rather than written down. pt-BR pages quote BRL (or "a combinar"); /internacional and /en quote USD/EUR on their own terms; never automatic side-by-side conversion. **Values are agreed on WhatsApp before the first session**, and the first conversation is a charged session with no obligation to continue.
 - **Aliveness is editorial, not automated:** availability state (three editable states, including the anti-urgency "sem novos atendimentos — escreva e eu aviso"), response window ("respondo em até um dia útil"), rotating Jung passages from a CMS pool she grows, the Instagram feed (CMS-curated tiles until her Meta connection is live).
 - **Copy lives in the Payload CMS** and is deliberately out of the concept's scope; her supplied text is the source copy.
 - **Attribution without tracking:** each pre-written WhatsApp opener ("o bilhete") is worded per origin — the arriving message tells her which page and service the conversation came from. Zero visitor tracking; LGPD-clean.
@@ -99,10 +99,10 @@ One boundary sentence routes between the doors: _sentido do trabalho → anális
 - **The Instagram account** — 45.4K followers, verified, alive: classical public-domain paintings + Jung quotes in pt-BR. The single largest existing asset; the site's top of funnel.
 - **Real client testimonials** exist (praising _competência_, _acolhimento_, _ética_) — publishable only through the consent gate; a consent round including one voice from abroad is on the ask list.
 - **Her academic record**, stated plainly, no editorializing: PUC-SP graduação · Instituto Numen pós · PUC-SP aprimoramentos (clínica junguiana; orientação profissional) · extensões (PUC-SP Psicologia e Religião; USP Fenômenos Anômalos). 22 anos na psicologia; clínica desde 2014; Jung since her 2nd year — "um caminho sem volta."
-- **Real client geography:** Portugal, Inglaterra, EUA.
+- **Real client geography:** Portugal, Inglaterra, Holanda, EUA, Canadá (Canadá and Holanda added by her on 2026-08-10; the cities standing for them on the clock — Toronto, Amsterdã — are our default and await her confirmation).
 - **Reference assets** in `/references/` (01–06.jpg, logo.jpg, wheel.jpg, luiza.png, print01.png). Several current image picks fail the provenance test and are replaced.
 - **The portrait does not exist yet.** The current photo is a casual selfie; as the first image beside competitors' professional headshots it re-creates the amateur register she is paying to leave. A portrait session is the one asset money must buy; the hero stays type-led regardless.
-- **Pending from Luiza (CONCEPT §13):** fee decision, CRP in writing, availability + response-window sentences, the four bilhete openers, 6–10 Jung passages + 4–6 favorite posts, the Meta/Instagram connection, the bio-link fix on launch day, domain confirmation, and later the wheel readings, /en copy, one testimonial from abroad.
+- **Pending from Luiza (CONCEPT §13):** CRP in writing, availability + response-window sentences, the four bilhete openers, 6–10 Jung passages + 4–6 favorite posts, the Meta/Instagram connection, the bio-link fix on launch day, domain confirmation, and later the wheel readings, /en copy, one testimonial from abroad.
 - **Do not fabricate:** fees, testimonials, credentials, her voice, benchmarks, or any in-person practice claim.
 
 ## Product Principles

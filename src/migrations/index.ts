@@ -16,6 +16,8 @@ import * as migration_20260806_222852_concept_v3_sobre_signature_drop from "./20
 import * as migration_20260807_011121_concept_v3_lamina_drop from "./20260807_011121_concept_v3_lamina_drop";
 import * as migration_20260807_145513_sobre_formacao_intro from "./20260807_145513_sobre_formacao_intro";
 import * as migration_20260808_025144_media_blur_data_url from "./20260808_025144_media_blur_data_url";
+import * as migration_20260811_015741_clinica_fees_note from "./20260811_015741_clinica_fees_note";
+import * as migration_20260811_020449_internacional_cities_drop from "./20260811_020449_internacional_cities_drop";
 
 export const migrations = [
   {
@@ -107,5 +109,15 @@ export const migrations = [
     up: migration_20260808_025144_media_blur_data_url.up,
     down: migration_20260808_025144_media_blur_data_url.down,
     name: "20260808_025144_media_blur_data_url",
+  },
+  {
+    up: migration_20260811_015741_clinica_fees_note.up,
+    down: migration_20260811_015741_clinica_fees_note.down,
+    name: "20260811_015741_clinica_fees_note",
+  },
+  {
+    up: migration_20260811_020449_internacional_cities_drop.up,
+    down: migration_20260811_020449_internacional_cities_drop.down,
+    name: "20260811_020449_internacional_cities_drop",
   },
 ];

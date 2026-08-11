@@ -66,7 +66,17 @@ export type Clinica = {
   // availability
   availability: { state: AvailabilityState; responseWindow: string | null };
   // fees (never empty strings — see Fee)
-  fees: { analysis: Fee; careerGuidance: Fee; internationalNote: string | null };
+  fees: {
+    analysis: Fee;
+    careerGuidance: Fee;
+    /**
+     * Her own sentence about how a value is arrived at, printed under the price
+     * on every page that quotes one. It is the answer to the question the fee row
+     * cannot answer while both prices are unset, and it is hers rather than ours.
+     */
+    note: string | null;
+    internationalNote: string | null;
+  };
   // the bilhete openers, the Jung pool, the privacy line
   notes: NoteOpeners;
   jungPassages: JungPassage[];
@@ -104,15 +114,24 @@ export const CLINICA_DEFAULTS: Clinica = {
   // admin (DEP-005).
   availability: { state: "open", responseWindow: null },
   // The two prices stay unset until she decides them (DEP-005) and render "a
-  // combinar". The abroad framing is not a price, though — it is CONCEPT §8.9's
-  // own policy sentence, quoted there almost verbatim — so it ships as a draft on
-  // the pages that quote BRL. `/internacional` states money in its own list and
-  // suppresses this note (see `PraticoSection`).
+  // combinar". That row on its own used to be circular — it said the value was
+  // settled inside the very conversation the page was describing — so `note`
+  // carries her own answer underneath it: values are agreed *before* the first
+  // session, over WhatsApp. **Hers, verbatim** from her 2026-08 FAQ answer, minus
+  // the response-window clause (ledger row 10): /primeira-conversa and the home's
+  // availability line both state the response window in their own right, and this
+  // sentence prints on four pages.
+  //
+  // The abroad framing is not a price either — it is CONCEPT §8.9's own policy
+  // sentence, quoted almost verbatim — so it ships as a draft on the pages that
+  // quote BRL. `/internacional` states money in its own list and suppresses both
+  // notes (see `PraticoSection`).
   fees: {
     analysis: feeFrom(null),
     careerGuidance: feeFrom(null),
+    note: "Combinamos os valores antes da primeira sessão, conforme a modalidade e a frequência. Para saber o valor atual, é só me escrever no WhatsApp.",
     internationalNote:
-      "Para quem mora fora do Brasil, os valores são em dólar ou em euro, e combinamos na primeira conversa. O site não converte moeda.",
+      "Para quem mora fora do Brasil, os valores são em dólar ou em euro, e combinamos antes da primeira sessão. O site não converte moeda.",
   },
   // Drafts, awaiting her sign-off (owner decision 2026-08-05, recorded in
   // plan/feature-page-primeira-conversa-1.md). Unlike everything else on the site

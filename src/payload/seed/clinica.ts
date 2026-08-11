@@ -26,8 +26,10 @@ const ENGLISH = {
   role: "Clinical psychologist working in the analytical-psychology tradition",
   positioning:
     "An online analytical psychology (Jung) practice, for Brazil and anywhere in the world.",
+  feesNote:
+    "We agree on fees before the first session, according to the format and how often we meet. To know the current fee, just write to me on WhatsApp.",
   internationalNote:
-    "For people living outside Brazil, fees are in dollars or euros, and we agree on the amount in the first conversation. The site never converts currency.",
+    "For people living outside Brazil, fees are in dollars or euros, and we agree on the amount before the first session. The site never converts currency.",
   credentials: [
     "PUC-SP",
     "in practice since 2014",
@@ -60,6 +62,7 @@ export async function seedClinica(payload: Payload): Promise<void> {
   const data = (
     role: string,
     positioning: string,
+    feesNote: string,
     internationalNote: string,
     credentials: Array<{ id?: string | null; item: string }>,
     notes: {
@@ -87,9 +90,10 @@ export async function seedClinica(payload: Payload): Promise<void> {
     },
     availability: { state: d.availability.state },
     // The two prices stay unset — hers to decide (DEP-005) — so both services
-    // render "a combinar". The abroad framing is CONCEPT §8.9's own policy
-    // sentence rather than a price, so it is seeded.
-    fees: { internationalNote },
+    // render "a combinar". Neither note is a price: `note` is her own sentence
+    // about how a value is agreed (before the first session, on WhatsApp) and the
+    // abroad framing is CONCEPT §8.9's own policy sentence, so both are seeded.
+    fees: { note: feesNote, internationalNote },
     // Drafts awaiting her sign-off, seeded so a fresh database renders the
     // bilhete rather than the plain fallback button.
     notes: { ...notes, english: d.notes.english },
@@ -103,6 +107,7 @@ export async function seedClinica(payload: Payload): Promise<void> {
     data: data(
       d.role,
       d.positioning,
+      d.fees.note ?? "",
       d.fees.internationalNote ?? "",
       d.credentials.map((item) => ({ item })),
       PT_NOTES,
@@ -123,6 +128,7 @@ export async function seedClinica(payload: Payload): Promise<void> {
     data: data(
       ENGLISH.role,
       ENGLISH.positioning,
+      ENGLISH.feesNote,
       ENGLISH.internationalNote,
       rows.map((row, index) => ({ id: row.id, item: ENGLISH.credentials[index] })),
       ENGLISH.notes,

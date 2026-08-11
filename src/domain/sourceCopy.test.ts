@@ -3,6 +3,7 @@ import { ANALISE_DEFAULTS } from "@/domain/analise/Analise";
 import { CLINICA_DEFAULTS } from "@/domain/clinica/Clinica";
 import { INTERNACIONAL_DEFAULTS } from "@/domain/internacional/Internacional";
 import { ORIENTACAO_PROFISSIONAL_DEFAULTS } from "@/domain/orientacaoProfissional/OrientacaoProfissional";
+import { PRIMEIRA_CONVERSA_DEFAULTS } from "@/domain/primeiraConversa/PrimeiraConversa";
 import type { RichTextContent } from "@/domain/richText/RichTextContent";
 import { extractParagraphs } from "@/domain/richText/extractParagraphs";
 import { SOBRE_DEFAULTS } from "@/domain/sobre/Sobre";
@@ -67,6 +68,12 @@ const HERS = {
 
   internacionalDistancia:
     "Para garantir que a distância não seja um obstáculo para o seu processo de autoconhecimento, os meus atendimentos acontecem no formato on-line.",
+
+  // Her 2026-08 FAQ answer about valores, minus its closing clause (ledger row
+  // 10). It is the site's only statement of how a value is arrived at, and it
+  // prints on the four pages that quote a price.
+  valores:
+    "Combinamos os valores antes da primeira sessão, conforme a modalidade e a frequência. Para saber o valor atual, é só me escrever no WhatsApp.",
 } as const;
 
 /** Her six course names, in the order she gave them. */
@@ -174,6 +181,24 @@ describe("her supplied text, 2026-08-07", () => {
       expect(paragraphsOf(INTERNACIONAL_DEFAULTS.abertura.body)[0]).toBe(
         HERS.internacionalDistancia,
       );
+    });
+  });
+
+  describe("Valores", () => {
+    it("keeps her pricing sentence, with only the logged trim (ledger row 10)", () => {
+      expect(CLINICA_DEFAULTS.fees.note).toBe(HERS.valores);
+    });
+
+    it("dropped only the response window, and nothing else of hers", () => {
+      // The clause the ledger licensed cutting, and the reason it could be cut:
+      // both /primeira-conversa and the home's agenda line already answer it.
+      expect(CLINICA_DEFAULTS.fees.note).not.toContain("respondo em até um dia útil");
+      expect(PRIMEIRA_CONVERSA_DEFAULTS.logistica.doubts[1].answer).toContain("Em até um dia útil");
+    });
+
+    it("says where the value is agreed, and never inside the session being priced", () => {
+      expect(CLINICA_DEFAULTS.fees.note).toContain("WhatsApp");
+      expect(CLINICA_DEFAULTS.fees.internationalNote).not.toContain("na primeira conversa");
     });
   });
 

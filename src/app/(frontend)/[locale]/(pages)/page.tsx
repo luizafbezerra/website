@@ -6,6 +6,7 @@ import { getInicio } from "@/domain/inicio/getInicio";
 import { getInstagramFeed } from "@/domain/instagram/getInstagramFeed";
 import type { Locale } from "@/domain/site/Locale";
 import { pagePath } from "@/domain/site/pagePath";
+import { getSobre } from "@/domain/sobre/getSobre";
 import { getTestimonials } from "@/domain/testimonials/getTestimonials";
 import { absoluteUrl } from "@/infrastructure/env/baseUrl";
 import { BrasilExterior } from "@/view/inicio/BrasilExterior";
@@ -46,7 +47,7 @@ export const revalidate = 3600;
  * page's farewell. A CMS that could reorder this could break the one thing the
  * page does.
  *
- * The route stays thin — two domain reads plus the testimonials, then props. The
+ * The route stays thin — the page's own reads plus the testimonials, then props. The
  * entity graph is emitted once by the shared `(pages)` layout, so only the two
  * payloads that belong to *this* page are added here.
  */
@@ -62,9 +63,13 @@ export default async function Home({ params, searchParams }: HomeProps) {
   const skyOverride =
     process.env.NODE_ENV === "development" ? parseSkyInstant((await searchParams).ceu) : null;
 
-  const [clinica, inicio, testimonials, instagramPosts, t] = await Promise.all([
+  const [clinica, inicio, sobre, testimonials, instagramPosts, t] = await Promise.all([
     getClinica(locale),
     getInicio(locale),
+    // Only for the academic record under "Quem recebe você". /sobre owns the
+    // field; the home reads it rather than keeping a second copy, so a course she
+    // edits once changes on both pages. `getSobre` is request-scoped `cache()`d.
+    getSobre(locale),
     getTestimonials(locale),
     // Her live feed, revalidated hourly like the page itself. Returns [] on any
     // failure, and the section hides itself.
@@ -96,7 +101,7 @@ export default async function Home({ params, searchParams }: HomeProps) {
       <InstagramBridge clinica={clinica} content={inicio.instagram} posts={instagramPosts} />
       <DoisCaminhos content={inicio.doisCaminhos} />
       <OSintoma clinica={clinica} content={inicio.oSintoma} at={renderedAt} />
-      <SobreDigest content={inicio.sobreDigest} />
+      <SobreDigest content={inicio.sobreDigest} formacao={sobre.formacao.items} />
       <BrasilExterior content={inicio.brasilExterior} />
       <ComoComecar content={inicio.comoComecar} />
       <Vozes testimonials={testimonials} content={inicio.vozes} />

@@ -42,6 +42,7 @@ export type PayloadClinica = {
   fees?: {
     analysis?: string | null;
     careerGuidance?: string | null;
+    note?: string | null;
     internationalNote?: string | null;
   } | null;
   notes?: {

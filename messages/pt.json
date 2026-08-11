@@ -32,7 +32,7 @@
     },
     "internacional": {
       "title": "Brasil e exterior",
-      "description": "Psicóloga brasileira on-line para quem mora fora do Brasil: análise e orientação profissional em português ou em inglês, no seu fuso, com o horário de Brasília como referência. Já acompanhei pessoas em Portugal, na Inglaterra e nos Estados Unidos; valores em dólar ou em euro."
+      "description": "Psicóloga brasileira on-line para quem mora fora do Brasil: análise e orientação profissional em português ou em inglês, no seu fuso, com o horário de Brasília como referência. Atendo pessoas em Portugal, na Inglaterra, na Holanda, nos Estados Unidos e no Canadá; valores em dólar ou em euro."
     },
     "orientacaoProfissional": {
       "title": "Orientação profissional e de carreira",
@@ -172,25 +172,35 @@
       "chartLabel": "Carta do céu sobre São Paulo em {date}, com as constelações visíveis acima do horizonte",
       "caption": "o céu sobre São Paulo · {date}"
     },
-    "brasilExterior": {
-      "horasAria": "Horários locais agora",
-      "cities": {
-        "brasilia": "Brasília",
-        "lisboa": "Lisboa",
-        "londres": "Londres",
-        "novaYork": "Nova York"
-      }
+    "sobreDigest": {
+      "formacaoLabel": "Formação"
     },
     "contato": {
       "orByEmail": "ou por e-mail:",
       "faqLink": "perguntas frequentes antes de escrever"
     }
   },
+  "horas": {
+    "aria": "Horários locais agora",
+    "listAria": "A diferença de fuso entre Brasília e os lugares onde eu atendo",
+    "stripLabel": "Onde eu atendo, e que horas são lá agora",
+    "here": "aqui",
+    "ahead": "{hours} h à frente",
+    "behind": "{hours} h atrás",
+    "places": {
+      "eua": { "country": "Estados Unidos", "city": "Nova York" },
+      "canada": { "country": "Canadá", "city": "Toronto" },
+      "brasil": { "country": "Brasil", "city": "Brasília" },
+      "portugal": { "country": "Portugal", "city": "Lisboa" },
+      "inglaterra": { "country": "Inglaterra", "city": "Londres" },
+      "holanda": { "country": "Holanda", "city": "Amsterdã" }
+    }
+  },
   "pratico": {
     "fee": "Valor",
     "feeAnalysis": "Valor · análise",
     "feeCareerGuidance": "Valor · orientação profissional",
-    "feeToDiscuss": "A combinar na primeira conversa."
+    "feeToDiscuss": "A combinar antes da primeira sessão."
   },
   "primeiraConversa": {
     "skipToBilhete": "ir direto ao bilhete",

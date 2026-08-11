@@ -8,7 +8,7 @@ const LABELS = {
   fee: "Valor",
   feeAnalysis: "Valor · análise",
   feeCareerGuidance: "Valor · orientação profissional",
-  feeToDiscuss: "A combinar na primeira conversa.",
+  feeToDiscuss: "A combinar antes da primeira sessão.",
 } as TwinLabels;
 
 const BOTH_UNSET = CLINICA_DEFAULTS.fees;
@@ -34,7 +34,7 @@ describe("twinFeeRows", () => {
 
   it("says 'a combinar' once while both prices are unset, rather than twice", () => {
     expect(twinFeeRows(BOTH_UNSET, "both", LABELS)).toEqual([
-      { label: "Valor", value: "A combinar na primeira conversa." },
+      { label: "Valor", value: "A combinar antes da primeira sessão." },
     ]);
   });
 
@@ -50,10 +50,10 @@ describe("twinFeeRows", () => {
 
     expect(twinFeeRows(onlyAnalysis, "both", LABELS)).toEqual([
       { label: "Valor · análise", value: "R$ 250 por sessão" },
-      { label: "Valor · orientação profissional", value: "A combinar na primeira conversa." },
+      { label: "Valor · orientação profissional", value: "A combinar antes da primeira sessão." },
     ]);
     expect(twinFeeRows(onlyAnalysis, "careerGuidance", LABELS)).toEqual([
-      { label: "Valor", value: "A combinar na primeira conversa." },
+      { label: "Valor", value: "A combinar antes da primeira sessão." },
     ]);
   });
 });

@@ -216,7 +216,7 @@ export const ORIENTACAO_PROFISSIONAL_DEFAULTS: OrientacaoProfissional = {
     ],
     // The ask closes the practical band instead of holding a band of its own.
     comecar: {
-      body: "Se a pergunta da carreira é a sua, me escreva. Na primeira conversa eu explico o percurso com calma, e você decide depois.",
+      body: "Se a pergunta da carreira é a sua, me escreva. A primeira conversa é uma sessão cobrada, sem compromisso de continuar: nela eu explico o percurso com calma, e você decide depois.",
       linkLabel: "o que acontece na primeira conversa",
     },
   },

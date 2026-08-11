@@ -43,21 +43,30 @@ const EVERY_PAGE = [pt.chrome.whoLine, pt.chrome.colophon.binding];
 /** CONCEPT §6's credential strip, on the three pages that render it. */
 const CREDENTIAL_STRIP = [CLINICA_DEFAULTS.credential, ...CLINICA_DEFAULTS.credentials];
 
-/** The abroad note `PraticoSection` prints under a BRL fee row. */
-const FEE_ROW = [CLINICA_DEFAULTS.fees.internationalNote];
+/** The two notes `PraticoSection` prints under a BRL fee row. */
+const FEE_ROW = [CLINICA_DEFAULTS.fees.note, CLINICA_DEFAULTS.fees.internationalNote];
+
+/** Her academic record, which /sobre owns and the home now renders too. */
+const FORMACAO = SOBRE_DEFAULTS.formacao.items;
 
 type PageComposition = {
   own: unknown;
   /** Renders `Credencial`, and so the CONCEPT §6 strip. */
   credentialStrip?: true;
-  /** Quotes BRL fees, and so prints the abroad note. */
+  /** Quotes BRL fees, and so prints the two notes. */
   feeRow?: true;
   /** Prints her positioning sentence as body copy (the hero). */
   positioning?: true;
+  /**
+   * Renders `FormacaoList` from /sobre's own field. /sobre counts it through
+   * `own`; the home has to be told, or the budget would miss the "Psicologia
+   * Clínica Junguiana" row a visitor reads there.
+   */
+  formacao?: true;
 };
 
 const PAGES: Record<string, PageComposition> = {
-  "/": { own: INICIO_DEFAULTS, credentialStrip: true, positioning: true },
+  "/": { own: INICIO_DEFAULTS, credentialStrip: true, positioning: true, formacao: true },
   "/analise": { own: ANALISE_DEFAULTS, feeRow: true },
   "/orientacao-profissional": { own: ORIENTACAO_PROFISSIONAL_DEFAULTS, feeRow: true },
   "/sobre": { own: SOBRE_DEFAULTS, credentialStrip: true },
@@ -115,6 +124,7 @@ function textOf(page: string): string {
     ...(composition.credentialStrip ? CREDENTIAL_STRIP : []),
     ...(composition.feeRow ? FEE_ROW : []),
     ...(composition.positioning ? [CLINICA_DEFAULTS.positioning] : []),
+    ...(composition.formacao ? FORMACAO : []),
   ]
     .flatMap(stringsIn)
     .join("\n");

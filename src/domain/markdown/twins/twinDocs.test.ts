@@ -48,7 +48,16 @@ const LABELS: TwinLabels = {
   fee: "Valor",
   feeAnalysis: "Valor · análise",
   feeCareerGuidance: "Valor · orientação profissional",
-  feeToDiscuss: "A combinar na primeira conversa.",
+  feeToDiscuss: "A combinar antes da primeira sessão.",
+  // The `horas.places.*` names, as `twinMarkdown` resolves them.
+  reach: {
+    eua: { label: "Estados Unidos", value: "Nova York" },
+    canada: { label: "Canadá", value: "Toronto" },
+    brasil: { label: "Brasil", value: "Brasília" },
+    portugal: { label: "Portugal", value: "Lisboa" },
+    inglaterra: { label: "Inglaterra", value: "Londres" },
+    holanda: { label: "Holanda", value: "Amsterdã" },
+  },
 };
 
 const AVAILABILITY = "Com horários disponíveis.";
@@ -76,7 +85,7 @@ function docFor(key: PageKey, locale: Locale, testimonials: Testimonial[] = []):
 
   switch (key) {
     case "inicio":
-      return inicioDoc(INICIO_DEFAULTS, testimonials, ctx);
+      return inicioDoc(INICIO_DEFAULTS, testimonials, SOBRE_DEFAULTS.formacao.items, ctx);
     case "analise":
       return analiseDoc(ANALISE_DEFAULTS, ctx);
     case "orientacaoProfissional":
@@ -169,9 +178,53 @@ describe("the fee", () => {
     expect(text).toContain("**Valores** — Para quem mora fora do Brasil");
   });
 
-  it("carries the international note wherever a BRL price appears", () => {
+  it("carries both notes wherever a BRL price appears", () => {
     for (const key of ["analise", "orientacaoProfissional", "primeiraConversa"] as const) {
+      expect(textOf(key, "pt")).toContain(CLINICA_DEFAULTS.fees.note as string);
       expect(textOf(key, "pt")).toContain(CLINICA_DEFAULTS.fees.internationalNote as string);
+    }
+  });
+
+  // The row alone says only "a combinar"; her note is what turns that into an
+  // instruction. A twin that quoted the row without the note would be back to the
+  // circular version the pages just left behind.
+  it("never quotes the price without saying where it gets agreed", () => {
+    for (const key of ["analise", "orientacaoProfissional", "primeiraConversa"] as const) {
+      expect(textOf(key, "pt")).toMatch(/WhatsApp/);
+      expect(textOf(key, "pt")).not.toContain("A combinar na primeira conversa");
+    }
+  });
+});
+
+describe("the reach", () => {
+  // The site's countries used to live inside four prose sentences, which is why
+  // adding two meant rewriting all four. They are one list now, and these are the
+  // two documents that state it.
+  it("lists every country on the two pages that carry the strip", () => {
+    for (const key of ["inicio", "internacional"] as const) {
+      const text = textOf(key, "pt");
+
+      for (const place of Object.values(LABELS.reach)) {
+        expect(text).toContain(`**${place.label}** — ${place.value}`);
+      }
+    }
+  });
+
+  it("states no hour and no offset, because a twin is cached and they are not", () => {
+    for (const key of ["inicio", "internacional"] as const) {
+      const text = textOf(key, "pt");
+
+      expect(text).not.toMatch(/\d{1,2}h\d{2}/);
+      expect(text).not.toMatch(/horas? (à frente|atrás) de Bras[íi]lia/i);
+    }
+  });
+
+  // The one enumeration left in prose: a direct question, answered directly.
+  it("keeps /primeira-conversa's own answer naming all five countries", () => {
+    const text = textOf("primeiraConversa", "pt");
+
+    for (const country of ["Portugal", "Inglaterra", "Holanda", "Estados Unidos", "Canadá"]) {
+      expect(text).toContain(country);
     }
   });
 });
@@ -297,6 +350,19 @@ describe("/ (Início)'s twin", () => {
     expect(text).toContain("— M., orientação de carreira");
   });
 
+  // She asked for the record to stand on the first page rather than behind a
+  // link; the twin follows the page, and it is rendered from /sobre's own field
+  // rather than from a second copy.
+  it("states the whole academic record, as /sobre's twin does", () => {
+    const home = textOf("inicio", "pt");
+
+    for (const item of SOBRE_DEFAULTS.formacao.items) {
+      expect(home).toContain(`- ${item.title} — ${item.institution}`);
+    }
+    // Her one editorial line about the record stays on /sobre alone.
+    expect(home).not.toContain(SOBRE_DEFAULTS.formacao.intro as string);
+  });
+
   it("describes neither the cosmic overture nor the Instagram squares", () => {
     const text = textOf("inicio", "pt");
 
@@ -325,8 +391,7 @@ describe("/sobre's twin", () => {
   it("states the academic record at the precision she has confirmed, with no invented year", () => {
     const text = textOf("sobre", "pt");
 
-    expect(text).toContain("- Graduação em Psicologia — PUC-SP");
-    // Her own course names, from her 2026-08-07 text. This row and the Instituto
+    expect(text).toContain("- Graduação em Psicologia — PUC-SP"); // Her own course names, from her 2026-08-07 text. This row and the Instituto
     // Numen one used to be truncated because no source document named them.
     expect(text).toContain("- Pós-graduação em Psicologia Clínica — Instituto Numen");
     expect(text).toContain("- Extensão em Psicologia, Religião e Fenômenos Anômalos — USP");

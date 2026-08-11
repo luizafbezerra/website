@@ -39,6 +39,16 @@ export type TwinLabels = {
   feeAnalysis: string;
   feeCareerGuidance: string;
   feeToDiscuss: string;
+  /**
+   * The `horas.places.*` names, keyed by `REACH` key: `{ label: country, value:
+   * city }`. The order lives in `REACH`, not here — a record cannot carry one —
+   * so `twinReachRows` walks the constant and looks each place up.
+   *
+   * These are place names rather than scaffolding, and they are still chrome:
+   * "Nova York" and "New York" are the same fact spelled twice, which is what
+   * `messages` is for. Nothing here is hers to write.
+   */
+  reach: Record<string, { label: string; value: string }>;
 };
 
 export type TwinContext = {

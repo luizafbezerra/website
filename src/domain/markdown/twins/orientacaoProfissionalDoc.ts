@@ -71,6 +71,7 @@ export function orientacaoProfissionalDoc(
           ...twinFeeRows(ctx.clinica.fees, "careerGuidance", ctx.labels),
           ...page.pratico.items,
         ]),
+        paragraph(ctx.clinica.fees.note),
         paragraph(ctx.clinica.fees.internationalNote),
         // The ask, folded into the band exactly as the page folds it.
         paragraph(page.pratico.comecar.body),

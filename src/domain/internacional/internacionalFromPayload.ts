@@ -2,7 +2,7 @@ import { pagePlateFrom } from "@/domain/media/pagePlateFrom";
 import type { FactRow } from "@/domain/pages/FactRow";
 import type { RichTextContent } from "@/domain/richText/RichTextContent";
 import type { PayloadPageInternacional } from "@/infrastructure/payload/getPageInternacionalGlobal";
-import { type CityNote, INTERNACIONAL_DEFAULTS, type Internacional } from "./Internacional";
+import { INTERNACIONAL_DEFAULTS, type Internacional } from "./Internacional";
 
 /** Blank strings are absences, not values — a cleared field must fall back. */
 function filled(value: string | null | undefined): string | null {
@@ -21,36 +21,22 @@ function filledRichText(value: RichTextContent | null | undefined): RichTextCont
 }
 
 // ---------------------------------------------------------------------------
-// Both arrays on this page fall back to the defaults when they arrive empty.
+// The one array on this page falls back to the defaults when it arrives empty.
 //
 // Payload materializes an untouched array field as `[]` rather than as absent, so
 // "she cleared this" and "she never opened this tab" are the same value (the
-// finding recorded in TASK-035's notes). Neither array here has a designed empty
-// state and both belong to sections CONCEPT §6 requires — the city examples are
-// named in the map itself ("with city examples (Lisboa, Londres, Nova York)"), and
-// the prático rows are the page's whole answer about fuso, payment and language —
-// so of the two readings only one is safe: an empty array is treated as un-edited.
-//
-// The cost is that emptying the cities in the admin restores them, which is the
-// lesser failure: a fresh database or a failed seed would otherwise leave the
-// page's craft moment silently absent, and CONCEPT does not offer this page a
-// version without city examples.
+// finding recorded in TASK-035's notes). The prático rows have no designed empty
+// state — they are the page's whole answer about fuso, payment and language — so
+// of the two readings only one is safe: an empty array is treated as un-edited.
 //
 // Within a populated array, a row with no readable text is still dropped: a
 // half-typed row has nothing a visitor could read.
+//
+// The `cities` array that used to sit beside this one is gone (2026-08-10): the
+// time difference is computed live by `HorasDaClinica` from `domain/clinica/reach`
+// rather than written down, which is how the list grew from three countries to
+// five without growing a paragraph.
 // ---------------------------------------------------------------------------
-
-function citiesFrom(
-  raw: NonNullable<PayloadPageInternacional["brasileirosFora"]>["cities"],
-): CityNote[] {
-  if (!Array.isArray(raw)) return INTERNACIONAL_DEFAULTS.brasileirosFora.cities;
-
-  const cities = raw
-    .map((row) => ({ city: filled(row?.city), note: filled(row?.note) }))
-    .filter((row): row is CityNote => row.city !== null && row.note !== null);
-
-  return cities.length > 0 ? cities : INTERNACIONAL_DEFAULTS.brasileirosFora.cities;
-}
 
 function praticoFrom(raw: NonNullable<PayloadPageInternacional["pratico"]>["items"]): FactRow[] {
   if (!Array.isArray(raw)) return INTERNACIONAL_DEFAULTS.pratico.items;
@@ -75,7 +61,6 @@ export function internacionalFromPayload(doc: PayloadPageInternacional): Interna
     brasileirosFora: {
       heading: filled(doc.brasileirosFora?.heading) ?? defaults.brasileirosFora.heading,
       body: filledRichText(doc.brasileirosFora?.body) ?? defaults.brasileirosFora.body,
-      cities: citiesFrom(doc.brasileirosFora?.cities),
       plate: pagePlateFrom(doc.brasileirosFora?.plate),
     },
     // Not localized in the CMS, so the same English prose arrives in both locales;

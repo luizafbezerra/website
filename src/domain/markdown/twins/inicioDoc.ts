@@ -1,6 +1,9 @@
 import type { Inicio } from "@/domain/inicio/Inicio";
+import { formacaoLine } from "@/domain/markdown/formacaoLine";
 import {
   blocks,
+  bullets,
+  factBullets,
   link,
   type MarkdownBlock,
   numbered,
@@ -11,6 +14,8 @@ import {
 import { richTextToMarkdown } from "@/domain/markdown/richTextToMarkdown";
 import type { TwinContext } from "@/domain/markdown/TwinContext";
 import { twinDocument } from "@/domain/markdown/twinDocument";
+import { twinReachRows } from "@/domain/markdown/twinReachRows";
+import type { FormacaoItem } from "@/domain/sobre/Sobre";
 import type { Testimonial } from "@/domain/testimonials/Testimonial";
 
 /**
@@ -34,6 +39,7 @@ import type { Testimonial } from "@/domain/testimonials/Testimonial";
 export function inicioDoc(
   page: Inicio,
   testimonials: readonly Testimonial[],
+  formacao: readonly FormacaoItem[],
   ctx: TwinContext,
 ): MarkdownBlock[] {
   const { pageUrls } = ctx;
@@ -82,12 +88,21 @@ export function inicioDoc(
         2,
         page.sobreDigest.heading,
         richTextToMarkdown(page.sobreDigest.body),
+        // The academic record, in full, exactly as /sobre's twin renders it —
+        // she asked for it to stand on the first page rather than behind a link,
+        // and an assistant answering "what are her qualifications" should find it
+        // in the document it was pointed at.
+        bullets(formacao.map(formacaoLine)),
         paragraph(link(page.sobreDigest.linkLabel, pageUrls.sobre)),
       ),
       section(
         2,
         page.brasilExterior.heading,
         paragraph(page.brasilExterior.body),
+        // The countries the rendered strip names. The prose above used to carry
+        // three of them; the list carries all of them, and it is the one thing a
+        // reader abroad is scanning this section for.
+        factBullets(twinReachRows(ctx.labels)),
         paragraph(link(page.brasilExterior.linkLabel, pageUrls.internacional)),
       ),
       section(

@@ -11,7 +11,7 @@ import { PraticoSection } from "@/view/general/PraticoSection";
  * Portuguese pages; printing it here would ask a reader who pays in euros to do
  * the conversion the site is forbidden from doing for them. So this page frames
  * money on its own terms instead, in its own "Valores" row: dollars or euros, with
- * the value and the arrangement settled in the first conversation.
+ * the value and the arrangement settled on WhatsApp before the first session.
  *
  * That row is a page field rather than A Clínica's `internationalNote` on purpose.
  * On the pages that quote reais the note is a *carve-out* beside a price — "for

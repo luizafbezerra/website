@@ -49,8 +49,8 @@ Ranked by warmth × volume:
 2. **The cold pt-BR searcher in distress** — anxious, on a phone, often at night, comparing
    therapists. Needs: does she work with what I have, is she qualified, what happens if I
    write, what does it cost.
-3. **Brazilians abroad** — Portugal, UK, USA (her three real client countries; ~5M Brazilians
-   live abroad, concentrated exactly there). Search in Portuguese; pay in strong currencies.
+3. **Brazilians abroad** — Portugal, UK, Netherlands, USA, Canada (her five real client
+   countries; ~5M Brazilians live abroad, concentrated exactly there). Search in Portuguese; pay in strong currencies.
    Need: _permission and logistics_ — "sim, atendo quem mora fora", time zones, how to pay
    from abroad. Served by the pt-BR site itself.
 4. **Portuguese natives** — reached by the same pt-BR funnel; need only explicit mention that
@@ -124,8 +124,8 @@ list so they can never disagree.
 ├── 5  O sintoma        approach digest: the symptom as a call + rotating Jung
 │      como chamado     passage → /analise
 ├── 6  Sobre digest     4 lines + the origin-story hook → /sobre
-├── 7  Brasil e         short band: Portugal · Inglaterra · EUA · pt/en
-│      exterior         → /internacional
+├── 7  Brasil e         short band: the five countries + Brasília, each with its
+│      exterior         local time now · pt/en → /internacional
 ├── 8  Como é começar   3 beats, ~80 words → /primeira-conversa
 ├── 9  Vozes            testimonials — mix curated across both services + at least
 │                       one voice from abroad (all consent-gated; hides at zero)
@@ -222,11 +222,13 @@ list so they can never disagree.
 /internacional          BRASIL E EXTERIOR
 │  job: confirm she attends from where I live — fuso, payment, language — and how
 ├── 1  Abertura         brasileiros no exterior e estrangeiros ao redor do mundo;
-│                       real history: Portugal · Inglaterra · EUA; "o atendimento
+│                       real reach: Portugal · Inglaterra · Holanda · EUA ·
+│                       Canadá, carried by the live time-difference list; "o atendimento
 │                       segue a regulamentação brasileira de telepsicologia" (a
 │                       trust signal, not a disclaimer)
-├── 2  Para brasileiros terapia em português, no seu fuso — with city examples
-│      fora do Brasil   (Lisboa, Londres, Nova York)
+├── 2  Para brasileiros terapia em português, no seu fuso — with the live
+│      fora do Brasil   time-difference list (one row per country, its city, its
+│                       local hour now, and how far it sits from Brasília)
 ├── 3  In English       one short English section: analytically-oriented psychotherapy
 │                       and career guidance, online, in English (links to /en)
 ├── 4  Prático          time zones · international payment · video platform
@@ -346,9 +348,11 @@ Ordered by conversion impact:
    same A Clínica facts, so the pages that speak in first person name who is speaking
    without repeating the strip's facts their own prose already states.
 9. **Currency & time-zone policy** — pt-BR pages quote BRL (or "a combinar"); the
-   international page and /en quote USD/EUR on their own terms ("valores em dólar/euro —
-   combinamos na primeira conversa"), never automatic side-by-side conversion. All times
-   anchored to horário de Brasília with city examples abroad.
+   international page and /en quote USD/EUR on their own terms ("valores em dólar/euro"),
+   never automatic side-by-side conversion. **Values are agreed before the first session,
+   over WhatsApp** — never "na primeira conversa", which priced a session inside itself —
+   and the first conversation is a charged session with no obligation to continue. All times
+   anchored to horário de Brasília, with the difference computed live rather than written.
 10. **Micro-motion with restraint** — nudge, fade, color; wonder concentrated in exactly one
     set-piece per page; every animation has a reduced-motion alternative.
 

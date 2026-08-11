@@ -2,9 +2,7 @@ import { inEnglishSectionFor } from "@/domain/internacional/inEnglishSectionFor"
 import type { Internacional } from "@/domain/internacional/Internacional";
 import {
   blocks,
-  bullets,
   factBullets,
-  labelled,
   link,
   type MarkdownBlock,
   paragraph,
@@ -14,6 +12,7 @@ import { richTextToMarkdown } from "@/domain/markdown/richTextToMarkdown";
 import type { TwinContext } from "@/domain/markdown/TwinContext";
 import { twinDocument } from "@/domain/markdown/twinDocument";
 import { twinFeeRows } from "@/domain/markdown/twinFeeRows";
+import { twinReachRows } from "@/domain/markdown/twinReachRows";
 
 /**
  * Brasil e exterior's twin — the five sections of CONCEPT §6, in the page's own
@@ -47,7 +46,10 @@ export function internacionalDoc(page: Internacional, ctx: TwinContext): Markdow
         2,
         page.brasileirosFora.heading,
         richTextToMarkdown(page.brasileirosFora.body),
-        bullets(page.brasileirosFora.cities.map((city) => labelled(city.city, city.note))),
+        // Country and city, with no clock: the page computes the difference from
+        // Brasília at the instant a reader looks, and this document is cached (see
+        // `twinReachRows`).
+        factBullets(twinReachRows(ctx.labels)),
       ),
       inEnglish &&
         section(

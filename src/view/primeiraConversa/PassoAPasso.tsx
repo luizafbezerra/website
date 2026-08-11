@@ -1,5 +1,7 @@
 import { useTranslations } from "next-intl";
+import type { CSSProperties } from "react";
 import type { PrimeiraConversa } from "@/domain/primeiraConversa/PrimeiraConversa";
+import { CascadeReveal } from "@/view/general/CascadeReveal";
 import { PageSection } from "@/view/general/PageSection";
 import { Plate } from "@/view/general/Plate";
 import { SectionHeading } from "@/view/general/SectionHeading";
@@ -43,11 +45,12 @@ export function PassoAPasso({ content }: { content: PrimeiraConversa["passoAPass
     <PageSection labelledBy="passo-a-passo-heading">
       <SectionHeading id="passo-a-passo-heading">{content.heading}</SectionHeading>
 
-      <ol className="mt-14 space-y-12">
-        {content.steps.map((step) => (
+      <CascadeReveal as="ol" className="mt-14 space-y-12">
+        {content.steps.map((step, index) => (
           <li
             key={step.numeral}
             className="grid grid-cols-[2.5rem_1fr] items-baseline gap-x-4 sm:grid-cols-[3.5rem_1fr] sm:gap-x-6"
+            style={{ "--list-i": index } as CSSProperties}
           >
             <span aria-hidden="true" className="roman-numeral">
               {step.numeral}
@@ -60,7 +63,7 @@ export function PassoAPasso({ content }: { content: PrimeiraConversa["passoAPass
             </div>
           </li>
         ))}
-      </ol>
+      </CascadeReveal>
 
       {content.permissoes.items.length > 0 && (
         <ul className="border-rule-soft mt-16 space-y-8 border-t pt-12">

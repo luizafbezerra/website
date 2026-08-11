@@ -1,4 +1,6 @@
+import type { CSSProperties } from "react";
 import type { FormacaoItem } from "@/domain/sobre/Sobre";
+import { CascadeReveal } from "@/view/general/CascadeReveal";
 
 /**
  * Her academic record, one row per line — the rows themselves, with no heading
@@ -23,16 +25,21 @@ import type { FormacaoItem } from "@/domain/sobre/Sobre";
  * for any of these, and a guessed year on a record whose job is verification is
  * the one mistake it cannot afford (CONCEPT §11: provenance is never invented —
  * the rule that governs a plate's year governs hers).
+ *
+ * The records are written in from the margin, one after the other, the first
+ * time the list comes into view (`CascadeReveal`). Each row carries its own
+ * `--list-i`, which is the only thing that decides its place in the cascade.
  */
 export function FormacaoList({ items, className }: { items: FormacaoItem[]; className?: string }) {
   if (items.length === 0) return null;
 
   return (
-    <ul className={className}>
-      {items.map((item) => (
+    <CascadeReveal as="ul" className={className}>
+      {items.map((item, index) => (
         <li
           key={`${item.title}·${item.institution ?? ""}`}
           className="border-rule-soft border-b py-5"
+          style={{ "--list-i": index } as CSSProperties}
         >
           <p className="text-ink max-w-[54ch]">{item.title}</p>
 
@@ -45,6 +52,6 @@ export function FormacaoList({ items, className }: { items: FormacaoItem[]; clas
           )}
         </li>
       ))}
-    </ul>
+    </CascadeReveal>
   );
 }

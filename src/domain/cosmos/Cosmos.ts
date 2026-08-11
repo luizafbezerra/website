@@ -261,14 +261,20 @@ export namespace Cosmos {
   const DEG = Math.PI / 180;
   export const deg2rad = (d: number): number => d * DEG;
 
-  // Texture asset paths. v4 replaces the painted dome with a procedural
-  // universe (shader-based nebulae + procedural starfields), but keeps the
-  // dome.webp on disk for a future section. The brass photo is consumed as a
-  // roughness micro-variation map by `MeshStandardMaterial`, not as base color.
+  // Texture asset paths. v4 replaced the painted dome with a procedural universe
+  // (shader-based nebulae + procedural starfields). The plates that swap-over
+  // left behind are gone from disk now — dome.webp, ring-brass-v2.webp and
+  // sun-gilt-v2.webp, 631 KB between them, kept "for a future section" long
+  // enough to read as assets the scene uses. It does not: the rings take a
+  // matcap baked at mount and the sun a procedural glow sprite. Only the
+  // roughness micro-variation map below is still sampled, by that matcap bake.
+  //
+  // The comet and poster paths are different: those files never existed, and
+  // `CosmosComets` documents them as the seam for dropping painted sprites in
+  // over the procedural ones. They cost nothing — nothing requests them — so
+  // they stay as the extension point they describe.
   export const textures = {
-    ringBrass: "/art/cosmos/ring-brass-v2.webp",
     ringBrushedRoughness: "/art/cosmos/ring-brushed-roughness.webp",
-    sunGilt: "/art/cosmos/sun-gilt-v2.webp",
     cometHead: "/art/cosmos/comet-head.webp",
     cometTail: "/art/cosmos/comet-tail.webp",
     sigil: (id: SigilId): string => `/art/cosmos/sigils/${id}.webp`,

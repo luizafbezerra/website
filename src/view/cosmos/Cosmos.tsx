@@ -528,7 +528,10 @@ function PosterFallback() {
         src={Data.preludeCompositeMobile}
         alt=""
         fill
-        sizes="100vw"
+        // Not `100vw`, which asked the optimizer for w=3840 on a wide screen —
+        // an upscale of a 1024px source, for a plate the stylesheet then puts a
+        // 7px blur on. It is held for a beat behind the reveal, not read.
+        sizes="768px"
         className="h-full w-full object-cover object-[center_60%]"
       />
     </div>

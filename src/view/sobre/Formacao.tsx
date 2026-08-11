@@ -1,4 +1,5 @@
 import type { Sobre } from "@/domain/sobre/Sobre";
+import { FormacaoList } from "@/view/general/FormacaoList";
 import { PageSection } from "@/view/general/PageSection";
 import { SectionHeading } from "@/view/general/SectionHeading";
 
@@ -19,20 +20,10 @@ import { SectionHeading } from "@/view/general/SectionHeading";
  * drafted sentence may ever take its place, because the exception is granted to
  * her voice, not to the slot.
  *
- * Rows are a list, not a `<dl>`: an institution is not a term the course defines,
- * so a description list would be the wrong semantics for what is really one
- * record per line. Hairline rules do the structuring, as they do on every other
- * fact list in the system.
- *
- * Both lines are body type. DESIGN's Marginalia-Is-Voice rule binds hardest
- * here — a credential in decorative small caps is a credential somebody squints
- * at — so the institution takes the same treatment `CredentialLine` gives the
- * strip: body font, `ink-soft`, small but readable.
- *
- * `period` prints only when she has written it. No source document states a year
- * for any of these, and a guessed year on the page whose job is verification is
- * the one mistake this page cannot afford (CONCEPT §11: provenance is never
- * invented — the rule that governs a plate's year governs hers).
+ * The rows themselves are `FormacaoList`, shared with the home page since she
+ * asked for the record to stand there without a click. This file stays the
+ * *section*: the heading, her intro, and the interval around them — the part
+ * that belongs to /sobre and to nowhere else.
  *
  * A `beat`, for the same reason the section is cold: the restraint is the
  * argument, and a record given the monumental interval on both sides would be
@@ -46,24 +37,7 @@ export function Formacao({ content }: { content: Sobre["formacao"] }) {
 
       {content.intro && <p className="body-prose text-ink mt-8 max-w-[62ch]">{content.intro}</p>}
 
-      <ul className="border-rule-soft mt-12 border-t">
-        {content.items.map((item) => (
-          <li
-            key={`${item.title}·${item.institution ?? ""}`}
-            className="border-rule-soft border-b py-5"
-          >
-            <p className="text-ink max-w-[54ch]">{item.title}</p>
-
-            {(item.institution || item.period) && (
-              <p className="text-ink-soft mt-1 text-sm">
-                {item.institution}
-                {item.institution && item.period && <span aria-hidden="true"> · </span>}
-                {item.period}
-              </p>
-            )}
-          </li>
-        ))}
-      </ul>
+      <FormacaoList items={content.items} className="border-rule-soft mt-12 border-t" />
     </PageSection>
   );
 }

@@ -32,7 +32,6 @@ export type PayloadPageInternacional = {
   brasileirosFora?: {
     heading?: string | null;
     body?: RichTextContent | null;
-    cities?: PayloadArrayRow<{ city?: string | null; note?: string | null }>;
     plate?: {
       image?: PayloadMediaField;
       painter?: string | null;

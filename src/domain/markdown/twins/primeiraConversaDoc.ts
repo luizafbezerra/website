@@ -59,6 +59,9 @@ export function primeiraConversaDoc(page: PrimeiraConversa, ctx: TwinContext): M
           ...twinFeeRows(ctx.clinica.fees, "both", ctx.labels),
           ...page.logistica.items,
         ]),
+        // The two notes the rendered price band prints under the row, in the same
+        // order: how a value is agreed, then how it is agreed from abroad.
+        paragraph(ctx.clinica.fees.note),
         paragraph(ctx.clinica.fees.internationalNote),
         // Discrete Q&A blocks (CONCEPT §10), like /perguntas — the question as its
         // own heading, so a retrieval step can return one answer.

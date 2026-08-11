@@ -54,39 +54,17 @@ export const PageInternacional: GlobalConfig = {
           name: "brasileirosFora",
           label: "2 · Para brasileiros fora do Brasil",
           description:
-            "Terapia em português, no fuso de quem lê. Cite cidades reais — Lisboa, Londres, Nova York.",
+            "Terapia em português, no fuso de quem lê. A lista de países e a diferença de horário aparecem sozinhas abaixo do texto: o site calcula a hora de cada lugar na hora em que a pessoa está lendo, então não há nada aqui para manter atualizado.",
           fields: [
             localizedText({ name: "heading", label: "Título" }),
             localizedRichText({ name: "body", label: "Texto" }),
-            {
-              name: "cities",
-              type: "array",
-              label: "Exemplos de cidade",
-              labels: { singular: "Cidade", plural: "Cidades" },
-              admin: {
-                description:
-                  "Cuidado com precisão falsa: o Brasil não tem mais horário de verão, mas a Europa e os Estados Unidos têm, então a diferença muda algumas vezes por ano. Escreva notas que continuem verdadeiras nos dois casos.",
-              },
-              fields: [
-                // Localized because the name of a city is different in each
-                // language ("Nova York" / "New York"), and the English mirror
-                // must not print the Portuguese one inside an English sentence.
-                localizedText({ name: "city", label: "Cidade", required: true }),
-                localizedTextarea({
-                  name: "note",
-                  label: "Nota de horário",
-                  description:
-                    "Ex.: três ou quatro horas à frente de Brasília, conforme o horário de verão europeu — o fim da tarde aí é o meio da tarde aqui.",
-                }),
-              ],
-            },
             {
               name: "plate",
               type: "group",
               label: "A pintura desta página",
               admin: {
                 description:
-                  "Uma pintura depois dos exemplos de cidade — mar, viagem, porto: a distância como paisagem. Domínio público, com proveniência verificada.",
+                  "Uma pintura depois da lista de horários — mar, viagem, porto: a distância como paisagem. Domínio público, com proveniência verificada.",
               },
               fields: [
                 mediaSlot({

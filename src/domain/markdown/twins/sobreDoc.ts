@@ -6,10 +6,11 @@ import {
   paragraph,
   section,
 } from "@/domain/markdown/MarkdownBlock";
+import { formacaoLine } from "@/domain/markdown/formacaoLine";
 import { richTextToMarkdown } from "@/domain/markdown/richTextToMarkdown";
 import type { TwinContext } from "@/domain/markdown/TwinContext";
 import { twinDocument } from "@/domain/markdown/twinDocument";
-import type { FormacaoItem, Sobre } from "@/domain/sobre/Sobre";
+import type { Sobre } from "@/domain/sobre/Sobre";
 
 /**
  * Sobre's twin — the four sections of CONCEPT §6 after the page's opening.
@@ -48,17 +49,4 @@ export function sobreDoc(page: Sobre, ctx: TwinContext): MarkdownBlock[] {
       ),
     ),
   });
-}
-
-/** `Graduação em Psicologia — PUC-SP (2003)`, at whatever precision she has confirmed. */
-function formacaoLine(item: FormacaoItem): string | null {
-  const title = item.title?.trim();
-  if (!title) return null;
-
-  const institution = item.institution?.trim();
-  const period = item.period?.trim();
-
-  return [title, institution && `— ${institution}`, period && `(${period})`]
-    .filter(Boolean)
-    .join(" ");
 }

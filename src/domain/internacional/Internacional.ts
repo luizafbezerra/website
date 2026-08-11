@@ -19,32 +19,25 @@ import { richText } from "@/domain/richText/richText";
 //
 // Everything else is a *draft*. This page did not exist before CONCEPT v3, so
 // every other string here states only facts CONCEPT and PRODUCT already fix: the
-// three real client countries (§3, §6), Brazilian telepsychology regulation as a
+// five real client countries (§3, §6), Brazilian telepsychology regulation as a
 // trust signal (§6), sessions in pt/en (§2), the horário de Brasília anchor and
-// the USD/EUR framing with no automatic conversion (§8.9), and "combinamos na
-// primeira conversa" as the mechanism for anything undecided (§14.1). Nothing
-// drafted here is her voice until she says it is, every field is editable in the
-// admin, and TASK-052 of the master plan owns the review.
+// the USD/EUR framing with no automatic conversion (§8.9), and WhatsApp before
+// the first session as the mechanism for anything undecided (§14.1, corrected on
+// 2026-08-10: it used to read "combinamos na primeira conversa", which put the
+// price inside the session it was pricing). Nothing drafted here is her voice
+// until she says it is, every field is editable in the admin, and TASK-052 of the
+// master plan owns the review.
 //
 // Two things are deliberately *not* claimed anywhere in this file: any licence,
 // registration or right to practise in another country (she is a Brazilian
 // psychologist working online under Brazilian regulation — that is exactly what
 // the trust line says), and any named payment provider or banking mechanism (no
-// source document states one, so the page says the arrangement is made in the
-// first conversation and stops there).
+// source document states one, so the page says the arrangement is made on
+// WhatsApp before the first session and stops there).
 //
 // The international bilhete opener is NOT here: it is a cross-page fact and lives
 // in A Clínica (`clinica.notes.international`), which is what `Comecar` reads.
 // ---------------------------------------------------------------------------
-
-/**
- * One city abroad and what its clock does relative to Brasília.
- *
- * Kept as its own type rather than reused as a `FactRow` because the CMS field
- * names are `city` and `note`, and the domain mirrors the admin path. The view
- * adapts it to the shared fact list.
- */
-export type CityNote = { city: string; note: string };
 
 /**
  * CONCEPT §6's third section: English prose *inside* the Portuguese page, with a
@@ -63,7 +56,6 @@ export type Internacional = {
   brasileirosFora: {
     heading: string;
     body: RichTextContent;
-    cities: CityNote[];
     plate: PagePlate;
   };
   inEnglish: InEnglishSection;
@@ -94,8 +86,8 @@ export const INTERNACIONAL_DEFAULTS: Internacional = {
     // is about distance not being an obstacle, and she says so first.
     body: richText([
       "Para garantir que a distância não seja um obstáculo para o seu processo de autoconhecimento, os meus atendimentos acontecem no formato on-line.",
-      "Atendo pessoas que moram fora do Brasil e pessoas de outros países, em português ou em inglês, por chamada de vídeo. Já acompanhei brasileiros em Portugal, na Inglaterra e nos Estados Unidos.",
-      "Análise e orientação profissional e de carreira, em encontros semanais. Na primeira conversa acertamos o fuso, o idioma e o pagamento.",
+      "Atendo pessoas que moram fora do Brasil e pessoas de outros países, em português ou em inglês, por chamada de vídeo.",
+      "Análise e orientação profissional e de carreira, em encontros semanais. O fuso, o idioma e o pagamento a gente acerta antes, pelo WhatsApp.",
     ]),
     // The appositive ", on-line," is gone: the h1, her opening sentence and the
     // credential strip all say it above this line (GUD-001).
@@ -104,34 +96,15 @@ export const INTERNACIONAL_DEFAULTS: Internacional = {
   },
   brasileirosFora: {
     heading: "Para brasileiros fora do Brasil",
+    // The measure of the difference is no longer written here: `HorasDaClinica`
+    // computes it live, one row per country, so the section says what the work is
+    // and the list says how far away it is. The three hand-written notes it
+    // replaced had to hedge into ranges ("três ou quatro horas à frente, conforme
+    // o horário de verão europeu"), because Brazil stopped observing daylight
+    // saving time in 2019 and Europe and North America did not.
     body: richText([
       "Você não precisa estar no Brasil para começar, nem interromper o que já começou porque se mudou. O trabalho acontece em português, por chamada de vídeo, de onde você mora.",
-      "Três exemplos, para dar a medida da diferença:",
     ]),
-    // Her three real client countries (CONCEPT §6), one city each.
-    //
-    // The notes name a *range* rather than a fixed hour on purpose. Brazil no
-    // longer observes daylight saving time, but Europe and the United States do,
-    // so the difference moves by an hour several times a year — and the two
-    // changeovers do not even fall on the same dates. A note claiming "cinco
-    // horas à frente" would be wrong for part of every year, on the one page
-    // whose whole job is to be trusted about logistics. The described moments
-    // ("o fim da tarde aí é o meio da tarde aqui") were checked to hold at both
-    // ends of each range.
-    cities: [
-      {
-        city: "Lisboa",
-        note: "Três ou quatro horas à frente de Brasília, conforme o horário de verão europeu. O fim da tarde aí é o meio da tarde aqui.",
-      },
-      {
-        city: "Londres",
-        note: "O mesmo fuso de Lisboa: o começo da noite em Londres ainda é fim de tarde no Brasil.",
-      },
-      {
-        city: "Nova York",
-        note: "Uma ou duas horas atrás de Brasília, conforme o horário de verão americano. O fim da tarde em Nova York é o começo da noite aqui.",
-      },
-    ],
     plate: EMPTY_PAGE_PLATE,
   },
   // Written in English, not translated: this is the section an anglophone reads
@@ -140,7 +113,7 @@ export const INTERNACIONAL_DEFAULTS: Internacional = {
   // protected title.
   inEnglish: {
     heading: "In English",
-    body: "I am a Brazilian clinical psychologist working in the analytical-psychology tradition, entirely online. Analytically-oriented psychotherapy and career guidance are available in English, by video call, wherever you live. We settle the time zone in the first conversation. Sessions follow Brazilian telepsychology regulation.",
+    body: "I am a Brazilian clinical psychologist working in the analytical-psychology tradition, entirely online. Analytically-oriented psychotherapy and career guidance are available in English, by video call, wherever you live. We settle the time zone, the language and payment beforehand, over WhatsApp. Sessions follow Brazilian telepsychology regulation.",
     linkLabel: "the whole site in English",
   },
   pratico: {
@@ -161,7 +134,7 @@ export const INTERNACIONAL_DEFAULTS: Internacional = {
       {
         label: "Valores",
         value:
-          "Para quem mora fora do Brasil, os valores são em dólar ou em euro. Combinamos o valor e a forma de pagamento na primeira conversa.",
+          "Para quem mora fora do Brasil, os valores são em dólar ou em euro. Combinamos o valor e a forma de pagamento antes da primeira sessão, pelo WhatsApp.",
       },
       {
         label: "Como acontece",
@@ -177,7 +150,7 @@ export const INTERNACIONAL_DEFAULTS: Internacional = {
   },
   comecar: {
     heading: "Começar de onde você está",
-    body: "Me escreva contando de onde você fala. Isso já resolve metade do que a gente precisa combinar. O resto acertamos na conversa.",
+    body: "Me escreva contando de onde você fala. Isso já resolve metade do que a gente precisa combinar; o resto — valor, horário, idioma — acertamos por lá, antes da primeira conversa. Ela é uma sessão cobrada, sem compromisso de continuar.",
     linkLabel: "conhecer a primeira conversa",
   },
 };

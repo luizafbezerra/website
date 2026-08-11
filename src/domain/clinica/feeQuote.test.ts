@@ -5,6 +5,7 @@ import { feeQuoteFrom } from "./feeQuote";
 const fees = (analysis: string | null, careerGuidance: string | null) => ({
   analysis: feeFrom(analysis),
   careerGuidance: feeFrom(careerGuidance),
+  note: null,
   internationalNote: null,
 });
 

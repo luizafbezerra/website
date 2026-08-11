@@ -202,19 +202,29 @@ além disso.
 
 Classes: **1** concordância verbal/nominal · **2** ortografia (Acordo Ortográfico) · **3**
 espaçamento e hifenização em nome próprio · **4** preposição ou contração errada · **N** numeral
-grafado em prosa (GUD-002).
+grafado em prosa (GUD-002) ·
+**C** corte ou inserção de conteúdo pedido por ela (fora da licença CON-003 — cada linha destas
+precisa do aval dela, não só da veto).
 
-| #   | Bloco   | Antes                                    | Depois                                | Classe | Por quê                                                                                                               |
-| --- | ------- | ---------------------------------------- | ------------------------------------- | ------ | --------------------------------------------------------------------------------------------------------------------- |
-| 1   | SRC-D   | o conteúdo dos encontros **são ditados** | o conteúdo dos encontros **é ditado** | 1      | O sujeito é "o conteúdo", singular; "dos encontros" é adjunto.                                                        |
-| 2   | SRC-D   | “anti capitalista”                       | “anticapitalista”                     | 2      | Prefixo _anti-_ junta-se sem hífen antes de consoante.                                                                |
-| 3   | SRC-B   | PUC - SP                                 | PUC-SP                                | 3      | A sigla da universidade é hifenizada sem espaços.                                                                     |
-| 4   | SRC-E.3 | pós graduações                           | pós-graduações                        | 2      | Prefixo _pós-_ é sempre hifenizado.                                                                                   |
-| 5   | SRC-E.3 | **À** primeira vez **que** entrei        | **Na** primeira vez **em que** entrei | 4      | "À primeira vez" não introduz oração temporal; a locução pede _na … em que_.                                          |
-| 6   | SRC-B   | até **12** encontros semanais            | até **doze** encontros semanais       | N      | GUD-002: numeral em prosa por extenso; dígitos só no registro e em valores.                                           |
-| 7   | SRC-G.1 | no formato **online**                    | no formato **on-line**                | 2      | Grafia da casa em todo o site, e a que ela própria usa em SRC-A e SRC-B.                                              |
-| 8   | SRC-E.1 | já soma **22** anos                      | já soma **vinte e dois** anos         | N      | Mesma regra da linha 6. O ano "2014" permanece em dígitos: é data, não contagem.                                      |
-| 9   | SRC-G.2 | Sessões em **P**ortuguês e **I**nglês    | **p**ortuguês ou **i**nglês           | 2      | Nomes de idioma são minúsculos em português. Sem efeito prático: as linhas de `pratico` já traziam a forma minúscula. |
+| #   | Bloco      | Antes                                                                   | Depois                                                                                                                   | Classe | Por quê                                                                                                                                                                                                                                                             |
+| --- | ---------- | ----------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | SRC-D      | o conteúdo dos encontros **são ditados**                                | o conteúdo dos encontros **é ditado**                                                                                    | 1      | O sujeito é "o conteúdo", singular; "dos encontros" é adjunto.                                                                                                                                                                                                      |
+| 2   | SRC-D      | “anti capitalista”                                                      | “anticapitalista”                                                                                                        | 2      | Prefixo _anti-_ junta-se sem hífen antes de consoante.                                                                                                                                                                                                              |
+| 3   | SRC-B      | PUC - SP                                                                | PUC-SP                                                                                                                   | 3      | A sigla da universidade é hifenizada sem espaços.                                                                                                                                                                                                                   |
+| 4   | SRC-E.3    | pós graduações                                                          | pós-graduações                                                                                                           | 2      | Prefixo _pós-_ é sempre hifenizado.                                                                                                                                                                                                                                 |
+| 5   | SRC-E.3    | **À** primeira vez **que** entrei                                       | **Na** primeira vez **em que** entrei                                                                                    | 4      | "À primeira vez" não introduz oração temporal; a locução pede _na … em que_.                                                                                                                                                                                        |
+| 6   | SRC-B      | até **12** encontros semanais                                           | até **doze** encontros semanais                                                                                          | N      | GUD-002: numeral em prosa por extenso; dígitos só no registro e em valores.                                                                                                                                                                                         |
+| 7   | SRC-G.1    | no formato **online**                                                   | no formato **on-line**                                                                                                   | 2      | Grafia da casa em todo o site, e a que ela própria usa em SRC-A e SRC-B.                                                                                                                                                                                            |
+| 8   | SRC-E.1    | já soma **22** anos                                                     | já soma **vinte e dois** anos                                                                                            | N      | Mesma regra da linha 6. O ano "2014" permanece em dígitos: é data, não contagem.                                                                                                                                                                                    |
+| 9   | SRC-G.2    | Sessões em **P**ortuguês e **I**nglês                                   | **p**ortuguês ou **i**nglês                                                                                              | 2      | Nomes de idioma são minúsculos em português. Sem efeito prático: as linhas de `pratico` já traziam a forma minúscula.                                                                                                                                               |
+| 10  | SRC-FAQ.1  | …é só me escrever no WhatsApp**; respondo em até um dia útil.**         | …é só me escrever no WhatsApp**.**                                                                                       | C      | Corte, não correção. A frase passou a imprimir-se em quatro páginas, e em duas delas a janela de resposta já está dita ao lado (`/primeira-conversa`, dúvida 2; a linha de agenda no rodapé de todas). A cláusula fica inteira em `/perguntas`, onde nada a repete. |
+| 11  | SRC-HOME.1 | …combinamos um horário para uma primeira conversa, **sem compromisso.** | …combinamos **o valor e** um horário para uma primeira conversa. **É uma sessão cobrada, sem compromisso de continuar.** | C      | Inserção pedida por ela em 10/08/2026: "explicar que é sem compromisso de continuar, ok, mas que a primeira sessão é cobrada". "Sem compromisso" sozinho lia-se como "de graça". As palavras dela ficam; o que se acrescenta é o fato que faltava.                  |
+
+**Linhas 10 e 11 são de outra natureza.** Não são correções gramaticais: são mudanças de
+conteúdo que ela pediu em 10/08/2026, registadas aqui porque tocam texto dela e a regra é a mesma —
+nenhuma palavra dela muda sem uma linha nesta tabela. A linha 10 corta uma cláusula dela; a linha 11
+acrescenta uma frase nossa dentro de um parágrafo dela. Ambas ficam pendentes do aval dela sobre a
+_redação_, não sobre o fato.
 
 **Linhas 8 e 9 vão além das sete previstas no plano.** Foram acrescentadas por consistência: a 8
 aplica a mesma regra da 6 (e coincide com o que o rascunho já publicava, "há vinte e dois anos"), e
@@ -465,11 +475,57 @@ Fora do escopo desta execução. Os campos existem e ficam vazios até ela preen
 (DEP-005, CON-007):
 
 - **O CRP por escrito.** O valor gravado em produção é hoje "CRP 00/00000".
-- **O valor da sessão.** Imprime "a combinar" enquanto não houver decisão.
+- **O valor da sessão em número.** Continua a imprimir "a combinar" — e agora "a combinar antes
+  da primeira sessão", com a frase dela por baixo a dizer onde se combina. **A política está
+  fechada** (10/08/2026): não há valor publicado, combina-se pelo WhatsApp antes da primeira
+  sessão, conforme a modalidade e a frequência, e a primeira conversa é uma sessão cobrada. O que
+  falta é apenas o número, se algum dia ela quiser publicá-lo.
 - **O retrato.** `quemE.portrait` é `null`; a página não mostra moldura vazia.
-- **As respostas `[A DEFINIR]` do FAQ.** Deliberadamente inconfundíveis; só as respostas dela as
-  retiram (CON-008). Nenhuma pode ficar visível em produção.
+- **As respostas `[A DEFINIR]` do FAQ.** Restam três das quatro: a resposta dela sobre valores
+  voltou em 10/08/2026 e uma segunda, sobre a primeira conversa ser cobrada, entrou como rascunho
+  ao lado. Deliberadamente inconfundíveis; só as respostas dela as retiram (CON-008). Nenhuma pode
+  ficar visível em produção.
 - **As aberturas de WhatsApp na voz dela**, as leituras dos doze signos, o sonho ampliado e a
   passagem de Jung.
 - **A revisão do inglês.** As páginas `/en` são tradução nossa do português dela — uma perda real
   de registro, assumida e provisória (RISK-004, CONCEPT §13.9).
+
+---
+
+## Adendo — o retorno dela de 10 de agosto de 2026
+
+Ela leu o site no ar e mandou três notas. Duas tocam texto dela, e por isso entram aqui em vez de
+ficarem só no commit.
+
+> "Na parte do meu currículo, eu preferia que ficasse em evidência sem precisar clicar no link."
+>
+> "E na parte de de como funciona o primeiro atendimento, explicar que é sem compromisso de
+> continuar, ok, mas que a primeira sessão é cobrada, para me chamar no Whats pra combinar os
+> valores e tal!"
+>
+> "E nos países que atendo adicionar o Canadá e Holanda."
+
+**SRC-FAQ.1 — a resposta dela sobre valores.** Escrita por ela para o site antigo, exportada em
+`docs/content-export-2026-08.md`, apagada do FAQ em `1831029` e reposta agora:
+
+> Combinamos os valores antes da primeira sessão, conforme a modalidade e a frequência. Para saber
+> o valor atual, é só me escrever no WhatsApp; respondo em até um dia útil.
+
+Vai inteira para `/perguntas`. Vai sem a cláusula final para `clinica.fees.note`, que se imprime nas
+quatro páginas que citam um valor (linha 10 da tabela). É a única frase do site que diz **como** um
+valor se combina, e a sua ausência é o que deixava a linha de valor circular: "a combinar na
+primeira conversa", combinada dentro da conversa que a página estava a descrever.
+
+**SRC-HOME.1 — o parágrafo de contato da home.** É dela, do site pré-CONCEPT. A inserção pedida por
+ela está na linha 11 da tabela. As três outras frases que passaram a dizer que a primeira conversa é
+cobrada — a abertura de `/primeira-conversa`, o passo II das duas páginas, e a resposta nova do FAQ
+— são **nossas** e continuam a precisar do aval dela, como qualquer rascunho.
+
+**Os países.** Ela nomeou países, não cidades. O site precisa de uma cidade para pôr um relógio, e
+as escolhidas — Toronto para o Canadá, Amsterdã para a Holanda — são nossas, pelas maiores
+comunidades brasileiras de cada país. Se as pessoas que ela atende estiverem em Vancouver, a linha
+erra por três horas. _Precisa da confirmação dela._
+
+Registada também a escolha de tempo verbal: ela escreveu "os países que **atendo**", presente, e o
+site passou a dizer o mesmo. A forma anterior — "Já acompanhei pessoas em…" — era rascunho nosso, e
+não havia motivo para mantê-la quando ela própria nomeou o conjunto com outras palavras.

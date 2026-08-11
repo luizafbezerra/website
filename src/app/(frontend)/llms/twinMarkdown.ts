@@ -2,6 +2,7 @@ import { getTranslations } from "next-intl/server";
 import { getAnalise } from "@/domain/analise/getAnalise";
 import type { Clinica } from "@/domain/clinica/Clinica";
 import { getClinica } from "@/domain/clinica/getClinica";
+import { REACH } from "@/domain/clinica/reach";
 import { getFaq } from "@/domain/faq/getFaq";
 import { groupFaqByCategory } from "@/domain/faq/groupFaqByCategory";
 import { getInicio } from "@/domain/inicio/getInicio";
@@ -63,8 +64,14 @@ async function twinBlocks(
       // The home twin carries the voices for the same reason the page does — and
       // through the same action, whose mapper drops every record without recorded
       // consent (SEC-002).
-      const [page, testimonials] = await Promise.all([getInicio(locale), getTestimonials(locale)]);
-      return inicioDoc(page, testimonials, ctx);
+      const [page, testimonials, sobre] = await Promise.all([
+        getInicio(locale),
+        getTestimonials(locale),
+        // Only for the academic record, which now stands on the home page rather
+        // than behind its link — read from /sobre's own field, as the page does.
+        getSobre(locale),
+      ]);
+      return inicioDoc(page, testimonials, sobre.formacao.items, ctx);
     }
     case "analise":
       return analiseDoc(await getAnalise(locale), ctx);
@@ -86,11 +93,12 @@ async function twinBlocks(
 }
 
 async function twinContext(key: PageKey, locale: Locale, clinica: Clinica): Promise<TwinContext> {
-  const [twin, chrome, pratico, nav] = await Promise.all([
+  const [twin, chrome, pratico, nav, horas] = await Promise.all([
     getTranslations({ locale, namespace: "twin" }),
     getTranslations({ locale, namespace: "chrome" }),
     getTranslations({ locale, namespace: "pratico" }),
     getTranslations({ locale, namespace: "nav" }),
+    getTranslations({ locale, namespace: "horas" }),
   ]);
 
   const labels: TwinLabels = {
@@ -107,6 +115,14 @@ async function twinContext(key: PageKey, locale: Locale, clinica: Clinica): Prom
     feeAnalysis: pratico("feeAnalysis"),
     feeCareerGuidance: pratico("feeCareerGuidance"),
     feeToDiscuss: pratico("feeToDiscuss"),
+    // The same place names the rendered strip prints, so the twin's reach list
+    // and the page's cannot disagree about how a city is spelled in English.
+    reach: Object.fromEntries(
+      REACH.map((place) => [
+        place.key,
+        { label: horas(`places.${place.key}.country`), value: horas(`places.${place.key}.city`) },
+      ]),
+    ),
   };
 
   const { state, responseWindow } = clinica.availability;

@@ -32,7 +32,7 @@
     },
     "internacional": {
       "title": "Brazil and abroad",
-      "description": "A Brazilian clinical psychologist working in the analytical-psychology tradition, entirely online: analytically-oriented psychotherapy and career guidance in English or Portuguese, in your own time zone, wherever in the world you live. Fees in dollars or euros."
+      "description": "A Brazilian clinical psychologist working in the analytical-psychology tradition, entirely online: analytically-oriented psychotherapy and career guidance in English or Portuguese, in your own time zone, wherever in the world you live. I work with people in Portugal, England, the Netherlands, the United States and Canada; fees in dollars or euros."
     },
     "orientacaoProfissional": {
       "title": "Career guidance",
@@ -172,25 +172,35 @@
       "chartLabel": "Chart of the sky over São Paulo on {date}, showing the constellations above the horizon",
       "caption": "the sky over São Paulo · {date}"
     },
-    "brasilExterior": {
-      "horasAria": "Local times right now",
-      "cities": {
-        "brasilia": "Brasília",
-        "lisboa": "Lisbon",
-        "londres": "London",
-        "novaYork": "New York"
-      }
+    "sobreDigest": {
+      "formacaoLabel": "Training"
     },
     "contato": {
       "orByEmail": "or by email:",
       "faqLink": "questions people ask before writing"
     }
   },
+  "horas": {
+    "aria": "Local times right now",
+    "listAria": "The time difference between Brasília and the places I work with",
+    "stripLabel": "Where I work, and what time it is there now",
+    "here": "here",
+    "ahead": "{hours} h ahead",
+    "behind": "{hours} h behind",
+    "places": {
+      "eua": { "country": "United States", "city": "New York" },
+      "canada": { "country": "Canada", "city": "Toronto" },
+      "brasil": { "country": "Brazil", "city": "Brasília" },
+      "portugal": { "country": "Portugal", "city": "Lisbon" },
+      "inglaterra": { "country": "England", "city": "London" },
+      "holanda": { "country": "The Netherlands", "city": "Amsterdam" }
+    }
+  },
   "pratico": {
     "fee": "Fee",
     "feeAnalysis": "Fee · analysis",
     "feeCareerGuidance": "Fee · career guidance",
-    "feeToDiscuss": "Discussed in the first conversation."
+    "feeToDiscuss": "Agreed before the first session."
   },
   "primeiraConversa": {
     "skipToBilhete": "go straight to the note",

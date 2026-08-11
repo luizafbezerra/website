@@ -62,12 +62,22 @@ export function PraticoSection({
 
       <FactList rows={[...feeRows, ...rows]} className="mt-12" />
 
-      {/* Body scale, like the rows above it: how somebody in Lisbon pays is a
-          fact they act on, and DESIGN's Marginalia-Is-Voice rule keeps those out
-          of small type. It stays `ink-soft` because it is an aside to the price,
-          not a row of the list. */}
+      {/* Body scale, like the rows above them: how a value is arrived at and how
+          somebody in Lisbon pays are facts a reader acts on, and DESIGN's
+          Marginalia-Is-Voice rule keeps those out of small type. Both stay
+          `ink-soft` because they are asides to the price, not rows of the list.
+
+          Her own note first: while both prices are unset the row says only "a
+          combinar", and the sentence directly under it is what turns that into an
+          instruction — the value is agreed before the first session, on WhatsApp.
+          The abroad framing follows, because it qualifies the currency rather
+          than the arrangement. */}
+      {fees !== "none" && clinica.fees.note && (
+        <p className="text-ink-soft mt-6 max-w-[54ch]">{clinica.fees.note}</p>
+      )}
+
       {fees !== "none" && clinica.fees.internationalNote && (
-        <p className="text-ink-soft mt-6 max-w-[54ch]">{clinica.fees.internationalNote}</p>
+        <p className="text-ink-soft mt-4 max-w-[54ch]">{clinica.fees.internationalNote}</p>
       )}
 
       {children}

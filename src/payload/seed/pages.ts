@@ -510,6 +510,8 @@ export async function seedPages(payload: Payload): Promise<void> {
   // ── Brasil e exterior ─────────────────────────────────────────────────────
   // Seeded in pt and en (see the file comment). Both localized arrays need their
   // row ids on the English pass.
+  // Only the prático rows are a localized array now; the city notes are gone,
+  // replaced by the live time-difference list (`domain/clinica/reach`).
   const internacional = INTERNACIONAL_DEFAULTS;
   const internacionalPt = await payload.updateGlobal({
     ...shared,
@@ -523,7 +525,6 @@ export async function seedPages(payload: Payload): Promise<void> {
       brasileirosFora: {
         heading: internacional.brasileirosFora.heading,
         body: rt(internacional.brasileirosFora.body),
-        cities: internacional.brasileirosFora.cities,
       },
       // Not localized — one English section, written once, read on the pt page.
       inEnglish: internacional.inEnglish,
@@ -536,7 +537,6 @@ export async function seedPages(payload: Payload): Promise<void> {
     },
   });
 
-  const cityIds = rowIds(internacionalPt.brasileirosFora?.cities);
   const internacionalPraticoIds = rowIds(internacionalPt.pratico?.items);
   const internacionalEn = INTERNACIONAL_EN;
 
@@ -554,9 +554,6 @@ export async function seedPages(payload: Payload): Promise<void> {
       brasileirosFora: {
         heading: internacionalEn.brasileirosFora.heading,
         body: rt(internacionalEn.brasileirosFora.body),
-        cities: internacionalEn.brasileirosFora.cities.map((row, index) =>
-          withId(row, cityIds[index]),
-        ),
       },
       inEnglish: internacional.inEnglish,
       pratico: {
@@ -724,7 +721,7 @@ const INICIO_EN = {
   },
   brasilExterior: {
     heading: "Brazil and abroad",
-    body: "Sessions are in Portuguese or in English, in your own time zone. I have worked with people in Portugal, England and the United States. Living abroad does not interrupt an analysis.",
+    body: "Sessions are in Portuguese or in English, in your own time zone. Living abroad does not interrupt an analysis.",
     linkLabel: "if you live abroad",
   },
   comoComecar: {
@@ -736,7 +733,7 @@ const INICIO_EN = {
       },
       {
         numeral: "II",
-        text: "We arrange a time for a first conversation of about fifty minutes, with no commitment to continue.",
+        text: "We arrange a time and a fee for a first conversation of about fifty minutes, with no commitment to continue.",
       },
       {
         numeral: "III",
@@ -752,7 +749,7 @@ const INICIO_EN = {
     eyebrow: "To begin",
     heading: "A short conversation is usually enough to see whether this makes sense.",
     body: richText([
-      "The simplest way is WhatsApp. You write me a short message (you do not have to tell everything at once) and we arrange a time for a first conversation, with no commitment. From there we decide together how to continue.",
+      "The simplest way is WhatsApp. You write me a short message (you do not have to tell everything at once) and we agree the fee and a time for a first conversation. It is a paid session, with no commitment to continue. From there we decide together how to continue.",
     ]),
     whatsappLabel: "Talk on WhatsApp",
   },
@@ -953,7 +950,7 @@ const ORIENTACAO_PROFISSIONAL_EN = {
       { label: "Times", value: "Always Brasília time." },
     ],
     comecar: {
-      body: "If the career question is yours, write to me. In the first conversation I explain the path calmly, and you decide afterwards.",
+      body: "If the career question is yours, write to me. The first conversation is a paid session with no commitment to continue: in it I explain the path calmly, and you decide afterwards.",
       linkLabel: "what happens in a first conversation",
     },
   },
@@ -1025,7 +1022,7 @@ const PRIMEIRA_CONVERSA_EN = {
     heading: "The first conversation",
     lead: richText([
       "A conversation of about fifty minutes, by video call, in Portuguese or in English, from wherever you are, in Brazil or abroad.",
-      "It is for us to get to know each other: you say what is happening, I listen, and at the end the decision to continue is yours.",
+      "It is for us to get to know each other: you say what is happening, I listen, and at the end the decision to continue is yours. It is a working session like any other, and it is charged. You take on no commitment to continue after it.",
     ]),
   },
   passoAPasso: {
@@ -1038,8 +1035,8 @@ const PRIMEIRA_CONVERSA_EN = {
       },
       {
         numeral: "II",
-        title: "We arrange the time",
-        text: "You choose from the times I have, and I send the call link before the day.",
+        title: "We arrange the time and the fee",
+        text: "You choose from the times I have, we agree the fee for the session, and I send the call link before the day.",
       },
       {
         numeral: "III",
@@ -1082,7 +1079,7 @@ const PRIMEIRA_CONVERSA_EN = {
       {
         question: "Do you work with people living outside Brazil?",
         answer:
-          "Yes. I have worked with people in Portugal, England and the United States. We settle the time zone and continue in Portuguese or in English.",
+          "Yes. I work with people in Portugal, England, the Netherlands, the United States and Canada. We settle the time zone and continue in Portuguese or in English.",
       },
       {
         question: "How long do you take to reply?",
@@ -1135,35 +1132,19 @@ const INTERNACIONAL_EN = {
     // line below, which dropped the same appositive on the Portuguese side.
     body: richText([
       "So that distance is never an obstacle to your process of self-knowledge, my sessions happen online.",
-      "I work with Brazilians living abroad and with people from other countries, in Portuguese or in English, by video call. I have worked with Brazilians in Portugal, England and the United States.",
-      "Analytically-oriented psychotherapy and career guidance, in weekly meetings. We settle the time zone, the language and the payment in the first conversation.",
+      "I work with Brazilians living abroad and with people from other countries, in Portuguese or in English, by video call.",
+      "Analytically-oriented psychotherapy and career guidance, in weekly meetings. We settle the time zone, the language and payment beforehand, over WhatsApp.",
     ]),
     trustLine:
       "Sessions follow Brazilian telepsychology regulation: that is how a Brazilian psychologist works with people living in another country.",
   },
   brasileirosFora: {
     heading: "For Brazilians living outside Brazil",
+    // The measure of the difference is computed live now, one row per country,
+    // rather than written into three notes that had to hedge into ranges.
     body: richText([
       "You do not need to be in Brazil to begin, and you do not need to interrupt what you have already begun because you moved. The work happens in Portuguese, by video call, from wherever you live.",
-      "Three examples, to give the measure of the difference:",
     ]),
-    // The offsets name a range on purpose: Brazil abolished daylight saving time
-    // in 2019, Europe and the United States did not, so a fixed hour difference
-    // would be wrong for part of every year.
-    cities: [
-      {
-        city: "Lisbon",
-        note: "Three or four hours ahead of Brasília, depending on European daylight saving time. Late afternoon there is mid-afternoon here.",
-      },
-      {
-        city: "London",
-        note: "The same time zone as Lisbon: early evening in London is still late afternoon in Brazil.",
-      },
-      {
-        city: "New York",
-        note: "One or two hours behind Brasília, depending on US daylight saving time. Late afternoon in New York is early evening here.",
-      },
-    ],
   },
   pratico: {
     heading: "In practice",
@@ -1176,7 +1157,7 @@ const INTERNACIONAL_EN = {
       {
         label: "Fees",
         value:
-          "For people living outside Brazil, fees are in dollars or euros. We agree on the amount and how to pay in the first conversation.",
+          "For people living outside Brazil, fees are in dollars or euros. We agree on the amount and how to pay before the first session, over WhatsApp.",
       },
       { label: "How it happens", value: "By video call. I send the link before each meeting." },
       { label: "Languages", value: "Portuguese or English, whichever you prefer." },
@@ -1189,7 +1170,7 @@ const INTERNACIONAL_EN = {
   },
   comecar: {
     heading: "Begin from where you are",
-    body: "Write and tell me where you are writing from. That already settles half of what we need to arrange. We sort out the rest in the conversation.",
+    body: "Write and tell me where you are writing from. That already settles half of what we need to arrange; the rest — fee, time, language — we sort out there, before the first conversation. It is a paid session, with no commitment to continue.",
     linkLabel: "see how the first conversation works",
   },
 };

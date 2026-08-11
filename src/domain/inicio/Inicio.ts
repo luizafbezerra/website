@@ -16,8 +16,10 @@ import { richText } from "@/domain/richText/richText";
 //
 // **On the copy in these defaults.** Two kinds live here, and the difference
 // matters (CONCEPT §11: nothing ships in her name that she did not write).
-//   · Hers, verbatim — the hero lead, the Vozes title, the whole contato block.
-//     Carried across from the pre-CONCEPT home, which is where she wrote them.
+//   · Hers, verbatim — the hero lead, the Vozes title, the contato eyebrow and
+//     heading. Carried across from the pre-CONCEPT home, which is where she wrote
+//     them. `contato.body` was hers too until she asked for the paid-session fact
+//     to be stated (2026-08-10); the insertion is ledger row 11.
 //   · Structural drafts — the section headings and the short connective copy for
 //     the four sections that never existed before (dois caminhos, o sintoma,
 //     Brasil e exterior, como é começar). These state facts CONCEPT and PRODUCT
@@ -169,7 +171,12 @@ export const INICIO_DEFAULTS: Inicio = {
     // "on-line" is deliberately absent: the hero's positioning sentence and the
     // credential strip both say it before a reader reaches this section, and a
     // fourth occurrence on one page is a defect rather than emphasis (GUD-001).
-    body: "O atendimento é em português ou em inglês, no seu fuso. Já acompanhei pessoas em Portugal, na Inglaterra e nos Estados Unidos. Morar fora não interrompe uma análise.",
+    //
+    // The countries left this sentence on 2026-08-10, when she added two more:
+    // the strip below names all of them, with the local hour beside each, and a
+    // list carried by prose is a list that has to be rewritten every time it
+    // grows.
+    body: "O atendimento é em português ou em inglês, no seu fuso. Morar fora não interrompe uma análise.",
     linkLabel: "quem mora fora",
   },
   comoComecar: {
@@ -181,7 +188,16 @@ export const INICIO_DEFAULTS: Inicio = {
       },
       {
         numeral: "II",
-        text: "Combinamos um horário para uma primeira conversa de cinquenta minutos, sem compromisso de seguir.",
+        // Two words carry her 2026-08-10 correction: "o valor e". The beat used to
+        // read "Combinamos um horário … sem compromisso de seguir", and a reader
+        // with no mention of money in sight supplied the missing fact themselves —
+        // that a conversation nobody had priced was free. Naming the value of the
+        // first conversation makes that reading unavailable, and the beat stays one
+        // line, which is what a three-beat skim is for. The value comes first
+        // because it is the fact that was missing. The page still states it
+        // outright further down, in her own Contato paragraph; this beat only has
+        // to stop being deniable.
+        text: "Combinamos o valor e o horário para uma primeira conversa de cinquenta minutos, sem compromisso de seguir.",
       },
       {
         numeral: "III",
@@ -193,11 +209,14 @@ export const INICIO_DEFAULTS: Inicio = {
   // Hers.
   vozes: { heading: "Pacientes contam" },
   contato: {
-    // Hers, verbatim.
+    // Hers, verbatim — except `body`, which now carries the paid-session fact she
+    // asked for on 2026-08-10 (ledger row 11). Her sentence is otherwise word for
+    // word: only "sem compromisso" was completed into "sem compromisso de
+    // continuar", and the arrangement of the value added beside the time.
     eyebrow: "Para começar",
     heading: "Uma conversa breve costuma ser o suficiente para vermos se faz sentido.",
     body: richText([
-      "O caminho mais simples é o WhatsApp. Você me escreve uma mensagem curta (não precisa contar tudo de uma vez) e combinamos um horário para uma primeira conversa, sem compromisso. A partir dela decidimos juntos como seguir.",
+      "O caminho mais simples é o WhatsApp. Você me escreve uma mensagem curta (não precisa contar tudo de uma vez) e combinamos o valor e um horário para uma primeira conversa. É uma sessão cobrada, sem compromisso de continuar. A partir dela decidimos juntos como seguir.",
     ]),
     whatsappLabel: "Conversar pelo WhatsApp",
   },

@@ -1,15 +1,27 @@
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 import type { Inicio } from "@/domain/inicio/Inicio";
+import type { Sobre } from "@/domain/sobre/Sobre";
+import { FormacaoList } from "@/view/general/FormacaoList";
 import { RichTextProse } from "@/view/general/RichTextProse";
 import { PageSection } from "@/view/general/PageSection";
 import { SectionHeading } from "@/view/general/SectionHeading";
 import { SectionLink } from "@/view/general/SectionLink";
 
 /**
- * Section 6 of CONCEPT §6 — four lines and the hook, enough to want to click
- * through to /sobre. Deliberately short: the full record, the formação and the
- * clinic's origin story belong to that page, and repeating them here would spend
- * the reason to go.
+ * Section 6 of CONCEPT §6 — who receives you, and on what record.
+ *
+ * The bio is four lines and a hook; the academic record under it is the whole
+ * thing, six rows, read from `/sobre`'s own field rather than copied here. This
+ * section used to argue the opposite — that repeating the record here would
+ * spend the reason to click through — and she overruled it: "na parte do meu
+ * currículo, eu preferia que ficasse em evidência sem precisar clicar no link."
+ * A reader deciding whether to write should not have to take a second page's
+ * word for the credentials.
+ *
+ * Her `formacao.intro` stays behind on /sobre. It is the one editorial sentence
+ * that section gets, and the rows here need no argument for being long — the
+ * eyebrow says what they are and they say the rest.
  *
  * The mandala mark sits beside the bio at profile scale — the same circular
  * avatar the header carries, grown to the size a follower knows from the feed.
@@ -24,7 +36,15 @@ import { SectionLink } from "@/view/general/SectionLink";
  * doors to the ask. Giving each of them the monumental interval made them read
  * as fragments; the tighter cadence makes them one sequence.
  */
-export function SobreDigest({ content }: { content: Inicio["sobreDigest"] }) {
+export function SobreDigest({
+  content,
+  formacao,
+}: {
+  content: Inicio["sobreDigest"];
+  formacao: Sobre["formacao"]["items"];
+}) {
+  const t = useTranslations("inicio.sobreDigest");
+
   return (
     <PageSection labelledBy="sobre-digest-heading" pace="beat">
       <div className="grid grid-cols-1 gap-x-12 gap-y-8 lg:grid-cols-[auto_1fr]">
@@ -46,6 +66,18 @@ export function SobreDigest({ content }: { content: Inicio["sobreDigest"] }) {
           <SectionHeading id="sobre-digest-heading">{content.heading}</SectionHeading>
 
           <RichTextProse data={content.body} className="body-prose text-ink mt-8 max-w-[62ch]" />
+
+          {/* The world's voice, not a second heading: the band already owns
+              "Quem recebe você", and a display-scale title here would split one
+              introduction into two sections. An `h3` all the same — the record is
+              a real part of the outline, and a screen reader should be able to
+              jump to it. */}
+          {formacao.length > 0 && (
+            <>
+              <h3 className="tracked mt-10">{t("formacaoLabel")}</h3>
+              <FormacaoList items={formacao} className="border-rule-soft mt-4 border-t" />
+            </>
+          )}
 
           <SectionLink href="/sobre" className="mt-10">
             {content.linkLabel}

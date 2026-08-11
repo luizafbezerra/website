@@ -54,36 +54,25 @@ describe("internacionalFromPayload", () => {
     expect(page.brasileirosFora.heading).toBe(INTERNACIONAL_DEFAULTS.brasileirosFora.heading);
   });
 
-  // Payload materializes an untouched array as `[]`, and both arrays here belong
-  // to sections CONCEPT §6 requires, so an empty one reads as un-edited.
-  it("falls back on both empty arrays rather than dropping a required section", () => {
-    const page = internacionalFromPayload({
-      brasileirosFora: { cities: [] },
-      pratico: { items: [] },
-    });
+  // Payload materializes an untouched array as `[]`, and this one is the page's
+  // whole answer about fuso, payment and language, so an empty one reads as
+  // un-edited.
+  it("falls back on an empty prático array rather than dropping a required section", () => {
+    const page = internacionalFromPayload({ pratico: { items: [] } });
 
-    expect(page.brasileirosFora.cities).toEqual(INTERNACIONAL_DEFAULTS.brasileirosFora.cities);
     expect(page.pratico.items).toEqual(INTERNACIONAL_DEFAULTS.pratico.items);
   });
 
-  it("keeps the cities in stored order and drops the half-typed rows", () => {
+  // The `cities` array is gone: the time difference is computed live from
+  // `domain/clinica/reach` rather than typed into the CMS, so there is no stored
+  // shape left to fall back to and nothing for a stale note to be wrong about.
+  it("carries no city notes, in the domain shape or out of a stored one", () => {
     const page = internacionalFromPayload({
-      brasileirosFora: {
-        cities: [
-          { city: "Porto", note: "O mesmo fuso de Lisboa." },
-          // A city she started naming and has not described yet.
-          { city: "Dublin" },
-          // A note with no city to attach it to.
-          { note: "Duas horas à frente." },
-          { city: "Tóquio", note: "Doze horas à frente — a manhã aí é a noite de ontem aqui." },
-        ],
-      },
-    });
+      brasileirosFora: { cities: [{ city: "Porto", note: "O mesmo fuso de Lisboa." }] },
+    } as never);
 
-    expect(page.brasileirosFora.cities).toEqual([
-      { city: "Porto", note: "O mesmo fuso de Lisboa." },
-      { city: "Tóquio", note: "Doze horas à frente — a manhã aí é a noite de ontem aqui." },
-    ]);
+    expect(page.brasileirosFora).not.toHaveProperty("cities");
+    expect(JSON.stringify(page)).not.toContain("Porto");
   });
 
   it("keeps the prático rows in stored order and drops the ones with nothing to read", () => {

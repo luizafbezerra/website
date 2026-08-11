@@ -85,9 +85,9 @@ export async function seedFaq(payload: Payload): Promise<void> {
 }
 
 /**
- * The English FAQ, matched to `FAQ_DEFAULTS` by index — four placeholders, one per
- * section, because that is the whole Portuguese array too. Her six translated
- * answers went with the Portuguese originals; recover them from
+ * The English FAQ, matched to `FAQ_DEFAULTS` by index — three placeholders and the
+ * two money answers, because that is the shape of the Portuguese array too. Her
+ * other translated answers went with the Portuguese originals; recover them from
  * `git show 6d508ba:src/payload/seed/faq.ts` if she signs one off unchanged.
  *
  * `FAQ_PLACEHOLDER_MARK` is deliberately **not** translated: the mark exists so the
@@ -99,6 +99,16 @@ export async function seedFaq(payload: Payload): Promise<void> {
 const FAQ_EN: Array<{ question: string; answer: string }> = [
   placeholderEn("analysis"),
   placeholderEn("career guidance"),
+  {
+    question: "What about fees?",
+    answer:
+      "We agree on fees before the first session, according to the format and how often we meet. To know the current fee, just write to me on WhatsApp; I reply within one working day.",
+  },
+  {
+    question: "Is the first conversation charged?",
+    answer:
+      "Yes. It is a working session like any other, and it is charged. What does not exist is a commitment to continue after it: you decide, in your own time, whether to go on.",
+  },
   placeholderEn("the practical side"),
   placeholderEn("sessions from abroad"),
 ];

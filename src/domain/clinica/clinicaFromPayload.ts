@@ -59,9 +59,13 @@ export function clinicaFromPayload(doc: PayloadClinica): Clinica {
       state: isAvailabilityState(state) ? state : defaults.availability.state,
       responseWindow: filled(doc.availability?.responseWindow),
     },
+    // Both notes stay absences when cleared rather than falling back: a note she
+    // deleted is a decision, and a pricing sentence that reappears after she
+    // removes it is worse than none.
     fees: {
       analysis: feeFrom(doc.fees?.analysis),
       careerGuidance: feeFrom(doc.fees?.careerGuidance),
+      note: filled(doc.fees?.note),
       internationalNote: filled(doc.fees?.internationalNote),
     },
     // The openers fall back like every other field, which is what makes the

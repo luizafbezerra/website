@@ -198,10 +198,16 @@ export const Clinica: GlobalConfig = {
               },
             },
             localizedTextarea({
+              name: "note",
+              label: "Nota de valores",
+              description:
+                "A sua frase sobre como o valor é combinado, impressa logo abaixo do valor em todas as páginas que o citam. Ex.: combinamos os valores antes da primeira sessão, conforme a modalidade e a frequência — é só me escrever no WhatsApp. Em branco, o site não escreve nada no lugar.",
+            }),
+            localizedTextarea({
               name: "internationalNote",
               label: "Nota internacional",
               description:
-                'Enquadramento para quem está fora, ex.: "valores em dólar/euro — combinamos na primeira conversa". O site nunca converte moeda automaticamente.',
+                'Enquadramento para quem está fora, ex.: "valores em dólar/euro — combinamos antes da primeira sessão". O site nunca converte moeda automaticamente.',
             }),
           ],
         },

@@ -52,6 +52,17 @@ const ALUMNI_OF = ["Pontifícia Universidade Católica de São Paulo", "Institut
 
 const SERVICE_KEYS = ["analise", "orientacaoProfissional"] as const;
 
+/**
+ * The reach in the vocabulary a machine reads: a Brazilian practice that also
+ * receives people living anywhere, with the countries she actually works with
+ * named so an assistant answering "does she see clients in the Netherlands" has
+ * something to answer *with* rather than an inference from "Worldwide".
+ *
+ * Country codes, not country names, so the claim survives translation. The list
+ * is the same one `REACH` carries on the page, in the same order.
+ */
+const AREA_SERVED = ["BR", "PT", "GB", "NL", "US", "CA", "Worldwide"];
+
 /** Both languages she works in — the signal that matters most to a foreigner. */
 const LANGUAGES = SITE_LOCALES.map((locale) => LOCALE_TAGS[locale]);
 
@@ -73,9 +84,7 @@ export function SiteEntityGraphJsonLd({ clinica, locale }: { clinica: Clinica; l
     description: clinica.positioning,
     email: clinica.email,
     telephone: clinica.whatsappE164,
-    // The reach, in the vocabulary a machine reads: a Brazilian practice that
-    // also receives people living anywhere.
-    areaServed: ["BR", "Worldwide"],
+    areaServed: AREA_SERVED,
     founder: { "@id": PERSON_ID },
     employee: { "@id": PERSON_ID },
     ...(sameAs.length > 0 && { sameAs }),
@@ -114,7 +123,7 @@ export function SiteEntityGraphJsonLd({ clinica, locale }: { clinica: Clinica; l
     serviceType: t(`services.${key}.name`),
     url: pageUrl(key, locale),
     provider: { "@id": PERSON_ID },
-    areaServed: ["BR", "Worldwide"],
+    areaServed: AREA_SERVED,
     availableChannel: {
       "@type": "ServiceChannel",
       serviceUrl: homeUrl,

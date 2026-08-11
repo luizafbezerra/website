@@ -1,6 +1,6 @@
 import { useTranslations } from "next-intl";
 import type { Internacional } from "@/domain/internacional/Internacional";
-import { FactList } from "@/view/general/FactList";
+import { HorasDaClinica } from "@/view/general/HorasDaClinica";
 import { PageSection } from "@/view/general/PageSection";
 import { Plate } from "@/view/general/Plate";
 import { RichTextProse } from "@/view/general/RichTextProse";
@@ -16,13 +16,13 @@ const PLATE_ASPECT = "3 / 2";
  * permission before logistics: "sim, atendo quem mora fora." So the prose gives it
  * in the first sentence and only then measures the distance.
  *
- * **The city examples are the page's craft moment, and the craft is factual.** They
- * are set in the same fact list as the prático rows rather than in a decorated
- * treatment of their own, because a time difference is an operational fact and
- * DESIGN puts those in body type; the care is spent on making each note stay true
- * all year (see the reasoning in `INTERNACIONAL_DEFAULTS`). Three of them, one per
- * country she has actually worked with — a fourth would turn her history into a
- * list of markets.
+ * **The time difference is the page's craft moment, and the craft is factual.**
+ * It used to be three hand-written notes, and each had to hedge into a range —
+ * "três ou quatro horas à frente, conforme o horário de verão europeu" — because
+ * Brazil stopped observing daylight saving time in 2019 and Europe and North
+ * America did not. `HorasDaClinica` computes the difference at the instant the
+ * reader is looking, so it is exact, it can never go stale, and a sixth country
+ * costs one line rather than one more paragraph of hedging.
  *
  * The plate closes the section, which is where this page takes its breath: the
  * permission has landed, the arithmetic is done, and the language changes in the
@@ -48,10 +48,7 @@ export function BrasileirosFora({ content }: { content: Internacional["brasileir
 
       <RichTextProse data={content.body} className="body-prose text-ink mt-8 max-w-[62ch]" />
 
-      <FactList
-        rows={content.cities.map(({ city, note }) => ({ label: city, value: note }))}
-        className="mt-10"
-      />
+      <HorasDaClinica variant="full" className="mt-10" />
 
       <Plate
         image={plate.image}

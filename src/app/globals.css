@@ -1632,14 +1632,29 @@
     mask-composite: intersect;
   }
 
+  /* The grain has to stay put while the page scrolls under it, or the texture
+     visibly slides past beneath the cosmos canvas's pin. `background-attachment:
+     fixed` said that in one line, but it says it the expensive way: the browser
+     cannot cache a viewport-anchored background against a scrolling element, so
+     it repaints the full viewport every frame, down all 11,700px of the home page.
+
+     A fixed pseudo-element expresses the same thing as its own layer, which the
+     compositor can leave alone entirely. `background-attachment` goes back to its
+     default, so the paint is one composited quad rather than per-frame work. */
   .parchment-grain {
     background-color: var(--color-parchment);
+    position: relative;
+  }
+
+  .parchment-grain::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
     background-image: url("/texture/parchment.webp");
     background-size: 512px 512px;
     background-repeat: repeat;
-    /* Fix the grain to the viewport so scroll-pinned sections (e.g. cosmos)
-       don't show the texture sliding past underneath the canvas. */
-    background-attachment: fixed;
   }
 
   .rule-warm {

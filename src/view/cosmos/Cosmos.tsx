@@ -6,11 +6,20 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Cosmos as Data } from "@/domain/cosmos/Cosmos";
 import type { CosmosSky } from "@/domain/cosmos/proceduralSky";
 import { useCosmosShow } from "@/view/cosmos/hooks/useCosmosShow";
+import { useAfterPageSettled } from "@/view/general/useAfterPageSettled";
 import { cn } from "@/view/styling/cn";
 import type { SigilScreenPosition } from "./CosmosCanvas";
 import { CosmosMarginalia } from "./CosmosMarginalia";
 import { CosmosSigilOverlay } from "./scene/CosmosSigilOverlay";
 
+// Keep the `import()` literal and inline inside `dynamic()`. Hoisting it into a
+// shared helper reads better but breaks the lazy boundary: the bundler stops
+// recognising the call as a code-split point and emits the chunk as a preload in
+// the document head, so three.js downloads during the initial page load — the
+// exact cost this section is arranged to avoid.
+//
+// The warm below re-states the same specifier for the same reason. Two literals
+// resolving one chunk, deliberately.
 const CosmosCanvas = dynamic(() => import("./CosmosCanvas").then((m) => m.CosmosCanvas), {
   ssr: false,
   loading: () => null,
@@ -40,6 +49,32 @@ const SHOW_SKIP_AFFORDANCE = false;
 
 const initialSigilPositions = (): SigilScreenPosition[] =>
   Array.from({ length: SIGIL_COUNT }, () => ({ x: 0.5, y: 0.5, visible: false }));
+
+/**
+ * Pulls everything the scene needs into memory, without mounting or drawing
+ * anything: the canvas chunk (three.js + fiber + the scene modules, ~585 KB
+ * encoded) and the painted-prelude plates plus the brushed-brass roughness map.
+ *
+ * Idempotent and module-scoped, because two independent triggers race for it —
+ * the page going idle and the reader approaching the section — and whichever
+ * arrives first should make the second free. `import()` is already idempotent;
+ * `warmTextures` funnels through the texture cache, which is too.
+ *
+ * Evaluating three.js costs a task. Spending it here is the whole point: the
+ * alternative is spending it mid-scroll, which is what the reader feels.
+ *
+ * The 12 sigils stay out of this — they are popover-only, and a reader who
+ * never hovers a sigil should never pay their 433 KB.
+ */
+function warmCosmosAssets(): void {
+  void import("./CosmosCanvas");
+  // Reached dynamically, never statically: `useOptionalTexture` imports three,
+  // so a top-level import of it here would drag three.js into this module's
+  // graph — and this module is in the page's eager bundle. That mistake is
+  // invisible in the source and obvious in the network panel, where three_core
+  // turns up as an async <script> in the initial document.
+  void import("./scene/useOptionalTexture").then((m) => m.warmTextures(Data.warmupTextureUrls));
+}
 
 // Gate. Renders nothing when the visitor has opted out via the in-cosmos
 // "Continuar a leitura" button or the footer toggle. Wrapping the heavy
@@ -111,6 +146,9 @@ function CosmosBody({ onDismissForever, sky }: CosmosProps & { onDismissForever:
   // fires. Until then the painted poster holds the screen; the reveal
   // cross-fade waits for both this and `isVisible`.
   const [isPrimed, setIsPrimed] = useState<boolean>(false);
+  // True once the document's own load has settled and the thread has gone idle —
+  // the earliest point at which warming the cosmos costs the reader nothing.
+  const pageSettled = useAfterPageSettled();
 
   // Reduced motion preference.
   useEffect(() => {
@@ -130,28 +168,45 @@ function CosmosBody({ onDismissForever, sky }: CosmosProps & { onDismissForever:
     return () => mq.removeEventListener("change", onChange);
   }, []);
 
-  // Two IntersectionObservers, decoupling warm-up from reveal:
+  // Three IntersectionObservers, staging the approach so no single moment pays
+  // for the whole scene:
   //
-  //   * WARM (wide, ~1 viewport early): sets `mountCanvas` once, so the canvas
-  //     mounts hidden at opacity:0 behind the poster and runs its bakes +
-  //     shader compile + texture uploads during the approach. Never unset —
-  //     once warmed, the scene stays alive in memory.
+  //   * PREFETCH (250% above): pulls the canvas chunk and the painted plates
+  //     into memory about three screens out. Network and module evaluation
+  //     only — nothing mounts, nothing draws.
+  //   * MOUNT (60%): sets `mountCanvas`, so the canvas mounts hidden at
+  //     opacity:0 behind the poster and stages its bakes + shader compile.
+  //     Never unset — once warmed, the scene stays alive in memory. This used
+  //     to sit at 120% because it had a download to hide; with the chunk and
+  //     textures already resident it no longer does.
   //   * REVEAL (30%): tracks current intersection into `isVisible`. Combined
   //     with `isPrimed` this triggers the cross-fade AND drives the Canvas
   //     frameloop (per-frame work pauses once scrolled fully past).
   //
-  // Neither runs for reduced-motion / mobile — those paths keep the static
+  // None run for reduced-motion / mobile — those paths keep the static
   // composite + StaticSigilWheel and never mount the canvas.
   useEffect(() => {
     if (reducedMotion || isMobile) return;
     const el = sectionRef.current;
     if (!el) return;
 
-    const warm = new IntersectionObserver(
+    const prefetch = new IntersectionObserver(
+      (entries) => {
+        if (!entries.some((e) => e.isIntersecting)) return;
+        prefetch.disconnect();
+        warmCosmosAssets();
+      },
+      // Bottom side only — `rootMargin` is top/right/bottom/left, and the
+      // section is below the reader on the way down, so it is the bottom edge
+      // that has to reach for it. A reader arriving from above needs no reach:
+      // they are already at the section and the mount observer fires anyway.
+      { rootMargin: "0px 0px 250% 0px", threshold: 0 },
+    );
+    const mount = new IntersectionObserver(
       (entries) => {
         if (entries.some((e) => e.isIntersecting)) setMountCanvas(true);
       },
-      { rootMargin: "120% 0px 120% 0px", threshold: 0 },
+      { rootMargin: "60% 0px 60% 0px", threshold: 0 },
     );
     const reveal = new IntersectionObserver(
       (entries) => {
@@ -159,59 +214,45 @@ function CosmosBody({ onDismissForever, sky }: CosmosProps & { onDismissForever:
       },
       { rootMargin: "30% 0px 30% 0px", threshold: 0 },
     );
-    warm.observe(el);
+    prefetch.observe(el);
+    mount.observe(el);
     reveal.observe(el);
     return () => {
-      warm.disconnect();
+      prefetch.disconnect();
+      mount.disconnect();
       reveal.disconnect();
     };
   }, [reducedMotion, isMobile]);
 
-  // Idle texture preload. Warms the painted-prelude WebPs + the brushed-brass
-  // roughness map into the HTTP cache during an idle slice, so the shared
-  // `THREE.TextureLoader` fetches in `useOptionalTexture` are cache hits —
-  // lifting the network leg out of the warm/reveal budget. A warm roughness
-  // map also lets the armillary matcap bake take its immediate path instead of
-  // the 500ms cold-cache fallback. The 12 sigils stay lazy (popover-only).
+  // Speculative warm, once the page has finished its own load and gone quiet.
+  //
+  // This used to be a bare `requestIdleCallback`, which fired a few hundred
+  // milliseconds after hydration and put a megabyte of painted prelude on the
+  // wire while the hero portrait and the Instagram tiles were still arriving —
+  // for a section six thousand pixels down the page. `useAfterPageSettled`
+  // waits for `load` first, so the cosmos never competes with what the visitor
+  // is actually looking at.
+  //
+  // A reader who scrolls faster than the page settles is covered by the
+  // prefetch observer above; whichever fires first wins and the other is a
+  // no-op, because both funnel through the same idempotent warm.
   useEffect(() => {
-    if (reducedMotion || isMobile) return;
-    let cancelled = false;
-    const warm = () => {
-      if (cancelled) return;
-      for (const url of Data.warmupTextureUrls) {
-        // `window.Image`, not the `next/image` default import in scope.
-        const img = new window.Image();
-        img.decoding = "async";
-        img.src = url;
-        // Force the decode now (off the main thread) rather than lazily at
-        // first GPU upload; swallow 404 / abort.
-        img.decode().catch(() => {});
-      }
-    };
-    const ric = window.requestIdleCallback;
-    if (typeof ric === "function") {
-      const id = ric(warm, { timeout: 3000 });
-      return () => {
-        cancelled = true;
-        window.cancelIdleCallback?.(id);
-      };
-    }
-    // Safari / older Firefox: no requestIdleCallback — defer past first paint.
-    const timer = setTimeout(warm, 1500);
-    return () => {
-      cancelled = true;
-      clearTimeout(timer);
-    };
-  }, [reducedMotion, isMobile]);
+    if (reducedMotion || isMobile || !pageSettled) return;
+    warmCosmosAssets();
+  }, [reducedMotion, isMobile, pageSettled]);
 
   // Fallback prime. If the off-screen warm-up never reports back — a device
   // without KHR_parallel_shader_compile where `compileAsync` stalls, a
   // backgrounded tab throttling rAF, a thrown compile — prime anyway a few
   // seconds after the canvas mounts so the reveal gate never hangs. The warm
   // work has had ample time by then.
+  //
+  // Five seconds rather than three and a half: the scene now builds across
+  // several yielded stages, and on a slow device that staging must be allowed
+  // to finish rather than be cut off mid-way by the backstop.
   useEffect(() => {
     if (reducedMotion || isMobile || !mountCanvas || isPrimed) return;
-    const timer = setTimeout(() => setIsPrimed(true), 3500);
+    const timer = setTimeout(() => setIsPrimed(true), 5000);
     return () => clearTimeout(timer);
   }, [reducedMotion, isMobile, mountCanvas, isPrimed]);
 
@@ -487,7 +528,10 @@ function PosterFallback() {
         src={Data.preludeCompositeMobile}
         alt=""
         fill
-        sizes="100vw"
+        // Not `100vw`, which asked the optimizer for w=3840 on a wide screen —
+        // an upscale of a 1024px source, for a plate the stylesheet then puts a
+        // 7px blur on. It is held for a beat behind the reveal, not read.
+        sizes="768px"
         className="h-full w-full object-cover object-[center_60%]"
       />
     </div>

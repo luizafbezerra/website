@@ -5,6 +5,7 @@ import * as THREE from "three";
 import { Cosmos } from "@/domain/cosmos/Cosmos";
 import type { StarField } from "@/domain/cosmos/StarField";
 import { getStarSprite } from "./spriteTextures";
+import { useCosmosFill } from "@/view/cosmos/hooks/useCosmosFill";
 
 // The textured sky: stars on a thick spherical shell at radii 30–80, drawn from
 // a warm distribution (mostly cream + gilt, rare terracotta and cool blue-white).
@@ -15,6 +16,7 @@ import { getStarSprite } from "./spriteTextures";
 // will supply the real one without touching this file.
 export function CosmosDeepField({ field }: { field: StarField }) {
   const sprite = useMemo(() => getStarSprite(), []);
+  const fill = useCosmosFill();
 
   const setLayers = useCallback((points: THREE.Points | null) => {
     if (points) points.layers.enable(1);
@@ -36,7 +38,7 @@ export function CosmosDeepField({ field }: { field: StarField }) {
         sizeAttenuation
         vertexColors
         transparent
-        alphaTest={0.02}
+        alphaTest={fill.alphaTest}
         opacity={0.95}
         depthWrite={false}
         toneMapped={false}

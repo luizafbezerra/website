@@ -20,17 +20,33 @@ import "@/app/globals.css";
 
 type LocaleRouteProps = { params: Promise<{ locale: string }> };
 
+/**
+ * Only the faces the site actually sets. `next/font` preloads every face it is
+ * asked for, at the highest priority, before first paint — so an unused weight
+ * is not latent capacity, it is bytes spent ahead of the hero.
+ *
+ * `latin` only: no glyph the site renders reaches Latin Extended-A. pt-BR's
+ * `ã õ ç á é í ó ú â ê` all sit in Latin-1 Supplement, which `latin` covers, and
+ * so does the English copy. Should a name ever need `ł` or `č`, `display: "swap"`
+ * drops that one character to the Georgia fallback rather than breaking the page.
+ *
+ * Cardo is display-only (`--font-display`, headings and eyebrows) and headings
+ * are never bold, so it ships regular + italic. Vollkorn carries the body, and
+ * body copy comes out of Lexical rich text she authors — a bold run there emits
+ * `<strong>`, so it keeps one real 700 rather than letting the browser smear a
+ * synthetic bold across a serif. Nothing sets 500 or 600.
+ */
 const cardo = Cardo({
-  subsets: ["latin", "latin-ext"],
-  weight: ["400", "700"],
+  subsets: ["latin"],
+  weight: ["400"],
   style: ["normal", "italic"],
   display: "swap",
   variable: "--font-cardo",
 });
 
 const vollkorn = Vollkorn({
-  subsets: ["latin", "latin-ext"],
-  weight: ["400", "500", "600", "700"],
+  subsets: ["latin"],
+  weight: ["400", "700"],
   style: ["normal", "italic"],
   display: "swap",
   variable: "--font-vollkorn",

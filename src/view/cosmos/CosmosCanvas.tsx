@@ -2,9 +2,10 @@
 
 import { Canvas, type RootState } from "@react-three/fiber";
 import type { MutableRefObject } from "react";
-import { useCallback, useEffect, useMemo, useRef } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Cosmos } from "@/domain/cosmos/Cosmos";
 import { type CosmosSky, proceduralSky } from "@/domain/cosmos/proceduralSky";
+import { yieldToBrowser } from "@/view/general/yieldToBrowser";
 import { CosmosArmillary } from "./scene/CosmosArmillary";
 import { CosmosCameraRig } from "./scene/CosmosCameraRig";
 import { CosmosComets } from "./scene/CosmosComets";
@@ -14,8 +15,33 @@ import { CosmosGalaxyBand } from "./scene/CosmosGalaxyBand";
 import { CosmosNebulae } from "./scene/CosmosNebulae";
 import { CosmosPrelude } from "./scene/CosmosPrelude";
 import { CosmosStarField } from "./scene/CosmosStarField";
+import { useCosmosFillName } from "@/view/cosmos/hooks/useCosmosFill";
 
 export type SigilScreenPosition = { x: number; y: number; visible: boolean };
+
+/**
+ * How many yielded steps the scene is built over. The grouping is by cost, and
+ * the order is a real dependency: the armillary's one-shot matcap bake walks the
+ * background through a CubeCamera, so the nebula shell, deep field and galaxy
+ * band all have to be in the graph before it mounts.
+ *
+ *   1  camera rig, deep field, galaxy band — plain point positions, cheap
+ *   2  star field — 4,000 sprites
+ *   3  nebula shell — the FBM equirect bake
+ *   4  armillary — rings plus the CubeCamera matcap bake
+ *   5  constellation lines, comets, painted prelude
+ */
+const BUILD_STAGES = 5;
+
+/**
+ * How long the reveal waits on an off-thread pre-link before priming anyway.
+ *
+ * Only reached on drivers that advertise KHR_parallel_shader_compile: long enough
+ * that a parallel link finishes first, short enough that nobody waits on a driver
+ * which advertises the extension and then never reports completion. The parent's
+ * multi-second backstop is for something else — a canvas that never primes at all.
+ */
+const PRIME_WAIT_MS = 700;
 
 type Props = {
   progressRef: MutableRefObject<number>;
@@ -90,7 +116,17 @@ export function CosmosCanvas({
 }: Props) {
   // Built here rather than in the leaf components so it only runs when the
   // canvas itself mounts, and so both fields come from one supplier.
-  const drawnSky = useMemo(() => sky ?? proceduralSky({ mobile }), [sky, mobile]);
+  //
+  // The fill profile only reaches the procedural sky: a `sky` handed in from
+  // outside is someone else's field ("O céu desta noite"), and thinning a real
+  // sky's star count would be a lie about what is overhead rather than a
+  // rendering trade-off. The alphaTest half of the profile still applies to it,
+  // because that is only about how each sprite is drawn.
+  const fillName = useCosmosFillName();
+  const drawnSky = useMemo(
+    () => sky ?? proceduralSky({ mobile, fill: fillName }),
+    [sky, mobile, fillName],
+  );
 
   // `onCreated` is captured once when the renderer is created, so it can't
   // close over a changing prop directly — read the latest `onPrimed` via ref.
@@ -110,32 +146,113 @@ export function CosmosCanvas({
     };
   }, []);
 
+  // How much of the scene has been committed. Building everything in one commit
+  // cost a single ~685 ms main-thread task — 5,320 sprite positions, the FBM
+  // nebula baked to an equirect texture, the armillary's CubeCamera matcap bake,
+  // a dozen canvas-gradient sprites, then a compile over all of it. Mid-scroll
+  // that block is a full second of unresponsive page.
+  //
+  // So the scene arrives in stages, yielding between each, and the total work is
+  // unchanged while no single task is long enough to be felt. This is invisible:
+  // the poster holds the screen until the parent's `isPrimed` lands, which now
+  // waits for the last stage.
+  const [stage, setStage] = useState<number>(0);
+  // The renderer lives in state, not a ref, so the prime effect below re-runs
+  // when it arrives. Whether `onCreated` fires before or after the last stage
+  // commits is a race — with a ref, losing it meant the prime never ran and the
+  // reveal fell through to the 5s backstop for no reason.
+  const [renderer, setRenderer] = useState<RootState | null>(null);
+
   const handleCreated = useCallback((state: RootState) => {
-    // Defer one frame so the scene children (nebula sphere, deep field,
-    // armillary rings, prelude planes) have committed into the scene graph
-    // before we walk it to pre-link their GLSL programs.
-    requestAnimationFrame(() => {
-      if (disposedRef.current) return;
+    setRenderer(state);
+  }, []);
+
+  // Walk the stages, handing the thread back between each — and pre-link what
+  // each stage just added before moving on.
+  //
+  // Compiling per stage rather than once at the end is what keeps the pre-link
+  // from becoming its own long task. `compile()` walks the whole scene, but
+  // three caches programs, so each call only does real work for the materials
+  // that stage introduced; the sum is the same pre-link, split across the yields
+  // the build was already taking. On a software rasteriser, where the pre-link
+  // dominates everything else here, that is the difference between one ~480 ms
+  // block and five short ones.
+  useEffect(() => {
+    if (stage >= BUILD_STAGES) return;
+    const controller = new AbortController();
+    yieldToBrowser(controller.signal).then(() => {
+      if (controller.signal.aborted || disposedRef.current) return;
+      if (renderer && stage > 0) renderer.gl.compile(renderer.scene, renderer.camera);
+      if (controller.signal.aborted || disposedRef.current) return;
+      setStage((s) => Math.min(BUILD_STAGES, s + 1));
+    });
+    return () => controller.abort();
+  }, [stage, renderer]);
+
+  // Prime once the graph is complete — not one frame after context creation, as
+  // before, because the later stages' materials would not exist yet to compile.
+  useEffect(() => {
+    if (stage < BUILD_STAGES || !renderer) return;
+    const state = renderer;
+
+    let cancelled = false;
+
+    let waitTimer: ReturnType<typeof setTimeout> | undefined;
+
+    // One more frame so the last stage's children have committed, then the
+    // pre-link pass — which route it takes depends on the driver, and the two are
+    // not interchangeable.
+    //
+    // Where KHR_parallel_shader_compile exists, `compileAsync` genuinely links off
+    // the main thread, and that is the whole prize: the pre-link is the single
+    // most expensive thing this component does (~580 ms on a software rasteriser),
+    // so on real hardware it belongs off-thread.
+    //
+    // Where the extension is missing, `compileAsync` must not be used. Three falls
+    // back to polling each material's program for readiness, reading
+    // `material.program.isReady()` on materials that have none yet — it throws
+    // inside its own timer, so the promise settles neither way and the reveal hangs
+    // on the parent's backstop. (Reproduced on SwiftShader.) There, the synchronous
+    // `compile()` is both correct and no slower, since nothing was going to be
+    // parallel anyway.
+    const raf = requestAnimationFrame(() => {
+      if (cancelled || disposedRef.current) return;
+
       const prime = () => {
-        if (disposedRef.current) return;
-        // Under frameloop="demand" during warm — invalidate once so the
-        // freshly-linked programs draw and the baked textures upload here,
-        // off the (still-hidden) reveal frame.
+        if (cancelled || disposedRef.current) return;
+        cancelled = true; // first of the two routes below to arrive wins
+        // Under frameloop="demand" during warm — invalidate once so the freshly
+        // linked programs draw and the baked textures upload here, off the
+        // (still-hidden) reveal frame.
         state.invalidate();
         onPrimedRef.current?.();
       };
-      // `compileAsync` pre-links every material in the scene — using
-      // KHR_parallel_shader_compile when present, falling back to a
-      // synchronous compile otherwise (still a win: it runs while the canvas
-      // is hidden behind the poster, not on the visible reveal frame). prime()
-      // runs on both resolve and reject so an unsupported/throwing path never
-      // strands the reveal gate (the parent's fallback timeout backstops this
-      // too). Materials that don't exist yet at this instant (the matcap,
-      // texture-dependent props) compile on their own warm-frame draw — still
-      // off the reveal.
-      state.gl.compileAsync(state.scene, state.camera).then(prime, prime);
+
+      const parallel = !!state.gl.getContext().getExtension("KHR_parallel_shader_compile");
+      if (!parallel) {
+        state.gl.compile(state.scene, state.camera);
+        prime();
+        return;
+      }
+
+      // Bounded even on the supported path: a driver that advertises the extension
+      // but never reports completion should cost a beat, not the whole backstop.
+      const compiled = state.gl.compileAsync(state.scene, state.camera).then(
+        () => {},
+        () => {},
+      );
+      const bounded = new Promise<void>((resolve) => {
+        waitTimer = setTimeout(resolve, PRIME_WAIT_MS);
+      });
+      void Promise.race([compiled, bounded]).then(prime);
     });
-  }, []);
+
+    return () => {
+      cancelled = true;
+      cancelAnimationFrame(raf);
+      if (waitTimer !== undefined) clearTimeout(waitTimer);
+    };
+  }, [stage, renderer]);
 
   return (
     <Canvas
@@ -177,7 +294,7 @@ export function CosmosCanvas({
       }}
       style={{ width: "100%", height: "100%" }}
     >
-      {!mobile ? <CosmosCameraRig progressRef={progressRef} /> : null}
+      {!mobile && stage >= 1 ? <CosmosCameraRig progressRef={progressRef} /> : null}
 
       {/* Universe content — translated up to `UNIVERSE_Y_OFFSET` so the
           armillary lives in the sky rather than on the painted ground.
@@ -185,33 +302,36 @@ export function CosmosCanvas({
           through the prelude clouds and arrives at the elevated universe. */}
       <group position={[0, Cosmos.UNIVERSE_Y_OFFSET, 0]}>
         {/* Background — layer 1 enabled so the armillary's one-shot matcap
-            bake captures it. */}
-        <CosmosNebulae />
-        <CosmosDeepField field={drawnSky.deepField} />
-        <CosmosGalaxyBand field={drawnSky.galaxyBand} />
+            bake captures it. Both of these precede the armillary's stage
+            because that bake reads them. */}
+        {stage >= 3 ? <CosmosNebulae /> : null}
+        {stage >= 1 ? <CosmosDeepField field={drawnSky.deepField} /> : null}
+        {stage >= 1 ? <CosmosGalaxyBand field={drawnSky.galaxyBand} /> : null}
 
         {/* Foreground — layer 0 only; excluded from the matcap bake. */}
-        <CosmosStarField mobile={mobile} />
+        {stage >= 2 ? <CosmosStarField mobile={mobile} /> : null}
 
         {/* Constellation strokes sit between the foreground star shell
             (radii 4–8) and the deep-field stars (30–80) so they read as
             the "near sky" without being baked into the brass reflection. */}
-        {!mobile ? <CosmosConstellationLines progressRef={progressRef} /> : null}
+        {!mobile && stage >= 5 ? <CosmosConstellationLines progressRef={progressRef} /> : null}
 
-        <CosmosArmillary
-          sigilScreenPositionsRef={sigilScreenPositionsRef}
-          activeSigilId={activeSigilId}
-          progressRef={progressRef}
-        />
+        {stage >= 4 ? (
+          <CosmosArmillary
+            sigilScreenPositionsRef={sigilScreenPositionsRef}
+            activeSigilId={activeSigilId}
+            progressRef={progressRef}
+          />
+        ) : null}
 
-        {!mobile ? <CosmosComets progressRef={progressRef} /> : null}
+        {!mobile && stage >= 5 ? <CosmosComets progressRef={progressRef} /> : null}
       </group>
 
       {/* Painted prelude — discrete cut-out props (clouds, land, trees,
           rocks, bush, single figure) at world origin. Not translated:
           the painted ground stays at world y=0 so the camera physically
           rises up through it during the approach. */}
-      {!mobile ? <CosmosPrelude progressRef={progressRef} /> : null}
+      {!mobile && stage >= 5 ? <CosmosPrelude progressRef={progressRef} /> : null}
     </Canvas>
   );
 }

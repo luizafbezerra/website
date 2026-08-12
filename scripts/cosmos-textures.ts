@@ -372,7 +372,14 @@ const PRELUDE_MAX_DIM = 2048;
 // soft painted cut-outs, alpha-composited, blurred by depth of field and moving
 // past the camera. Effort 6 is the encoder's slowest setting: it costs bake time
 // only, and gives ~6% for nothing at runtime.
-const PRELUDE_WEBP = { quality: 75, effort: 6 } as const;
+//
+// `alphaQuality` is the lever the tuning above never pulled: sharp defaults it to
+// 100, so every prop was carrying a losslessly-encoded alpha channel next to a
+// q75 colour channel. These masks are feathered cut-out edges, not detail — the
+// thing alpha compression degrades is precisely the thing depth-of-field blur and
+// alpha compositing hide. 70 is the knee of the curve: it halves `land.webp`,
+// where 60 and 50 buy under 1% more between them.
+const PRELUDE_WEBP = { quality: 75, effort: 6, alphaQuality: 70 } as const;
 
 async function buildPreludeAsset(assetId: Cosmos.PreludeAssetId): Promise<string | null> {
   const filename = PRELUDE_ASSET_SOURCES[assetId];
@@ -615,17 +622,26 @@ async function processAll(): Promise<void> {
     console.log(`OK   ${t.dst} (${Math.round(stat.size / 1024)} KB)`);
   }
 
-  // v4 dropped the dome pass — kept on disk and in this file so it's
-  // recoverable for a future section. The brushed-roughness pass derives
-  // from the brass plate, so order: brass → sun → brushed-roughness.
+  // Both the dome and the gilt-sun passes are disabled, and their outputs are
+  // gone from `public/`: v4 replaced the painted dome with a procedural universe
+  // and the sun with a procedural glow sprite, so the two plates were shipping to
+  // every visitor's `public/` tree while nothing on the page ever requested them
+  // (578 KB). The passes stay here, preserved like the dome pass always was, so
+  // either is one uncommented line away from returning.
+  //
+  // The brass pass is NOT vestigial in the same way, even though nothing loads
+  // ring-brass-v2.webp directly: brushed-roughness derives from it, and that map
+  // is sampled by the armillary's matcap bake. Hence the order brass →
+  // brushed-roughness, and hence the plate stays on disk.
   const graded = [
     // { name: "dome", fn: buildDome },  // disabled in v4; preserved above.
     { name: "brass", fn: buildBrass },
-    { name: "sun", fn: buildSun },
+    // { name: "sun", fn: buildSun },   // disabled: the sun is procedural now.
     { name: "brushed-roughness", fn: buildBrushedRoughness },
   ] as const;
   // Reference the preserved functions so oxlint doesn't flag them as unused.
   void buildDome;
+  void buildSun;
   void renderCobaltWash;
 
   for (const g of graded) {

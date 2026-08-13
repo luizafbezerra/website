@@ -124,8 +124,11 @@ export const INICIO_DEFAULTS: Inicio = {
     // feed is where a follower already knows her, so the heading names the feed,
     // not the website's idea of it.
     heading: "O que eu publico",
-    intro:
-      "No Instagram, tudo passa depressa. Aqui cada publicação fica no centro, uma por vez, com o texto que a acompanha.",
+    // No intro by default: the posts carry their own captions, and every draft
+    // of this paragraph ended up explaining the page's layout to itself. If a
+    // line ever belongs here, it is hers to write (what she posts about), not
+    // the site's to justify.
+    intro: null,
   },
   doisCaminhos: {
     heading: "Dois caminhos",

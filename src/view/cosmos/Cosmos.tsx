@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Cosmos as Data } from "@/domain/cosmos/Cosmos";
 import type { CosmosSky } from "@/domain/cosmos/proceduralSky";
+import type { Locale } from "@/domain/site/Locale";
 import { useCosmosShow } from "@/view/cosmos/hooks/useCosmosShow";
 import { useAfterPageSettled } from "@/view/general/useAfterPageSettled";
 import { cn } from "@/view/styling/cn";
@@ -95,9 +96,11 @@ export type CosmosProps = {
    * supplied field is what "O céu desta noite" will hand it (REQ-009).
    */
   sky?: CosmosSky;
+  /** Selects the section's copy (eyebrow/title/dek/disclaimer/epigraph). */
+  locale?: Locale;
 };
 
-export function Cosmos({ sky }: CosmosProps = {}) {
+export function Cosmos({ sky, locale = "pt" }: CosmosProps = {}) {
   const [show, setShow] = useCosmosShow();
   const prevShowRef = useRef<boolean>(show);
   const dismissYRef = useRef<number | null>(null);
@@ -124,10 +127,15 @@ export function Cosmos({ sky }: CosmosProps = {}) {
   }, [show]);
 
   if (!show) return null;
-  return <CosmosBody onDismissForever={dismiss} sky={sky} />;
+  return <CosmosBody onDismissForever={dismiss} sky={sky} locale={locale} />;
 }
 
-function CosmosBody({ onDismissForever, sky }: CosmosProps & { onDismissForever: () => void }) {
+function CosmosBody({
+  onDismissForever,
+  sky,
+  locale = "pt",
+}: CosmosProps & { onDismissForever: () => void }) {
+  const copy = Data.sectionCopyFor(locale);
   const sectionRef = useRef<HTMLElement>(null);
   const pinnedRef = useRef<HTMLDivElement>(null);
   const progressRef = useRef<number>(0);
@@ -316,7 +324,7 @@ function CosmosBody({ onDismissForever, sky }: CosmosProps & { onDismissForever:
     <section
       ref={sectionRef}
       id={Data.sectionAnchorId}
-      aria-label={Data.sectionAriaLabel}
+      aria-label={copy.ariaLabel}
       className={cn(
         "cosmos-section relative",
         isFlatFlow && "cosmos-reduced",
@@ -328,12 +336,12 @@ function CosmosBody({ onDismissForever, sky }: CosmosProps & { onDismissForever:
           reading edge, the one place the page's funnel of widths wobbled. */}
       <header className="px-6 pt-24 pb-10 sm:px-10 sm:pt-28 sm:pb-14">
         <div className="mx-auto w-full max-w-3xl">
-          <p className="tracked mb-5 text-center sm:text-left">{Data.sectionEyebrow}</p>
+          <p className="tracked mb-5 text-center sm:text-left">{copy.eyebrow}</p>
           <h2 className="display text-foreground text-balance text-[clamp(1.95rem,3.8vw,2.75rem)] leading-[1.13] tracking-[-0.008em]">
-            {Data.sectionTitle}
+            {copy.title}
           </h2>
           <p className="body-italic text-ink-soft mt-7 max-w-[58ch] text-[1.06rem] leading-[1.7]">
-            {Data.sectionDek}
+            {copy.dek}
           </p>
         </div>
       </header>
@@ -408,12 +416,12 @@ function CosmosBody({ onDismissForever, sky }: CosmosProps & { onDismissForever:
               for Luiza's review before publish. */}
           {revealed ? (
             <aside className="cosmos-epigraph" aria-hidden="true">
-              <p className="cosmos-epigraph-line">{Data.descentEpigraph.line}</p>
+              <p className="cosmos-epigraph-line">{copy.epigraph.line}</p>
               <p className="cosmos-epigraph-attribution">
                 <span aria-hidden="true" className="text-terracotta mr-2">
                   ·
                 </span>
-                {Data.descentEpigraph.attribution}
+                {copy.epigraph.attribution}
               </p>
             </aside>
           ) : null}
@@ -441,7 +449,7 @@ function CosmosBody({ onDismissForever, sky }: CosmosProps & { onDismissForever:
           <span aria-hidden="true" className="text-terracotta mr-2">
             ·
           </span>
-          {Data.sectionDisclaimer}
+          {copy.disclaimer}
         </p>
       </footer>
 

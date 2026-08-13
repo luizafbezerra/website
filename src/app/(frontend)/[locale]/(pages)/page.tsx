@@ -109,7 +109,11 @@ export default async function Home({ params, searchParams }: HomeProps) {
       {/* The sky is computed here, on the server, from the same render clock as
           the rotating passage — so every visitor to this render sees one sky,
           and it is São Paulo's rather than the reader's. */}
-      <WowSlot content={inicio.cosmos} sky={computeNightSky(skyOverride ?? renderedAt)} />
+      <WowSlot
+        content={inicio.cosmos}
+        sky={computeNightSky(skyOverride ?? renderedAt)}
+        locale={locale}
+      />
     </>
   );
 }

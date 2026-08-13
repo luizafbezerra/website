@@ -1,3 +1,5 @@
+import type { Locale } from "@/domain/site/Locale";
+
 export namespace Cosmos {
   export type SigilId =
     | "aries"
@@ -194,24 +196,55 @@ export namespace Cosmos {
   export const constellations: ReadonlyArray<ConstellationPath> = buildConstellations();
 
   // Section identity + copy. Drafts to be reviewed with Luiza before publish.
+  // Locale-keyed because the section is one of the two pages rendered under
+  // `/en` as well as `/` — see `sectionCopyFor` below. The zodiac sign names
+  // and marginalia in `sigils` above are NOT part of this split yet and still
+  // render in Portuguese on `/en`; that is a separate, known gap.
   export const sectionAnchorId = "ceu";
-  export const sectionEyebrow = "Atlas celeste";
-  export const sectionTitle = "Sob o céu interior";
-  export const sectionDek =
-    "Para Jung, o céu noturno é uma das formas mais antigas de a humanidade conversar consigo mesma: não como prescrição, mas como um vocabulário de padrões. Estas constelações não predizem; nomeiam.";
-  export const sectionDisclaimer = "Não é uma análise astrológica; é uma evocação simbólica.";
 
-  // Descent-beat epigraph. Anchored bottom-left of the cosmos sticky frame
-  // during the final 15% of the scroll, fading in alongside the painted
-  // horizon. Placeholder text for Luiza's review before publish — the
-  // attribution to Jung for this quote is widely repeated but disputed
-  // (not found verbatim in his published works); flag this when reviewing.
-  export const descentEpigraph = {
-    line: "Quem olha para fora, sonha. Quem olha para dentro, desperta.",
-    attribution: "Carl Gustav Jung",
-  } as const;
-  export const sectionAriaLabel = "Atlas celeste: evocação simbólica, sem análise astrológica";
-  export const sigilAriaLabel = (signName: string) => `Constelação de ${signName}`;
+  export type SectionCopy = {
+    eyebrow: string;
+    title: string;
+    dek: string;
+    disclaimer: string;
+    ariaLabel: string;
+    epigraph: { line: string; attribution: string };
+  };
+
+  const SECTION_COPY: Record<Locale, SectionCopy> = {
+    pt: {
+      eyebrow: "Atlas celeste",
+      title: "Sob o céu interior",
+      dek: "Para Jung, o céu noturno é uma das formas mais antigas de a humanidade conversar consigo mesma: não como prescrição, mas como um vocabulário de padrões. Estas constelações não predizem; nomeiam.",
+      disclaimer: "Não é uma análise astrológica; é uma evocação simbólica.",
+      ariaLabel: "Atlas celeste: evocação simbólica, sem análise astrológica",
+      // Attribution to Jung for this line is widely repeated but disputed
+      // (not found verbatim in his published works); flag this when reviewing.
+      epigraph: {
+        line: "Quem olha para fora, sonha. Quem olha para dentro, desperta.",
+        attribution: "Carl Gustav Jung",
+      },
+    },
+    en: {
+      eyebrow: "Celestial atlas",
+      title: "Under the inner sky",
+      dek: "For Jung, the night sky is one of humanity's oldest ways of talking to itself: not as prescription, but as a vocabulary of patterns. These constellations do not predict; they name.",
+      disclaimer: "This is not an astrological reading; it is a symbolic evocation.",
+      ariaLabel: "Celestial atlas: a symbolic evocation, not an astrological reading",
+      epigraph: {
+        line: "Who looks outside, dreams. Who looks inside, awakens.",
+        attribution: "Carl Gustav Jung",
+      },
+    },
+  };
+
+  export const sectionCopyFor = (locale: Locale): SectionCopy => SECTION_COPY[locale];
+
+  // `locale` defaults to "pt" because `signName` itself (from `sigils` above,
+  // e.g. "Áries") is not locale-split yet — a known remaining gap, not
+  // something this label can fix on its own.
+  export const sigilAriaLabel = (signName: string, locale: Locale = "pt") =>
+    locale === "en" ? `Constellation of ${signName}` : `Constelação de ${signName}`;
 
   // v1 scroll-cinema phase boundaries (preserved for backwards-compat with the
   // orchestrator's `--cosmos-sigil-opacity` CSS variable computation, which is

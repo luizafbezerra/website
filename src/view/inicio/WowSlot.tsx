@@ -2,6 +2,7 @@
 
 import type { NightSky } from "@/domain/cosmos/nightSky";
 import type { Inicio } from "@/domain/inicio/Inicio";
+import type { Locale } from "@/domain/site/Locale";
 import { useMotionAllowed } from "@/view/general/useMotionAllowed";
 import { useWideViewport } from "@/view/general/useWideViewport";
 import { Cosmos } from "@/view/cosmos/Cosmos";
@@ -30,11 +31,19 @@ import { CeuDestaNoite } from "@/view/cosmos/CeuDestaNoite";
  * explicitly dismissed the Cosmos forever: that is their stated choice, it
  * persists in their own browser, and the footer offers it back.
  */
-export function WowSlot({ content, sky }: { content: Inicio["cosmos"]; sky: NightSky }) {
+export function WowSlot({
+  content,
+  sky,
+  locale,
+}: {
+  content: Inicio["cosmos"];
+  sky: NightSky;
+  locale: Locale;
+}) {
   const motionAllowed = useMotionAllowed();
   const wide = useWideViewport();
 
-  if (wide && motionAllowed) return <Cosmos />;
+  if (wide && motionAllowed) return <Cosmos locale={locale} />;
 
   return <CeuDestaNoite sky={sky} caption={content.caption} />;
 }

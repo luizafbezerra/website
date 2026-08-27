@@ -28,6 +28,7 @@
     "seed": "tsx --require ./scripts/no-schema-push.cjs --env-file .env.local src/payload/seed/index.ts",
     "export:content": "tsx --require ./scripts/no-schema-push.cjs --env-file .env.local scripts/export-content.mts",
     "faq:cleanup": "tsx --require ./scripts/no-schema-push.cjs --env-file .env.local scripts/faq-cleanup.mts",
+    "faq:seed": "tsx --require ./scripts/no-schema-push.cjs --env-file .env.local scripts/faq-seed.mts",
     "prepare": "husky"
   },
   "dependencies": {

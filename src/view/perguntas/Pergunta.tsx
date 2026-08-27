@@ -4,7 +4,7 @@ import { questionAnchor } from "./questionAnchor";
 /**
  * One question, closed until asked.
  *
- * **Why a disclosure and not the open Q&A this page used to print.** Sixteen
+ * **Why a disclosure and not the open Q&A this page used to print.** Two dozen
  * answers set out in full make a scroll nobody reads: the visitor arrives with one
  * doubt, and finding it meant reading past every answer that was not theirs. Closed,
  * the page becomes a list of the doubts themselves — the four section headings and
@@ -14,7 +14,7 @@ import { questionAnchor } from "./questionAnchor";
  * **Nothing is hidden from anyone who cannot click.** Native `<details>` keeps the
  * answer in the document: find-in-page opens the question around a match, a fragment
  * link opens its own question on arrival, and the page's `FAQPage` JSON-LD still
- * carries all sixteen answers to a crawler. That is what makes the collapse a change
+ * carries every answer to a crawler. That is what makes the collapse a change
  * of presentation rather than a loss of content — the objection that kept this page
  * flat, answered by the element rather than argued away.
  *

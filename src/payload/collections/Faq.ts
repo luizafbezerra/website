@@ -16,19 +16,18 @@ import { localizedText, localizedTextarea } from "../fields/copyFields";
  * `_status` — every row is public.
  */
 /**
- * Helper text under the Pergunta field: the subjects worth covering, by section.
+ * Helper text under the Pergunta field.
  *
- * These are the ten drafted answers this repo shipped in August, demoted from copy
- * to prompt — the ground was right, the voice was ours. The section names match
- * `FAQ_CATEGORY_LABELS` in `../faqCategories` and must stay in step with them.
+ * It used to list the subjects each section still needed, because most of the page
+ * was a placeholder. Her batch of 2026-08-26 answered it, so the field's job is now
+ * the opposite: tell her which answers are still ours rather than hers, so she can
+ * take them over whenever she wants to.
+ *
  * Admin-facing, so pt-BR only and never localized (the panel is hers).
  */
 const FAQ_QUESTION_SUGGESTIONS = [
-  "Sugestões por seção — a página precisa de pelo menos uma resposta sua em cada uma.",
-  "Sobre a análise: quanto tempo dura uma análise · que público você atende · se é preciso lembrar dos sonhos.",
-  "Sobre a orientação profissional: quantos encontros são · que testes são usados e se eles decidem por você · o que a pessoa leva no final · em que difere de terapia.",
-  "Prático: com que frequência são as sessões · valores · como funciona a sessão on-line · sigilo · remarcação.",
-  "Internacional: diferença de fuso · como pagar de fora do Brasil · sessões em inglês.",
+  "As quatro seções já estão respondidas. Este campo é para quando chegar uma pergunta nova — escreva-a como a pessoa perguntaria, não como um título.",
+  "Oito das respostas não são suas: são as suas próprias páginas resumidas, para que nenhuma seção ficasse vazia. Pode trocar todas por palavras suas a qualquer momento — são as quatro de Sobre a orientação profissional, a de “Quanto tempo dura uma análise?” e três das quatro de Internacional (horários, idiomas e regulamentação).",
 ].join("\n\n");
 
 export const Faq: CollectionConfig = {
@@ -40,8 +39,8 @@ export const Faq: CollectionConfig = {
     defaultColumns: ["question", "category", "order"],
     description:
       "As perguntas de /perguntas. Cada uma pertence a uma seção; dentro da seção, a ordem segue o campo Ordem. " +
-      "Cada uma das quatro seções precisa de pelo menos uma resposta escrita por você antes de o site poder ser indexado — " +
-      "as linhas marcadas [A DEFINIR] estão no lugar das suas e não vão ao ar.",
+      "As quatro seções já estão respondidas — o que você editar ou acrescentar aqui entra no ar sozinho, " +
+      "sem depender de uma nova publicação do site.",
   },
   access: {
     read: () => true,

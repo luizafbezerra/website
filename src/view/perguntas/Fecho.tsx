@@ -11,7 +11,7 @@ import { WhatsAppCta } from "@/view/general/WhatsAppCta";
  * **Deliberately not a `Comecar` block.** CONCEPT §6 gives this page four sections
  * and no "Começar": the terminal terracotta ask belongs to the service and reach
  * pages, and to `/primeira-conversa`, where the whole page is the ask. A filled
- * terracotta block after sixteen answers would turn a reference page into a sales
+ * terracotta block after two dozen answers would turn a reference page into a sales
  * page at the exact moment the visitor is being careful — and would put the site's
  * one CTA voice somewhere trust was still being earned. So both affordances here
  * are marginalia: `WhatsAppCta variant="quiet"` and a `SectionLink`.

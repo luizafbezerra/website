@@ -83,7 +83,7 @@ One boundary sentence routes between the doors: _sentido do trabalho → anális
 - **Creative-touch greenlight** — CONCEPT §9 is a menu, not a commitment. Decided: O céu desta noite (static chart) + O selo + O quadro inteiro + Sonho ampliado + the moon colophon for launch; A Lâmina dropped on evidence (see §9.1).
 - **Portrait logistics** — who shoots, when.
 - **CRP number** — currently read off her public bio; needs written confirmation before it ships anywhere.
-- **Domain** — recommendation simbolosdoself.com.br (+ .com if free); her confirmation pending.
+- **Domain** — confirmed (2026-09): **simbolosdoself.com** is the canonical origin; `www.simbolosdoself.com` 301s to it (Vercel domain redirect, not code).
 
 ## Brand Commitments
 

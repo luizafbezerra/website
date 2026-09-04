@@ -454,8 +454,8 @@ a vector stand-in inverts any of them into banned generated ornament.
 
 ## 10. Being found
 
-- **As "Símbolos do Self":** domain decision made with her (recommend simbolosdoself.com.br,
-  plus .com if free); title pattern `<página> · Símbolos do Self`, home title carrying the
+- **As "Símbolos do Self":** domain confirmed with her — **simbolosdoself.com**, `www` answering
+  with a 301 to the apex (Vercel domain redirect); title pattern `<página> · Símbolos do Self`, home title carrying the
   positioning sentence + her name; structured data declaring the clinic (professional
   organization, no street address — online-only), the person (credentials, alumniOf,
   languages pt/en), the two services, and `sameAs` binding the Instagram account and
@@ -569,7 +569,7 @@ a vector stand-in inverts any of them into banned generated ornament.
    carousel + the un-crop pairs).
 7. **The Meta/Instagram connection** on her side (unblocks the live feed) and **the bio
    link fix** the day the site is live — the single highest-ROI minute of the project.
-8. **Domain confirmation** (simbolosdoself.com.br).
+8. ~~**Domain confirmation**~~ — confirmed 2026-09: simbolosdoself.com.
 9. Later, when ready: the wheel readings in her words; her polish pass over the English
    translations; one testimonial from a client abroad (consent-gated).
 

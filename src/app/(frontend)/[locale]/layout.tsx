@@ -7,7 +7,6 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { getClinica } from "@/domain/clinica/getClinica";
 import { LOCALE_TAGS } from "@/domain/site/Locale";
 import { BASE_URL } from "@/infrastructure/env/baseUrl";
-import { SITE_INDEXABLE } from "@/infrastructure/env/siteIndexable";
 import { routing } from "@/i18n/routing";
 import { HashAnchorScroll } from "@/view/routing/HashAnchorScroll";
 import "@/app/globals.css";
@@ -93,20 +92,8 @@ export const generateMetadata = async ({ params }: LocaleRouteProps): Promise<Me
     // Her positioning sentence is the site's default description: one line that
     // answers what this is, for whom, and how far it reaches.
     description: clinica.positioning,
-    // Pre-launch belt-and-suspenders. Pair with robots.ts (Disallow: /) so the
-    // placeholder credential, portrait, and bio cannot be indexed before the
-    // content pass lands. Once NEXT_PUBLIC_SITE_INDEXABLE flips at launch, the
-    // `robots` key is dropped entirely so pages become indexable by default.
-    ...(SITE_INDEXABLE
-      ? {}
-      : {
-          robots: {
-            index: false,
-            follow: false,
-            nocache: true,
-            googleBot: { index: false, follow: false },
-          },
-        }),
+    // No `robots` key: pages are indexable by default. The pre-launch `noindex`
+    // came out with the release PR, together with the `Disallow: /` in robots.ts.
     openGraph: {
       type: "website",
       siteName: clinica.clinicName,

@@ -15,19 +15,21 @@ export const revalidate = 3600;
  * Each entry also carries its locale alternates, which is how a crawler learns
  * that the pt and en variants are the same page.
  *
+ * No `lastModified`. The registry does not know when a page's content last
+ * changed, and stamping every entry with the build time on each hourly
+ * revalidation is the pattern Google says makes it stop trusting the field —
+ * an absent date is read; a wrong one is discarded along with the rest.
+ *
  * Lives at the true app root rather than inside `(frontend)`: sitemap and robots
  * are locale-independent, so keeping them outside `[locale]` means the middleware
  * never has to rewrite them.
  */
 export default function sitemap(): MetadataRoute.Sitemap {
-  const lastModified = new Date();
-
   return pagePathEntries(builtPages()).map(({ page, path }) => {
     const paths = pagePathsByLocale(page.key);
 
     return {
       url: absoluteUrl(path),
-      lastModified,
       changeFrequency: page.changeFrequency,
       priority: page.sitemapPriority,
       alternates: {

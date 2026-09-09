@@ -87,6 +87,21 @@ function sectorsIn(locale: Locale) {
 
 const FIRST_SECTOR_ID = SECTORS[0]?.id ?? "aries";
 
+/**
+ * One state of the detail panel — the hint, or one of the twelve signs.
+ *
+ * All of them stack in the same grid cell from `lg` up, so the panel measures
+ * its tallest state and stops resizing under the cursor. `invisible` is doing
+ * the reserving: unlike `hidden` it keeps the box, and it takes the content out
+ * of the accessibility tree and out of the tab order the same way, so the
+ * eleven inactive signs are inert without needing `aria-hidden` on each.
+ *
+ * Below `lg` the inactive states are `display: none`, which is what keeps a
+ * phone from reserving the tallest sign's height under the wheel at rest.
+ */
+const panelStateClass = (shown: boolean) =>
+  shown ? "lg:[grid-area:1/1]" : "hidden lg:invisible lg:block lg:[grid-area:1/1]";
+
 /** Circular navigation: the wheel has no first or last, only neighbours. */
 function step(id: ZodiacSignId, delta: number): ZodiacSignId {
   const index = SECTORS.findIndex((sector) => sector.id === id);
@@ -331,7 +346,23 @@ export function MandalaWheel({ readings }: { readings: Record<ZodiacSignId, Sign
       {/* `tabIndex={0}` because a tabpanel holding no focusable content still has
           to be reachable from its tab — that is how a keyboard reader gets from
           the wheel into what the wheel is showing them. The focus ring is the
-          site-wide `:focus-visible` rule in `globals.css`, not a local override. */}
+          site-wide `:focus-visible` rule in `globals.css`, not a local override.
+
+          **Why every sign is in the DOM, and why only from `lg` up.** Sweeping
+          the wheel used to resize this panel under the cursor — the hint is
+          shorter than any sign, and the signs differ from each other — which
+          pushed the Cosmos below down the page on every hover. A `min-h` cannot
+          fix that honestly: the number would be a guess that her per-sign
+          readings (REQ-007, empty today) would invalidate the moment she wrote
+          one. So from `lg` up all thirteen states share one grid cell and the
+          inactive ones are `invisible` rather than unmounted: `visibility`
+          keeps a box, so the panel is always as tall as its tallest state and
+          the reservation re-derives itself from whatever she writes.
+
+          Below `lg` the panel sits *under* the wheel, there is no hover, and a
+          tap is expected to open something — so the inactive states are
+          `display: none` there and the panel grows as it always did, rather
+          than reserving a screen of blank parchment on a phone. */}
       <div
         ref={panelRef}
         id={PANEL_ID}
@@ -340,21 +371,23 @@ export function MandalaWheel({ readings }: { readings: Record<ZodiacSignId, Sign
         tabIndex={0}
         aria-labelledby={active ? tabId(active.id) : undefined}
         aria-label={active ? undefined : t("panelLabel")}
-        className="mx-auto max-w-[52ch] lg:mx-0 lg:min-h-[34rem]"
+        className="mx-auto max-w-[52ch] lg:mx-0 lg:grid"
       >
-        {active ? (
-          <SignDetail
-            id={active.id}
-            label={active.label}
-            dateRange={active.dateRange}
-            reading={readings[active.id]}
-          />
-        ) : (
-          <div className="space-y-6">
-            <p className="marginalia max-w-[44ch]">{t("hint")}</p>
-            <p className="marginalia max-w-[44ch]">{t("hintVedic")}</p>
+        <div className={panelStateClass(!active)}>
+          <p className="marginalia max-w-[44ch]">{t("hint")}</p>
+          <p className="marginalia mt-6 max-w-[44ch]">{t("hintVedic")}</p>
+        </div>
+
+        {sectors.map((sector) => (
+          <div key={sector.id} className={panelStateClass(sector.id === activeId)}>
+            <SignDetail
+              id={sector.id}
+              label={sector.label}
+              dateRange={sector.dateRange}
+              reading={readings[sector.id]}
+            />
           </div>
-        )}
+        ))}
       </div>
     </div>
   );

@@ -1,65 +1,23 @@
-import type { Field, GlobalConfig } from "payload";
-import { WHEEL_ZODIAC } from "@/domain/wheel/wheelGeometry";
-import {
-  type Element,
-  ZODIAC_CONTENT,
-  ZODIAC_SIGN_IDS,
-  type ZodiacSignId,
-} from "@/domain/zodiac/zodiacContent";
+import type { GlobalConfig } from "payload";
 import { localizedRichText, localizedText, localizedTextarea } from "../../fields/copyFields";
 import { mediaSlot } from "../../fields/mediaSlot";
 import { PAGES_GROUP, pageAccess, revalidatePageHook } from "./shared";
 
 /**
  * A Análise (`/analise`) — the approach page. For analysis the approach *is* the
- * product, so this page carries the pillars, her account of the method, and the
- * painted wheel that moved here from the retired `/simbolos` route.
+ * product, so this page carries the pillars and her account of the method.
  *
  * The 2026-08 condensation cut the page from eight bands to five, and the tabs
  * follow: the pillars moved up to section 2 (recognition before method), her five
  * verbatim paragraphs became the method section's spine (`oMetodo.body`), A visão
  * dissolved into the method's individuação note, the three titled tools collapsed
- * to one line, the ask folded into the practical band (`pratico.comecar`), and
- * the mandala closes the page after the ask — the same grammar as the Cosmos on
- * the home.
+ * to one line, and the ask folded into the practical band (`pratico.comecar`),
+ * which is now the page's last word.
  *
- * The wheel's readings (the twelve signs' prose) are deliberately empty: the
- * wheel ships visual-only and a reading renders only in her words (REQ-007 /
- * CONCEPT §11 authorship policy). The interlocking reference data — element,
- * ruler, the nakshatra table — stays in `src/domain/zodiac/`, because it is
- * scholarly reference, not editorial voice.
+ * The mandala moved to Início, where it renders just above the Cosmos: the two
+ * wow surfaces belong on one page rather than one apiece, and the ask closes
+ * this one. Its tab lives in `page-inicio` — see `inicio.ts`.
  */
-
-const ELEMENT_GROUPS: { element: Element; label: string }[] = [
-  { element: "fogo", label: "Fogo" },
-  { element: "terra", label: "Terra" },
-  { element: "ar", label: "Ar" },
-  { element: "água", label: "Água" },
-];
-
-/** The painted wheel's own labels, keyed so `ZodiacSignId` can index them. */
-const SIGN_LABELS = new Map(WHEEL_ZODIAC.map((sign) => [sign.id, sign]));
-
-const signGroup = (id: ZodiacSignId): Field => {
-  const sign = SIGN_LABELS.get(id);
-  return {
-    name: id,
-    type: "group",
-    label: sign?.label ?? id,
-    admin: { description: `${sign?.dateRange ?? ""} · ${ZODIAC_CONTENT[id].archetype}` },
-    fields: [
-      localizedTextarea({ name: "reading", label: "Leitura do signo" }),
-      localizedTextarea({ name: "vedicReading", label: "Leitura védica — três mansões lunares" }),
-    ],
-  };
-};
-
-const signCollapsibles: Field[] = ELEMENT_GROUPS.map(({ element, label }) => ({
-  type: "collapsible",
-  label,
-  admin: { initCollapsed: true },
-  fields: ZODIAC_SIGN_IDS.filter((id) => ZODIAC_CONTENT[id].element === element).map(signGroup),
-}));
 
 export const PageAnalise: GlobalConfig = {
   slug: "page-analise",
@@ -248,18 +206,6 @@ export const PageAnalise: GlobalConfig = {
                 localizedText({ name: "linkLabel", label: "Rótulo do link" }),
               ],
             },
-          ],
-        },
-        // ── 6 A mandala ──────────────────────────────────────────────────────
-        {
-          name: "mandala",
-          label: "6 · A mandala",
-          description:
-            "A roda pintada fecha a página, depois do convite — o momento de encantamento. Ela é visual: cada leitura abaixo só aparece no site depois que você a escrever. Enquanto estiverem em branco, a roda fala apenas pela imagem.",
-          fields: [
-            localizedText({ name: "heading", label: "Título" }),
-            localizedTextarea({ name: "intro", label: "Introdução" }),
-            ...signCollapsibles,
           ],
         },
       ],

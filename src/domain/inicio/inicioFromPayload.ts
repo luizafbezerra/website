@@ -1,7 +1,8 @@
 import { pageImageFrom } from "@/domain/media/pageImageFrom";
 import type { RichTextContent } from "@/domain/richText/RichTextContent";
+import { ZODIAC_SIGN_IDS, type ZodiacSignId } from "@/domain/zodiac/zodiacContent";
 import type { PayloadPageInicio } from "@/infrastructure/payload/getPageInicioGlobal";
-import { type Beat, type Door, type Inicio, INICIO_DEFAULTS } from "./Inicio";
+import { type Beat, type Door, type Inicio, INICIO_DEFAULTS, type SignReading } from "./Inicio";
 
 /** Blank strings are absences, not values — a cleared field must fall back. */
 function filled(value: string | null | undefined): string | null {
@@ -17,6 +18,20 @@ function filledRichText(value: RichTextContent | null | undefined): RichTextCont
   if (!value) return null;
   const children = value.root?.children;
   return Array.isArray(children) && children.length > 0 ? value : null;
+}
+
+/**
+ * Her twelve readings. Every sign is present in the result so the wheel can look
+ * any of them up, and every unwritten half is `null` — REQ-007's gate is this
+ * mapping, not a component's conditional.
+ */
+function readingsFrom(raw: PayloadPageInicio["mandala"]): Record<ZodiacSignId, SignReading> {
+  return Object.fromEntries(
+    ZODIAC_SIGN_IDS.map((id) => {
+      const stored = raw?.[id];
+      return [id, { reading: filled(stored?.reading), vedicReading: filled(stored?.vedicReading) }];
+    }),
+  ) as Record<ZodiacSignId, SignReading>;
 }
 
 function doorFrom(raw: NonNullable<PayloadPageInicio["doisCaminhos"]>["analysis"], fallback: Door) {
@@ -79,6 +94,11 @@ export function inicioFromPayload(doc: PayloadPageInicio): Inicio {
       heading: filled(doc.oSintoma?.heading) ?? defaults.oSintoma.heading,
       body: filledRichText(doc.oSintoma?.body) ?? defaults.oSintoma.body,
       linkLabel: filled(doc.oSintoma?.linkLabel) ?? defaults.oSintoma.linkLabel,
+    },
+    mandala: {
+      heading: filled(doc.mandala?.heading) ?? defaults.mandala.heading,
+      intro: filled(doc.mandala?.intro) ?? defaults.mandala.intro,
+      readings: readingsFrom(doc.mandala),
     },
     cosmos: {
       caption: filled(doc.cosmos?.caption),

@@ -1,6 +1,7 @@
 import type { PageImage } from "@/domain/media/PageImage";
 import type { RichTextContent } from "@/domain/richText/RichTextContent";
 import { richText } from "@/domain/richText/richText";
+import { ZODIAC_SIGN_IDS, type ZodiacSignId } from "@/domain/zodiac/zodiacContent";
 
 // ---------------------------------------------------------------------------
 // Início (`/`) — the eleven sections of CONCEPT §6 in scroll order, as the page
@@ -9,7 +10,10 @@ import { richText } from "@/domain/richText/richText";
 // read the same.
 //
 // Section 2 (Credencial) has no member: the strip appears on every core page,
-// so it is A Clínica's `credentials`, read straight off `Clinica`.
+// so it is A Clínica's `credentials`, read straight off `Clinica`. `mandala` is
+// the twelfth section, which arrived from `/analise`: it renders immediately
+// above the Cosmos, so both wow surfaces sit past the ask rather than one on
+// each page. Its readings are hers alone (REQ-007) — see `SignReading`.
 //
 // INICIO_DEFAULTS is what renders when Payload is off or a field is blank, and
 // it is also what `seed/pages.ts` writes on a fresh database.
@@ -39,6 +43,14 @@ export type Door = {
 /** One beat of "como é começar". */
 export type Beat = { numeral: string; text: string };
 
+/**
+ * Her prose for one sign of the wheel, both halves optional and both empty at
+ * launch (REQ-007). A null reading renders nothing at all — never a placeholder
+ * frame, because a missing paragraph is not a missing asset, and announcing the
+ * gap to a visitor would be worse than the wheel simply being visual.
+ */
+export type SignReading = { reading: string | null; vedicReading: string | null };
+
 export type Inicio = {
   hero: {
     lead: RichTextContent;
@@ -66,6 +78,11 @@ export type Inicio = {
     heading: string;
     body: RichTextContent;
     linkLabel: string;
+  };
+  mandala: {
+    heading: string;
+    intro: string;
+    readings: Record<ZodiacSignId, SignReading>;
   };
   cosmos: {
     /**
@@ -98,6 +115,11 @@ export type Inicio = {
     whatsappLabel: string;
   };
 };
+
+/** Twelve signs, no prose. The shape her admin edits fill in one field at a time. */
+export const EMPTY_SIGN_READINGS: Record<ZodiacSignId, SignReading> = Object.fromEntries(
+  ZODIAC_SIGN_IDS.map((id) => [id, { reading: null, vedicReading: null }]),
+) as Record<ZodiacSignId, SignReading>;
 
 export const INICIO_DEFAULTS: Inicio = {
   hero: {
@@ -156,6 +178,13 @@ export const INICIO_DEFAULTS: Inicio = {
       "O trabalho é escutar esse chamado até entender do que ele trata, em vez de silenciá-lo.",
     ]),
     linkLabel: "como eu trabalho",
+  },
+  mandala: {
+    heading: "A mandala dos signos",
+    intro:
+      "Doze figuras pintadas, vinte e sete mansões lunares, a Terra ao centro. Aqui os signos são vocabulário: imagens para nomear o que se vive, nunca uma previsão nem uma leitura sobre quem você é.",
+    // REQ-007: hers alone, and empty until she writes them.
+    readings: EMPTY_SIGN_READINGS,
   },
   cosmos: {
     caption: null,

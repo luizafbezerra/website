@@ -1,5 +1,4 @@
 import { describe, expect, it } from "vitest";
-import { ZODIAC_SIGN_IDS } from "@/domain/zodiac/zodiacContent";
 import type { PayloadPageAnalise } from "@/infrastructure/payload/getPageAnaliseGlobal";
 import { ANALISE_DEFAULTS } from "./Analise";
 import { analiseFromPayload } from "./analiseFromPayload";
@@ -26,7 +25,6 @@ describe("analiseFromPayload", () => {
     const doc: PayloadPageAnalise = {
       abertura: { heading: "   " },
       oMetodo: { closingLine: "", toolsLine: "  " },
-      mandala: { intro: "  " },
       oQueTrazem: { linkLabel: " " },
       pratico: { comecar: { body: "\n" } },
     };
@@ -36,7 +34,6 @@ describe("analiseFromPayload", () => {
     expect(page.abertura.heading).toBe(ANALISE_DEFAULTS.abertura.heading);
     expect(page.oMetodo.closingLine).toBe(ANALISE_DEFAULTS.oMetodo.closingLine);
     expect(page.oMetodo.toolsLine).toBe(ANALISE_DEFAULTS.oMetodo.toolsLine);
-    expect(page.mandala.intro).toBe(ANALISE_DEFAULTS.mandala.intro);
     expect(page.oQueTrazem.linkLabel).toBe(ANALISE_DEFAULTS.oQueTrazem.linkLabel);
     expect(page.pratico.comecar.body).toBe(ANALISE_DEFAULTS.pratico.comecar.body);
   });
@@ -148,45 +145,6 @@ describe("analiseFromPayload", () => {
     });
 
     expect(page.oMetodo.plate.image).toBeNull();
-  });
-
-  // -------------------------------------------------------------------------
-  // REQ-007 — the wheel is visual-only until her readings exist, and this mapper
-  // is where that gate lives.
-  // -------------------------------------------------------------------------
-
-  it("returns every sign with both readings null on an untouched mandala tab", () => {
-    const { readings } = analiseFromPayload({}).mandala;
-
-    expect(Object.keys(readings)).toEqual([...ZODIAC_SIGN_IDS]);
-    for (const id of ZODIAC_SIGN_IDS) {
-      expect(readings[id], id).toEqual({ reading: null, vedicReading: null });
-    }
-  });
-
-  it("carries the readings she has written, one sign at a time", () => {
-    const { readings } = analiseFromPayload({
-      mandala: {
-        aries: { reading: "Áries marca o impulso." },
-        pisces: { vedicReading: "As três mansões de Peixes." },
-      },
-    }).mandala;
-
-    expect(readings.aries).toEqual({ reading: "Áries marca o impulso.", vedicReading: null });
-    expect(readings.pisces).toEqual({
-      reading: null,
-      vedicReading: "As três mansões de Peixes.",
-    });
-    // Every other sign stays silent.
-    expect(readings.leo).toEqual({ reading: null, vedicReading: null });
-  });
-
-  it("treats a whitespace-only reading as unwritten, so the wheel stays visual", () => {
-    const { readings } = analiseFromPayload({
-      mandala: { taurus: { reading: "   ", vedicReading: "\n" } },
-    }).mandala;
-
-    expect(readings.taurus).toEqual({ reading: null, vedicReading: null });
   });
 
   // -------------------------------------------------------------------------

@@ -178,6 +178,23 @@
     "contato": {
       "orByEmail": "or by email:",
       "faqLink": "questions people ask before writing"
+    },
+    "mandala": {
+      "wheelAlt": "A painted mandala with twelve zodiacal figures, twenty-seven Vedic lunar mansions and the Earth at its centre",
+      "tablistLabel": "The wheel's twelve figures",
+      "panelLabel": "Details of the chosen figure",
+      "signAria": "{sign}, {dates}",
+      "hint": "Hover over one of the twelve figures, or use the arrow keys. Tap to bring it to the top.",
+      "hintVedic": "Beside each figure's portrait a second, Vedic chapter opens: the three lunar mansions its arc crosses.",
+      "fields": {
+        "element": "Element",
+        "modality": "Modality",
+        "ruler": "Ruler",
+        "body": "Body",
+        "archetype": "Archetype"
+      },
+      "vedic": "Vedic tradition",
+      "vedicSub": "Three lunar mansions"
     }
   },
   "horas": {
@@ -250,23 +267,6 @@
     "plate": {
       "placeholder": "A painting set beside the idea of individuation.",
       "placeholderNote": "The chosen work arrives here through the admin, with painter, title and year."
-    },
-    "mandala": {
-      "wheelAlt": "A painted mandala with twelve zodiacal figures, twenty-seven Vedic lunar mansions and the Earth at its centre",
-      "tablistLabel": "The wheel's twelve figures",
-      "panelLabel": "Details of the chosen figure",
-      "signAria": "{sign}, {dates}",
-      "hint": "Hover over one of the twelve figures, or use the arrow keys. Tap to bring it to the top.",
-      "hintVedic": "Beside each figure's portrait a second, Vedic chapter opens: the three lunar mansions its arc crosses.",
-      "fields": {
-        "element": "Element",
-        "modality": "Modality",
-        "ruler": "Ruler",
-        "body": "Body",
-        "archetype": "Archetype"
-      },
-      "vedic": "Vedic tradition",
-      "vedicSub": "Three lunar mansions"
     },
     "sonho": {
       "parallelPlaceholder": "The painting detail for this parallel."

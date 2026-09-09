@@ -17,19 +17,10 @@ import { twinDocument } from "@/domain/markdown/twinDocument";
 import { twinFeeRows } from "@/domain/markdown/twinFeeRows";
 
 /**
- * A Análise's twin — the five bands of the condensed page, in the page's own
- * order: what people bring, how the work happens (her verbatim text), the
- * practical facts with the ask folded in, and the mandala closing after it.
- *
- * **The wheel's reference data and its per-sign readings are not here**, and this
- * is the largest omission in any twin. The mandala section keeps its heading and
- * its intro, because that intro is where the site states the policy that binds
- * every symbol on it — *the signs are vocabulary, never a reading about you*
- * (CONCEPT §11) — which is precisely the sentence a machine should be able to
- * quote back. What it drops is the twelve × five nomenclature table
- * (`src/domain/zodiac/zodiacContent.ts`), which is scholarly apparatus for a
- * drawing that does not exist in text, and her twenty-four per-sign readings,
- * which are `null` at launch by design (REQ-007).
+ * A Análise's twin — the four bands of the condensed page, in the page's own
+ * order: what people bring, how the work happens (her verbatim text), and the
+ * practical facts with the ask folded in, closing the page. The mandala left with
+ * the wheel; `inicioDoc` carries it now.
  *
  * `Sonho ampliado` mirrors the page's own condition: it appears only while her
  * dream motif is written — the intro alone must not keep the section alive here
@@ -87,7 +78,6 @@ export function analiseDoc(page: Analise, ctx: TwinContext): MarkdownBlock[] {
         paragraph(page.pratico.comecar.body),
         paragraph(link(page.pratico.comecar.linkLabel, pageUrls.primeiraConversa)),
       ),
-      section(2, page.mandala.heading, paragraph(page.mandala.intro)),
     ),
   });
 }

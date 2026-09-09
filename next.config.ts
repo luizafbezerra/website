@@ -8,14 +8,15 @@ const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
  * The blog and the standalone `/simbolos` page were removed with the CONCEPT v3
  * rebuild. These cover the handful of links that may have been shared before
  * launch rather than any SEO equity — permanent so crawlers and agents stop
- * asking. `/simbolos` points at the page that inherits the painted wheel.
+ * asking. `/simbolos` points at the page that inherits the painted wheel —
+ * Início since the wheel moved off `/analise`.
  *
  * No host redirect here: `www.simbolosdoself.com` is sent to the apex with a 301
  * by the Vercel domain configuration, before a request reaches the app.
  */
 const REMOVED_PAGE_REDIRECTS = [
   { source: "/blog/:path*", destination: "/", permanent: true },
-  { source: "/simbolos", destination: "/analise", permanent: true },
+  { source: "/simbolos", destination: "/", permanent: true },
 ];
 
 const nextConfig: NextConfig = {

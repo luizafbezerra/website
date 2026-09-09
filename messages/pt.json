@@ -178,6 +178,23 @@
     "contato": {
       "orByEmail": "ou por e-mail:",
       "faqLink": "perguntas frequentes antes de escrever"
+    },
+    "mandala": {
+      "wheelAlt": "Mandala pintada com doze figuras zodiacais, vinte e sete mansões lunares védicas e a Terra ao centro",
+      "tablistLabel": "As doze figuras da roda",
+      "panelLabel": "Detalhes da figura escolhida",
+      "signAria": "{sign}, {dates}",
+      "hint": "Passe o cursor por uma das doze figuras, ou navegue com as setas do teclado. Toque para trazê-la ao alto.",
+      "hintVedic": "Cada figura abre, ao lado do seu retrato, um segundo capítulo védico: as três mansões lunares que a sua faixa atravessa.",
+      "fields": {
+        "element": "Elemento",
+        "modality": "Modalidade",
+        "ruler": "Regente",
+        "body": "Corpo",
+        "archetype": "Arquétipo"
+      },
+      "vedic": "Tradição védica",
+      "vedicSub": "Três mansões lunares"
     }
   },
   "horas": {
@@ -250,23 +267,6 @@
     "plate": {
       "placeholder": "Uma pintura ao lado da ideia de individuação.",
       "placeholderNote": "A obra escolhida entra aqui pelo painel, com pintor, título e ano."
-    },
-    "mandala": {
-      "wheelAlt": "Mandala pintada com doze figuras zodiacais, vinte e sete mansões lunares védicas e a Terra ao centro",
-      "tablistLabel": "As doze figuras da roda",
-      "panelLabel": "Detalhes da figura escolhida",
-      "signAria": "{sign}, {dates}",
-      "hint": "Passe o cursor por uma das doze figuras, ou navegue com as setas do teclado. Toque para trazê-la ao alto.",
-      "hintVedic": "Cada figura abre, ao lado do seu retrato, um segundo capítulo védico: as três mansões lunares que a sua faixa atravessa.",
-      "fields": {
-        "element": "Elemento",
-        "modality": "Modalidade",
-        "ruler": "Regente",
-        "body": "Corpo",
-        "archetype": "Arquétipo"
-      },
-      "vedic": "Tradição védica",
-      "vedicSub": "Três mansões lunares"
     },
     "sonho": {
       "parallelPlaceholder": "O detalhe de pintura deste paralelo."

@@ -1,4 +1,11 @@
-import type { GlobalConfig } from "payload";
+import type { Field, GlobalConfig } from "payload";
+import { WHEEL_ZODIAC } from "@/domain/wheel/wheelGeometry";
+import {
+  type Element,
+  ZODIAC_CONTENT,
+  ZODIAC_SIGN_IDS,
+  type ZodiacSignId,
+} from "@/domain/zodiac/zodiacContent";
 import { localizedRichText, localizedText, localizedTextarea } from "../../fields/copyFields";
 import { mediaSlot } from "../../fields/mediaSlot";
 import { PAGES_GROUP, pageAccess, revalidatePageHook } from "./shared";
@@ -10,7 +17,44 @@ import { PAGES_GROUP, pageAccess, revalidatePageHook } from "./shared";
  *
  * The lockup, the credential facts, the WhatsApp number and the Jung passage
  * pool are not here — they are cross-page facts and live in "A Clínica".
+ *
+ * Tab numbers follow CONCEPT §6's map rather than scroll order, which is why
+ * "6 · Cosmos" sits mid-strip and renders last. A mandala is the twelfth
+ * section, added when the wheel moved off `/analise`; it is numbered 12 and
+ * placed last so nothing else had to be renumbered, and it renders immediately
+ * above the Cosmos.
  */
+
+const ELEMENT_GROUPS: { element: Element; label: string }[] = [
+  { element: "fogo", label: "Fogo" },
+  { element: "terra", label: "Terra" },
+  { element: "ar", label: "Ar" },
+  { element: "água", label: "Água" },
+];
+
+/** The painted wheel's own labels, keyed so `ZodiacSignId` can index them. */
+const SIGN_LABELS = new Map(WHEEL_ZODIAC.map((sign) => [sign.id, sign]));
+
+const signGroup = (id: ZodiacSignId): Field => {
+  const sign = SIGN_LABELS.get(id);
+  return {
+    name: id,
+    type: "group",
+    label: sign?.label ?? id,
+    admin: { description: `${sign?.dateRange ?? ""} · ${ZODIAC_CONTENT[id].archetype}` },
+    fields: [
+      localizedTextarea({ name: "reading", label: "Leitura do signo" }),
+      localizedTextarea({ name: "vedicReading", label: "Leitura védica — três mansões lunares" }),
+    ],
+  };
+};
+
+const signCollapsibles: Field[] = ELEMENT_GROUPS.map(({ element, label }) => ({
+  type: "collapsible",
+  label,
+  admin: { initCollapsed: true },
+  fields: ZODIAC_SIGN_IDS.filter((id) => ZODIAC_CONTENT[id].element === element).map(signGroup),
+}));
 export const PageInicio: GlobalConfig = {
   slug: "page-inicio",
   label: "Início",
@@ -200,6 +244,18 @@ export const PageInicio: GlobalConfig = {
             localizedText({ name: "heading", label: "Título da seção" }),
             localizedRichText({ name: "body", label: "Texto" }),
             localizedText({ name: "whatsappLabel", label: "Rótulo do botão WhatsApp" }),
+          ],
+        },
+        // ── 12 A mandala ─────────────────────────────────────────────────────
+        {
+          name: "mandala",
+          label: "12 · A mandala",
+          description:
+            "A roda pintada, logo acima do Cosmos, no pé da página — depois do convite, nunca antes dele. Ela é visual: cada leitura abaixo só aparece no site depois que você a escrever. Enquanto estiverem em branco, a roda fala apenas pela imagem.",
+          fields: [
+            localizedText({ name: "heading", label: "Título" }),
+            localizedTextarea({ name: "intro", label: "Introdução" }),
+            ...signCollapsibles,
           ],
         },
       ],

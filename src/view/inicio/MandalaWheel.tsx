@@ -8,7 +8,7 @@ import {
   useRef,
   useState,
 } from "react";
-import type { SignReading } from "@/domain/analise/Analise";
+import type { SignReading } from "@/domain/inicio/Inicio";
 import type { Locale } from "@/domain/site/Locale";
 import {
   shortestRotationDelta,
@@ -95,7 +95,7 @@ function step(id: ZodiacSignId, delta: number): ZodiacSignId {
 }
 
 export function MandalaWheel({ readings }: { readings: Record<ZodiacSignId, SignReading> }) {
-  const t = useTranslations("analise.mandala");
+  const t = useTranslations("inicio.mandala");
   const locale = useLocale() as Locale;
   const sectors = useMemo(() => sectorsIn(locale), [locale]);
   const motionAllowed = useMotionAllowed();
@@ -380,7 +380,7 @@ function SignDetail({
   dateRange: string;
   reading: SignReading;
 }) {
-  const t = useTranslations("analise.mandala");
+  const t = useTranslations("inicio.mandala");
   const locale = useLocale() as Locale;
   const content = zodiacContentIn(locale, id);
   const { nakshatras } = vedicContentIn(locale, id);

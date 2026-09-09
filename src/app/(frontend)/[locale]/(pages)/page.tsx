@@ -16,6 +16,7 @@ import { Credencial } from "@/view/general/Credencial";
 import { DoisCaminhos } from "@/view/inicio/DoisCaminhos";
 import { Hero } from "@/view/inicio/Hero";
 import { InstagramBridge } from "@/view/inicio/InstagramBridge";
+import { Mandala } from "@/view/inicio/Mandala";
 import { OSintoma } from "@/view/inicio/OSintoma";
 import { SobreDigest } from "@/view/inicio/SobreDigest";
 import { Vozes } from "@/view/inicio/Vozes";
@@ -36,16 +37,17 @@ export async function generateMetadata({ params }: HomeProps): Promise<Metadata>
 export const revalidate = 3600;
 
 /**
- * Início — the eleven sections of CONCEPT §6, in the order the map declares.
+ * Início — CONCEPT §6's eleven sections in the order the map declares, plus the
+ * mandala, which arrived from /analise as a twelfth.
  *
  * The order is the page's argument, and it is fixed in code rather than
  * configured: recognition, then credentials, then her world, then the two doors,
  * then the approach, the person, the reach, the process, the voices, the ask —
- * and only then the wow. The Cosmos closes the page rather than interrupting it:
- * a visitor deciding whether to write never has to cross a scroll-pinned scene
- * to reach the ask, and the one who lingers past it gets the wonder as the
- * page's farewell. A CMS that could reorder this could break the one thing the
- * page does.
+ * and only then the wow, twice: the painted wheel, then the Cosmos. Both close
+ * the page rather than interrupting it, so a visitor deciding whether to write
+ * never has to cross a scroll-pinned scene to reach the ask, and the one who
+ * lingers past it gets the wonder as the page's farewell. A CMS that could
+ * reorder this could break the one thing the page does.
  *
  * The route stays thin — the page's own reads plus the testimonials, then props. The
  * entity graph is emitted once by the shared `(pages)` layout, so only the two
@@ -106,6 +108,10 @@ export default async function Home({ params, searchParams }: HomeProps) {
       <ComoComecar content={inicio.comoComecar} />
       <Vozes testimonials={testimonials} content={inicio.vozes} />
       <Contato clinica={clinica} content={inicio.contato} />
+      {/* The two wow surfaces, both past the ask: the painted wheel, then the
+          sky. The wheel came from /analise so that a visitor meets the wonder
+          once, on the page everyone lands on, rather than once per page. */}
+      <Mandala content={inicio.mandala} />
       {/* The sky is computed here, on the server, from the same render clock as
           the rotating passage — so every visitor to this render sees one sky,
           and it is São Paulo's rather than the reader's. */}

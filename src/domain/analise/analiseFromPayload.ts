@@ -1,15 +1,8 @@
 import { pagePlateFrom } from "@/domain/media/pagePlateFrom";
 import type { FactRow } from "@/domain/pages/FactRow";
 import type { RichTextContent } from "@/domain/richText/RichTextContent";
-import { ZODIAC_SIGN_IDS, type ZodiacSignId } from "@/domain/zodiac/zodiacContent";
 import type { PayloadPageAnalise } from "@/infrastructure/payload/getPageAnaliseGlobal";
-import {
-  ANALISE_DEFAULTS,
-  type Analise,
-  type DreamParallel,
-  type Pillar,
-  type SignReading,
-} from "./Analise";
+import { ANALISE_DEFAULTS, type Analise, type DreamParallel, type Pillar } from "./Analise";
 
 /** Blank strings are absences, not values — a cleared field must fall back. */
 function filled(value: string | null | undefined): string | null {
@@ -103,20 +96,6 @@ function parallelsFrom(
     );
 }
 
-/**
- * Her twelve readings. Every sign is present in the result so the wheel can look
- * any of them up, and every unwritten half is `null` — REQ-007's gate is this
- * mapping, not a component's conditional.
- */
-function readingsFrom(raw: PayloadPageAnalise["mandala"]): Record<ZodiacSignId, SignReading> {
-  return Object.fromEntries(
-    ZODIAC_SIGN_IDS.map((id) => {
-      const stored = raw?.[id];
-      return [id, { reading: filled(stored?.reading), vedicReading: filled(stored?.vedicReading) }];
-    }),
-  ) as Record<ZodiacSignId, SignReading>;
-}
-
 /** Normalize the raw `page-analise` global, falling back field by field. */
 export function analiseFromPayload(doc: PayloadPageAnalise): Analise {
   const defaults = ANALISE_DEFAULTS;
@@ -159,11 +138,6 @@ export function analiseFromPayload(doc: PayloadPageAnalise): Analise {
         body: filled(doc.pratico?.comecar?.body) ?? defaults.pratico.comecar.body,
         linkLabel: filled(doc.pratico?.comecar?.linkLabel) ?? defaults.pratico.comecar.linkLabel,
       },
-    },
-    mandala: {
-      heading: filled(doc.mandala?.heading) ?? defaults.mandala.heading,
-      intro: filled(doc.mandala?.intro) ?? defaults.mandala.intro,
-      readings: readingsFrom(doc.mandala),
     },
   };
 }

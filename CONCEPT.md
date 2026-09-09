@@ -131,13 +131,19 @@ list so they can never disagree.
 │                       one voice from abroad (all consent-gated; hides at zero)
 ├── 10 Contato          WhatsApp · email · availability state · response window
 │                       (times anchored to horário de Brasília)
-└── 11 Cosmos           ★ wow (desktop) — the page's farewell, after the ask, so
+├── 11 A mandala        ★ wow — the painted wheel as archetypal vocabulary, moved
+│                       here from /analise (2026-09) so both wow surfaces sit on
+│                       the page everyone lands on · after the ask, never before
+│                       it (readings ship only in her words or with her sign-off;
+│                       visual-only until then)
+└── 12 Cosmos           ★ wow (desktop) — the page's farewell, after the ask, so
                         it never sits between a visitor and the CTA · on phones,
                         a designed substitute — one painting as a scroll-cinema
                         (§9.1) — never a hidden hole
 
 /analise                A ANÁLISE      (the approach page — for análise, the
-│                       approach IS the product; condensed to five bands, 2026-08)
+│                       approach IS the product; condensed to five bands 2026-08,
+│                       four since the mandala moved to Início 2026-09)
 │  job: understand what analysis with her is and how it works, enough to begin
 ├── 1  Abertura         espaço seguro de escuta, reflexão e transformação; the
 │                       symptom has a purpose — a call from the unconscious;
@@ -149,12 +155,9 @@ list so they can never disagree.
 │      acontece         the symbolic material (dreams · daily images · repeating
 │                       patterns) · individuação described, never promised ·
 │                       "é um trabalho de colaboração"
-├── 4  Na prática       weekly · online · pt/en · Brasil e exterior — closing on
-│                       the ask (→ /primeira-conversa · WhatsApp)
-└── 5  A mandala        ★ this page's wow — the painted wheel as archetypal
-                        vocabulary, closing the page after the ask like the
-                        Cosmos closes the home (readings ship only in her words
-                        or with her sign-off; visual-only until then)
+└── 4  Na prática       weekly · online · pt/en · Brasil e exterior — closing on
+                        the ask (→ /primeira-conversa · WhatsApp), which is now
+                        the page's last word: the mandala moved to Início
 
 /orientacao-profissional   ORIENTAÇÃO PROFISSIONAL E DE CARREIRA
 │                          (condensed to five bands, 2026-08)

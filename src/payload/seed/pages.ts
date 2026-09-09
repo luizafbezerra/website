@@ -133,6 +133,7 @@ export async function seedPages(payload: Payload): Promise<void> {
         body: rt(inicio.contato.body),
         whatsappLabel: inicio.contato.whatsappLabel,
       },
+      mandala: { heading: inicio.mandala.heading, intro: inicio.mandala.intro },
     },
   });
 
@@ -180,6 +181,7 @@ export async function seedPages(payload: Payload): Promise<void> {
         body: rt(INICIO_EN.contato.body),
         whatsappLabel: INICIO_EN.contato.whatsappLabel,
       },
+      mandala: { heading: INICIO_EN.mandala.heading, intro: INICIO_EN.mandala.intro },
     },
   });
 
@@ -219,7 +221,6 @@ export async function seedPages(payload: Payload): Promise<void> {
         items: analise.pratico.items,
         comecar: analise.pratico.comecar,
       },
-      mandala: { heading: analise.mandala.heading, intro: analise.mandala.intro },
     },
   });
 
@@ -260,7 +261,6 @@ export async function seedPages(payload: Payload): Promise<void> {
         items: ANALISE_EN.pratico.items.map((row, index) => withId(row, analisePraticoIds[index])),
         comecar: ANALISE_EN.pratico.comecar,
       },
-      mandala: { heading: ANALISE_EN.mandala.heading, intro: ANALISE_EN.mandala.intro },
     },
   });
 
@@ -753,6 +753,11 @@ const INICIO_EN = {
     ]),
     whatsappLabel: "Talk on WhatsApp",
   },
+  mandala: {
+    heading: "The mandala of the signs",
+    intro:
+      "Twelve painted figures, twenty-seven lunar mansions, the Earth at the centre. Here the signs are vocabulary: images for naming what you live through, never a prediction and never a reading about who you are.",
+  },
 };
 
 const ANALISE_EN = {
@@ -851,11 +856,6 @@ const ANALISE_EN = {
       body: "If you feel it is time to begin this journey back to yourself, it will be a joy to accompany your process.",
       linkLabel: "what happens in a first conversation",
     },
-  },
-  mandala: {
-    heading: "The mandala of the signs",
-    intro:
-      "Twelve painted figures, twenty-seven lunar mansions, the Earth at the centre. Here the signs are vocabulary: images for naming what you live through, never a prediction and never a reading about who you are.",
   },
 };
 

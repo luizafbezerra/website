@@ -275,11 +275,11 @@ describe("/perguntas' twin", () => {
   });
 });
 
-describe("/analise's twin", () => {
+describe("Início's twin", () => {
   it("keeps the wheel's heading and its policy sentence, and nothing else", () => {
-    const document = docFor("analise", "pt");
+    const document = docFor("inicio", "pt");
     const start = document.findIndex(
-      (block) => block.kind === "heading" && block.text === ANALISE_DEFAULTS.mandala.heading,
+      (block) => block.kind === "heading" && block.text === INICIO_DEFAULTS.mandala.heading,
     );
     const rest = document.slice(start + 1);
     const end = rest.findIndex((block) => block.kind === "heading");
@@ -287,27 +287,31 @@ describe("/analise's twin", () => {
     // Exactly one block under the heading: the intro that states the site's rule
     // about symbols — vocabulary, "nunca uma leitura sobre quem você é".
     expect(rest.slice(0, end)).toEqual([
-      { kind: "paragraph", text: ANALISE_DEFAULTS.mandala.intro },
+      { kind: "paragraph", text: INICIO_DEFAULTS.mandala.intro },
     ]);
   });
 
   it("still omits a per-sign reading after she writes one", () => {
     const withReading = {
-      ...ANALISE_DEFAULTS,
+      ...INICIO_DEFAULTS,
       mandala: {
-        ...ANALISE_DEFAULTS.mandala,
+        ...INICIO_DEFAULTS.mandala,
         readings: {
-          ...ANALISE_DEFAULTS.mandala.readings,
+          ...INICIO_DEFAULTS.mandala.readings,
           aries: { reading: "O impulso que abre o ano.", vedicReading: "Ashwini, o cavaleiro." },
         },
       },
     };
-    const text = renderMarkdown(analiseDoc(withReading, contextFor("analise", "pt")));
+    const text = renderMarkdown(
+      inicioDoc(withReading, [], SOBRE_DEFAULTS.formacao.items, contextFor("inicio", "pt")),
+    );
 
     expect(text).not.toContain("O impulso que abre o ano.");
     expect(text).not.toContain("Ashwini, o cavaleiro.");
   });
+});
 
+describe("/analise's twin", () => {
   it("keeps Sonho ampliado absent while her motif is unwritten — the default state", () => {
     // The intro alone must not keep the section alive here when the page hides it.
     expect(textOf("analise", "pt")).not.toContain(ANALISE_DEFAULTS.sonhoAmpliado.heading);

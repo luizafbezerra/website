@@ -1,3 +1,4 @@
+import { ZODIAC_SIGN_IDS } from "@/domain/zodiac/zodiacContent";
 import { describe, expect, it } from "vitest";
 import type { PayloadPageInicio } from "@/infrastructure/payload/getPageInicioGlobal";
 import { INICIO_DEFAULTS } from "./Inicio";
@@ -15,6 +16,7 @@ describe("inicioFromPayload", () => {
     const doc: PayloadPageInicio = {
       instagram: { heading: "   ", intro: "" },
       brasilExterior: { body: "" },
+      mandala: { intro: "  " },
     };
 
     const inicio = inicioFromPayload(doc);
@@ -22,6 +24,7 @@ describe("inicioFromPayload", () => {
     expect(inicio.instagram.heading).toBe(INICIO_DEFAULTS.instagram.heading);
     expect(inicio.instagram.intro).toBe(INICIO_DEFAULTS.instagram.intro);
     expect(inicio.brasilExterior.body).toBe(INICIO_DEFAULTS.brasilExterior.body);
+    expect(inicio.mandala.intro).toBe(INICIO_DEFAULTS.mandala.intro);
   });
 
   it("falls back on rich text that Lexical left with no paragraphs", () => {
@@ -131,5 +134,44 @@ describe("inicioFromPayload", () => {
       // curated, so an untouched Cosmos section is complete, not unfinished.
       expect(inicioFromPayload({}).cosmos).toEqual({ caption: null });
     });
+  });
+
+  // -------------------------------------------------------------------------
+  // REQ-007 — the wheel is visual-only until her readings exist, and this mapper
+  // is where that gate lives.
+  // -------------------------------------------------------------------------
+
+  it("returns every sign with both readings null on an untouched mandala tab", () => {
+    const { readings } = inicioFromPayload({}).mandala;
+
+    expect(Object.keys(readings)).toEqual([...ZODIAC_SIGN_IDS]);
+    for (const id of ZODIAC_SIGN_IDS) {
+      expect(readings[id], id).toEqual({ reading: null, vedicReading: null });
+    }
+  });
+
+  it("carries the readings she has written, one sign at a time", () => {
+    const { readings } = inicioFromPayload({
+      mandala: {
+        aries: { reading: "Áries marca o impulso." },
+        pisces: { vedicReading: "As três mansões de Peixes." },
+      },
+    }).mandala;
+
+    expect(readings.aries).toEqual({ reading: "Áries marca o impulso.", vedicReading: null });
+    expect(readings.pisces).toEqual({
+      reading: null,
+      vedicReading: "As três mansões de Peixes.",
+    });
+    // Every other sign stays silent.
+    expect(readings.leo).toEqual({ reading: null, vedicReading: null });
+  });
+
+  it("treats a whitespace-only reading as unwritten, so the wheel stays visual", () => {
+    const { readings } = inicioFromPayload({
+      mandala: { taurus: { reading: "   ", vedicReading: "\n" } },
+    }).mandala;
+
+    expect(readings.taurus).toEqual({ reading: null, vedicReading: null });
   });
 });

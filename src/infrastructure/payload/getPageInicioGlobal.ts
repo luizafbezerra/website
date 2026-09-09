@@ -2,6 +2,7 @@ import "server-only";
 import { cache } from "react";
 import type { RichTextContent } from "@/domain/richText/RichTextContent";
 import type { Locale } from "@/domain/site/Locale";
+import type { ZodiacSignId } from "@/domain/zodiac/zodiacContent";
 import { getPayloadSafe } from "./getPayloadSafe";
 import type { PayloadMediaField } from "./PayloadMedia";
 
@@ -9,6 +10,11 @@ import type { PayloadMediaField } from "./PayloadMedia";
 // The raw `page-inicio` global exactly as Payload returns it. Named tabs flatten
 // to nested objects and every field is optional, so the domain mapper can fall
 // back section by section.
+//
+// The `mandala` tab's twelve sign groups are direct children of the tab: the
+// admin's four `collapsible` wrappers (fogo · terra · ar · água) are presentation
+// only and add no level to the stored document. They are typed through
+// `PayloadSignReadings` rather than spelled out twelve times.
 //
 // Read at `depth: 1`, unlike `getClinicaGlobal`: this page has upload slots (the
 // portrait, A Lâmina's plate) and depth 0 would return bare row ids with no URL
@@ -19,6 +25,14 @@ import type { PayloadMediaField } from "./PayloadMedia";
 // ---------------------------------------------------------------------------
 
 type PayloadArrayRow<T> = Array<T & { id?: string | null }> | null;
+
+/** Her prose for one sign — both halves empty until she writes them (REQ-007). */
+export type PayloadSignReading = {
+  reading?: string | null;
+  vedicReading?: string | null;
+} | null;
+
+export type PayloadSignReadings = Partial<Record<ZodiacSignId, PayloadSignReading>>;
 
 export type PayloadPageInicio = {
   hero?: {
@@ -72,6 +86,12 @@ export type PayloadPageInicio = {
     body?: RichTextContent | null;
     whatsappLabel?: string | null;
   } | null;
+  mandala?:
+    | ({
+        heading?: string | null;
+        intro?: string | null;
+      } & PayloadSignReadings)
+    | null;
 };
 
 /** The `page-inicio` global, or null when Payload is disabled. */

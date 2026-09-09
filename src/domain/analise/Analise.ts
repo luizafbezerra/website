@@ -2,14 +2,13 @@ import { EMPTY_PAGE_PLATE, type PagePlate } from "@/domain/media/PagePlate";
 import type { FactRow } from "@/domain/pages/FactRow";
 import type { RichTextContent } from "@/domain/richText/RichTextContent";
 import { richText } from "@/domain/richText/richText";
-import { ZODIAC_SIGN_IDS, type ZodiacSignId } from "@/domain/zodiac/zodiacContent";
 
 // ---------------------------------------------------------------------------
 // A Análise (`/analise`) — five bands (the 2026-08 condensation of CONCEPT §6's
 // seven sections): abertura · o que as pessoas trazem · como o trabalho acontece
-// · na prática (with the ask folded in) · a mandala, which closes the page after
-// the ask the way the Cosmos closes the home. Sonho ampliado remains a sixth,
-// normally absent band gated on her curation. One member per tab in
+// · na prática, with the ask folded in and closing the page. Sonho ampliado
+// remains a fifth, normally absent band gated on her curation. The mandala moved
+// to Início, above the Cosmos. One member per tab in
 // `page-analise`, so a field's admin path and its render path read the same.
 //
 // ANALISE_DEFAULTS is what renders when Payload is off or a field is blank, and
@@ -39,12 +38,9 @@ import { ZODIAC_SIGN_IDS, type ZodiacSignId } from "@/domain/zodiac/zodiacConten
 // `docs/source-copy-2026-08-07.md`. Nothing in this file may edit her prose
 // without adding a row there first.
 //
-// Two policies bind this page harder than any other:
-//   · **Individuação is described, never promised** (CONCEPT §11). `oMetodo`'s
-//     individuação note says so in its own words.
-//   · **The wheel's readings are hers alone** (REQ-007). All twenty-four are
-//     `null` here and seeded empty; the wheel speaks through the painting and
-//     its scholarly reference until she writes them.
+// One policy binds this page harder than any other: **individuação is described,
+// never promised** (CONCEPT §11). `oMetodo`'s individuação note says so in its
+// own words.
 //
 // The fee is NOT here — it is composed from A Clínica (REQ-005). Neither are the
 // WhatsApp openers: they are cross-page facts in `clinica.notes`. The who-line
@@ -53,14 +49,6 @@ import { ZODIAC_SIGN_IDS, type ZodiacSignId } from "@/domain/zodiac/zodiacConten
 
 /** One of the three pillars, I–III. */
 export type Pillar = { numeral: string; title: string; text: string };
-
-/**
- * Her prose for one sign of the wheel, both halves optional and both empty at
- * launch (REQ-007). A null reading renders nothing at all — never a placeholder
- * frame, because a missing paragraph is not a missing asset, and announcing the
- * gap to a visitor would be worse than the wheel simply being visual.
- */
-export type SignReading = { reading: string | null; vedicReading: string | null };
 
 /** One parallel set beside the dream motif (CONCEPT §9.3). */
 export type DreamParallel = {
@@ -107,17 +95,7 @@ export type Analise = {
     /** The ask, folded into the practical band rather than a section of its own. */
     comecar: { body: string; linkLabel: string };
   };
-  mandala: {
-    heading: string;
-    intro: string;
-    readings: Record<ZodiacSignId, SignReading>;
-  };
 };
-
-/** Twelve signs, no prose. The shape her admin edits fill in one field at a time. */
-export const EMPTY_SIGN_READINGS: Record<ZodiacSignId, SignReading> = Object.fromEntries(
-  ZODIAC_SIGN_IDS.map((id) => [id, { reading: null, vedicReading: null }]),
-) as Record<ZodiacSignId, SignReading>;
 
 /**
  * Her own account of how she works — five paragraphs, verbatim, carried here
@@ -289,12 +267,5 @@ export const ANALISE_DEFAULTS: Analise = {
       body: "Se você sente que é o momento de iniciar essa jornada de volta para si mesmo(a), será uma alegria acompanhar o seu processo.",
       linkLabel: "o que acontece na primeira conversa",
     },
-  },
-  mandala: {
-    heading: "A mandala dos signos",
-    intro:
-      "Doze figuras pintadas, vinte e sete mansões lunares, a Terra ao centro. Aqui os signos são vocabulário: imagens para nomear o que se vive, nunca uma previsão nem uma leitura sobre quem você é.",
-    // REQ-007: hers alone, and empty until she writes them.
-    readings: EMPTY_SIGN_READINGS,
   },
 };

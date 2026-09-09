@@ -6,7 +6,6 @@ import type { Locale } from "@/domain/site/Locale";
 import { pagePath } from "@/domain/site/pagePath";
 import { absoluteUrl } from "@/infrastructure/env/baseUrl";
 import { Abertura } from "@/view/analise/Abertura";
-import { Mandala } from "@/view/analise/Mandala";
 import { OMetodo } from "@/view/analise/OMetodo";
 import { OQueTrazem } from "@/view/analise/OQueTrazem";
 import { SonhoAmpliado } from "@/view/analise/SonhoAmpliado";
@@ -28,13 +27,14 @@ export async function generateMetadata({ params }: AnaliseProps): Promise<Metada
 export const revalidate = 86400;
 
 /**
- * A Análise — five bands (2026-08 condensation of CONCEPT §6's seven sections).
+ * A Análise — four bands (2026-08 condensation of CONCEPT §6's seven sections,
+ * less the mandala, which moved to Início).
  *
  * The order is the page's argument, uninterrupted from question to ask: what it
  * is (and who receives you) → what people bring, in recognition terms → how the
  * work happens, in her own words → the practical facts, closing on the ask. The
- * wheel comes after the ask, as the page's farewell — the same grammar as the
- * Cosmos on the home, so the wow never sits between a visitor and the CTA.
+ * ask is the last thing on the page: the painted wheel moved to Início, where it
+ * joins the Cosmos so both wow surfaces sit past one CTA rather than two.
  *
  * Sonho ampliado can be present between the method and the facts: it renders
  * only while her dream motif is written (CONCEPT §9.3 requires her words), and
@@ -78,7 +78,6 @@ export default async function AnalisePage({ params }: AnaliseProps) {
       >
         <ComecarFold content={page.pratico.comecar} clinica={clinica} opener="analysis" />
       </PraticoSection>
-      <Mandala content={page.mandala} />
     </>
   );
 }

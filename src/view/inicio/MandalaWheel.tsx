@@ -60,6 +60,18 @@ const tabId = (id: ZodiacSignId) => `mandala-sign-${id}`;
 const PANEL_REVEAL_MIN_PX = 200;
 
 /**
+ * How far a pointer may travel between press and release and still count as a
+ * tap rather than a swipe. Below `lg` the panel sits under the wheel, so reading
+ * a sign means scrolling — and a scroll begins with a finger down outside the
+ * wheel. Dismissing on the press would un-turn the wheel before the page had
+ * moved a pixel, which is why the dismissal waits for the release and measures.
+ */
+const DISMISS_SLOP_PX = 10;
+
+/** A press on any of these leaves the selection alone. */
+const KEEP_SELECTORS = "[data-wheel-sector],[data-wheel-panel],[data-wheel-keep]";
+
+/**
  * The sectors, prepared once at module load.
  *
  * `WheelSign["id"]` is typed as `string` by the geometry module, so the id is
@@ -124,6 +136,8 @@ export function MandalaWheel({ readings }: { readings: Record<ZodiacSignId, Sign
   const tablistRef = useRef<SVGGElement>(null);
   const wheelRef = useRef<HTMLDivElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
+  // Where a dismissing press started, or null while no such press is in flight.
+  const dismissOriginRef = useRef<{ x: number; y: number } | null>(null);
 
   useEffect(() => {
     const target = turnedId ? (SECTORS.find((s) => s.id === turnedId)?.rotation ?? 0) : 0;
@@ -154,24 +168,43 @@ export function MandalaWheel({ readings }: { readings: Record<ZodiacSignId, Sign
       setTurnedId(null);
     };
 
-    const onPointerDown = (event: Event) => {
+    // `pointerdown`/`pointerup` rather than `mousedown` + `touchstart`: one path
+    // for mouse, touch and pen, and a release to measure against. A press on a
+    // sector re-selects, a press inside the panel must not close what is being
+    // read, and a press anywhere on the painting — the inner disc, the gaps
+    // between the thin sector paths, the caption — is a press on the thing the
+    // visitor is looking at, not outside it.
+    const onPointerDown = (event: PointerEvent) => {
       const target = event.target as Element | null;
-      // A press on a sector re-selects; a press inside the panel must not dismiss
-      // it, or selecting text there would close what is being read.
-      if (target?.closest("[data-wheel-sector],[data-wheel-panel]")) return;
-      clear();
+      if (target?.closest(KEEP_SELECTORS)) return;
+      dismissOriginRef.current = { x: event.clientX, y: event.clientY };
+    };
+
+    const onPointerUp = (event: PointerEvent) => {
+      const origin = dismissOriginRef.current;
+      dismissOriginRef.current = null;
+      if (!origin) return;
+      const travelled = Math.hypot(event.clientX - origin.x, event.clientY - origin.y);
+      if (travelled <= DISMISS_SLOP_PX) clear();
+    };
+
+    // The browser taking the gesture over for a scroll: no tap ever happened.
+    const onPointerCancel = () => {
+      dismissOriginRef.current = null;
     };
 
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") clear();
     };
 
-    document.addEventListener("mousedown", onPointerDown);
-    document.addEventListener("touchstart", onPointerDown);
+    document.addEventListener("pointerdown", onPointerDown);
+    document.addEventListener("pointerup", onPointerUp);
+    document.addEventListener("pointercancel", onPointerCancel);
     document.addEventListener("keydown", onKeyDown);
     return () => {
-      document.removeEventListener("mousedown", onPointerDown);
-      document.removeEventListener("touchstart", onPointerDown);
+      document.removeEventListener("pointerdown", onPointerDown);
+      document.removeEventListener("pointerup", onPointerUp);
+      document.removeEventListener("pointercancel", onPointerCancel);
       document.removeEventListener("keydown", onKeyDown);
     };
   }, []);
@@ -247,7 +280,7 @@ export function MandalaWheel({ readings }: { readings: Record<ZodiacSignId, Sign
     // carry their own `max-w-[52ch]`, so the wider measure was buying nothing
     // here while costing the wheel sixty pixels.
     <div className="mt-14 grid items-start gap-12 lg:mt-20 lg:grid-cols-[1fr_minmax(0,46ch)] lg:gap-16">
-      <div ref={wheelRef} className="mx-auto w-[min(24rem,86vw)] lg:mx-0 lg:w-full">
+      <div ref={wheelRef} data-wheel-keep className="mx-auto w-[min(24rem,86vw)] lg:mx-0 lg:w-full">
         <div
           className="relative aspect-square w-full transition-transform duration-[600ms] ease-[cubic-bezier(0.3,0,0.2,1)] motion-reduce:transition-none"
           style={{
